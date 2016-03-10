@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import RouteAuthMixin from '../mixins/routeauth';
-import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixin';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 const {
   get,

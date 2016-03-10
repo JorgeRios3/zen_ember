@@ -494,10 +494,10 @@ export default Ember.Controller.extend( Ember.Evented, EmberValidations, {
 	
 	}.observes("selectedEtapa"),
 	observarCliente : function(){
-		var cliente = get(this, "cliente");
+		var cliente = get(this, "clienteId");
 		set(this, "clientesofertas", this.store.query("clientesoferta", { cliente : cliente}));
 		var _this = this;
-		var rap = this.store.find("referenciasrapconclientesincuenta",get(this, "cliente"));
+		var rap = this.store.find("referenciasrapconclientesincuenta",cliente);
 		rap.then(function(data){
 
 			set(_this, "referencia", data.get("referencia"));

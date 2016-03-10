@@ -54,7 +54,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   geolocation: service(),
   beforeModel(transition) {
     this._super(transition);
-    info('bmodel');
+    let cl = get(get(this, "geolocation"), "currentLocation");
+    info(`bmodel currentLocation ${cl}`);
     this.controllerFor('index').setProperties({
       usuario: '',
       perfil: '',
@@ -89,7 +90,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     this.store.unloadAll('twofactor');
     let c = this.controllerFor('index');
     let bootTime = get(c, 'bootTime');
-    let requestLocation = get(c, 'tiempoTranscurrido').indexOf('seconds')  !== -1 || get(c, 'tiempoTranscurrido').indexOf('segundos')  !== -1;
+    //let requestLocation = get(c, 'tiempoTranscurrido').includes('seconds') || get(c, 'tiempoTranscurrido').includes('segundos');
+    let requestLocation = get(get(this,"geolocation"), "currentLocation") === null;
     info('valor de requestLocation', get(c, 'tiempoTranscurrido'));
     let promises = {
       zenusuario: this.store.find('zenusuario', 1),
