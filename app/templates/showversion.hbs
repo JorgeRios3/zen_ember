@@ -1,0 +1,58 @@
+<br/><br/><br/>
+{{#if admin}}
+  {{#if isDev}}
+	<button class="btn btn-info" {{action 'cargaUsuarios'}}>Mostrar usuarios</button>
+	<button class="btn btn-info" {{action 'haciendoLogging'}}>Logging</button>
+	{{input type="text" value=perPage placeholder="usuarios visibles..."}}
+	{{#if verUsuarios}}
+		
+		{{#if verUsuarios}}
+			{{page-numbers content=usuarios.pagedContent showFL=true}}
+			<div id="no-more-tables">
+			<table  class="table table-bordered table-striped table-condensed cf">
+			
+				<thead>
+				<tr>
+					<th>Usuario</th>
+					<th>Password</th>
+					<th>Perfil</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{#each usuarios.pagedContent as |u|}}
+					<tr><td data-title="Usuario">{{u.usuario}}</td>
+						<td data-title="Password">{{u.password}}</td>
+						<td data-title="Perfil">{{u.perfil}}</td>
+					</tr>
+				{{/each}}
+				</tbody>
+			</table>
+			</div>
+			
+		{{/if}}
+
+	{{/if}}
+	<br>
+	{{#each firma as | palabra |}}
+	  {{palabra}}
+	{{/each}}
+	<br>
+	{{~#each firma as | palabra |}}
+	  {{palabra}}
+	{{~/each}}
+	<div class="col-xs-6 col-md-3">{{bs-datetimepicker date=mydate }}</div>
+	<br>
+		{{if mydate mydate 'Escoja fecha'}}
+	{{else}}
+		<hr>
+	{{/if}}
+	
+{{/if}}
+{{#liquid-if content use="crossFade"}}
+{{#with content as |the|}}
+  <h2 class="text-danger text-center">{{the.version}}</h2>
+{{/with}}
+{{/liquid-if}}
+
+	
+

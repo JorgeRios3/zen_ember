@@ -1,0 +1,89 @@
+
+	<div class="text text-danger">Datos Trámites</div>
+	<br>
+		<div class="form-group">
+				<label class="control-label">Tipo de Tramite</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=tipoTramite action=(action  (mut tipoTramite)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Tipo Tramite{{/x-option}}
+  							{{#each tipostramites as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="titularIfe" checked=titularIfe }}Titular IFE 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="titularCopiasIfe" checked=titularCopiasIfe }}Titular 3 Copias IFE 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="titularCartaEmpresa" checked=titularCartaEmpresa }}Titular Carta de la Empresa 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="titularCopiaAfore" checked=titularCopiaAfore }}Titular Copia Afore 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="titularActaNacimiento" checked=titularActaNacimiento }}Titular Acta de Nacimiento Original 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="titularCopiasActaNacimiento" checked=titularCopiasActaNacimiento }}Titular 3 Copias Acta de Nacimiento 
+			</label>
+		</div>
+		{{#if isCasado}}
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="conyugeIfe" checked=conyugeIfe }}Cónyuge IFE 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="conyugeCopiasIfe" checked=conyugeCopiasIfe }}Cónyuge 3 Copias IFE 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="conyugeCartaEmpresa" checked=conyugeCartaEmpresa }}Cónyuge Carta de la Empresa 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="conyugeCopiaAfore" checked=conyugeCopiaAfore }}Cónyuge Copia Afore 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="conyugeActaNacimiento" checked=conyugeActaNacimiento }}Cónyuge Acta de Nacimiento Original 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="conyugeCopiasActaNacimiento" checked=conyugeCopiasActaNacimiento }}Cónyuge 3 Copias Acta de Nacimiento 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="actaMatrimonio" checked=actaMatrimonio }}Acta de Matrimonio Original 
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="copiasActaMatrimonio" checked=copiasActaMatrimonio }} 3 Copias Acta de Matrimonio 
+			</label>
+		</div>
+		{{/if}}
+  <hr>

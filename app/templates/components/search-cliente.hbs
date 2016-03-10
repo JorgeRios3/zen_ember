@@ -1,0 +1,64 @@
+ {{#if errores}}
+ <br><div class="alert alert-danger">
+  				<a class="close" data-dismiss="alert" href="#">x</a>
+  					<p>
+            			<strong>no se pudieron cargar los clientes : </strong> <code>trono promesa</code>
+  					</p>
+        </div>
+ {{/if}}
+	<div class="form-group">
+		<label for="idclientenombreNombre" class="control-label">Nombre</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=nombreCliente class="form-control" placeholder="Nombre" id="idclientenombreNombre" class="text-uppercase" }}
+			</div>
+			<div class="btn btn-info" {{action "buscarCliente"}}>Buscar</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="tipos" class="control-label">tipo de cliente</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="selectedTipo" class="form-control form-control-inline"}}
+		  			
+		  			{{#each tipos as |item|}}
+		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	{{#if cuantos}}
+		<div class={{if cuantosLength 'h3 text-success' 'h3 text-danger'}}>hay {{cuantos}} clientes</div>
+	{{/if}}
+	{{#unless tiposSinCuenta}}
+	<div class="form-group">
+		<label for="etapas" class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="selectedEtapa" class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija etapa{{/x-option}}
+		  			{{#each etapas as |item|}}
+		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	{{/unless}}
+	{{#if cuantosLength}}
+	<div class="form-group">
+		<label>Elija Nombre</label>
+			<div class="row">	
+				<div class="col-md-8">
+					{{ember-selectize
+						content=arrayClientes2
+						optionValuePath="content.id"
+						optionLabelPath="content.nombre"
+						placeholder="Todos"
+						value=selectedNombre
+					}}
+				</div>
+			</div>
+	</div>
+	{{/if}}

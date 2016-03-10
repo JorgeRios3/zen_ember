@@ -1,0 +1,209 @@
+<h2 class="text-info">Estado De Cuenta</h2>
+
+
+	<div class="form-group">
+		<label for="etapas" class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="selectedEtapa" class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija etapa{{/x-option}}
+		  			{{#each etapas as |item|}}
+		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclientenombre" class="control-label">Nombre</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idclientenombre" class="text-uppercase" }}
+			</div>
+			<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+		</div>
+	</div>
+	{{#if cuantos}}
+		{{#if maximo}}
+			<div class="h3 text text-success">hay {{cuantos}} clientes</div>
+			<div class="form-group">
+			<label>Elija Nombre</label>
+				<div class="row">	
+				<div class="col-md-8">
+					{{ember-selectize
+						content=catalogoNombres
+						optionValuePath="content.cuenta"
+						optionLabelPath="content.nombre"
+						placeholder="Todos"
+						value=selectedNombre
+					}}
+				</div>
+				</div>
+			</div>
+
+			{{else}}
+			<div class="h3 text text-warning">hay {{cuantos}} clientes la lista es muy larga intenta filtrar mas el nombre </div>
+		{{/if}}
+	{{/if}}
+
+	<div class="form-group">
+		<label class="control-label">Manzana</label>
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<p class="form-control-static text text-info">{{manzana}}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label">Lote</label>
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<p class="form-control-static text text-info">{{lote}}</p>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label">Cuenta</label>
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<p class="form-control-static text text-info">{{cuenta}}</p>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label">Saldo De La Cuenta</label>
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<p class="form-control-static text text-info">{{saldo}}</p>
+			</div>
+		</div>
+	</div>
+
+	{{#if conPagares}}
+	<div class="form-group">
+		<label class="control-label">Saldo Pagares</label>
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<p class="form-control-static text text-info">{{saldoPagaresFormateado}}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="text text-info">Pagares</div>
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				<th>Fecha</th>
+                <th>Fecha De Vencimiento</th>
+				<th>Saldo</th>
+				<th>Cargo</th>
+				<th>Abono</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each documentosPagares as |t|}}
+			<tr>
+
+				<td data-title="Fecha">		
+					{{t.fecha}}
+			    </td>
+                <td data-title="Fecha De Vencimiento">
+                	<div class="text {{if t.estavencido 'text-danger'}} ">{{t.fechavencimientocompleto}}</div>
+				</td>
+				<td data-title="Saldo" class="text-right">
+					{{t.saldo}}
+				</td>
+				<td data-title="Cargo" class="text-right">
+					{{t.cargo}}
+				</td>
+				<td data-title="Abono" class="text-right">
+					{{t.abono}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+
+	{{/if}}
+
+
+	<div class="text text-info">Documentos</div>
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				<th>Sel</th>
+                <th>Documento</th>
+				<th>Descripcion</th>
+				<th>Cargo</th>
+				<th>Abono</th>
+				<th>Saldo</th>
+				<th>Fecha</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each docsCliente as |t|}}
+			<tr>
+
+				<td data-title="Sel">
+					{{#if t.elegido}}
+						<span class="glyphicon glyphicon-check"></span>
+						{{else}}
+						<span></span>
+					{{/if}}
+			    </td>
+                <td data-title="Documento">
+					<a href="" {{ action 'procesaDocumento' t.id t.abono }}>{{t.id}}</a>
+				</td>
+				<td data-title="Descripcion">
+					{{t.descripcion}}
+				</td>
+				<td data-title="Cargo" class="text-right">
+					{{t.cargo}}
+				</td>
+				<td data-title="Abono" class="text-right">
+					{{t.abono}}
+				</td>
+				<td data-title="Saldo" class="text-right">
+					{{t.saldo}}
+				</td>
+				<td data-title="Fecha">
+					{{t.fecha}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				<th>Id</th>
+                <th>Cantidad</th>
+				<th>Fecha</th>
+				<th>Cargo Abono</th>
+				<th>Recibo</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each movimientosdocumento as |m|}}
+			<tr>
+                <td data-title="Documento">
+					{{m.id}}
+				</td>
+				<td data-title="Descripcion">
+					{{m.cantidad}}
+				</td>
+				<td data-title="Cargo" class="text-right">
+					{{m.fecha}}
+				</td>
+				<td data-title="Abono" class="text-right">
+					{{m.cargoabono}}
+				</td>
+				<td data-title="Saldo" class="text-right">
+					{{m.recibo}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>

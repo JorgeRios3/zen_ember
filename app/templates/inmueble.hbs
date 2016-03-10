@@ -1,0 +1,77 @@
+<div class="h2 text text-info">Inmuebles Detalle</div>
+
+<div class="form-group">
+				<label for="idnumerosexteriores" class="control-label">Etapa</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value='0' action="selectedEtapaAction" class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija etapa{{/x-option}}
+  							{{#each model as |item|}}
+  								{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+
+<div class="row">
+	<div class="checkbox col-xs-10 col-md-3">
+		<label>
+			{{input type="checkbox" name="candadoPrecio" checked=disponible }}Activar Para Buscar Solo Inmuebles Disponibles
+		</label>
+	</div>
+</div>
+{{#if buscarActivado}}
+<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+{{/if}}
+
+
+{{#if desplegarResultado}}
+	{{#if listaInmuebles.length}}
+
+	<table class="table table-bordered table-striped table-condensed cf">
+				<thead>
+					<tr>
+						<th>inmueble</th>
+						<th>manzana</th>
+						<th>lote</th>
+						<th>habilitado </th>
+						<th>candado</th>
+	    				<th>precio</th>  
+	    				<th>vendido</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{#each listaInmuebles as |t|}}
+				<tr>
+					<td data-title="inmueble">
+						{{t.id}}
+				    </td>
+					<td data-title="manzana">
+						{{t.manzana}}
+					</td>
+					<td data-title="lote">
+						{{t.lote}}
+						
+					</td>
+					<td data-title="habilitado">
+						{{icon-boolean value=t.habilitado}}
+					</td>
+					<td data-title="candado">
+						{{icon-boolean value=t.candado}}
+					</td>
+					<td data-title="precio" class="text text-right">
+						{{t.precio}}
+					</td>
+					<td data-title="vendido">
+						{{icon-boolean value=t.vendido}}
+					</td>
+				</tr>
+				{{/each}}
+			
+				</tbody>
+			</table>
+	{{else}}
+	{{spinkit-spinner}}
+	{{/if}}
+{{/if}}

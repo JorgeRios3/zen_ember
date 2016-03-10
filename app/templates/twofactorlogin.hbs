@@ -1,0 +1,26 @@
+<br><br><br>
+{{#if errorMessage}}
+  <div class="alert alert-danger">
+  <a class="close" data-dismiss="alert" href="#">x</a>
+  <p>
+            <strong>Acceso Denegado : </strong> <code>{{errorMessage}}</code>
+  </p>
+        
+        </div>
+{{else}}
+<div class="alert alert-info"><a class="close" data-dismiss="alert" href="#">x</a>Ingrese su token</div>
+
+{{/if}}
+<img src="/image/logosmall.jpg">
+<form {{action 'twoFactorCheck' on='submit'}}>
+        <div class="form-group">
+          <label for="twoFactorToken">Token</label>
+          <div class="row">
+            <div class="col-xs-10 col-md-4">
+            {{input id='twoFactorToken' placeholder='Digite Token' class='form-control' value=twoFactorToken}}
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary {{if buttonReady '' 'disabled'}}">Acceder</button>
+
+</form>

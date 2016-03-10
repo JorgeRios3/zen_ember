@@ -1,0 +1,128 @@
+<h2 class="text-info">Características de Vivienda</h2>
+			<div class="form-group">
+				<label for="idnumerosexteriores" class="control-label">Etapa</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value='0' action=(action "selectedEtapaAction") class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija etapa{{/x-option}}
+  							{{#each etapas as |item|}}
+  								{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+			
+			
+			{{#liquid-if cuantosInmueblesDisponibles use="toRight"}}
+				<div class="form-group">
+					<label class="control-label">Inmuebles Disponibles</label>
+					<div class="row">
+						<div class="col-xs-4 col-md-2">
+							<p class="form-control-static text text-info">{{cuantosInmueblesDisponibles}}</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="idmanzanas" class="control-label">Manzana</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=currentManzana action="seleccionaManzana" class="form-control form-control-inline"}}
+  								{{#x-option value='0'}}Elija manzana{{/x-option}}
+  								{{#each manzanasTramite as |item|}}
+  									{{#x-option value=item}}{{item.manzana}}{{/x-option}}
+								{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+		    	</div>
+	
+				{{#if departamento}}
+					<div class="form-group">
+						<label for="idnumerosexteriores" class="control-label">Numero Exterior</label>
+						<div class="row">
+							<div class="col-md-5">
+								{{#x-select value='0' action="numeroExteriorElegido" class="form-control form-control-inline"}}
+ 		 							{{#x-option value='0'}}Elija Número{{/x-option}}
+  									{{#each numerosExteriores as |item|}}
+  										{{#x-option value=item}}{{item}}{{/x-option}}
+									{{/each}}
+								{{/x-select}}
+							</div>
+						</div>
+		
+					</div>
+
+					<div class="form-group">
+						<label for="idnumerosinteriores" class="control-label">Numero Interior</label>
+						<div class="row">
+							<div class="col-md-5">
+								{{#x-select value=currentNumeroInterior action="numeroInteriorElegido" class="form-control form-control-inline"}}
+  									{{#x-option value='0'}}Elija Número{{/x-option}}
+  									{{#each numerosInteriores as |item|}}
+  										{{#x-option value=item}}{{item}}{{/x-option}}
+									{{/each}}
+								{{/x-select}}
+							</div>
+						</div>
+					</div>
+				{{/if}}
+
+				<div class="form-group">
+					<label for="idofertachoicelote" class="control-label">Lote</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=currentLoteElegido action="loteElegido" class="form-control form-control-inline"}}
+  								{{#if inmueble}}
+  									{{#x-option value=inmueble}}{{inmueble}}{{/x-option}}
+									{{#each sortedTodosDesc as |item|}}
+  										{{#x-option value=item}}{{item.lote}}{{/x-option}}
+									{{/each}}
+					
+								{{else}}
+  									{{#x-option value=0}}Elija Lote{{/x-option}}
+   									{{#each sortedTodosDesc as |item|}}
+  										{{#x-option value=item}}{{item.lote}}{{/x-option}}
+									{{/each}}
+                            
+  								{{/if}}			
+  							{{/x-select}}
+  						</div>
+  					</div>				
+				</div>
+
+				{{#if inmueble}}
+					<div class="form-group">		
+						<label for="idofertainmueble" class="control-label">Inmueble</label>
+						<div class="row">
+							<div class="col-xs-4 col-md-6">
+								<p class="form-control-static text text-info">{{inmueble}} &nbsp; {{domicilio}}</p>
+							</div>	
+						</div>	
+					</div>
+				{{/if}}
+
+				{{#if hayCaracteristicas}}
+					<div id="no-more-tables">
+						<table class="table table-bordered table-striped table-condensed cf">
+							<thead>
+							<tr>
+								<th>Descripcion</th>
+								<th>Cantidad</th>
+							</tr>
+							</thead>
+							<tbody>
+							{{#each carateristicasLista as |caracteristica|}}
+								<tr>
+									<td data-title="Descripcion">{{caracteristica.descripcion}}</td>
+									<td data-title="Cantidad" class="text-right">{{caracteristica.cantidad}}</td>
+								</tr>
+							{{/each}}
+							</tbody>
+						</table>
+					</div>
+					{{/if}}
+
+		{{/liquid-if }}
+		

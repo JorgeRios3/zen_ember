@@ -1,0 +1,120 @@
+<br><br>
+<div class="h3 text text-info">Trámites Consulta</div>
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Etapa</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value='0' action="selectedEtapaAction" class="form-control form-control-inline"}}
+					{{#x-option value='0'}}Elija etapa{{/x-option}}
+					{{#each etapas as |item|}}
+						{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+				{{/each}}
+			{{/x-select}}
+		</div>
+	</div>
+</div>
+{{#if etapaSeleccionada}}
+	<div class="checkbox">
+		<label>
+			{{input type="checkbox" name="todosLosTramite" checked=todosTramites }}Todos los trámites
+		</label>
+	</div>
+	<div class="form-group">
+		<label for="idnumerosexteriores" class="control-label">Tipo</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="selectedTipoAction" class="form-control form-control-inline"}}
+						{{#x-option value='0'}}Elija tipo{{/x-option}}
+						{{#each tipos as |item|}}
+							{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+
+	{{#if botonPedir}}
+		{{#if showComponent}}
+			{{impresion-reporte store=store reporte="tramites" parametro1="etapa" valorParametro1=etapaSeleccionada onlyEmail=true excel=true submit=(action 'togglePrinterComponent') cancel=(action 'togglePrinterComponent') }}
+			{{else}}
+				<div class="btn btn-info" {{action "togglePrinterComponent"}}>Imprimir reporte</div>
+		{{/if}}
+	{{/if}}
+	{{#unless todosTramites}}
+	<div class="form-group">
+	<label>Criterio</label>
+		<div class="row">	
+			<div class="col-md-5">
+			{{#x-select value=criterio action=(action (mut criterio)) class="form-control form-control-inline"}}
+				{{#each criterios as |c|}}
+					{{#x-option value=c.id}}{{c.descripcion}}{{/x-option}}
+				{{/each}}
+			{{/x-select}}
+			</div>
+		</div>
+	</div>
+	{{#if sePuede}}
+	<div class="text text-success">puedes escoger los tramites que quieras</div>
+	{{else}}
+	<div class="text text-warning">solo puedes ecoger un tramite</div>
+	{{/if}}
+	<div class="form-group">
+	<label>Elija trámite</label>
+		<div class="row">	
+			<div class="col-md-5">
+			{{ember-selectize
+				content=catalogoTramitesFiltrado
+				optionValuePath="content.id"
+				optionLabelPath="content.catDescrip"
+				placeholder="Todos"
+				value=selectedTramite
+			}}
+			</div>
+		</div>
+	</div>
+
+	{{#if tramitesSeleccionados}}
+	<div class="text text-info">Tramites Seleccionados</div>
+	<div>
+		{{#each tramitesSeleccionados as |tramite|}}
+			<ul {{action "quitarTramite" tramite}}>{{tramite.catDescrip}}</ul>
+		{{/each}}
+	</div>
+	{{#if tramiteEnLista}}	
+	  {{#modal-bs title="Ya tiene ese tramite en la Lista" ok="enteradoInspeccionarErrores"}}
+	  {{/modal-bs}}
+
+	{{/if}}
+	{{/if}}
+
+		{{#if tramitesSeleccionados.length}}
+			<div class="btn btn-info" {{action "pedir"}}>Consultar</div>
+		{{/if}}
+			{{#if noHayInmuebles}}
+			<br>
+				<div class="text text-warning">No hay inmuebles</div>
+			{{/if}}
+			<br><br><div><span class="badge badge-info">{{cuantosInmuebles}}</span></div><br>
+			<div id="no-more-tables">
+				<table class="table table-bordered table-striped table-condensed cf">
+						<thead>
+						<tr>
+							
+							{{#each seleccionados as |t|}}
+							<th>{{t}}</th>
+							{{/each}}
+						</tr>
+						</thead>
+						<tbody>
+							{{#each inmuebles as |inmueble|}}
+								{{bsz-row record=inmueble titleCols=seleccionados}}
+							{{/each}}
+						</tbody>
+				</table>
+			</div>
+			{{#each encabezadoColumnas as |t|}}
+				<div>{{t.tramite}}{{t.descripcion}}</div>
+			{{/each}}
+	{{/unless}}
+{{/if}}
+

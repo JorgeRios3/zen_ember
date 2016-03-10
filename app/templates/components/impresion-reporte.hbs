@@ -1,0 +1,111 @@
+		{{#if hayCorreo}}
+			{{#unless sinParametro}}
+				{{#if onlyEmail}}
+				{{else}}
+					<div class="form-group">
+		
+				<label for="parametro1" class="control-label">{{labelParametro1}}</label>	
+				<div class="row">
+					<div class="col-xs-6 col-md-3">
+						{{input type="text" value=valorParametro1 class="form-control" placeholder=placeholderParametro1 maxlength="11" id="parametro1"}}
+					</div>	
+				</div>
+			</div>
+				{{/if}}
+			{{/unless}}
+			{{#if esVisible}}
+				<div class="text-info">Impresión</div>
+				<table class="table table-bordered table-striped table-condensed cf">
+					<thead>
+					<tr>
+						<th>Documento</th><th>Copias</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td data-title="Documento">{{reporte}}</td>
+							<td data-title="Copias">
+								<div class="row">
+									<div class="col-xs-8 col-md-3">
+										{{input type="number" value=copias min="1" max="3"}}
+									</div>
+								</div>
+							</td>
+						</tr>
+						
+						<tr>
+							<td data-title="Documento">
+								<div class="checkbox">
+									<label>
+										{{input type="checkbox" name="enviarEmail" checked=enviarEmail }}Enviar Correo a {{emailaddress}}
+									</label>
+								</div>
+							</td>
+							<td data-title="Copias">
+								<div>
+								</div>
+							</td>
+						</tr>
+						{{#if enviarEmail}}
+							<tr>
+							<td data-title="Documento">
+								<div class="checkbox">
+									<label>
+										{{input type="checkbox" name="soloEmail" checked=soloEmail }}Solo Correo
+									</label>
+								</div>
+							</td>
+							<td data-title="Copias">
+								<div>
+								</div>
+							</td>
+							</tr>
+							{{#if excel}}
+							<tr>
+							<td data-title="Documento">
+								<div class="checkbox">
+									<label>
+										{{input type="checkbox" name="getExcel" checked=getExcel }}Generar Excel Tambien
+									</label>
+								</div>
+							</td>
+							<td data-title="Copias">
+								<div>
+								</div>
+							</td>
+							</tr>
+							{{/if}}
+						{{/if}}
+						{{#unless soloEmail}}
+						{{#each impresoras.content as |impresora indice|}}
+							{{#if impresora.elegible }}
+							<tr>
+							<td data-title="Documento">
+								<div>
+									<a action href="" {{action 'elegirImpresora' indice }}>
+										<span class="glyphicon glyphicon-{{if impresora.chosen 'plus' 'minus'}}"></span>
+									</a>
+									{{impresora.nombre}}
+								</div>
+							</td>
+							<td data-title="Copias">
+								<div>
+								</div>
+							</td>
+							</tr>
+							{{/if}}
+						{{/each}}
+						{{/unless}}	
+						
+					</tbody>
+				</table>
+	  			<button class="btn btn-primary {{if botonHabilitado '' 'disabled'}}" {{action 'imprimir'}}>Imprimir</button>
+	  			<button class="btn btn-warning {{if botonHabilitado '' 'disabled'}}" {{action 'cancelar'}}>Cancelar</button>
+	  			{{/if}}
+	  	{{else}}
+	  				<div class="alert alert-warning">
+  						<a class="close" data-dismiss="alert" href="#">x</a>
+  						<p><h3>No existe correo</h3></p>
+  						<p>necesita dar de alta su correo en la opcion de impresoras, para poder utilizar la impresion y envio a correo del reporte</p> 
+        			</div>
+	  	{{/if}}

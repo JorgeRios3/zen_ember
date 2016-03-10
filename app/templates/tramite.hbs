@@ -1,0 +1,369 @@
+
+	<h2 class="text-info">Trámites</h2>
+		{{#unless siHayInmuebleFiltrado}}
+			<div class="alert alert-danger">
+  				<a class="close" data-dismiss="alert" href="#">x</a>
+  				<p>
+           		 <strong>no hay inmuebles en esta manzana con el tramite seleccionado</strong>
+  				</p> 
+        </div>
+		{{/unless}}
+			<div class="form-group">
+				<label for="idnumerosexteriores" class="control-label">Etapa</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value='0' action="selectedEtapaAction" class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija etapa{{/x-option}}
+  							{{#each etapas as |item|}}
+  								{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Elija Tramite</label>
+					<div class="row">	
+						<div class="col-md-5">
+						{{ember-selectize
+							content=catalogoTramites
+							optionValuePath="content.id"
+							optionLabelPath="content.catDescrip"
+							placeholder="Todos"
+							value=selectedTramite
+						}}
+						</div>
+					</div>
+			</div>
+			{{#if isManzanaFiltrado}}
+				<div class="form-group">
+					<label for="idmanzanas" class="control-label">Manzana</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value='0' action="selectedManzanaFiltrado" class="form-control form-control-inline" id="x-manzana-filtrado"}}
+  								{{#x-option value='0'}}Elija manzana{{/x-option}}
+  								{{#each manzanasTramite as |item|}}
+  									{{#x-option value=item.manzana}}{{item.manzana}}{{/x-option}}
+								{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+		    	</div>
+
+		    	
+		    	{{#if siHayInmuebleFiltrado}}
+		    		<div class="form-group">
+						<label for="idlotefiltrado" class="control-label">Lote Filtrado</label>
+						<div class="row">
+							<div class="col-md-5">
+								{{#x-select value="0" action="loteElegido" class="form-control form-control-inline" id="x-lote-filtrado"}}
+  									{{#x-option value='0'}}inmueble filtrado{{/x-option}}
+									{{#each sortedTodosDesc as |item|}}
+  											{{#x-option value=item.lote}}{{item.lote}}{{/x-option}}
+									{{/each}}
+  								{{/x-select}}
+  								</div>
+  								</div>				
+					</div>
+		    	{{/if}} 
+		    {{else}}
+			{{#liquid-if cuantosInmueblesDisponibles use="toRight"}}
+				<div class="form-group">
+					<label class="control-label">Inmuebles Disponibles</label>
+					<div class="row">
+						<div class="col-xs-4 col-md-2">
+							<p class="form-control-static text text-info">{{cuantosInmueblesDisponibles}}</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="idmanzanas" class="control-label">Manzana</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value='0' action="selectedManzana" class="form-control form-control-inline" }}
+  								{{#x-option value='0'}}Elija manzana{{/x-option}}
+  								{{#each manzanasTramite as |item|}}
+  									{{#x-option value=item.manzana}}{{item.manzana}}{{/x-option}}
+								{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+		    	</div>
+	
+				{{#if departamento}}
+					<div class="form-group">
+						<label for="idnumerosexteriores" class="control-label">Numero Exterior</label>
+						<div class="row">
+							<div class="col-md-5">
+								{{#x-select value='0' action="numeroExteriorElegido" class="form-control form-control-inline" id="x-exterior"}}
+ 		 							{{#x-option value='0'}}Elija Número{{/x-option}}
+  									{{#each numerosExteriores as |item|}}
+  										{{#x-option value=item}}{{item}}{{/x-option}}
+									{{/each}}
+								{{/x-select}}
+							</div>
+						</div>
+		
+					</div>
+
+					<div class="form-group">
+						<label for="idnumerosinteriores" class="control-label">Numero Interior</label>
+						<div class="row">
+							<div class="col-md-5">
+								{{#x-select value='0' action="numeroInteriorElegido" class="form-control form-control-inline" id="x-interior"}}
+  									{{#x-option value='0'}}Elija Número{{/x-option}}
+  									{{#each numerosInteriores as |item|}}
+  										{{#x-option value=item}}{{item}}{{/x-option}}
+									{{/each}}
+								{{/x-select}}
+							</div>
+						</div>
+					</div>
+				{{/if}}
+
+				<div class="form-group">
+					<label for="idofertachoicelote" class="control-label">Lote</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value='0' action="loteElegido" class="form-control form-control-inline" id="x-inmueble"}}
+  								{{#if inmueble}}
+  									{{#x-option value="0"}}{{inmueble}}{{/x-option}}
+									{{#each sortedTodosDesc as |item|}}
+  										{{#x-option value=item.lote}}{{item.lote}}{{/x-option}}
+									{{/each}}
+					
+								{{else}}
+  									{{#x-option value='0'}}Elija Lote{{/x-option}}
+   									{{#each sortedTodosDesc as |item|}}
+  										{{#x-option value=item.lote}}{{item.lote}}{{/x-option}}
+									{{/each}}
+                            
+  								{{/if}}			
+  							{{/x-select}}
+  						</div>
+  					</div>				
+				</div>
+
+
+		{{/liquid-if }}
+		{{/if}}
+		{{#if inmueble}}
+					<div class="form-group">		
+						<label for="idofertainmueble" class="control-label">Inmueble</label>
+						<div class="row">
+							<div class="col-xs-4 col-md-6">
+								<p class="form-control-static text text-info">{{inmueble}} &nbsp; {{domicilio}}</p>
+							</div>	
+						</div>	
+					</div>
+					<br>
+					<div class="btn btn-info" {{action "abreCatalogoTramite"}}>Agrega Tramite</div>
+		{{#if agregarTramite}}
+			<div class="form-group">
+				<br>
+						<label for="idnumerosinteriores" class="control-label">tramite</label>
+						<div class="row">
+							<div class="col-md-5">
+								{{#x-select value='0' action="agregaTramiteSelect" class="form-control form-control-inline"}}
+  									{{#x-option value='0'}}Elija Tramite{{/x-option}}
+  									{{#each catalogoTramitePorAgregarFiltrado  as |item|}}
+  										{{#x-option value=item}}{{item.id}} {{item.descripcion}}{{/x-option}}
+									{{/each}}
+								{{/x-select}}
+							</div>
+						</div>
+					</div>
+
+		{{/if}}
+				{{/if}}
+	
+
+			{{#if mostrarTabla}}
+			<table class="table table-bordered table-striped table-condensed cf">
+			<thead>
+				<tr>
+					<th>Sel</th>
+					<th>Tramite</th>
+					<th>Descripcion</th>
+					<th>Fecha Inicial</th>
+					<th>Fecha Inicio</th>
+    				<th>Fecha Est Entrega</th>  
+    				<th>Fecha Real Entrega</th>
+   		 			<th>Fecha Vencimiento</th>
+   		 			<th>Origen</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each tramitesLista as |t|}}
+			<tr>
+				<td data-title="Sel">
+					{{#valores-iguales valor1=selectedTramite valor2=t.tramite }}<span class="glyphicon glyphicon-check"></span>{{/valores-iguales}}
+			    </td>
+				<td data-title="Tramite">
+					{{link-autorizado hacer=(action "seleccionar") tramites=tramites tramite=t.tramite idtramite=t.id}}
+					
+					{{!link-to 'Lo que se ve' 'ruta'}}
+				</td>
+				<td data-title="Descripcion">
+					{{t.descripcion}}
+					
+				</td>
+				<td data-title="Fecha Inicial">
+					{{t.fechaInicial}}
+				</td>
+				<td data-title="Fecha Inicio">
+					{{t.fechaInicio}}
+				</td>
+				<td data-title="Fecha Est Entrega">
+					{{t.fechaEstEntrega}}
+				</td>
+				<td data-title="Fecha Real Entrega">
+					{{t.fechaRealEntrega}}
+				</td>
+				<td data-title="Fecha Vencimiento">
+					{{t.fechaVencimiento}}
+				</td>
+				<td data-title="Origen">{{t.origen}}</td>
+			</tr>
+			{{/each}}
+			</tbody>
+		</table>
+			{{/if}}
+		
+		{{#liquid-if muestraZonaCaptura use="toLeft"}}
+				<div class="h3 text text-info">{{descripcionTramite}}</div>
+				{{repite-html vueltas=5}}
+                {{#if isGestion}}
+					<div class="form-group">
+						<label class="control-label">Fecha Inicio</label>
+						<div class="row">
+							<div class="col-xs-10 col-md-3">
+            					{{bs-datetimepicker date=nullFechaInicio 
+            					updateDate=(action (mut fechaInicio)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
+            				</div>
+            			</div>
+        			</div>
+
+                	
+					<div class="form-group">
+						<label for="datewidget" class="control-label">Fecha Est. Entrega</label>
+						<div class="row">
+							<div class="col-xs-10 col-md-3">
+            					{{bs-datetimepicker date=nullfechaEstEntrega updateDate=(action (mut fechaEstEntrega)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
+            				</div>
+            			</div>
+        			</div>
+
+					<div class="form-group">
+						<label for="datewidget" class="control-label">Fecha Real Entrega</label>
+						<div class="row">
+							<div class="col-xs-10 col-md-3">
+            					{{bs-datetimepicker date=nullfechaRealEntrega updateDate=(action (mut fechaRealEntrega)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
+            				</div>
+            			</div>
+        			</div>
+
+					<div class="form-group">
+						<label for="datewidget" class="control-label">Fecha Vencimiento</label>
+						<div class="row">
+							<div class="col-xs-10 col-md-3">
+            					{{bs-datetimepicker date=nullfechaVencimiento updateDate=(action (mut fechaVencimiento)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
+            				</div>
+            			</div>
+        			</div>
+
+        			{{else}}
+				<div class="form-group">
+					<label for="datewidget" class="control-label">Fecha Inicial</label>
+					<div class="row">
+						<div class="col-xs-10 col-md-3">
+            				{{bs-datetimepicker date=nullfechaInicial updateDate=(action (mut fechaInicial)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" }}
+            			</div>
+
+            			{{#if fechaInicial}}
+							<div class="checkbox col-xs-10 col-md-3">
+								<label>
+									{{input type="checkbox" name="limpiarFecha" checked=limpiarFecha }}Limpiar Fecha
+								</label>
+							</div>
+						{{/if}}
+					</div>
+				</div>
+        			
+
+					
+
+
+        			<div class="form-group">
+          			<label for="numcredito">Numero de Credito</label>
+          			<div class="row">
+            			<div class="col-xs-10 col-md-4">
+            				{{input id='numcredito' placeholder='Digite numero de credito' class='form-control' value=numeroCredito}}
+            	    	</div>
+                        {{thumb-updown value=bnumeroCredito}}
+            	      
+            	    </div>  	   
+            	</div>
+
+            	<div class="form-group">
+          			<label for="monto">Monto</label>
+          			<div class="row">
+            			<div class="col-xs-10 col-md-4">
+            				{{input id='monto' placeholder='Digite Monto' class='form-control' value=montoCredito}}         			
+            			</div>
+            			{{thumb-updown value=bmontoCredito}}
+          			</div>
+        		</div>
+
+				<div class="form-group">
+          			<label for="montosubsidio">Monto Subsidio</label>
+          			<div class="row">
+            			<div class="col-xs-10 col-md-4">
+            				{{input id='montosubsidio' placeholder='Digite Monto Subsidio' class='form-control' value=montoSubsidio}}
+            			</div>
+            			{{thumb-updown value=bmontoSubsidio}}
+          			</div>
+        		</div>
+
+				<div class="form-group">
+          			<label for="comentario">Comentario</label>
+          			<div class="row">
+            			<div class="col-xs-10 col-md-4">
+            				{{input id='comentario' placeholder='Digite Comentario' class='form-control' value=comentario}}
+            			</div>
+          			</div>
+        		</div>
+
+        		<!--{{/if}}
+        		     {{#if esGrabable}}
+        		     <br><br><br><br><br><br>
+        			<div class="form-group">
+						<button class="btn btn-large btn-info" {{action 'grabar' tramiteConsiderado}}>Grabar</button>
+        			</div>
+        		{{/if}}-->	
+        		<br><br><br><br><br><br>
+        			<p>
+						<button class="btn btn-lg btn-info" {{action 'grabar' tramiteConsiderado}}>Grabar</button>
+						<button class="btn btn-lg btn-warning" {{action 'cancelar'}}>Cancelar</button>
+						{{#if isGestion}}
+						<button class="btn btn-lg btn-danger" {{action "eliminar"}}>Eliminar</button>
+						{{/if}}
+					
+					</p>
+        {{/liquid-if}}
+
+	  	{{#if huboErrorAlGrabar}}
+  			{{#modal-bs title="Hubo Error al Grabarse el tramite" ok="enteradoHuboErrorAlGrabar" close="enteradoHuboErrorAlGrabar"}}
+   					No pudo grabarse el tramite. {{error}} 
+   				<br>
+   				<div class="text-danger">	
+   				</div>
+  			{{/modal-bs}}
+
+		{{/if}}
+    
+
+		
+
+

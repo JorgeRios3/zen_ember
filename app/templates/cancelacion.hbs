@@ -1,0 +1,267 @@
+<h2 class="text-info">Cancelaciones</h2>
+	<div class="form-group">
+		<label for="etapas" class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="selectedEtapa" class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija etapa{{/x-option}}
+		  			{{#each etapas as |item|}}
+		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclientenombre" class="control-label">Nombre</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idclientenombre" class="text-uppercase" }}
+			</div>
+			<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+		</div>
+	</div>
+	{{#if cuantos}}
+		{{#if maximo}}
+			<div class="h3 text text-success">hay {{cuantos}} clientes</div>
+			<div class="form-group">
+			<label>Elija Nombre</label>
+				<div class="row">	
+				<div class="col-md-8">
+					{{ember-selectize
+						content=catalogoNombres
+						optionValuePath="content.cuenta"
+						optionLabelPath="content.nombre"
+						placeholder="Todos"
+						value=selectedNombre
+					}}
+				</div>
+				</div>
+			</div>
+
+			{{else}}
+			<div class="h3 text text-warning">hay {{cuantos}} clientes la lista es muy larga intenta filtrar mas el nombre </div>
+		{{/if}}
+	{{/if}}
+
+	<div class="form-group">
+		<label class="control-label">Manzana</label>
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<p class="form-control-static text text-info">{{manzana}}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label">Lote</label>
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<p class="form-control-static text text-info">{{lote}}</p>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label">Cuenta</label>
+		<div class="row">
+			<div class="col-xs-4 col-md-2">
+				<p class="form-control-static text text-info">{{cuenta}}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="checkbox">
+			<label>
+				{{input type="checkbox" name="conDevolucion" checked=conDevolucion }}Con Devolucion ?
+			</label>
+		</div>
+	</div>
+    
+	<div class="checkbox">
+		<label>
+			{{input type="checkbox" name="genSolicitudChq" checked=genSolicitudChq }}Generar Solicitud de Cheque ?
+		</label>
+	</div>
+	
+	<div class="checkbox">
+		<label>
+			{{input type="checkbox" name="reactivable" checked=reactivable }}Reactivable ?
+		</label>
+	</div>
+
+
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				<th>Sel</th>
+                <th>Documento</th>
+				<th>Descripcion</th>
+				<th>Cargo</th>
+				<th>Abono</th>
+				<th>Saldo</th>
+				<th>Fecha</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each docsCliente as |t|}}
+			<tr>
+
+				<td data-title="Sel">
+					{{#if t.elegido}}
+						<span class="glyphicon glyphicon-check"></span>
+						{{else}}
+						<span></span>
+					{{/if}}
+			    </td>
+                <td data-title="Documento">
+					<a href="" {{ action 'procesaDocumento' t.id t.abono }}>{{t.id}}</a>
+				</td>
+				<td data-title="Descripcion">
+					{{t.descripcion}}
+				</td>
+				<td data-title="Cargo" class="text-right">
+					{{t.cargo}}
+				</td>
+				<td data-title="Abono" class="text-right">
+					{{t.abono}}
+				</td>
+				<td data-title="Saldo" class="text-right">
+					{{t.saldo}}
+				</td>
+				<td data-title="Fecha">
+					{{t.fecha}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	<div class="text-info">Abonos seleccionados: {{abonos}}</div>
+	{{#if isValid }}
+		{{#unless muestraOpcionesImpresion }}
+			<button class="btn btn-lg btn-warning" {{action 'cancelar'}}>Cancelar</button>
+		{{/unless}}
+	{{else}}
+		<button class="btn btn-danger" {{action 'revisarErrores'}}>Revisar</button>
+		{{#if muestroErrores}}
+			{{#modal-bs title="Errores antes de poder grabar" close="enteradoInspeccionarErrores"}}
+   				<ul>
+   					{{#each erroresHabidos.content as |err|}}
+   						<li>{{if err.campo err.campo err.variable}}&nbsp;-&nbsp;{{err.mensaje}}</li>
+   					{{/each}}
+   				</ul>
+  			{{/modal-bs}}
+		{{/if}} 
+	{{/if}}
+
+	{{#if muestraOpcionesImpresion }}
+		<div class="text-info">Documentos para imprimir:</div>
+		<table class="table table-bordered table-striped table-condensed cf">
+			<thead>
+				<tr>
+					<th>Documento</th><th>Copias</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td data-title="Documento">Documentos Cliente</td>
+					<td data-title="Copias">
+						<div class="row">
+							<div class="col-xs-8 col-md-3">
+								{{input type="number" value=copiasDocsCliente min="1" max="3"}}
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td data-title="Documento">Cancelacion</td>
+					<td data-title="Copias">
+						<div class="row">
+							<div class="col-xs-8 col-md-3">
+								{{input type="number" value=copiasCancelacion min="1" max="3"}}
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td data-title="Documento">
+						<div class="checkbox">
+							<label>
+								{{input type="checkbox" name="enviarEmail" checked=enviarEmail }}Enviar Correo a {{emailaddress}}
+							</label>
+						</div>
+					</td>
+					<td data-title="Copias">
+						<div>
+						</div>
+					</td>
+				</tr>
+				{{#if enviarEmail}}
+					<tr>
+					<td data-title="Documento">
+						<div class="checkbox">
+							<label>
+								{{input type="checkbox" name="soloEmail" checked=soloEmail }}Solo Correo
+							</label>
+						</div>
+					</td>
+					<td data-title="Copias">
+						<div>
+						</div>
+					</td>
+					</tr>
+				{{/if}}
+				{{#unless soloEmail}}
+				{{#each impresoras.content as |impresora indice|}}
+					{{#if impresora.elegible }}
+					<tr>
+					<td data-title="Documento">
+						<div>
+							<a action href="" {{action 'elegirImpresora' indice }}>
+								<span class="glyphicon glyphicon-{{if impresora.chosen 'plus' 'minus'}}"></span>
+							</a>
+							{{impresora.nombre}}
+						</div>
+					</td>
+					<td data-title="Copias">
+						<div>
+						</div>
+					</td>
+					</tr>
+					{{/if}}
+				{{/each}}
+				{{/unless}}	
+						
+			</tbody>
+		</table>
+	  	<button class="btn btn-{{if isValid 'success' 'danger'}}" {{action 'imprimir'}}>Imprimir</button>
+	{{/if}}
+
+	<br><br><br>
+	
+
+	{{#if huboErrorAlGrabar}}
+  		{{#modal-bs title="Hubo Error al Grabarse al cancelar" ok="enteradoHuboErrorAlGrabar" close="enteradoHuboErrorAlGrabar"}}
+   					 {{error}}  
+   			<br>
+   			<div class="text-danger"></div>
+  		{{/modal-bs}}
+	{{/if}}
+
+	{{#if huboErrorAlImprimir}}
+  		{{#modal-bs title="Hubo Error al imprimir documentos" ok="enteradoHuboErrorAlImprimir" close="enteradoHuboErrorAlImprimir"}}
+   					No se pudo cancelar.  
+   			<br>
+   			<div class="text-danger"></div>
+  		{{/modal-bs}}
+	{{/if}}
+
+	{{#if huboErrorAlImprimir1}}
+  		{{#modal-bs title="Hubo Error al imprimir la cancelacion" ok="enteradoHuboErrorAlImprimir1" close="enteradoHuboErrorAlImprimir1"}}
+   					No se pudo cancelar.  
+   			<br>
+   			<div class="text-danger"></div>
+  		{{/modal-bs}}
+	{{/if}}
+
+

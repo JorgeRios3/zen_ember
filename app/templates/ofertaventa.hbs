@@ -1,0 +1,140 @@
+<h2 class="text text-info">Ofertas Compra</h2>
+<div class="form-group">
+		<label for="etapas" class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="seleccionaEtapa" class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija etapa{{/x-option}}
+		  			{{#each etapas as |item|}}
+		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+</div>
+<div class="form-group">
+		<label for="etapas" class="control-label">Gerente</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="seleccionaGerente" class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija Gerente{{/x-option}}
+		  			{{#each gerentes as |item|}}
+		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+</div>
+<div class="form-group">
+	<label for="datewidget" class="control-label">Fecha Inicio Oferta</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+			{{bs-datetimepicker date=fechaInicialnull showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaInicial))}}
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label for="datewidget" class="control-label">Fecha Termino Oferta</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+			{{bs-datetimepicker date=fechaFinalnull showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaFinal))}}
+		</div>
+	</div>
+</div>
+{{#if limpiaFechas}}
+	<button type="button" class="btn btn-link" {{action "limpiarFechas"}}>Limpia Fechas</button>
+{{/if}}
+
+<div class="form-group">
+		<label for="etapas" class="control-label">Estatus</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="seleccionaEstatus" class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija Estatus{{/x-option}}
+		  			{{#each estatus as |item|}}
+		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+</div>
+<div class="form-group">
+		<label for="etapas" class="control-label">Ordenado</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='0' action="seleccionaOrden" class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija Orden{{/x-option}}
+		  			{{#each ordenado as |item|}}
+		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+</div>
+<div class="btn btn-info" {{action "pedir"}}>pedir</div>
+
+
+{{#if catalogo}}
+	{{#if muestraNavegacion}}
+		<h4 class="text text-danger">P&aacute;g. {{resultPage}} de {{resultPages}} Total a mostrar {{resultRowCountFormatted}}</h4>
+	{{/if}}
+	{{#if hayPagPrevias}}
+		<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}>Mostrar P&aacute;g. Previa</button>
+	{{/if}}
+	{{#if hayPagSiguientes}}
+		<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Mostrar P&aacute;g. Siguiente</button>
+	{{/if}}
+	<table  class="table table-bordered table-striped table-condensed cf">
+	<thead>
+		<tr>
+			<th>Oferta</th>
+			<th>Fecha Oferta</th>
+			<th>Etapa</th>
+			<th>Fecha Cancelacion</th>
+			<th>Nombre Cliente</th>
+			<th>Telefono</th>
+			<th>Gerente</th>
+			<th>Vendedor</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each catalogo as |r|}}
+		<tr>
+			<td data-title="Oferta">
+				{{r.oferta}}
+			</td>
+			<td data-title="Fecha Oferta">
+				{{r.fecha_oferta}}
+			</td>
+			<td data-title="Etapa">
+				{{r.etapa}}
+			</td>
+			<td data-title="Fecha Cancelacion">
+				{{r.fecha_cancelacion}}
+			</td>
+			<td data-title="Nombre Cliente">
+				{{r.nombre_cliente}}
+			</td>
+			<td data-title="Telefono">
+				{{r.telefono}}
+			</td>
+			<td data-title="Gerente">
+				{{r.nombre_gerente}}
+			</td>
+			<td data-title="Vendedor">
+				{{r.nombre_subvendedor}}
+			</td>
+
+		</tr>
+		{{/each}}
+		
+	</tbody>
+</table>
+	
+		{{#if showComponent}}
+			{{impresion-reporte store=store reporte="ofertaventa" parametro1="repparamsid" onlyEmail=true valorParametro1=metaRDB sinParametro=false  submit=(action 'togglePrinterComponent') cancel=(action 'togglePrinterComponent') }}
+		{{else}}
+			<div class="btn btn-info" {{action "togglePrinterComponent"}}>Imprimir Resumen</div>
+		{{/if}}
+
+{{/if}}

@@ -1,0 +1,152 @@
+{{#if tipoContenido}}
+<hr>
+<h4 class="text text-info">Resultado de la B&uacute;squeda</h4>
+<div id="no-more-tables">
+{{#if buscados.length}}
+    {{#if muestraNavegacion}}
+		<h4 class="text text-danger">P&aacute;g. {{resultPage}} de {{resultPages}} Total a mostrar {{resultRowCountFormatted}}</h4>
+	{{/if}}
+	{{#if hayPagPrevias}}
+		<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}>Mostrar P&aacute;g. Previa</button>
+	{{/if}}
+	{{#if hayPagSiguientes}}
+		<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Mostrar P&aacute;g. Siguiente</button>
+	{{/if}}
+<table  class="table table-bordered table-striped table-condensed cf">
+	<thead>
+		<tr>
+			<th>Num</th>
+			<th>Id</th>
+			<th>Apellido Pat</th>
+			<th>Apellido Mat</th>
+			<th>Nombre</th>
+			<th>Afiliacion</th>
+			<th>Fecha Alta</th>
+			<th>Fecha Cierre</th>
+			<th>Gerente</th>
+			<th>Vendedor</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each buscados as |p|}}
+		<tr>
+			<td data-title="Num">
+				{{p.numf}}
+			</td>
+			<td data-title="Id">
+				{{p.id}}
+			</td>
+			<td data-title="Apellido Pat">
+				{{p.apellidopaterno}}
+			</td>
+			<td data-title="Apellido Mat">
+				{{p.apellidomaterno}}
+			</td>
+			<td data-title="Nombre">
+				{{p.nombre}}
+			</td>
+			<td data-title="Afiliacion">
+				{{p.afiliacion}}
+			</td>
+			<td data-title="Fecha Alta">
+				{{p.fechaalta}}
+			</td>
+			<td data-title="Fecha Cierre">
+				{{p.fechacierre}}
+			</td>
+			<td data-title="Gerente">
+				{{p.gerente}}
+			</td>
+			<td data-title="Vendedor">
+				{{p.vendedor}}
+			</td>
+		</tr>
+		{{/each}}
+		
+	</tbody>
+</table>
+
+{{else}}
+{{#if huboEnBusqueda}}
+	{{else}}
+  {{spinkit-spinner}}
+{{/if}}
+<div class="h2 text text-success">No se encontraron resultados</div>
+{{/if}}
+</div>
+{{else}}
+<hr>
+<h4 class="text text-info">Recientes</h4>
+<div id="no-more-tables">
+{{#if recientes.length}}
+<table  class="table table-bordered table-striped table-condensed cf">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Apellido Pat</th>
+			<th>Apellido Mat</th>
+			<th>Nombre</th>
+			<th>Afiliacion</th>
+			<th>Fecha Alta</th>
+			<th>Gerente</th>
+			<th>Vendedor</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each recientes  as |r|}}
+		<tr>
+			<td data-title="Id">
+				{{#if copiable}}
+					{{r.id}}
+				{{else}}
+					{{r.id}}
+				{{/if}}
+			</td>
+			<td data-title="Apellido Pat">
+				{{r.apellidopaterno}}
+			</td>
+			<td data-title="Apellido Mat">
+				{{r.apellidomaterno}}
+			</td>
+			<td data-title="Nombre">
+				{{r.nombre}}
+			</td>
+			<td data-title="Afiliacion">
+				{{#if r.afiliacionvalida}}
+					<span class="glyphicon glyphicon-thumbs-up"></span>
+				{{else}}
+					<span class="glyphicon glyphicon-thumbs-down"></span>
+				{{/if}}
+				{{#if copiable}}
+					{{#unless r.vendido}}
+						<a href="" {{action 'copiarAfiliacion' r.afiliacion r.id}}>Copiar {{r.afiliacion}}</a>
+					{{else}}
+						{{r.afiliacion}}
+					{{/unless}}
+				{{else}}
+					{{r.afiliacion}}
+				{{/if}}
+			</td>
+			<td data-title="Fecha Alta">
+				{{r.fecha}}
+			</td>
+			<td data-title="Gerente">
+				{{r.gerente}}
+			</td>
+			<td data-title="Vendedor">
+				{{r.vendedor}}
+			</td>
+		</tr>
+		{{/each}}
+		
+	</tbody>
+</table>
+{{else}}
+{{#if huboEnBusqueda}}
+{{else}}
+{{spinkit-spinner}}
+{{/if}}
+<div class="h2 text text-success">No se encontraron resultados</div>
+{{/if}}
+</div>
+{{/if}}

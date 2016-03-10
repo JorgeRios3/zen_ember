@@ -1,0 +1,24 @@
+<h2 class="text-info">Cartera</h2>
+
+
+<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				<th>Descripcion</th>
+				<th>Importe</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each model as |p|}}
+			<tr>
+
+                <td data-title="Descripcion">
+					{{p.descripcion}}
+				</td>
+				<td data-title="Importe" class="text-right">
+					{{p.importeformateado}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>

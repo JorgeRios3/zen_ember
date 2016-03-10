@@ -1,0 +1,115 @@
+<hr>
+	<div class="text text-danger">Datos Cónyuge</div>
+	
+	<br>
+	<div class="form-group">
+		<label for="idclienteconyugenombre" class="control-label">Nombre Completo</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=conyugenombre class="form-control" placeholder="Nombre" id="idclienteconyugenombre"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclienteconyugerfc" class="control-label">RFC</label>
+		<div class="row">
+			<div class="col-xs-6 col-md-3">
+				{{input type="text" value=conyugerfc class="form-control" placeholder="Reg Fed Contrib" maxlength="13" id="idclienteconyugerfc"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclienteconyugecurp" class="control-label">CURP</label>
+		<div class="row">
+			<div class="col-xs-6 col-md-3">
+				{{input type="text" value=conyugecurp class="form-control" placeholder="Curp, registro nacional de poblaci&oacute;n" maxlength="18" id="idclienteconyugecurp"}}
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha de Nacimiento</label>
+		<div class="row">
+			<div class="col-xs-10 col-md-3">
+            	{{bs-datetimepicker date=nullconyugefechanacimiento showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut conyugefechanacimiento))}}
+        	</div>
+    	</div>
+	</div>
+
+	<div class="form-group">
+		<label for="idclienteconyugelugarnacimiento" class="control-label">Lugar de Nacimiento</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=conyugelugarnacimiento class="form-control" placeholder="Lugar de Nacimiento" id="idclienteconyugelugarnacimiento" maxlength="50"}}
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="idclienteconyugenacionalidad" class="control-label">Nacionalidad</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=conyugenacionalidad class="form-control" placeholder="Nacionalidad" id="idclienteconyugenacionalidad" maxlength="15"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+				<label class="control-label">Ocupación</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=conyugeocupacion action=(action  (mut conyugeocupacion)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Ocupación{{/x-option}}
+  							{{#each ocupaciones as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	{{#if hayHijos}}
+		
+		{{#each losHijos as |hijo|}}
+			<label>{{hijo.descripcion}}</label>&nbsp;<a href="" {{action 'removiendoHijo' hijo.timestamp }}><span class="glyphicon glyphicon-remove-sign"></span></a><br>
+		{{/each}}
+		
+	{{/if}}
+	{{#if agregarHijo}}
+
+		<div class="text text-danger">Agregando Hijo</div>
+		<br>
+		<div class="form-group">
+				<label class="control-label">Sexo</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=conyugehijossexo action=(action  (mut conyugehijossexo)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Sexo{{/x-option}}
+  							{{#each sexos as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		<div class="form-group">
+			<label for="idclienteconyugehijosanos" class="control-label">Edad Años</label>
+			<div class="row">
+				<div class="col-xs-4 col-md-3">
+					{{input type="text" value=conyugehijosanos class="form-control" placeholder="Años" id="idclienteconyugehijosanos"}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="idclienteconyugehijosmeses" class="control-label">Edad Meses</label>
+			<div class="row">
+				<div class="col-xs-4 col-md-3">
+					{{input type="text" value=conyugehijosmeses class="form-control" placeholder="Meses" id="idclienteconyugehijomeses"}}
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-info" {{action 'aceptandoHijo'}}>Ok</button>&nbsp;
+		<button class="btn btn-info" {{action 'cancelandoAgregarHijo'}}>Cancelar</button>
+	{{else}}
+		<br>
+		<label>Agregar Hijo</label>&nbsp;<a href="" {{action 'agregandoHijo'}}><span class="glyphicon glyphicon-plus-sign"></span></a>
+	{{/if}}
+<hr>

@@ -4,6 +4,17 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
+	'ember-bootstrap-datetimepicker': {
+		"importBootstrapCSS": true,
+		"importBootstrapJS": true,
+		"importBootstrapTheme": false
+	},
+	'ember-cli-selectize': {
+		'theme': 'bootstrap3'
+	},
+	fingerprint: {
+		prepend: 'https://s3.amazonaws.com/streams.grupoiclar.com/zeniclar/'
+	}
     // Add options here
   });
 

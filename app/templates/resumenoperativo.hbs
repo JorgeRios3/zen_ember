@@ -1,0 +1,48 @@
+<head>
+<style>
+ul#menu li {
+    display:inline;
+}
+</style>
+</head>
+{{repite-html value=3}}
+<h3 class="text-center text-info">Resumen Operativo</h3>
+<p class="text-center">{{fecha}}</p>
+<div id="no-more-tables">
+<table class="table table-bordered table-striped table-condensed cf">
+					<thead>
+					<tr>
+						<th>Cons</th>
+						<th>Tipo</th>
+						<th>Rubro</th>
+						<th>{{nombre1}}</th>
+						<th>{{nombre2}}</th>
+						<th>{{nombre3}}</th>
+						<th>{{nombre4}}</th>
+						<th>Total</th>
+						
+					</tr>
+					</thead>
+					<tbody>
+					{{#each data.content as |row i|}}
+						<tr>
+							<td data-title="Cons"><span class="text-right">{{esto-masuno value=i}}</span></td>
+							<td data-title="Tipo">{{row.tipo}}</td>
+							<td data-title="Rubro">{{row.titulo}}</td>
+							<td data-title="{{nombre1}}" class="text-right"><span class="text-right">{{row.etapa1}}</span></td>
+							<td data-title="{{nombre2}}" class="text-right">{{row.etapa2}}</td>
+							<td data-title="{{nombre3}}" class="text-right">{{row.etapa3}}</td>
+							<td data-title="{{nombre4}}" class="text-right">{{row.etapa4}}</td>
+							<td data-title="Total" class="text-right">{{row.total}}</td>
+							
+					
+						</tr>
+					{{/each}}
+					</tbody>
+</table>
+</div>
+				{{#if showComponent}}
+					{{impresion-reporte store=store reporte="resumen" parametro1="cliente" valorParametro1="" excel=true sinParametro=true submit=(action 'togglePrinterComponent') cancel=(action 'togglePrinterComponent') }}
+				{{else}}
+					<div class="btn btn-info" {{action "togglePrinterComponent"}}>Imprimir Resumen</div>
+				{{/if}}

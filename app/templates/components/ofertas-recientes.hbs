@@ -1,0 +1,62 @@
+
+{{#if hayError}}
+	<div class="text-danger">Ofertas Recientes no se pudieron cargar</div>
+{{else}}
+	{{#if etapa}}
+		
+		{{#if datos.length}}
+			<div class="text-info">Ofertas Recientes</div>
+			{{#if mostrarDatos}}
+				<a href="" {{action "ocultar"}}>Ocultar</a>
+				<div id="no-more-tables">
+				<table class="table table-bordered table-striped table-condensed cf">
+					<thead>
+					<tr>
+						{{#if dameTodos}}
+							<th>Cons</th>
+							<th>Etapa</th>
+
+						{{/if}}
+						<th>Oferta</th>
+						<th>Fecha</th>
+						<th>Cliente</th>
+						<th>Nombre</th>
+						<th>Cuenta</th>
+						<th>Manzana</th>
+						<th>Lote</th>
+						<th>Saldo</th>
+					</tr>
+					</thead>
+					<tbody>
+					{{#each datos as |oferta i|}}
+						<tr>
+						{{#if dameTodos}}
+							<td data-title="Cons">{{esto-masuno value=i}}</td>
+							<td data-title="Etapa">{{oferta.etapa}}</td>
+
+						{{/if}}
+							{{#if asignacion}}
+								<td data-title="Oferta"><a href="" {{action 'seleccionar' oferta}}>{{oferta.oferta}} </a></td>
+							{{else}}
+								<td data-title="Oferta">{{oferta.oferta}}</td>
+							{{/if}}
+							<td data-title="Fecha">{{oferta.fecha}}</td>
+							<td data-title="Cliente">{{oferta.cliente}}</td>
+							<td data-title="Nombre">{{oferta.nombrecliente}}</td>
+							<td data-title="Cuenta">{{oferta.cuenta}}</td>
+							<td data-title="Manzana">{{oferta.manzana}}</td>
+							<td data-title="Lote">{{oferta.lote}}</td>
+							<td data-title="Saldo" class="text-right">{{oferta.saldoformateado}}</td>
+					
+						</tr>
+					{{/each}}
+					</tbody>
+				</table>
+				</div>
+			{{else}}
+				<a href="" {{action "mostrar"}}>Mostrar</a>
+			{{/if}}
+		{{/if}}
+	{{/if}}
+{{/if}}
+

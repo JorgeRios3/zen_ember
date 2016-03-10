@@ -1,0 +1,95 @@
+{{#unless refreshing}}
+<h3 class="text text-info text-center">Impresoras</h3>
+<div id="no-more-tables">
+<table class="table table-bordered table-striped table-condensed cf">
+
+<thead>
+<tr>
+	<th>Dispositivo</th>
+	<th>Asignacion </th>
+	<th>Timestamp</th>
+	<th>Estatus</th>
+</tr>	
+</thead>	
+<tbody>
+{{#each content key="@identity" as |c|}}
+<tr>
+	<td data-title="Dispositivo">{{c.name}}</td>
+	<td data-title="Asignacion">{{c.displayname}}</td>
+	<td data-title="Timestamp">{{c.timestamp}}</td>
+	<td data-title="Estatus">
+		{{#if c.online}}
+			<a href="" {{action "configurarImpresora" c.printerid }}><span class="glyphicon glyphicon-print"></span></a>
+			<span id={{printerid}}>
+				{{#if c.copies}}
+					<span class="badge badge-info">{{c.copies}}</span>
+				{{/if}}
+			</span>
+			
+		{{else}}
+			<span class="glyphicon glyphicon-off"></span>
+		{{/if}}
+		{{#if admin}}
+		<a href="" {{action "eliminar" c.printerid}}><span class="glyphicon glyphicon-remove-circle"></span></a>
+		{{/if}}
+		
+	</td>
+</tr>
+
+
+{{/each}}
+</tbody>
+</table>
+</div>
+
+<form class="form-inline">
+
+	<div class="form-group">
+			
+			    
+			    	
+						<label for="idemailuser">Email</label>
+					
+					
+					
+						{{input type="text" value=email class="form-control" placeholder="Email a donde enviar archivo"  id="idemailuser"}}
+				
+					
+				
+	</div>
+	<div class="form-group">
+				{{#if email}}
+				
+					<a href="" {{action 'limpiarEmail'}}><span class="glyphicon glyphicon-remove-circle"></span></a>
+					<button {{action 'probarEmail'}} class="btn btn-small btn-warning">Probar Email</button>
+				
+			    {{/if}}
+			   
+			    	<button {{action 'actualizarEmail'}} class="btn btn-small btn-info">Actualizar Email</button>
+                
+			
+    </div>
+			
+	
+</form>
+
+
+<!--<button {{ action 'refrescar' }} class="btn btn-default btn-info">Refrescar</button>-->
+	
+{{#if mostrarConfiguracion}}
+	<br/>
+	<button {{ action 'configura'  0}} class="btn btn-small btn-danger">X</button>
+	<button {{ action 'configura'  1}} class="btn btn-small btn-warning">1</button>
+	<button {{ action 'configura'  2}} class="btn btn-small btn-warning">2</button>
+	<button {{ action 'configura'  3}} class="btn btn-small btn-warning">3</button>
+	<button {{ action 'probar'  }} class="btn btn-small btn-info">P</button>
+
+{{else}}
+    <br/>
+	{{async-button action='refrescar' default=btnRefreshDefault pending=btnRefreshPending fulfilled=btnRefreshFulfilled rejected=bntRefreshRejected }}
+	{{#if admin}}<button {{action 'agregar'}}>Incorporar nuevas impresoras</button>{{/if}}
+
+{{/if}}
+{{else}}
+	{{spinkit-three-bounce}}
+{{/unless}}

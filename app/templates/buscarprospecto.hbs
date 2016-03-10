@@ -1,0 +1,226 @@
+<br><br>
+<h3>
+	<div class="row">
+		<span class="col-xs-8 col-md-4">Buscando Prospectos</span>
+		{{#link-to 'buscarprospecto'}}
+			<span class="glyphicon glyphicon-ok"></span>
+		{{/link-to }}
+		{{#link-to 'prospecto'}}
+			<span class="glyphicon glyphicon-pencil"></span>
+		{{/link-to }}
+	</div>
+</h3>
+{{#unless deboFiltrar}}
+
+	<button {{action 'filtrar'}} class="btn btn-warning">Filtrar</button>
+	{{#if copiable}}
+		<button class="btn btn-info btn-small" {{action 'recargarRecientes' '2' }}>Afiliación Cualquiera</button>
+		<button class="btn btn-info btn-small" {{action 'recargarRecientes' '1' }}>Afiliación Correcta</button>
+		<button class="btn btn-info btn-small" {{action 'recargarRecientes' '0' }}>Afiliación Inválida</button>
+	{{/if}}
+	{{partial "partialbuscarprospecto"}}
+
+{{/unless}}
+
+{{#if deboFiltrar}}
+	{{#unless criterioindividual}}
+		<button {{action 'mostrar'}} class="btn btn-primary" style="margin: 5px;">Muestra Resultado </button>
+	{{/unless}}
+{{#if cuantosBusqueda}}
+	{{#unless criterioindividual}}
+		<h3 style="{{searchStyle}}">
+			{{cuantosBusqueda}}&nbsp;{{a-letras valor=cuantosBusqueda}}
+		</h3>
+	{{/unless}}
+{{/if}}
+<br><br>
+<form role="form">
+	<div class="checkbox">
+		<label>
+		
+		{{input type="checkbox" name="criterioindividual" checked=criterioindividual}}
+		Para usar un criterio individual palomee
+		</label>
+	</div>
+	{{#if criterioindividual}}
+		<div class="form-group">
+				<label class="control-label">criterio</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=criterioFiltro action=(action  (mut criterioFiltro)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Criterio{{/x-option}}
+  							{{#each criterios as |item|}}
+  								{{#x-option value=item.id}}{{item.criterio}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{#if criterioEsNumero}}
+			<div class="form-group">
+				<label for="idnumeroprospectobus" class="control-label">N&uacute;mero de Prospecto</label>
+				<div class="row">
+					<div class="col-xs-10 col-md-3">
+						{{input type="text" value=numeroprospecto class="form-control" placeholder="# Prospecto" id="idnumeroprospectobus"}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+		{{#if criterioEsNombre}}
+			<div class="form-group">
+				<label for="idnombrebus" class="control-label">Nombre</label>
+				<div class="row">
+					<div class="col-xs-11 col-md-7">
+						{{input type="text" value=nombreprospecto class="form-control" placeholder="Digite parte del nombre" id="idnombrebus"}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+		{{#if criterioEsAfiliacion}}
+			<div class="form-group">
+				<label for="idafiliacionbus" class="control-label">Afiliaci&oacute;n </label>
+				<div class="row">
+					<div class="col-xs-10 col-md-3">
+						{{input type="text" value=afiliacion class="form-control" placeholder="Afiliación al IMSS" maxlength="11" id="idafiliacionbus"}}
+					</div>
+					{{#if afiliacionOk}}
+						<span class="glyphicon glyphicon-thumbs-up"></span>
+					{{else}}
+						<span class="glyphicon glyphicon-thumbs-down"></span>
+					{{/if}}
+				</div>
+			</div>
+	
+		{{/if}}
+      	<button {{action 'mostrarCriterioIndividual'}} class="btn btn-info" style="margin: 5px;">Muestra Resultado</button>
+	{{else}}
+	<div class="form-group">
+				<label  class="control-label">Tipo de Resultado</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=tipoResultado action=(action  (mut tipoResultado)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Tipo Resultado{{/x-option}}
+  							{{#each tiposresultados as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	<div class="form-group">
+				<label class="control-label">Tipo de Fecha</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=tipoFecha action=(action  (mut tipoFecha)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Tipo Fecha{{/x-option}}
+  							{{#each tiposfechas as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	
+	{{#if tipoFecha}}
+    {{!date-widget label="Fecha Inicial" xtag="fechaInicial" action="getDateValue"}}
+	{{!date-widget label="Fecha Final" xtag="fechaFinal" action="getDateValue"}}
+	<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha Inicial</label>
+		<div class="row">
+			<div class="col-xs-10 col-md-3">
+            	{{bs-datetimepicker date=nullFechaInicial format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaInicial))}}
+        	</div>
+    	</div>
+	</div>
+	<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha Final</label>
+		<div class="row">
+			<div class="col-xs-10 col-md-3">
+            	{{bs-datetimepicker date=nullFechaFinal format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaFinal))}}
+        	</div>
+    	</div>
+	</div>
+		{{#if tipoFechaEsAlta}}
+			<div class="checkbox">
+				<label>
+				{{input type="checkbox" name="sincierre" checked=sincierre}}
+				Para elegir solo sin cierre palomee
+				</label>
+			</div>
+		{{/if}}
+	{{/if}}
+	<div class="form-group">
+				<label class="control-label">Cuenta</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=tipoCuenta action=(action  (mut tipoCuenta)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Cuenta{{/x-option}}
+  							{{#each tiposcuentas as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	
+	{{#if content.nombregerente}}
+	<div class="row">
+		<div class="col-xs-9 col-md-6">
+			<p class="bg-primary">Gerente : {{content.nombregerente}}</p>
+		</div>
+	</div>
+	<br/>
+	{{else}}
+
+	<div class="form-group">
+				<label class="control-label">Gerente de Ventas</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedGerente action=(action  (mut selectedGerente)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Gerente{{/x-option}}
+  							{{#each apGerentesventas as |item|}}
+  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	{{/if}}
+	{{#if content.nombrevendedor}}
+	<div class="row">
+		<div class="col-xs-9 col-md-6">
+			<p class="bg-primary">Vendedor : {{content.nombrevendedor}}</p>
+		</div>
+	</div>
+	<br/>
+	{{else}}
+	<div class="form-group">
+		{{!<label for="idvendedor" class="control-label">Vendedor</label>}}
+		<div class="row col-xs-9 col-md-6">
+			{{ember-selectize
+				content=misvendedores
+				optionValuePath="content.id"
+				optionLabelPath="content.nombre"
+				placeholder="Elija vendedor"
+				value=selectedVendedor
+			}}
+		</div>
+	</div>
+	{{/if}}
+	<br><br>
+	<div class="form-group">
+				<label class="control-label">Medio Publicitario de Contacto</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedMedio action=(action  (mut selectedMedio)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Medio Publicitario{{/x-option}}
+  							{{#each apMediospublicitarios as |item|}}
+  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	{{/if}}
+</form>
+{{/if}}

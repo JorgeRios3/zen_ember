@@ -1,0 +1,62 @@
+
+<div class="jumbotron">
+            <h2>Grupo Iclar</h2>
+            <p class="text-info">Calidad en Patrimonio Familiar </p>
+            <mark><small >{{if isInIclar '(En Corporativo)' '(Remoto)'}}&nbsp;{{hoyEs}}</small></mark>
+            
+            <br><br>
+            
+              {{#with gvCtrlr.content as |gv|}}
+                {{#if gv.gravatar}}
+                  {{gravatar-image emailhashed=gv.gravatar}}
+                {{else}}
+                  <div class="text text-info">Sin Gravatar</div>
+                {{/if}}
+              {{/with}}
+            <p class="text text-right">
+              {{usuario}} 
+              <a href="" {{action 'getOut'}} >
+                <span class="glyphicon glyphicon-log-out"></span></a>
+              </p>
+            <p>
+              <img src="/image/logosmall.jpg">
+            </p>
+</div>
+
+{{#if logoutPrompt}}
+  {{#modal-bs title="Que hago o que" ok="logoutConfirmation" close="removeModal"}}
+   Abandono la sesión?
+   {{!</form>}}
+  {{/modal-bs}}
+{{/if}}
+{{#if desktopOrJumbo}}
+<div class="row"> 
+  <p class="text-center"><div class="col-md-4">
+            {{ember-selectize
+              content=opcionesMenu
+              optionValuePath="content.id"
+              optionLabelPath="content.nombre"
+              placeholder="Todos"
+              value=selectedMenu
+            }}
+            </div>
+          </p>
+</div>
+{{/if}}
+<div class="row">
+  <hr id="hrIndex">
+</div>
+<div class="row">
+{{#each content as |opcion|}}
+  <div class="col-6 col-sm-6 col-lg-4">
+              <h2>{{title-formatter name=opcion showTitle=1}}</h2>
+              <p>
+                {{title-formatter name=opcion}}  
+              </p>
+              <p>
+                {{link-menu opcion=opcion}}
+          	  </p>
+  </div><!--/span-->
+{{/each}}
+
+</div><!--/row-->
