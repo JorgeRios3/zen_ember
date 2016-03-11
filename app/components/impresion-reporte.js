@@ -141,7 +141,7 @@ export default Ember.Component.extend({
           				var request_email = function( destino, archivo){
           					info('pidiendo enviar archivo por email', archivo);
                     let url_email = `/api/otro?email=${destino}&pdf=${archivo}`;
-                    if (get(that, "getExcel")){
+                    if (get(that, "excel")){
                       url_email=`${url_email}&xls=1`;
                     }
           					get(that, "ajax").request(url_email);
