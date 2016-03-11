@@ -231,7 +231,7 @@
 		</table>
 			{{/if}}
 		
-		{{#liquid-if muestraZonaCaptura use="toLeft"}}
+		{{#if muestraZonaCaptura use="toLeft"}}
 				<div class="h3 text text-info">{{descripcionTramite}}</div>
 				{{repite-html vueltas=5}}
                 {{#if isGestion}}
@@ -239,7 +239,7 @@
 						<label class="control-label">Fecha Inicio</label>
 						<div class="row">
 							<div class="col-xs-10 col-md-3">
-            					{{bs-datetimepicker date=nullFechaInicio 
+            					{{bs-datetimepicker date=fechaInicio 
             					updateDate=(action (mut fechaInicio)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
             				</div>
             			</div>
@@ -250,7 +250,7 @@
 						<label for="datewidget" class="control-label">Fecha Est. Entrega</label>
 						<div class="row">
 							<div class="col-xs-10 col-md-3">
-            					{{bs-datetimepicker date=nullfechaEstEntrega updateDate=(action (mut fechaEstEntrega)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
+            					{{bs-datetimepicker date=fechaEstEntrega updateDate=(action (mut fechaEstEntrega)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
             				</div>
             			</div>
         			</div>
@@ -259,7 +259,7 @@
 						<label for="datewidget" class="control-label">Fecha Real Entrega</label>
 						<div class="row">
 							<div class="col-xs-10 col-md-3">
-            					{{bs-datetimepicker date=nullfechaRealEntrega updateDate=(action (mut fechaRealEntrega)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
+            					{{bs-datetimepicker date=fechaRealEntrega updateDate=(action (mut fechaRealEntrega)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
             				</div>
             			</div>
         			</div>
@@ -268,7 +268,7 @@
 						<label for="datewidget" class="control-label">Fecha Vencimiento</label>
 						<div class="row">
 							<div class="col-xs-10 col-md-3">
-            					{{bs-datetimepicker date=nullfechaVencimiento updateDate=(action (mut fechaVencimiento)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
+            					{{bs-datetimepicker date=fechaVencimiento updateDate=(action (mut fechaVencimiento)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es"}}
             				</div>
             			</div>
         			</div>
@@ -278,7 +278,7 @@
 					<label for="datewidget" class="control-label">Fecha Inicial</label>
 					<div class="row">
 						<div class="col-xs-10 col-md-3">
-            				{{bs-datetimepicker date=nullfechaInicial updateDate=(action (mut fechaInicial)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" }}
+            				{{bs-datetimepicker date=fechaInicial updateDate=(action (mut fechaInicial)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" }}
             			</div>
 
             			{{#if fechaInicial}}
@@ -351,7 +351,7 @@
 						{{/if}}
 					
 					</p>
-        {{/liquid-if}}
+        {{/if}}
 
 	  	{{#if huboErrorAlGrabar}}
   			{{#modal-bs title="Hubo Error al Grabarse el tramite" ok="enteradoHuboErrorAlGrabar" close="enteradoHuboErrorAlGrabar"}}
