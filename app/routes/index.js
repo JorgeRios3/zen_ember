@@ -54,7 +54,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   geolocation: service(),
   beforeModel(transition) {
     this._super(transition);
-    let cl = get(get(this, "geolocation"), "currentLocation");
+    let cl = get(get(this, 'geolocation'), 'currentLocation');
     info(`bmodel currentLocation ${cl}`);
     this.controllerFor('index').setProperties({
       usuario: '',
@@ -85,18 +85,18 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     set(controller, 'opcionesLista', listaperfiles);
   },
   model() {
-    // let store = this.store;
-    this.store.unloadAll('zenusuario');
-    this.store.unloadAll('twofactor');
+    let { store } = this;
+    store.unloadAll('zenusuario');
+    store.unloadAll('twofactor');
     let c = this.controllerFor('index');
     let bootTime = get(c, 'bootTime');
-    //let requestLocation = get(c, 'tiempoTranscurrido').includes('seconds') || get(c, 'tiempoTranscurrido').includes('segundos');
-    let requestLocation = get(get(this,"geolocation"), "currentLocation") === null;
+    // let requestLocation = get(c, 'tiempoTranscurrido').includes('seconds') || get(c, 'tiempoTranscurrido').includes('segundos');
+    let requestLocation = get(get(this, 'geolocation'), 'currentLocation') === null;
     info('valor de requestLocation', get(c, 'tiempoTranscurrido'));
     let promises = {
-      zenusuario: this.store.find('zenusuario', 1),
-      twofactor: this.store.find('twofactor', 1),
-      gravatar: this.store.find('gravatar',1)
+      zenusuario: store.find('zenusuario', 1),
+      twofactor: store.find('twofactor', 1),
+      gravatar: store.find('gravatar', 1)
     };
     if (requestLocation) {
       promises.geolocation = get(this, 'geolocation').getLocation();
@@ -125,44 +125,45 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
 
   },
   profileHandler(perfil) {
-
-    if (perfil === 'vendedor') {
-      opciones = ['prospecto','inmueble'];
-    }
-    if (perfil === 'gerente') {
+    switch (perfil) {
+    case 'vendedor':
+      opciones = opciones = ['prospecto','inmueble'];
+      break;
+    case 'gerente':
       opciones = ['prospecto','inmueble', 'ofertaventa'];
-    }
-    if (perfil === 'direccioncomercial' || perfil === 'subdireccioncomercial') {
-      opciones = ['prospecto','oferta', 'cliente','tramite','resumenoperativo','inmueble','printers', 'estadocuenta', 'ofertaventa'];
-    }
-    if (perfil === 'comercial') {
-      opciones = ['prospecto','oferta', 'cliente','tramite','inmueble','printers', 'estadocuenta'];
-    }
-
-    if (perfil === 'especialcomercial') {
+      break;
+    case 'direccioncomercial':
+    case 'subdireccioncomercial':
+      opciones = ['prospecto','oferta','cliente','tramite','resumenoperativo','inmueble','printers', 'estadocuenta', 'ofertaventa'];
+      break;
+    case 'comercial':
+      opciones = ['prospecto', 'oferta', 'cliente','tramite','inmueble','printers', 'estadocuenta'];
+      break;
+    case 'especialcomercial':
       opciones = ['prospecto','oferta', 'cliente','tramite','inmueble','printers', 'estadocuenta', 'ofertaventa'];
-    }
-
-    if (perfil === 'auxiliarsubdireccion') {
+      break;
+    case 'auxiliarsubdireccion':
       opciones = ['mantenimientoprecios','desasignacion', 'tramite','resumenoperativo','inmueble','printers', 'estadocuenta'];
-    }
-
-    if (perfil === 'cobranza') {
-      opciones = [ 'tramite', 'mantenimientoprecios', 'resumenoperativo','inmueble','printers', 'estadocuenta'];
-    }
-    if (perfil === 'finanzas') {
+      break;
+    case 'cobranza':
+      opciones = ['tramite', 'mantenimientoprecios', 'resumenoperativo','inmueble','printers', 'estadocuenta'];
+      break;
+    case 'finanzas':
       opciones = ['mantenimientoprecios', 'tramite','resumenoperativo','inmueble','printers', 'estadocuenta'];
-    }
-    if (perfil === 'direccion' || perfil === 'presidencia') {
+      break;
+    case 'direccion':
+    case 'presidencia':
       opciones = ['resumenoperativo','printers'];
-    }
-    if (perfil === 'subdireccion') {
+      break;
+    case 'subdireccion':
       opciones = ['tramite','mantenimientoprecios','resumenoperativo','inmueble','printers', 'estadocuenta'];
-    }
-    if (perfil === '') {
+      break;
+    case '':
       opciones = ['printers'];
+      break;
     }
     return opciones;
+    
   },
   actions: {
     error(error) {
