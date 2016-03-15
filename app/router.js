@@ -41,6 +41,7 @@ Router.map(function() {
   this.route('ofertaventa');
   this.route('pagares');
   this.route('consultatramite');
+  this.route('ordenarmenu');
 });
 
 export default Router;

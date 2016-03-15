@@ -80,9 +80,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       hasTwoFactorAuthentication: get(model.twofactor, 'hasTwoFactorAuthentication'),
       isTwoFactorAuthenticated: get(model.twofactor, 'isTwoFactorAuthenticated')
     });
-    let listaperfiles = this.profileHandler(perfil);
-    set(controller, 'model', listaperfiles);
-    set(controller, 'opcionesLista', listaperfiles);
+    //let listaperfiles = this.profileHandler(perfil);
+    let menuitems= get(model.zenusuario, 'menuitems').w();
+    set(controller, 'model', menuitems);
+    set(controller, 'opcionesLista', menuitems);
   },
   model() {
     let { store } = this;
@@ -140,7 +141,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       opciones = ['prospecto', 'oferta', 'cliente','tramite','inmueble','printers', 'estadocuenta'];
       break;
     case 'especialcomercial':
-      opciones = ['prospecto','oferta', 'cliente','tramite','inmueble','printers', 'estadocuenta', 'ofertaventa'];
+      opciones = ['prospecto','oferta', 'cliente','tramite','inmueble','printers', 'estadocuenta', 'ofertaventa', 'cancelacion'];
       break;
     case 'auxiliarsubdireccion':
       opciones = ['mantenimientoprecios','desasignacion', 'tramite','resumenoperativo','inmueble','printers', 'estadocuenta'];

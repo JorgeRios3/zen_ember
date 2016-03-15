@@ -38,6 +38,7 @@ var fechaAntes="";
 
 export default Ember.Controller.extend({
 	session:Ember.inject.service(),
+	pruebaLotes: Ember.computed.sort("lotesArray", "todosSortingDesc"),
 	currentManzana:"0",
 	currentNumeroInterior:"0",
 	currentLoteElegido:"0",

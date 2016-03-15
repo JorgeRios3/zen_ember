@@ -31,7 +31,8 @@
 {{/if}}
 {{#if desktopOrJumbo}}
 <div class="row"> 
-  <p class="text-center"><div class="col-md-4">
+  <p class="text-center">
+    <div class="col-md-4">
             {{ember-selectize
               content=opcionesMenu
               optionValuePath="content.id"
@@ -39,8 +40,8 @@
               placeholder="Todos"
               value=selectedMenu
             }}
-            </div>
-          </p>
+    </div>
+  </p>{{link-to 'Configurar Menú' 'ordenarmenu'}}
 </div>
 {{/if}}
 <div class="row">
