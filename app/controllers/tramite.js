@@ -377,7 +377,7 @@ export default Ember.Controller.extend({
 
 		selectedManzana(manzana){
 			info("entro");
-			Ember.$('#x-inmueble option[value=0]').prop('selected',true);
+			Ember.$('#X-inmueble option[value=0]').prop('selected',true);
   			Ember.$('#x-exterior option[value=0]').prop('selected',true);
   			Ember.$('#x-interior option[value=0]').prop('selected',true);
 			var that = this;
@@ -478,7 +478,7 @@ export default Ember.Controller.extend({
 					return false;
 				}
 			});
-			Ember.$('#x-inmueble option[value=0]').prop('selected',true);
+			Ember.$('#X-inmueble option[value=0]').prop('selected',true);
   			Ember.$('#x-interior option[value=0]').prop('selected',true);
   			set(this, "otro", "");
   			set(this, "inmueble", "");

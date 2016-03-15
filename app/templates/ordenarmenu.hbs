@@ -1,0 +1,16 @@
+<h3 class="text text-info">Ordenación de opciones de Menú</h3>
+<p class="text text-success">Arrastra cada opción a la posición que desees</p>
+<p class="text text-success">y oprime Guardar cuando estés conforme con el orden o Cancelar para no modificar nada</p>
+
+<div class="u-pullLeft">
+{{#sortable-objects sortableObjectList=sortableObjectList sortEndAction='sortEndAction'}}
+  {{#each sortableObjectList as |item|}}
+    {{#draggable-object content=item  overrideClass='sortObject' isSortable=true}}
+      <div style="margin:5px" class="btn btn-primary btn-lg">{{item.bigTitle}}-{{item.intro}}</div>
+    {{/draggable-object}}
+  {{/each}}
+{{/sortable-objects}}
+</div>
+<br><br><br><br>
+<div class="btn btn-success" {{action "guardar"}}>Guardar</div>
+<div class="btn btn-warning" {{action "cancelar"}}>Cancelar</div>
