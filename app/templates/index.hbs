@@ -2,7 +2,7 @@
 <div class="jumbotron">
             <h2>Grupo Iclar</h2>
             <p class="text-info">Calidad en Patrimonio Familiar </p>
-            <mark><small >{{if isInIclar '(En Corporativo)' '(Remoto)'}}&nbsp;{{hoyEs}}</small></mark>
+            <mark><small >{{if isInIclar '( En Corporativo ) ' '( Remoto ) '}}&nbsp;{{hoyEs}}</small></mark>
             
             <br><br>
             
@@ -48,14 +48,14 @@
   <hr id="hrIndex">
 </div>
 <div class="row">
-{{#each content as |opcion|}}
+{{#each menu as |opcion|}}
   <div class="col-6 col-sm-6 col-lg-4">
-              <h2>{{title-formatter name=opcion showTitle=1}}</h2>
+              <h2>{{opcion.title}}</h2>
               <p>
-                {{title-formatter name=opcion}}  
+                  {{opcion.intro}}  
               </p>
               <p>
-                {{link-menu opcion=opcion}}
+                {{link-menu opcion=opcion.item}}
           	  </p>
   </div><!--/span-->
 {{/each}}

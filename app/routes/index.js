@@ -80,10 +80,21 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       hasTwoFactorAuthentication: get(model.twofactor, 'hasTwoFactorAuthentication'),
       isTwoFactorAuthenticated: get(model.twofactor, 'isTwoFactorAuthenticated')
     });
-    //let listaperfiles = this.profileHandler(perfil);
-    let menuitems= get(model.zenusuario, 'menuitems').w();
-    set(controller, 'model', menuitems);
-    set(controller, 'opcionesLista', menuitems);
+    // let listaperfiles = this.profileHandler(perfil);
+    let menuitems = get(model.zenusuario, 'menuitems').w();
+    let menu = Ember.A();
+    menuitems.forEach((item)=> {
+      let obj = model.menu.findBy('item', item);
+      let { title, intro } = obj.getProperties('title', 'intro');
+      // info(`${title} ${intro} -- valen title e intro`);
+      menu.pushObject({ item, title, intro });
+    });
+    controller.setProperties(
+      { model: menuitems,
+        opcionesLista: menuitems,
+        menu
+      }
+    );
   },
   model() {
     let { store } = this;
@@ -97,7 +108,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     let promises = {
       zenusuario: store.find('zenusuario', 1),
       twofactor: store.find('twofactor', 1),
-      gravatar: store.find('gravatar', 1)
+      gravatar: store.find('gravatar', 1),
+      menu: store.findAll('menu')
     };
     if (requestLocation) {
       promises.geolocation = get(this, 'geolocation').getLocation();
@@ -124,47 +136,6 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       }
     }
 
-  },
-  profileHandler(perfil) {
-    switch (perfil) {
-    case 'vendedor':
-      opciones = opciones = ['prospecto','inmueble'];
-      break;
-    case 'gerente':
-      opciones = ['prospecto','inmueble', 'ofertaventa'];
-      break;
-    case 'direccioncomercial':
-    case 'subdireccioncomercial':
-      opciones = ['prospecto','oferta','cliente','tramite','resumenoperativo','inmueble','printers', 'estadocuenta', 'ofertaventa'];
-      break;
-    case 'comercial':
-      opciones = ['prospecto', 'oferta', 'cliente','tramite','inmueble','printers', 'estadocuenta'];
-      break;
-    case 'especialcomercial':
-      opciones = ['prospecto','oferta', 'cliente','tramite','inmueble','printers', 'estadocuenta', 'ofertaventa', 'cancelacion'];
-      break;
-    case 'auxiliarsubdireccion':
-      opciones = ['mantenimientoprecios','desasignacion', 'tramite','resumenoperativo','inmueble','printers', 'estadocuenta'];
-      break;
-    case 'cobranza':
-      opciones = ['tramite', 'mantenimientoprecios', 'resumenoperativo','inmueble','printers', 'estadocuenta'];
-      break;
-    case 'finanzas':
-      opciones = ['mantenimientoprecios', 'tramite','resumenoperativo','inmueble','printers', 'estadocuenta'];
-      break;
-    case 'direccion':
-    case 'presidencia':
-      opciones = ['resumenoperativo','printers'];
-      break;
-    case 'subdireccion':
-      opciones = ['tramite','mantenimientoprecios','resumenoperativo','inmueble','printers', 'estadocuenta'];
-      break;
-    case '':
-      opciones = ['printers'];
-      break;
-    }
-    return opciones;
-    
   },
   actions: {
     error(error) {
