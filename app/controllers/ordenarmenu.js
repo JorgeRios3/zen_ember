@@ -10,6 +10,8 @@ export default Ember.Controller.extend({
   sortFinishText: null,
   nuevoAcomodo: '',
   actions: {
+    dragStart(obj) {},
+    sortEndAction() {},
     guardar() {
       let a = [];
       get(this, 'sortableObjectList').forEach((item)=> {

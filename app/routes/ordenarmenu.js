@@ -13,7 +13,6 @@ export default Ember.Route.extend({
       sortableObjectList: Ember.A()
     });
   },
-
   setupController(controller, model) {
     let i = 0;
     info( 'setupController ordenarmenu');
@@ -30,12 +29,10 @@ export default Ember.Route.extend({
       });
     });
   },
-
   model() {
     let {
     	store
     } = this;
-
     return hash({
       zenusuario: store.find('zenusuario', 1),
       menu: store.findAll('menu')
