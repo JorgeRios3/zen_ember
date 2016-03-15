@@ -1,6 +1,5 @@
 <h3 class="text text-info">Ordenación de opciones de Menú</h3>
-<p class="text text-success">Arrastra cada opción a la posición que desees</p>
-<p class="text text-success">y oprime Guardar cuando estés conforme con el orden o Cancelar para no modificar nada</p>
+<p class="text text-success">Arrastra cada opción a la posición que desees y oprime Guardar cuando estés conforme con el orden o haz click  en Inicio en la parte superior para ignorar cambios</p>
 
 <div class="u-pullLeft">
 {{#sortable-objects sortableObjectList=sortableObjectList sortEndAction='sortEndAction'}}
@@ -13,4 +12,3 @@
 </div>
 <br><br><br><br>
 <div class="btn btn-success" {{action "guardar"}}>Guardar</div>
-<div class="btn btn-warning" {{action "cancelar"}}>Cancelar</div>
