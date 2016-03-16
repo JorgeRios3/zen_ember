@@ -9,6 +9,7 @@ const {
 export default Ember.Controller.extend({
   sortFinishText: null,
   nuevoAcomodo: '',
+  menuOriginal: null,
   actions: {
     dragStart(obj) {},
     sortEndAction() {},
@@ -25,7 +26,23 @@ export default Ember.Controller.extend({
           info('hay error');
         });
       });
+    },
+
+    restaurar() {
+      let nuevoMenu = Ember.A();
+      let i = 0;
+      this.store.findAll('menuperfil').then((data)=> {
+        data.forEach((item) => {
+          let menu = get(this, 'menuOriginal').findBy('item', get(item, 'item'));
+          nuevoMenu.pushObject({
+            id: ++i,
+            title: get(menu, 'item'),
+            bigTitle: get(menu, 'title'),
+            intro: get(menu, 'intro')
+          });
+        });
+      });
+      set(this, 'sortableObjectList', nuevoMenu);
     }
   }
-
 });
