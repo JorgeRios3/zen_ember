@@ -43,6 +43,7 @@ Router.map(function() {
   this.route('consultatramite');
   this.route('ordenarmenu');
   this.route('ventasporsemana');
+  this.route('ventaspordia');
 });
 
 export default Router;
