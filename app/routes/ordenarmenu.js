@@ -16,6 +16,7 @@ export default Ember.Route.extend({
   setupController(controller, model) {
     let i = 0;
     info( 'setupController ordenarmenu');
+    set(controller, "menuOriginal", model.menu);
     // info('hay ', get(model.menu, 'length'), 'menu items');
     get(model.zenusuario, 'menuitems').w().forEach((item)=> {
       info('entrando en loop', item);

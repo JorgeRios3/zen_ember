@@ -42,6 +42,7 @@ Router.map(function() {
   this.route('pagares');
   this.route('consultatramite');
   this.route('ordenarmenu');
+  this.route('ventasporsemana');
 });
 
 export default Router;

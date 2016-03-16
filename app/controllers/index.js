@@ -41,12 +41,12 @@ export default Ember.Controller.extend({
   }),
   opcionesMenu: computed('', {
     get() {
-      let listaMenu = get(this, 'model');
+      let listaMenu = get(this, 'menu');
       let lista = [];
-      listaMenu.forEach((item)=> {
-        lista.addObject({ id: item, nombre: item });
-      });
       lista.addObject({ id: 'todos', nombre: 'todos' });
+      listaMenu.forEach((item)=> {
+        lista.addObject({ id: get(item, 'item'), nombre: get(item, 'item' )});
+      });
       return lista;
     }
   }),
@@ -92,14 +92,29 @@ export default Ember.Controller.extend({
   logoutConfirmation() {
     this.send('invalidateSession');
   },
-  Observa: observer('selectedMenu', function() {
+  /*Observa: observer('selectedMenu', function() {
     let menu = get(this, 'selectedMenu');
     if (!isEmpty(menu)) {
       if (menu === 'todos') {
-        set(this, 'model', get(this, 'opcionesLista'));
+        set(this, 'menu', get(this, 'opcionesLista'));
       } else {
-        set(this, 'model', [menu]);
+        set(this, 'menu', [menu]);
       }
+    }
+  }),*/
+  menuVisible: computed("selectedMenu", { 
+    get: function(){
+      //var that = this;
+      let menuItem = this.getWithDefault('selectedMenu', 'todos');
+      info("valor de selectedMenu", menuItem);
+      let menu = get(this, 'menu');
+      return menu.filter((item)=> {
+        if ( menuItem === get(item, 'item')){
+          return true;
+        } else {
+          return  menuItem === 'todos' ? true : false;
+        }
+      });
     }
   }),
   actions: {
