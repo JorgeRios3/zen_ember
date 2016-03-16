@@ -1,0 +1,20 @@
+<br>
+<div class="h3 text text-info">Panorama Comercial</div>
+<br>
+<div class="form-group">
+		<label class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value='' action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+						{{#x-option value='0'}}Todas{{/x-option}}
+						{{#each etapas as |item|}}
+							{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+</div>
+<br>
+{{bar-chart data=model options=options}}
+
+
