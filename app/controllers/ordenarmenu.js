@@ -3,10 +3,12 @@ import Ember from 'ember';
 const {
 	get,
 	set,
-	Logger: { info }
+	Logger: { info },
+  inject: { service }
 } = Ember;
 
 export default Ember.Controller.extend({
+  session: service(),
   sortFinishText: null,
   nuevoAcomodo: '',
   menuOriginal: null,
@@ -21,7 +23,7 @@ export default Ember.Controller.extend({
       this.store.findRecord('zenusuario', 1).then((usuario)=> {
         usuario.set('menuitems', a.join(' '));
         usuario.save().then(()=> {
-          this.transitionToRoute('index');
+          this.get('session').invalidate();
         }, (error)=> {
           info('hay error');
         });
