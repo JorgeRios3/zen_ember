@@ -44,6 +44,7 @@ Router.map(function() {
   this.route('ordenarmenu');
   this.route('ventasporsemana');
   this.route('ventaspordia');
+  this.route('panorama');
 });
 
 export default Router;
