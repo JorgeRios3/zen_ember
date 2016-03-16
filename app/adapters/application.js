@@ -19,3 +19,4 @@ inflector.irregular('comisionventa', 'comisionventas');
 inflector.irregular('parametrosetapa', 'parametrosetapas');
 inflector.irregular('chilpayate', 'hijos');
 inflector.irregular('referenciasrapconclientesincuenta', 'referenciasrapconclientesincuentas');
+inflector.irregular('ventaspordia', 'ventaspordias');
