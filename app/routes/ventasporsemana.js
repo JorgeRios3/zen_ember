@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import RouteAuthMixin from "../mixins/routeauth";
+import AuthenticatedRouteMixin from "ember-simple-auth/mixins/authenticated-route-mixin";
 
 const {
 	get,
@@ -8,7 +10,11 @@ const {
 	computed
 } = Ember;
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(AuthenticatedRouteMixin,
+RouteAuthMixin , {
+  beforeModel(transition){
+    this._super(...arguments);
+  },
   desktopOrJumbo: computed('media.isJumbo', 'media.isDesktop', {
     get() {
       return get(this, 'media.isJumbo') || get(this, 'media.isDesktop');
