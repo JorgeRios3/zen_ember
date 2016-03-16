@@ -27,11 +27,12 @@ RouteAuthMixin , {
   	}
   	let datos = Ember.A();
   	datos.push( ['Semana', 'Unidades', { role: 'style' }])
-  	model.forEach((item)=> {
+  	model.ventasPorSemana.forEach((item)=> {
   		datos.push([ get(item, 'intervaloReducido'), get(item, 'valor'), 'gold' ]);
   	});
-  	info("viendo dados",datos);
-  	controller.setProperties( { options : {
+  	controller.setProperties( {
+  	  etapas:model.etapasoferta, 
+  	  options : {
   		title: 'Ventas por Semana',
   		height: 400,
   		width,
@@ -41,6 +42,9 @@ RouteAuthMixin , {
   
   model() {
     const { store } = this;
-    return store.findAll('ventasporsemana');
+   return Ember.RSVP.hash({
+      etapasoferta: store.query('etapasoferta', { todas: 1 }),
+      ventasPorSemana: store.query('ventasporsemana', { semanas: 10 })
+	})
   },
 });
