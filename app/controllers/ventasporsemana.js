@@ -11,36 +11,34 @@ export default Ember.Controller.extend({
   consulta: false,
   selectedEtapa: '',
   selectedSemana: '',
-      options : {
-        annotations: {
-          alwaysOutside: true,
-          textStyle: {
-            fontSize: 13,
-            auraColor: 'none',
-            color: '#555'
-          },
-          boxStyle: {
-            stroke: '#ccc',
-            strokeWidth: 1,
-            gradient: {
-              color1: '#f3e5f5',
-              color2: '#f3e5f5',
-              x1: '0%', y1: '0%',
-              x2: '100%', y2: '100%'
-            }
-          }
-        },
-        
-      title: 'Ventas por Semana',
-      height: 400,
-      width: 700,
-      bars: 'horizontal',
-       hAxis: {
-          title: 'Total de unidades',
-          minValue: 0
+  options: {
+    annotations: {
+      alwaysOutside: true,
+      textStyle: {
+        fontSize: 13,
+        auraColor: 'none',
+        color: '#555'
+      },
+      boxStyle: {
+        stroke: '#ccc',
+        strokeWidth: 1,
+        gradient: {
+          color1: '#f3e5f5',
+          color2: '#f3e5f5',
+          x1: '0%', y1: '0%',
+          x2: '100%', y2: '100%'
         }
-
+      }
     },
+    title: 'Ventas por Semana',
+    height: 400,
+    width: 700,
+    bars: 'horizontal',
+    hAxis: {
+      title: 'Total de unidades',
+      minValue: 0
+    }
+  },
 
   init() {
     this._super(...arguments);
@@ -54,7 +52,7 @@ export default Ember.Controller.extend({
     pedirDatos() {
       this.store.unloadAll('ventasporsemana');
       let datos = Ember.A();
-      datos.push( ['Semana', 'Unidades', { role: 'never' }]);
+      datos.push(['Semana', 'Unidades', { role: 'never' }]);
       let objeto = {};
       if (get(this, 'selectedEtapa') !== '1') {
         objeto.etapa = get(this, 'selectedEtapa');
@@ -62,7 +60,7 @@ export default Ember.Controller.extend({
       objeto.semanas = get(this, 'selectedSemana');
       this.store.query('ventasporsemana', objeto).then((data)=> {
         data.forEach((item)=> {
-  		  datos.push([ get(item, 'intervaloReducido'), get(item, 'valor'), 'gold' ]);
+          datos.push([ get(item, 'intervaloReducido'), get(item, 'valor'), 'gold' ]);
         });
         set(this, 'model', datos);
         this.toggleProperty('consulta');

@@ -16,7 +16,7 @@ RouteAuthMixin , {
     this._super(...arguments);
     let c = this.controllerFor(this.routeName);
     let datos = Ember.A();
-    datos.push( ['Semana', 'Unidades', { role: 'never'}]);
+    datos.push(['Semana', 'Unidades', { role: 'never' }]);
     c.setProperties({
       options: {
         annotations: {
@@ -54,28 +54,26 @@ RouteAuthMixin , {
     }
   }),
   setupController(controller, model) {
-  	let width = 400;
-  	if (get(this, 'desktopOrJumbo')){
-  		width = 700;
-  	}
-  	let datos = Ember.A();
-  	datos.push( ['Semana', 'Unidades', { role: 'never'}]);
-  	model.ventasPorSemana.forEach((item)=> {
-      let i10nEN = new Intl.NumberFormat("en-US");
+    let width = 400;
+    if (get(this, 'desktopOrJumbo')) {
+      width = 700;
+    }
+    let datos = Ember.A();
+    datos.push(['Semana', 'Unidades', { role: 'never' }]);
+    model.ventasPorSemana.forEach((item)=> {
+      let i10nEN = new Intl.NumberFormat('en-US');
       let datoFormateado = i10nEN.format(get(item, 'valor'));
-  		datos.push([ get(item, 'intervaloReducido'), get(item, 'valor'), datoFormateado ]);
-  	});
+      datos.push([ get(item, 'intervaloReducido'), get(item, 'valor'), datoFormateado ]);
+    });
 
-  	controller.setProperties( {
-  	  etapas:model.etapasoferta, 
-  	   model: datos });
+    controller.setProperties({
+      etapas: model.etapasoferta,
+      model: datos });
   },
-  
   model() {
-    const { store } = this;
-   return Ember.RSVP.hash({
-      etapasoferta: store.query('etapasoferta', { todas: 1 }),
-      ventasPorSemana: store.query('ventasporsemana', { semanas: 10 })
-	})
-  },
+    return Ember.RSVP.hash({
+      etapasoferta: this.store.query('etapasoferta', { todas: 1 }),
+      ventasPorSemana: this.store.query('ventasporsemana', { semanas: 10 })
+    });
+  }
 });
