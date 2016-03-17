@@ -11,7 +11,6 @@ const {
 export default Ember.Controller.extend({
   selectedTipo: '1',
   options: null,
-  options2: null,
   init() {
     this._super(...arguments);
     set(this, 'tipo', Ember.ArrayProxy.create({ content: [{ id: 2, nombre: 'Ventas totales por dia' }] }));
@@ -25,7 +24,7 @@ export default Ember.Controller.extend({
       let datos = Ember.A();
       let objeto = {};
       datos.push(['Dia', 'Valores']);
-      	objeto.tipo = get(this, 'selectedTipo');
+      objeto.tipo = get(this, 'selectedTipo');
       this.store.query('ventaspordia', objeto).then((data)=> {
         data.forEach((item)=> {
           datos.push([ get(item, 'dia'), get(item, 'valor')]);
