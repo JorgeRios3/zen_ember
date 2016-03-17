@@ -2,23 +2,6 @@ import Ember from 'ember';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import ajax from 'ember-ajax';
 import moment from 'moment';
-let opciones = ['prospecto',
-    'oferta',
-    'ofertaasignacion',
-    'cancelacion',
-    'caracteristica',
-    'printers',
-    'tramite',
-    'resumenoperativo',
-    'mantenimientoprecios',
-    'desasignacion',
-    'cliente',
-    'showversion',
-    'inmueble',
-    'estadocuenta',
-    'ofertaventa',
-    'pagares',
-    'consultatramite'];
 
 const {
   get,
@@ -85,9 +68,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     let menu = Ember.A();
     menuitems.forEach((item)=> {
       let obj = model.menu.findBy('item', item);
-      let { title, intro } = obj.getProperties('title', 'intro');
+      let { title, intro, consulta } = obj.getProperties('title', 'intro', 'consulta');
       // info(`${title} ${intro} -- valen title e intro`);
-      menu.pushObject({ item, title, intro });
+      menu.pushObject({ item, title, intro, consulta });
     });
     controller.setProperties(
       { model: menuitems,
