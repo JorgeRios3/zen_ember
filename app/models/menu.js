@@ -6,5 +6,6 @@ const {
 export default DS.Model.extend({
   item: attr('string'),
   title: attr('string'),
-  intro: attr('string')
+  intro: attr('string'),
+  consulta: attr('boolean')
 });
