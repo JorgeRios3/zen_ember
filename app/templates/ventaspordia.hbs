@@ -1,7 +1,8 @@
+<br><br>
 {{#if tipoPromedio}}
-	{{pie-chart data=model options=options}}
-{{else}}
-	{{pie-chart data=model options=options2}}
+	<div class=" h3 text text-info">Ventas promedio por dia</div>
+	{{else}}
+	<div class="h3 text text-info">Ventas totales por dia</div>
 {{/if}}
 <div class="form-group">
 		<label class="control-label">Tipo</label>
@@ -17,3 +18,8 @@
 		</div>
 	</div>
 	
+{{#if tipoPromedio}}
+	{{pie-chart data=model options=options}}
+{{else}}
+	{{pie-chart data=model options=options2}}
+{{/if}}

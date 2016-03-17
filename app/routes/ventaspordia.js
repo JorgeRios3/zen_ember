@@ -31,14 +31,15 @@ RouteAuthMixin , {
       datos.push([get(item, 'dia'), get(item, 'valor')]);
     });
     controller.setProperties({
+      titulo: 'Ventas promedio por dia',
       etapas: model.etapasoferta,
       options: {
-        title: 'Ventas promedio por dia',
+        title: '',
         height: 400,
         width
       },
       options2: {
-        title: 'Ventas totales por dia',
+        title: '',
         height: 400,
         width
       },

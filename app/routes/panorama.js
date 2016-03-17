@@ -26,9 +26,9 @@ RouteAuthMixin , {
       width = 700;
     }
     let datos = Ember.A();
-    datos.push( ['Rubro', 'Unidades', { role: 'style' }]);
+    datos.push( ['Rubro', 'Unidades', { role: 'never' }]);
     model.datosPanorama.forEach((item)=> {
-      datos.push([ get(item, 'rubro'), get(item, 'valor'), 'gold' ]);
+      datos.push([ get(item, 'rubroReducido'), get(item, 'valor'), 'gold' ]);
     });
     controller.setProperties({
       etapas: model.etapasoferta,
@@ -36,7 +36,11 @@ RouteAuthMixin , {
         //title: 'Panorama Comercial',
         height: 400,
         bars: 'horizontal',
-        width
+        width,
+         hAxis: {
+          title: 'Total de unidades',
+          minValue: 0
+        }
       },
       model: datos
     });
