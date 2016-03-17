@@ -115,7 +115,7 @@ export default Ember.Controller.extend({
 			info('alor de tramites',tramites);
 			set(this, 'selectedTipo', item.id);
 			let tipo=get(this, 'selectedTipo');
-			get(this, 'catalogoTramites').filter(function(item2) {
+			get(this, 'catalogoTramites').forEach((item2) => {
 				let a = item2;
 				var t = get(item2, 'origen');
 				if ( tipo === t ){
