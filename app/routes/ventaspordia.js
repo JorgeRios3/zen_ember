@@ -38,11 +38,6 @@ RouteAuthMixin , {
         height: 400,
         width
       },
-      options2: {
-        title: '',
-        height: 400,
-        width
-      },
       model: datos
     });
   },
