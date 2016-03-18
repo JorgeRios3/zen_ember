@@ -60,7 +60,7 @@ RouteAuthMixin , {
     }
     let datos = Ember.A();
     datos.push(['Semana', 'Unidades', { role: 'never' }]);
-    model.ventasPorSemana.forEach((item)=> {
+    model.cobradasPorSemana.forEach((item)=> {
       let i10nEN = new Intl.NumberFormat('en-US');
       let datoFormateado = i10nEN.format(get(item, 'valor'));
       datos.push([ get(item, 'intervaloReducido'), get(item, 'valor'), datoFormateado ]);
@@ -73,7 +73,7 @@ RouteAuthMixin , {
   model() {
     return Ember.RSVP.hash({
       etapasoferta: this.store.query('etapasoferta', { todas: 1 }),
-      ventasPorSemana: this.store.query('ventasporsemana', { semanas: 10 })
+      cobradasPorSemana: this.store.query('cobradasporsemana', { semanas: 10 })
     });
   }
 });
