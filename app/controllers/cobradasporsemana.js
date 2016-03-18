@@ -50,7 +50,7 @@ export default Ember.Controller.extend({
       this.toggleProperty('consulta');
     },
     pedirDatos() {
-      this.store.unloadAll('ventasporsemana');
+      this.store.unloadAll('cobradasporsemana');
       let datos = Ember.A();
       datos.push(['Semana', 'Unidades', { role: 'never' }]);
       let objeto = {};
@@ -58,7 +58,7 @@ export default Ember.Controller.extend({
         objeto.etapa = get(this, 'selectedEtapa');
       }
       objeto.semanas = get(this, 'selectedSemana');
-      this.store.query('ventasporsemana', objeto).then((data)=> {
+      this.store.query('cobradasporsemana', objeto).then((data)=> {
         data.forEach((item)=> {
           datos.push([ get(item, 'intervaloReducido'), get(item, 'valor'), 'gold' ]);
         });
