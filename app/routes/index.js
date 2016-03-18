@@ -108,10 +108,13 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     let currentLocation = get(get(this, 'geolocation'), 'currentLocation');
     info('valor de geolocation', get(this, 'geolocation'));
     info(`valor de currentLocation ${currentLocation}`);
-    let radioIclar = 0.2; // 200 metros
+    let radioIclar = 1; // 200 metros
+    let distancia = distance(currentLocation[0], currentLocation[1], iclarLocation[0], iclarLocation[1]);
+    info('valor de distancia es', distancia);
     let isInIclar = distance(currentLocation[0], currentLocation[1], iclarLocation[0], iclarLocation[1]) <= radioIclar;
+    info('isInIclar vale', isInIclar);
     this.controllerFor('index').setProperties({
-      isInIclar: distance(currentLocation[0], currentLocation[1], iclarLocation[0], iclarLocation[1]) <= radioIclar
+      isInIclar
     });
     if (!isTwoFactorAuthenticated && hasTwoFactorAuthentication) {
       if (!isInIclar) {
