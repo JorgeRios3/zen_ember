@@ -40,6 +40,7 @@ module.exports = function(environment) {
     ENV.contentSecurityPolicy['script-src'] = ENV.contentSecurityPolicy['script-src'] + " 'unsafe-eval'";
   
     ENV.AUTOMATIC_LOGIN = false;
+    //ENV.DISTANCIA = true;
     ENV.WSOCKETS_URL = "ws://10.0.1.124:8889/zen";
     ENV.AUTOMATIC_LOGIN_IDENTIFICATION = "smartics";
     ENV.AUTOMATIC_LOGIN_PASSWORD = "fce594fa-aa2c-40a0-ad30-7ffa7af7a3"
