@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import config from '../config/environment';
 import ajax from 'ember-ajax';
 import moment from 'moment';
 
@@ -109,6 +110,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     info('valor de geolocation', get(this, 'geolocation'));
     info(`valor de currentLocation ${currentLocation}`);
     let radioIclar = 1; // 200 metros
+    if (config.DISTANCIA){
+      radioIclar = 0
+    }
     let distancia = distance(currentLocation[0], currentLocation[1], iclarLocation[0], iclarLocation[1]);
     info('valor de distancia es', distancia);
     let isInIclar = distance(currentLocation[0], currentLocation[1], iclarLocation[0], iclarLocation[1]) <= radioIclar;
