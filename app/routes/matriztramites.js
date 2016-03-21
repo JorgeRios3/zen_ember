@@ -7,6 +7,7 @@ const {
   get,
   Logger: { info }
 } = Ember;
+
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
   beforeModel(transition) {
@@ -14,16 +15,20 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     let c = this.controllerFor(this.routeName);
   },
   setupController(ctrl, model) {
-    set(ctrl, 'etapas', model.etapas);
-    set(ctrl, 'catalogoTramites', model.catalogoTramites);
+    let { etapas, catalogoTramites, matriztramites } = model;
+    ctrl.setProperties({ etapas, catalogoTramites, matriztramites });
+    // set(ctrl, 'etapas', etapas);
+    // set(ctrl, 'catalogoTramites', model.catalogoTramites);
   },
   model() {
     let { store } = this;
-    store.unloadAll('etapastramite');
-    store.unloadAll('catalogotramite');
+    let reload = { reload: true };
+    // store.unloadAll('etapastramite');
+    // store.unloadAll('catalogotramite');
     return Ember.RSVP.hash({
-      catalogoTramites: store.findAll('catalogotramite'),
-      etapas: store.findAll('etapastramite')
+      catalogoTramites: store.findAll('catalogotramite', reload),
+      etapas: store.findAll('etapastramite', reload),
+      matriztramites: store.findAll('matriztramite', reload)
     });
   }
 });
