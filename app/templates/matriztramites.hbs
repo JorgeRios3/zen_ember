@@ -12,3 +12,29 @@
 			</div>
 		</div>
 	</div>
+
+
+	<table  class="table table-bordered table-striped table-condensed cf">
+	<thead>
+		<tr>
+			<th>Tramite</th>
+			<th>Total</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each tramitesTotales as |t|}}
+		<tr>
+			<td data-title="Tramite">
+				{{t.tramite}}
+			</td>
+			<td data-title="Total">
+				{{t.total}}
+			</td>
+		</tr>
+		{{/each}}
+		
+	</tbody>
+</table>
+{{#unless noHayTramites}}
+<div class="text text-warning">No hay trámites en esta etapa</div>
+{{/unless}}
