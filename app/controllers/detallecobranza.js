@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import moment from 'moment';
 
 const {
 	observer,
@@ -21,6 +22,7 @@ export default Ember.Controller.extend({
   totMontoCredito: null,
   totMontoSubsidio: null,
   tipocobradas: computed.equal('selectedTipo', 'X'),
+  inmuebles: null,
   init() {
     this._super(...arguments);
     set(this, 'tipos', Ember.ArrayProxy.create({ content: [{ valor: 'C', nombre: 'Cotejadas' }, { valor: 'F', nombre: 'Firma sin cotejo' },
@@ -32,8 +34,8 @@ export default Ember.Controller.extend({
   }),
   tipoSeleccionado: observer('selectedTipo', function() {
     info('valor de selectedTipo', get(this, 'selectedTipo'));
-    for( let key of 'totMontoCredito totMontoSubsidio totDocumentos'.w()){
-    	set(this, key, '');
+    for (let key of 'totMontoCredito totMontoSubsidio totDocumentos'.w()) {
+      set(this, key, '');
     }
   }),
 
@@ -59,6 +61,7 @@ export default Ember.Controller.extend({
         let totMontoSubsidio = get(data, 'meta.totmontosubsidio');
         let totDocumentos = get(data, 'meta.totdocumentos');
         setProperties(this, { totDocumentos, totMontoCredito, totMontoSubsidio });
+        set(this, 'inmuebles', data);
       }, (error)=> {
 
       });

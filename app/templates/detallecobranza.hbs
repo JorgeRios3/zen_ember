@@ -1,34 +1,34 @@
 <br>
 <div class="h3 text text-info">Detalle Cobranza</div>
 <div class="form-group">
-		<label class="control-label">Etapa</label>
-		<div class="row">
-			<div class="col-md-5">
-				{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
-						{{#x-option value='1'}}Todas{{/x-option}}
-						{{#each etapas as |item|}}
-							{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
-					{{/each}}
-				{{/x-select}}
-			</div>
+	<label class="control-label">Etapa</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+				{{#x-option value='1'}}Todas{{/x-option}}
+				{{#each etapas as |item|}}
+					{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+				{{/each}}
+			{{/x-select}}
 		</div>
 	</div>
+</div>
 
 <div class="form-group">
-		<label class="control-label">Tipo</label>
-		<div class="row">
-			<div class="col-md-5">
-				{{#x-select value=selecteTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
-						{{#x-option}}Escoja Tipo{{/x-option}}
-						{{#each tipos as |t|}}
-							{{#x-option value=t.valor}}{{t.nombre}}{{/x-option}}
-					{{/each}}
-				{{/x-select}}
-			</div>
+	<label class="control-label">Tipo</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selecteTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
+				{{#x-option}}Escoja Tipo{{/x-option}}
+				{{#each tipos as |t|}}
+					{{#x-option value=t.valor}}{{t.nombre}}{{/x-option}}
+				{{/each}}
+			{{/x-select}}
 		</div>
 	</div>
+</div>
 {{#if tipocobradas}}
-<div class="form-group">
+	<div class="form-group">
 		<label for="datewidget" class="control-label">Fecha inicial para cobradas</label>
 		<div class="row">
 			<div class="col-xs-10 col-md-3">
@@ -37,7 +37,7 @@
     	</div>
 	</div>
 
-<div class="form-group">
+	<div class="form-group">
 		<label for="datewidget" class="control-label">Fecha final para cobradas</label>
 		<div class="row">
 			<div class="col-xs-10 col-md-3">
@@ -47,29 +47,29 @@
 	</div>
 {{/if}}
 
-<div class="btn btn-info" {{action 'pedir'}}>Pedir</div>
+<div class="btn btn-info" {{action 'pedir'}}>Desplegar Datos</div>
 <br>
 <br>
 {{#if totMontoCredito }}
-<div class="form-group">
-	<label class="control-label">Total Monto Crédito</label>
-	<div class="row">{{input type='text' value=totMontoCredito disabled=true}}</div>
-</div>
+	<div class="form-group">
+		<label class="control-label">Total Monto Crédito</label>
+		<div class="row">{{input type='text' value=totMontoCredito disabled=true}}</div>
+	</div>
 {{/if}}
 {{#if totMontoSubsidio}}
-<div class="form-group">
-	<label class="control-label">Total Monto Subsidio</label>
-	<div class="row">{{input type='text' value=totMontoSubsidio disabled=true}}</div>
-</div>
+	<div class="form-group">
+		<label class="control-label">Total Monto Subsidio</label>
+		<div class="row">{{input type='text' value=totMontoSubsidio disabled=true}}</div>
+	</div>
 {{/if}}
 {{#if totDocumentos}}
-<div class="form-group">
-	<label class="control-label">Total Documentos</label>
-	<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
-</div>
+	<div class="form-group">
+		<label class="control-label">Total Documentos</label>
+		<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
+	</div>
 {{/if}}
 <br><hr>
-
+<div id="no-more-tables">
 <table  class="table table-bordered table-striped table-condensed cf">
 	<thead>
 		<tr>
@@ -108,16 +108,16 @@
 				{{i.oferta}}
 			</td>
 			<td data-title="Monto Credito">
-				{{i.montoCredito}}
+				{{i.montoCreditoFormateado}}
 			</td>
 			<td data-title="Monto Subsidio">
-				{{i.montoSubsidio}}
+				{{i.montoSubsidioFormateado}}
 			</td>
-			<td data-title="Suman Documentos">
-				{{i.sumanDocumentos}}
+			<td data-title="Suman Documentos" class="text-right">
+				{{i.sumanDocumentosFormateado}}
 			</td>
-			<td data-title="Saldo">
-				{{i.saldo}}
+			<td data-title="Saldo" class="text-right">
+				{{i.saldoFormateado}}
 			</td>
 			<td data-title="Imss">
 				{{i.imss}}
@@ -127,3 +127,4 @@
 		
 	</tbody>
 </table>
+</div>
