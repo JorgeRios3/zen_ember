@@ -47,6 +47,7 @@ Router.map(function() {
   this.route('panorama');
   this.route('cobradasporsemana');
   this.route('matriztramites');
+  this.route('detallecobranza');
 });
 
 export default Router;

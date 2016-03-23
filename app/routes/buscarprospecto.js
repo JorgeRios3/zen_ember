@@ -1,7 +1,11 @@
 import Ember from 'ember';
 import RouteAuthMixin from '../mixins/routeauth';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-const { Logger: { info } } = Ember;
+const {
+  Logger: { info },
+  RSVP: { hash },
+  setProperties
+} = Ember;
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
   beforeModel(transition) {
@@ -40,6 +44,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
   },
 
   setupController(ctrlr, model) {
+    info('setupController buscarprospecto');
     ctrlr.setProperties({
       model: model.model,
       apGerentesventas: model.gerentesventa,
@@ -50,13 +55,19 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
   },
   model() {
     let { store } = this;
-    return Ember.RSVP.hash({
+    let reload = { reload: true };
+    return hash({
       model: store.find('gtevdor', 1),
-      gerentesventa: store.findAll('gerentesventa'),
-      vendedor: store.findAll('vendedor'),
-      mediospublicitario: store.findAll('mediospublicitario'),
-      prospectosreciente: store.findAll('prospectosreciente')
+      gerentesventa: store.findAll('gerentesventa', reload),
+      vendedor: store.findAll('vendedor', reload),
+      mediospublicitario: store.findAll('mediospublicitario', reload),
+      prospectosreciente: store.findAll('prospectosreciente', reload)
     });
+  },
+  actions: {
+    error(error) {
+      info('error en ruta buscarprospecto', error);
+    }
   }
 });
 

@@ -67,12 +67,19 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     // let listaperfiles = this.profileHandler(perfil);
     let menuitems = get(model.zenusuario, 'menuitems').w();
     let menu = Ember.A();
-    menuitems.forEach((item)=> {
+    model.menu.forEach((item)=> {
+      let { title, intro, consulta } = item.getProperties('title', 'intro', 'consulta');
+      let ruta = get(item, 'item');
+      info('valor de ruta', ruta);
+      menu.pushObject({ ruta ,title, intro, consulta });
+
+    });
+    /*menuitems.forEach((item)=> {
       let obj = model.menu.findBy('item', item);
       let { title, intro, consulta } = obj.getProperties('title', 'intro', 'consulta');
       // info(`${title} ${intro} -- valen title e intro`);
       menu.pushObject({ item, title, intro, consulta });
-    });
+    });*/
     controller.setProperties(
       { model: menuitems,
         opcionesLista: menuitems,
@@ -93,7 +100,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       zenusuario: store.find('zenusuario', 1),
       twofactor: store.find('twofactor', 1),
       gravatar: store.find('gravatar', 1),
-      menu: store.findAll('menu')
+      menu: store.findAll('menu', { reload: true })
     };
     if (requestLocation) {
       promises.geolocation = get(this, 'geolocation').getLocation();
@@ -110,8 +117,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     info('valor de geolocation', get(this, 'geolocation'));
     info(`valor de currentLocation ${currentLocation}`);
     let radioIclar = 1; // 200 metros
-    if (config.DISTANCIA){
-      radioIclar = 0
+    if (config.DISTANCIA) {
+      radioIclar = 0;
     }
     let distancia = distance(currentLocation[0], currentLocation[1], iclarLocation[0], iclarLocation[1]);
     info('valor de distancia es', distancia);
