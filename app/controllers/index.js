@@ -14,7 +14,6 @@ const {
 
 export default Ember.Controller.extend({
   session: service(),
-  // needs: ['gravatar'],
   gvCtrlr: controller('gravatar'),
   controllerApplication: controller('application'),
   perfil: '',
