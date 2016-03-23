@@ -1,0 +1,129 @@
+<br>
+<div class="h3 text text-info">Detalle Cobranza</div>
+<div class="form-group">
+		<label class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+						{{#x-option value='1'}}Todas{{/x-option}}
+						{{#each etapas as |item|}}
+							{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+
+<div class="form-group">
+		<label class="control-label">Tipo</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selecteTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
+						{{#x-option}}Escoja Tipo{{/x-option}}
+						{{#each tipos as |t|}}
+							{{#x-option value=t.valor}}{{t.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+{{#if tipocobradas}}
+<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha inicial para cobradas</label>
+		<div class="row">
+			<div class="col-xs-10 col-md-3">
+            	{{bs-datetimepicker date=nullFechaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaInicial))}}
+        	</div>
+    	</div>
+	</div>
+
+<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha final para cobradas</label>
+		<div class="row">
+			<div class="col-xs-10 col-md-3">
+            	{{bs-datetimepicker date=nullFechaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaFinal))}}
+        	</div>
+    	</div>
+	</div>
+{{/if}}
+
+<div class="btn btn-info" {{action 'pedir'}}>Pedir</div>
+<br>
+<br>
+{{#if totMontoCredito }}
+<div class="form-group">
+	<label class="control-label">Total Monto Crédito</label>
+	<div class="row">{{input type='text' value=totMontoCredito disabled=true}}</div>
+</div>
+{{/if}}
+{{#if totMontoSubsidio}}
+<div class="form-group">
+	<label class="control-label">Total Monto Subsidio</label>
+	<div class="row">{{input type='text' value=totMontoSubsidio disabled=true}}</div>
+</div>
+{{/if}}
+{{#if totDocumentos}}
+<div class="form-group">
+	<label class="control-label">Total Documentos</label>
+	<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
+</div>
+{{/if}}
+<br><hr>
+
+<table  class="table table-bordered table-striped table-condensed cf">
+	<thead>
+		<tr>
+			<th>Manzana</th>
+			<th>Lote</th>
+			<th>Fecha</th>
+			<th>Fecha Preliberacion</th>
+			<th>Nota</th>
+			<th>Oferta</th>
+			<th>Monto Credito</th>
+			<th>Monto Subsidio</th>
+			<th>Suman Documentos</th>
+			<th>Saldo</th>
+			<th>Imss</th>							
+		</tr>
+	</thead>
+	<tbody>
+		{{#each inmuebles as |i|}}
+		<tr>
+			<td data-title="Manzana">
+				{{i.manzana}}
+			</td>
+			<td data-title="Lote">
+				{{i.lote}}
+			</td>
+			<td data-title="Fecha">
+				{{i.fecha}}
+			</td>
+			<td data-title="Fecha Preliberacion">
+				{{i.fechaLiberacion}}
+			</td>
+			<td data-title="Nota">
+				{{i.nota}}
+			</td>
+			<td data-title="Oferta">
+				{{i.oferta}}
+			</td>
+			<td data-title="Monto Credito">
+				{{i.montoCredito}}
+			</td>
+			<td data-title="Monto Subsidio">
+				{{i.montoSubsidio}}
+			</td>
+			<td data-title="Suman Documentos">
+				{{i.sumanDocumentos}}
+			</td>
+			<td data-title="Saldo">
+				{{i.saldo}}
+			</td>
+			<td data-title="Imss">
+				{{i.imss}}
+			</td>
+		</tr>
+		{{/each}}
+		
+	</tbody>
+</table>

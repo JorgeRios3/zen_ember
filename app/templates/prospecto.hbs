@@ -1,8 +1,7 @@
-<br><br><h3>
+<br><br>
+<h3>
 	<div class="row">
-		<span class="col-xs-6 col-md-3">Prospecto</span>
-		
-		
+		<span class="col-xs-6 col-md-3">Prospecto</span>		
 		{{#link-to 'buscarprospecto'}}
 			<span class="glyphicon glyphicon-search"></span>
 		{{/link-to }}
@@ -44,116 +43,115 @@
 	</div>
 	{{/if}}
 	{{#if afiliacionOk}}
-	<div class="form-group">
-		<label for="idapellidopaterno" class="control-label">Apellido Paterno</label>
-		<div class="row">
-			<div class="col-xs-8 col-md-5">
-				{{input type="text" value=apellidopaterno class="form-control" placeholder="Apellido Paterno" id="idapellidopaterno" maxlenght="60"}}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="idapellidomaterno" class="control-label">Apellido Materno</label>
-		<div class="row">
-			<div class="col-xs-8 col-md-5">
-				{{input type="text" value=apellidomaterno class="form-control" placeholder="Apellido Materno" id="idapellidomaterno" maxlenght="60"}}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="idnombre" class="control-label">Nombre</label>
-		<div class="row">
-			<div class="col-xs-8 col-md-5">
-				{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idnombre" maxlenght="60"}}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="idrfc" class="control-label">RFC</label>
-		<div class="row">
-			<div class="col-xs-6 col-md-3">
-				{{input type="text" value=rfc class="form-control" placeholder="Reg Fed Contrib" maxlength="13" id="idrfc"}}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="idcurp" class="control-label">CURP</label>
-		<div class="row">
-			<div class="col-xs-6 col-md-3">
-				{{input type="text" value=curp class="form-control" placeholder="Curp, registro nacional de poblaci&oacute;n" maxlength="18" id="idcurp"}}
-			</div>
-		</div>
-	</div>
-	
-	{{! date-widget label="Fecha de Nacimiento" xtag="fechanacimiento" action="getDateValue"}}
-
-	<div class="form-group">
-		<label for="datewidget" class="control-label">Fecha de Nacimiento</label>
-		<div class="row">
-			<div class="col-xs-10 col-md-3">
-            	{{bs-datetimepicker date=nullfechadenacimiento showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechadenacimiento))}}
-        	</div>
-    	</div>
-	</div>
-	
-	<div class="form-group">
-		<label for="idtelefonocasa" class="control-label">Tel&eacute;fono Casa</label>
-		<div class="row">
-			<div class="col-xs-5 col-md-2">
-				{{input type="text" value=telefonocasa class="form-control" placeholder="Tel. Casa" id="idtelefonocasa" maxlength="20"}}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="idtelefontrabajo" class="control-label">Tel&eacute;fono trabajo</label>
-		<div class="row">
-			<div class="col-xs-5 col-md-2">
-				{{input type="text" value=telefonotrabajo class="form-control" placeholder="Tel. Trabajo" id="idtelefonotrabajo" maxlength="20"}}
-			</div>
-			<div class="col-xs-5 col-md-2">
-				{{input type="text" value=telefonotrabajoextension class="form-control" placeholder="Ext si la hay" id="idtelefonotrabajoextension" maxlength="5"}}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="idtelefonocelular" class="control-label">Celular ( M&oacute;vil )</label>
-		<div class="row">
-			<div class="col-xs-5 col-md-2">
-				{{input type="text" value=telefonocelular class="form-control" placeholder="Celular" id="idtelefonocelular" maxlength="20"}}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-				<label class="control-label">Medio Publicitario de Contacto</label>
-				<div class="row">
-					<div class="col-md-5">
-						{{#x-select value=selectedMedio action=(action  (mut selectedMedio)) class="form-control form-control-inline"}}
-  							{{#x-option value='0'}}Elija Medio Publicitario{{/x-option}}
-  							{{#each apMediospublicitarios as |item|}}
-  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
-							{{/each}}
-						{{/x-select}}
-					</div>
+		<div class="form-group">
+			<label for="idapellidopaterno" class="control-label">Apellido Paterno</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=apellidopaterno class="form-control" placeholder="Apellido Paterno" id="idapellidopaterno" maxlenght="60"}}
 				</div>
 			</div>
-	
-	<div class="form-group">
-		<label for="idmediopublicitariosugerido" class="control-label">Sugerido</label>
-		<div class="row">
-			<div class="col-xs-8 col-md-6">
-				{{input type="text" name=mediopublicitariosugerido class="form-control" placeholder="Medio Publicitario sugerido" id="idmediopublicitariosugerido" maxlength="150"}}
+		</div>
+		<div class="form-group">
+			<label for="idapellidomaterno" class="control-label">Apellido Materno</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=apellidomaterno class="form-control" placeholder="Apellido Materno" id="idapellidomaterno" maxlenght="60"}}
+				</div>
 			</div>
 		</div>
-	</div>
-	{{#if gtevdor.nombregerente}}
-	<div class="row">
-		<div class="col-xs-9 col-md-6">
-			<p class="bg-primary">Gerente : {{gtevdor.nombregerente}}</p>
+		<div class="form-group">
+			<label for="idnombre" class="control-label">Nombre</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idnombre" maxlenght="60"}}
+				</div>
+			</div>
 		</div>
-	</div>
-	<br/>
-	{{else}}
-	<div class="form-group">
+		<div class="form-group">
+			<label for="idrfc" class="control-label">RFC</label>
+			<div class="row">
+				<div class="col-xs-6 col-md-3">
+					{{input type="text" value=rfc class="form-control" placeholder="Reg Fed Contrib" maxlength="13" id="idrfc"}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="idcurp" class="control-label">CURP</label>
+			<div class="row">
+				<div class="col-xs-6 col-md-3">
+					{{input type="text" value=curp class="form-control" placeholder="Curp, registro nacional de poblaci&oacute;n" maxlength="18" id="idcurp"}}
+				</div>
+			</div>
+		</div>
+	
+	
+		<div class="form-group">
+			<label for="datewidget" class="control-label">Fecha de Nacimiento</label>
+			<div class="row">
+				<div class="col-xs-10 col-md-3">
+            		{{bs-datetimepicker date=nullfechadenacimiento showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechadenacimiento))}}
+        		</div>
+    		</div>
+		</div>
+	
+		<div class="form-group">
+			<label for="idtelefonocasa" class="control-label">Tel&eacute;fono Casa</label>
+			<div class="row">
+				<div class="col-xs-5 col-md-2">
+					{{input type="text" value=telefonocasa class="form-control" placeholder="Tel. Casa" id="idtelefonocasa" maxlength="20"}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="idtelefontrabajo" class="control-label">Tel&eacute;fono trabajo</label>
+			<div class="row">
+				<div class="col-xs-5 col-md-2">
+					{{input type="text" value=telefonotrabajo class="form-control" placeholder="Tel. Trabajo" id="idtelefonotrabajo" maxlength="20"}}
+				</div>
+				<div class="col-xs-5 col-md-2">
+					{{input type="text" value=telefonotrabajoextension class="form-control" placeholder="Ext si la hay" id="idtelefonotrabajoextension" maxlength="5"}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="idtelefonocelular" class="control-label">Celular ( M&oacute;vil )</label>
+			<div class="row">
+				<div class="col-xs-5 col-md-2">
+					{{input type="text" value=telefonocelular class="form-control" placeholder="Celular" id="idtelefonocelular" maxlength="20"}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label">Medio Publicitario de Contacto</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=selectedMedio action=(action  (mut selectedMedio)) class="form-control form-control-inline"}}
+  						{{#x-option value='0'}}Elija Medio Publicitario{{/x-option}}
+  						{{#each apMediospublicitarios as |item|}}
+  							{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+						{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+	
+		<div class="form-group">
+			<label for="idmediopublicitariosugerido" class="control-label">Sugerido</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-6">
+					{{input type="text" name=mediopublicitariosugerido class="form-control" placeholder="Medio Publicitario sugerido" id="idmediopublicitariosugerido" maxlength="150"}}
+				</div>
+			</div>
+		</div>
+		{{#if gtevdor.nombregerente}}
+			<div class="row">
+				<div class="col-xs-9 col-md-6">
+					<p class="bg-primary">Gerente : {{gtevdor.nombregerente}}</p>
+				</div>
+			</div>
+			<br/>
+		{{else}}
+			<div class="form-group">
 				<label class="control-label">Gerente de Ventas {{#if cuantosvendedores}}({{cuantosvendedores}}){{/if}}</label>
 				<div class="row">
 					<div class="col-md-5">
@@ -166,17 +164,16 @@
 					</div>
 				</div>
 			</div>
-	{{/if}}
-	{{#if gtevdor.nombrevendedor}}
-	<div class="row">
-		<div class="col-xs-9 col-md-6">
+		{{/if}}
+		{{#if gtevdor.nombrevendedor}}
+			<div class="row">
+				<div class="col-xs-9 col-md-6">
+					<p class="bg-primary">Vendedor : {{gtevdor.nombrevendedor}}</p>
+				</div>
+			</div>
+		{{else}}
 	
-			<p class="bg-primary">Vendedor : {{gtevdor.nombrevendedor}}</p>
-		</div>
-	</div>
-	{{else}}
-	
-	<div class="form-group">
+			<div class="form-group">
 				<label class="control-label">Vendedor</label>
 				<div class="row">
 					<div class="col-md-5">
@@ -189,25 +186,24 @@
 					</div>
 				</div>
 			</div>
-	{{/if}}
-	<br/>
-	<div>
-		{{#if isValid}}
-		<button class="btn btn-primary" type="submit">Grabar</button>
-		{{else}}
-		<button class="btn btn-danger" {{action 'revisarErrores'}}>Revisar</button>
 		{{/if}}
-	</div>
+		<br/>
+		<div>
+		{{#if isValid}}
+			<button class="btn btn-primary" type="submit">Grabar</button>
+		{{else}}
+			<button class="btn btn-danger" {{action 'revisarErrores'}}>Revisar</button>
+		{{/if}}
+		</div>
 	{{/if}}
-		{{#if muestroErrores}}
-			
-			{{#modal-bs title="Errores antes de poder grabar" close="enteradoInspeccionarErrores"}}
-  					<ul>
-   					{{#each erroresHabidos.content as |err|}}
-   					<li>{{if err.campo err.campo err.variable}}&nbsp;-&nbsp;{{err.mensaje}}</li>
-   					{{/each}}
- 				</ul>
-  			{{/modal-bs}}
-		{{/if}} 
+	{{#if muestroErrores}}		
+		{{#modal-bs title="Errores antes de poder grabar" close="enteradoInspeccionarErrores"}}
+  			<ul>
+   			{{#each erroresHabidos.content as |err|}}
+   				<li>{{if err.campo err.campo err.variable}}&nbsp;-&nbsp;{{err.mensaje}}</li>
+   			{{/each}}
+ 			</ul>
+  		{{/modal-bs}}
+	{{/if}} 
 
 </form>
