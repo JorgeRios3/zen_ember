@@ -44,7 +44,7 @@ export default Ember.Controller.extend({
       let lista = [];
       lista.addObject({ id: 'todos', nombre: 'todos' });
       listaMenu.forEach((item)=> {
-        lista.addObject({ id: get(item, 'item'), nombre: get(item, 'item' )});
+        lista.addObject({ id: get(item, 'ruta'), nombre: get(item, 'ruta' )});
       });
       return lista;
     }
@@ -108,7 +108,7 @@ export default Ember.Controller.extend({
       info("valor de selectedMenu", menuItem);
       let menu = get(this, 'menu');
       return menu.filter((item)=> {
-        if ( menuItem === get(item, 'item')){
+        if ( menuItem === get(item, 'ruta')){
           return true;
         } else {
           return  menuItem === 'todos' ? true : false;

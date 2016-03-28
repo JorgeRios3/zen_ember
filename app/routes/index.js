@@ -70,7 +70,6 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     model.menu.forEach((item)=> {
       let { title, intro, consulta } = item.getProperties('title', 'intro', 'consulta');
       let ruta = get(item, 'item');
-      info('valor de ruta', ruta);
       menu.pushObject({ ruta ,title, intro, consulta });
 
     });
