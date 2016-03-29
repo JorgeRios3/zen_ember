@@ -65,14 +65,22 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       isTwoFactorAuthenticated: get(model.twofactor, 'isTwoFactorAuthenticated')
     });
     // let listaperfiles = this.profileHandler(perfil);
-    let menuitems = get(model.zenusuario, 'menuitems').w();
     let menu = Ember.A();
-    model.menu.forEach((item)=> {
-      let { title, intro, consulta } = item.getProperties('title', 'intro', 'consulta');
-      let ruta = get(item, 'item');
-      menu.pushObject({ ruta ,title, intro, consulta });
-
-    });
+    let menuitems = get(model.zenusuario, 'menuitems').w();
+    if (menuitems) {
+      menuitems.forEach((item)=> {
+        let obj = model.menu.findBy('item', item);
+        let { title, intro, consulta } = obj.getProperties('title', 'intro', 'consulta');
+        // info(`${title} ${intro} -- valen title e intro`);
+        menu.pushObject({ ruta: item, title, intro, consulta });
+      });
+    } else {
+      model.menu.forEach((item)=> {
+        let { title, intro, consulta } = item.getProperties('title', 'intro', 'consulta');
+        let ruta = get(item, 'item');
+        menu.pushObject({ ruta ,title, intro, consulta });
+      });
+    }
     /*menuitems.forEach((item)=> {
       let obj = model.menu.findBy('item', item);
       let { title, intro, consulta } = obj.getProperties('title', 'intro', 'consulta');
