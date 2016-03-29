@@ -1,5 +1,8 @@
 <br>
 <div class="h3 text text-info">Detalle Cobranza</div>
+{{#if cargando}}
+<div class=" h5 text text-success">Cargando datos...</div>
+{{else}}
 <div class="form-group">
 	<label class="control-label">Etapa</label>
 	<div class="row">
@@ -19,7 +22,7 @@
 	<div class="row">
 		<div class="col-md-5">
 			{{#x-select value=selecteTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
-				{{#x-option}}Escoja Tipo{{/x-option}}
+				{{#x-option value='1'}}Escoja Tipo{{/x-option}}
 				{{#each tipos as |t|}}
 					{{#x-option value=t.valor}}{{t.nombre}}{{/x-option}}
 				{{/each}}
@@ -68,6 +71,15 @@
 		<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
 	</div>
 {{/if}}
+{{#if showNavigation}}
+		<h4 class="text text-danger">P&aacute;g. {{resultPage}} de {{resultPages}} Total a mostrar {{resultRowCountFormatted}}</h4>
+	{{/if}}
+	{{#if hayPagPrevias}}
+		<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}>Mostrar P&aacute;g. Previa</button>
+	{{/if}}
+	{{#if hayPagSiguientes}}
+		<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Mostrar P&aacute;g. Siguiente</button>
+	{{/if}}
 <br><hr>
 <div id="no-more-tables">
 <table  class="table table-bordered table-striped table-condensed cf">
@@ -128,3 +140,4 @@
 	</tbody>
 </table>
 </div>
+{{/if}}
