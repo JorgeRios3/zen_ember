@@ -18,9 +18,9 @@ export default DS.Model.extend({
   fechaPreliberacion: attr('string'),
   nota: attr('string'),
   oferta: attr('string'),
-  montoCredito: attr('string'),
-  montoSubsidio: attr('string'),
-  sumanDocumentos: attr('string'),
+  montocredito: attr('string'),
+  montosubsidio: attr('string'),
+  sumandocumentos: attr('string'),
   saldo: attr('string'),
   imss: attr('string'),
   formatter(key) {
@@ -38,19 +38,19 @@ export default DS.Model.extend({
       return this.formatter('saldo');
     }
   }),
-  sumanDocumentosFormateado: computed('sumanDocumentos', {
+  sumanDocumentosFormateado: computed('sumandocumentos', {
     get() {
-      return this.formatter('sumanDocumentos');
+      return this.formatter('sumandocumentos');
     }
   }),
-  montoCreditoFormateado: computed('montoCredito', {
+  montoCreditoFormateado: computed('montocredito', {
     get() {
-      return this.formatter('montoCredito');
+      return this.formatter('montocredito');
     }
   }),
-  montoSubsidioFormateado: computed('montoSubsidio', {
+  montoSubsidioFormateado: computed('montosubsidio', {
     get() {
-      return this.formatter('montoSubsidio');
+      return this.formatter('montosubsidio');
     }
   })
 });
