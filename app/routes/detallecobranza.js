@@ -14,6 +14,14 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
   beforeModel(transition) {
     this._super(...arguments);
     let c = this.controllerFor(this.routeName);
+    c.setProperties({
+      inmuebles: null,
+      totMontoCredito: null,
+      totMontoSubsidio: null,
+      totDocumentos: null,
+      selectedEtapa: 1,
+      selecteTipo: 1
+    });
   },
   setupController(ctrl, model) {
     let { etapas } = model;
