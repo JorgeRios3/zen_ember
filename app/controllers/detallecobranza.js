@@ -33,6 +33,10 @@ export default Ember.Controller.extend({
   resultPages: '',
   resultRowCountFormatted: '',
   requestedPage: '',
+  inmueblesLista: '',
+  mostrarCaracteristicas: false,
+  manzanaLoteFormateado: '',
+  carateristicasLista: Ember.A(),
   hayPagPrevias: computed('resultPage', {
     get() {
       if (get(this, 'resultPage') === '') {
@@ -63,13 +67,18 @@ export default Ember.Controller.extend({
     set(this, 'tipos', Ember.ArrayProxy.create({ content: [{ valor: 'C', nombre: 'Cotejadas' }, { valor: 'F', nombre: 'Firma sin cotejo' },
 	{ valor: 'E', nombre: 'En firma' }, { valor: 'I', nombre: 'Ingresadas' }, { valor: 'P', nombre: 'Por ingresar' }, { valor: 'S', nombre: 'Solicitados por cerrar' },
 	{ valor: 'A', nombre: 'Asignados por solicitar' }, { valor: 'X', nombre: 'Cobradas' }, { valor: 'T', nombre: 'Taller infonavit' }] }));
+    // set(this, 'inmueblesLista', Ember.ArrayProxy.create({ content: [] }));
   },
   etapaSeleccionada: observer('selectedEtapa', function() {
     let that = this;
     if (get(this, 'inmuebles') !== null) {
       set(that, 'inmuebles', null);
     }
-    // info('valor de etapaseleccionada', get(this, 'selectedEtapa'));
+    this.store.query('inmueblestramite', { etapa: get(this, 'selectedEtapa') })
+    .then((data)=> {
+      set(this, 'inmueblesLista', data);
+    });
+    info('valor de inmuebles', get(this, 'inmueblesLista'));
   }),
   tipoSeleccionado: observer('selectedTipo', function() {
     let that = this;
@@ -137,6 +146,41 @@ export default Ember.Controller.extend({
     });
   }),
   actions: {
+    cerrarModal() {
+      this.toggleProperty('mostrarCaracteristicas');
+    },
+    muestraCaracteristicas(manzana, lote) {
+      set(this, 'manzanaLoteFormateado', `${manzana} ${lote}`);
+      let that = this;
+      let Inmueble = '';
+      let domicilio = '';
+      let selectedPrecio = '';
+      let PrecioCatalogo = '';
+      get(this, 'carateristicasLista').clear();
+      get(this, 'inmueblesLista').filter((item) => {
+        if (get(item, 'manzana') === manzana && get(item, 'lote') === lote) {
+          info('valor de item bueno', get(item, 'id'), get(item, 'manzana'), get(item, 'lote'));
+          Inmueble = get(item, 'id');
+        }
+      });
+      this.store.find('inmuebleindividual', Inmueble)
+      .then((dato)=> {
+        domicilio = get(dato, 'domicilio'),
+        selectedPrecio = 0,
+        PrecioCatalogo = get(dato, 'precioCatalogo');
+        this.store.query('caracteristicasinmueble', {
+          inmueble: Inmueble,
+          precio: selectedPrecio,
+          precioCatalogo: PrecioCatalogo,
+          etapa: get(this, 'selectedEtapa') }).then((otro) => {
+            otro.forEach((item)=> {
+              get(that, 'carateristicasLista').pushObject(item);
+            });
+          });
+      });
+      this.toggleProperty('mostrarCaracteristicas');
+
+    },
     mostrarPagPrevia() {
       let nextPage = parseInt(get(this, 'resultPage'));
       nextPage = nextPage - 1;

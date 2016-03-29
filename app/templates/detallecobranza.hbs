@@ -73,13 +73,22 @@
 {{/if}}
 {{#if showNavigation}}
 		<h4 class="text text-danger">P&aacute;g. {{resultPage}} de {{resultPages}} Total a mostrar {{resultRowCountFormatted}}</h4>
-	{{/if}}
 	{{#if hayPagPrevias}}
 		<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}>Mostrar P&aacute;g. Previa</button>
 	{{/if}}
 	{{#if hayPagSiguientes}}
 		<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Mostrar P&aacute;g. Siguiente</button>
 	{{/if}}
+{{/if}}
+{{#if mostrarCaracteristicas}}	
+  {{#modal-bs title="Caracteristicas del inmueble" close="cerrarModal"}}
+  <div class="h5">Inmueble {{manzanaLoteFormateado}}</div>
+  	{{#each carateristicasLista as |c|}}
+  		<div>{{c.cantidad}} - {{c.descripcion}}</div>
+  	{{/each}}
+  {{/modal-bs}}
+
+{{/if}}
 <br><hr>
 <div id="no-more-tables">
 <table  class="table table-bordered table-striped table-condensed cf">
@@ -105,7 +114,7 @@
 				{{i.manzana}}
 			</td>
 			<td data-title="Lote">
-				{{i.lote}}
+				<a {{action 'muestraCaracteristicas' i.manzana i.lote}}>{{i.lote}}</a>
 			</td>
 			<td data-title="Fecha">
 				{{i.fecha}}
