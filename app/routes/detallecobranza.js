@@ -20,10 +20,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       totMontoSubsidio: null,
       totDocumentos: null,
       selectedEtapa: 1,
-      selecteTipo: 1
-      // showNavigation: false,
-      // hayPagPrevias: false,
-      // hayPagSiguientes:  false
+      selecteTipo: 1,
+      showNavigation: false
     });
   },
   setupController(ctrl, model) {
