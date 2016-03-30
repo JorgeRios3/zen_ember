@@ -11,7 +11,10 @@ const {
 	getProperties,
 	setProperties
 } = Ember;
-
+let conValor = ((obj, key)=> {
+  let value = get(obj, key);
+  return !isEmpty(value) && value !== '0.00';
+});
 let cuantosPrevio = null;
 export default Ember.Controller.extend({
   selectedEtapa: '',
@@ -22,8 +25,24 @@ export default Ember.Controller.extend({
   fechaFinal: '',
   total: '',
   totDocumentos: null,
+  totDocumentosOk: computed('totDocumentos', {
+    get() {
+      return conValor(this, 'totDocumentos');
+    }
+  }),
   totMontoCredito: null,
+  totMontoCreditoOk: computed('totMontoCredito', {
+    get() {
+      return conValor(this, 'totMontoCredito');
+    }
+  }),
   totMontoSubsidio: null,
+  totMontoSubsidioOk: computed('totMontoSubsidio', {
+    get() {
+      return conValor(this, 'totMontoSubsidio');
+    }
+  }),
+  showButton: false,
   cuantos: 0,
   showNavigation: false,
   tipocobradas: computed.equal('selectedTipo', 'X'),
@@ -69,29 +88,43 @@ export default Ember.Controller.extend({
 	{ valor: 'A', nombre: 'Asignados por solicitar' }, { valor: 'X', nombre: 'Cobradas' }, { valor: 'T', nombre: 'Taller infonavit' }] }));
     // set(this, 'inmueblesLista', Ember.ArrayProxy.create({ content: [] }));
   },
+  limpiar() {
+    // limpiando totales
+    for ( let key of "totDocumentos totMontoCredito totMontoSubsidio".w()) {
+      set(this, key, '');
+    }
+    set(this, 'inmuebles', null);
+  },
   etapaSeleccionada: observer('selectedEtapa', function() {
+    set(this, 'showButton', true);
     let that = this;
+    /*
     if (get(this, 'inmuebles') !== null) {
       set(that, 'inmuebles', null);
     }
+    */
     this.store.query('inmueblestramite', { etapa: get(this, 'selectedEtapa') })
     .then((data)=> {
       set(this, 'inmueblesLista', data);
     });
+    this.limpiar();
     info('valor de inmuebles', get(this, 'inmueblesLista'));
   }),
   tipoSeleccionado: observer('selectedTipo', function() {
+    set(this, 'showButton', true);
     let that = this;
+    /*
     if (get(this, 'inmuebles') !== null) {
       set(that, 'inmuebles', null);
     }
-    // info('valor de selectedTipo', get(this, 'selectedTipo'));
-    for (let key of 'totMontoCredito totMontoSubsidio totDocumentos'.w()) {
-      set(this, key, '');
-    }
+    */
+    this.limpiar();
+    
   }),
 
   observaFechas: observer('fechaInicial', 'fechaFinal', function() {
+    set(this, 'showButton', true);
+    this.limpiar();
     let finicial = moment(get(this, 'fechaInicial')).format('YYYY/MM/DD');
     let ffinal = moment(get(this, 'fechaFinal')).format('YYYY/MM/DD');
     // info(`${finicial}, ${ffinal}`);
@@ -149,21 +182,25 @@ export default Ember.Controller.extend({
     cerrarModal() {
       this.toggleProperty('mostrarCaracteristicas');
     },
-    muestraCaracteristicas(manzana, lote) {
+    muestraCaracteristicas(record) {
+      let { inmueble: Inmueble, manzana, lote } = record.getProperties('inmueble', 'manzana', 'lote');
+      info(`Obtuve el inmueble ${Inmueble}`);
       set(this, 'manzanaLoteFormateado', `${manzana} ${lote}`);
-      let that = this;
-      let Inmueble = '';
+      //let that = this;
+      
       let domicilio = '';
       let selectedPrecio = '';
       let PrecioCatalogo = '';
       get(this, 'carateristicasLista').clear();
+      /*
       get(this, 'inmueblesLista').filter((item) => {
         if (get(item, 'manzana') === manzana && get(item, 'lote') === lote) {
           info('valor de item bueno', get(item, 'id'), get(item, 'manzana'), get(item, 'lote'));
           Inmueble = get(item, 'id');
         }
       });
-      this.store.find('inmuebleindividual', Inmueble)
+      */
+      this.store.findRecord('inmuebleindividual', Inmueble)
       .then((dato)=> {
         domicilio = get(dato, 'domicilio'),
         selectedPrecio = 0,
@@ -174,7 +211,7 @@ export default Ember.Controller.extend({
           precioCatalogo: PrecioCatalogo,
           etapa: get(this, 'selectedEtapa') }).then((otro) => {
             otro.forEach((item)=> {
-              get(that, 'carateristicasLista').pushObject(item);
+              get(this, 'carateristicasLista').pushObject(item);
             });
           });
       });
@@ -198,6 +235,7 @@ export default Ember.Controller.extend({
       this.send('pedir');
     },
     pedir() {
+      set(this, 'showButton', false);
       set(this, 'cuantos', 0);
       let that = this;
       set(this, 'cargando', true);
@@ -227,6 +265,7 @@ export default Ember.Controller.extend({
           let totDocumentos = get(data, 'meta.totdocumentos');
           let cuantos = get(data, 'meta.cuantos');
           setProperties(this, { cuantos });
+          info(`hay en cuantos ${cuantos}`);
           if (cuantosPrevio !== cuantos) {
             this.notifyPropertyChange('cuantos');
           }

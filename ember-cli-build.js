@@ -1,5 +1,6 @@
 /*jshint node:true*/
 /* global require, module */
+var path = require('path');
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
@@ -17,7 +18,8 @@ module.exports = function(defaults) {
 	}
     // Add options here
   });
-
+  //app.import(path.join(app.bowerDirectory, 'intl/dist/Intl.js'));
+  //console.log(bowerDir);
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //
