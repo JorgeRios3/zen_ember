@@ -1,152 +1,152 @@
 <br>
 <div class="h3 text text-info">Detalle Cobranza</div>
 {{#if cargando}}
-<div class=" h5 text text-success">Cargando datos...</div>
+	<div class=" h5 text text-success">Cargando datos...</div>
 {{else}}
-<div class="form-group">
-	<label class="control-label">Etapa</label>
-	<div class="row">
-		<div class="col-md-5">
+	<div class="form-group">
+		<label class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
 			{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
 				{{#x-option value='1'}}Todas{{/x-option}}
 				{{#each etapas as |item|}}
 					{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
 				{{/each}}
 			{{/x-select}}
+			</div>
 		</div>
 	</div>
-</div>
 
-<div class="form-group">
-	<label class="control-label">Tipo</label>
-	<div class="row">
-		<div class="col-md-5">
+	<div class="form-group">
+		<label class="control-label">Tipo</label>
+		<div class="row">
+			<div class="col-md-5">
 			{{#x-select value=selecteTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
 				{{#x-option value='1'}}Escoja Tipo{{/x-option}}
 				{{#each tipos as |t|}}
 					{{#x-option value=t.valor}}{{t.nombre}}{{/x-option}}
 				{{/each}}
 			{{/x-select}}
+			</div>
 		</div>
 	</div>
-</div>
-{{#if tipocobradas}}
-	<div class="form-group">
-		<label for="datewidget" class="control-label">Fecha inicial para cobradas</label>
-		<div class="row">
-			<div class="col-xs-10 col-md-3">
-            	{{bs-datetimepicker date=nullFechaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaInicial))}}
-        	</div>
-    	</div>
-	</div>
+	{{#if tipocobradas}}
+		<div class="form-group">
+			<label for="datewidget" class="control-label">Fecha Inicial</label>
+			<div class="row">
+				<div class="col-xs-12 col-md-3">
+            	{{bs-datetimepicker date=fechaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaInicial))}}
+        		</div>
+    		</div>
+		</div>
 
-	<div class="form-group">
-		<label for="datewidget" class="control-label">Fecha final para cobradas</label>
-		<div class="row">
-			<div class="col-xs-10 col-md-3">
-            	{{bs-datetimepicker date=nullFechaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaFinal))}}
-        	</div>
-    	</div>
-	</div>
-{{/if}}
-
-<div class="btn btn-info" {{action 'pedir'}}>Desplegar Datos</div>
-<br>
-<br>
-{{#if totMontoCredito }}
-	<div class="form-group">
-		<label class="control-label">Total Monto Crédito</label>
-		<div class="row">{{input type='text' value=totMontoCredito disabled=true}}</div>
-	</div>
-{{/if}}
-{{#if totMontoSubsidio}}
-	<div class="form-group">
-		<label class="control-label">Total Monto Subsidio</label>
-		<div class="row">{{input type='text' value=totMontoSubsidio disabled=true}}</div>
-	</div>
-{{/if}}
-{{#if totDocumentos}}
-	<div class="form-group">
-		<label class="control-label">Total Documentos</label>
-		<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
-	</div>
-{{/if}}
-{{#if showNavigation}}
-		<h4 class="text text-danger">P&aacute;g. {{resultPage}} de {{resultPages}} Total a mostrar {{resultRowCountFormatted}}</h4>
-	{{#if hayPagPrevias}}
-		<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}>Mostrar P&aacute;g. Previa</button>
+		<div class="form-group">
+			<label for="datewidget" class="control-label">Fecha Final</label>
+			<div class="row">
+				<div class="col-xs-12 col-md-3">
+            	{{bs-datetimepicker date=fechaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaFinal))}}
+        		</div>
+    		</div>
+		</div>
 	{{/if}}
-	{{#if hayPagSiguientes}}
-		<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Mostrar P&aacute;g. Siguiente</button>
+	{{#if showButton}}
+		<div class="btn btn-info" {{action 'pedir'}}>Desplegar Datos</div>
 	{{/if}}
-{{/if}}
-{{#if mostrarCaracteristicas}}	
-  {{#modal-bs title="Caracteristicas del inmueble" close="cerrarModal"}}
-  <div class="h5">Inmueble {{manzanaLoteFormateado}}</div>
-  	{{#each carateristicasLista as |c|}}
-  		<div>{{c.cantidad}} - {{c.descripcion}}</div>
-  	{{/each}}
-  {{/modal-bs}}
+	<br><br>
+	{{#if totMontoCreditoOk }}
+		<div class="form-group">
+			<label class="control-label">Total Monto Crédito</label>
+			<div class="row">{{input type='text' value=totMontoCredito disabled=true}}</div>
+		</div>
+	{{/if}}
+	{{#if totMontoSubsidioOk}}
+		<div class="form-group">
+			<label class="control-label">Total Monto Subsidio</label>
+			<div class="row">{{input type='text' value=totMontoSubsidio disabled=true}}</div>
+		</div>
+	{{/if}}
+	{{#if totDocumentosOk}}
+		<div class="form-group">
+			<label class="control-label">Total Documentos</label>
+			<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
+		</div>
+	{{/if}}
+	{{#if showNavigation}}
+		<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
+		{{#if hayPagPrevias}}
+			<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
+		{{/if}}
+		{{#if hayPagSiguientes}}
+			<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+		{{/if}}
+	{{/if}}
+	{{#if mostrarCaracteristicas}}	
+  		{{#modal-bs title="Caracteristicas del inmueble" close="cerrarModal"}}
+  			<div class="h4">Inmueble {{manzanaLoteFormateado}}</div>
+  			{{#each carateristicasLista as |c|}}
+  			<div>{{c.cantidad}} - {{c.descripcion}}</div>
+  			{{/each}}
+  		{{/modal-bs}}
 
-{{/if}}
-<br><hr>
-<div id="no-more-tables">
-<table  class="table table-bordered table-striped table-condensed cf">
-	<thead>
-		<tr>
-			<th>Manzana</th>
-			<th>Lote</th>
-			<th>Fecha</th>
-			<th>Fecha Preliberacion</th>
-			<th>Nota</th>
-			<th>Oferta</th>
-			<th>Monto Credito</th>
-			<th>Monto Subsidio</th>
-			<th>Suman Documentos</th>
-			<th>Saldo</th>
-			<th>Imss</th>							
-		</tr>
-	</thead>
-	<tbody>
-		{{#each inmuebles as |i|}}
-		<tr>
-			<td data-title="Manzana">
-				{{i.manzana}}
-			</td>
-			<td data-title="Lote">
-				<a {{action 'muestraCaracteristicas' i.manzana i.lote}}>{{i.lote}}</a>
-			</td>
-			<td data-title="Fecha">
-				{{i.fecha}}
-			</td>
-			<td data-title="Fecha Preliberacion">
-				{{i.fechaPreliberacion}}
-			</td>
-			<td data-title="Nota">
-				{{i.nota}}
-			</td>
-			<td data-title="Oferta">
-				{{i.oferta}}
-			</td>
-			<td data-title="Monto Credito">
-				{{i.montoCreditoFormateado}}
-			</td>
-			<td data-title="Monto Subsidio">
-				{{i.montoSubsidioFormateado}}
-			</td>
-			<td data-title="Suman Documentos" class="text-right">
-				{{i.sumanDocumentosFormateado}}
-			</td>
-			<td data-title="Saldo" class="text-right">
-				{{i.saldoFormateado}}
-			</td>
-			<td data-title="Imss">
-				{{i.imss}}
-			</td>
-		</tr>
-		{{/each}}
+	{{/if}}
+	<br><hr>
+	<div id="no-more-tables">
+		<table  class="table table-bordered table-striped table-condensed cf">
+			<thead>
+				<tr>
+					<th>Manzana</th>
+					<th>Lote</th>
+					<th>Fecha</th>
+					<th>Fecha Preliberacion</th>
+					<th>Nota</th>
+					<th>Oferta</th>
+					<th>Monto Credito</th>
+					<th>Monto Subsidio</th>
+					<th>Suman Documentos</th>
+					<th>Saldo</th>
+					<th>Imss</th>							
+				</tr>
+			</thead>
+			<tbody>
+				{{#each inmuebles as |i|}}
+				<tr>
+					<td data-title="Manzana">
+						{{i.manzana}}
+					</td>
+					<td data-title="Lote">
+						<a {{action 'muestraCaracteristicas' i}}>{{i.lote}}</a>
+					</td>
+					<td data-title="Fecha">
+						{{i.fecha}}
+					</td>
+					<td data-title="Fecha Preliberacion">
+						{{i.fechaPreliberacion}}
+					</td>
+					<td data-title="Nota">
+						{{i.nota}}
+					</td>
+					<td data-title="Oferta">
+						{{i.oferta}}
+					</td>
+					<td data-title="Monto Credito">
+						{{i.montocredito}}
+					</td>
+					<td data-title="Monto Subsidio">
+						{{i.montosubsidio}}
+					</td>
+					<td data-title="Suman Documentos" class="text-right">
+						{{i.sumandocumentos}}
+					</td>
+					<td data-title="Saldo" class="text-right">
+						{{i.saldo}}
+					</td>
+					<td data-title="Imss">
+						{{i.imss}}
+					</td>
+				</tr>
+				{{/each}}
 		
-	</tbody>
-</table>
-</div>
+			</tbody>
+		</table>
+	</div>
 {{/if}}
