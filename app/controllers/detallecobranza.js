@@ -25,6 +25,11 @@ export default Ember.Controller.extend({
   fechaFinal: '',
   total: '',
   totDocumentos: null,
+  desktopOrJumbo: computed('media.isJumbo', 'media.isDesktop', {
+    get() {
+      return get(this, 'media.isJumbo') || get(this, 'media.isDesktop');
+    }
+  }),
   totDocumentosOk: computed('totDocumentos', {
     get() {
       return conValor(this, 'totDocumentos');
