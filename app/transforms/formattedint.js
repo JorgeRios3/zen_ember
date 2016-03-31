@@ -3,7 +3,7 @@ import FormatterMixin from '../mixins/formatter';
 
 export default Transform.extend(FormatterMixin, {
   deserialize(serialized) {
-    return this.formatter(serialized);
+    return this.formatter(serialized, 2, '.', ',', true);
   },
 
   serialize(deserialized) {

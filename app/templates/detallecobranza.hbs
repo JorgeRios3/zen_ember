@@ -71,13 +71,34 @@
 			<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
 		</div>
 	{{/if}}
-	{{#if showNavigation}}
+	{{#if desktopOrJumbo}}
+		{{#if showNavigation}}
+			<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
+			{{#if hayPagPrevias}}
+				<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
+			{{/if}}
+			{{#if hayPagSiguientes}}
+				<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+			{{/if}}
+		{{/if}}
+		{{#if mostrarCaracteristicas}}	
+	  		{{#modal-bs title="Caracteristicas del inmueble" close="cerrarModal"}}
+	  			<div class="h4">Inmueble {{manzanaLoteFormateado}}</div>
+	  			{{#each carateristicasLista as |c|}}
+	  			<div>{{c.cantidad}} - {{c.descripcion}}</div>
+	  			{{/each}}
+	  		{{/modal-bs}}
+
+		{{/if}}
+	{{else}}
+		{{#if showNavigation}}
 		<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
 		{{#if hayPagPrevias}}
-			<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
+			<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-up"></span>&nbsp;Bloque Previo</button>
 		{{/if}}
+		<br><br>
 		{{#if hayPagSiguientes}}
-			<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+			<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-down"></span></button>
 		{{/if}}
 	{{/if}}
 	{{#if mostrarCaracteristicas}}	
@@ -88,6 +109,7 @@
   			{{/each}}
   		{{/modal-bs}}
 
+	{{/if}}
 	{{/if}}
 	<br><hr>
 	<div id="no-more-tables">
@@ -114,13 +136,17 @@
 						{{i.manzana}}
 					</td>
 					<td data-title="Lote">
-						<a {{action 'muestraCaracteristicas' i}}>{{i.lote}}</a>
+						{{#if desktopOrJumbo}}
+							<a href="" {{action 'muestraCaracteristicas' i}}>{{i.lote}}</a>
+						{{else}}
+					   		{{i.lote}} <div class="btn btn-info" {{action 'muestraCaracteristicas' i}}>Ver</div>
+					    {{/if}}
 					</td>
 					<td data-title="Fecha">
 						{{i.fecha}}
 					</td>
 					<td data-title="Fecha Preliberacion">
-						{{i.fechaPreliberacion}}
+						{{#unless desktopOrJumbo}}<br>{{/unless}} {{i.fechaPreliberacion}}
 					</td>
 					<td data-title="Nota">
 						{{i.nota}}
@@ -129,13 +155,13 @@
 						{{i.oferta}}
 					</td>
 					<td data-title="Monto Credito">
-						{{i.montocredito}}
+						{{#unless desktopOrJumbo}}<br>{{/unless}} {{i.montocredito}}
 					</td>
 					<td data-title="Monto Subsidio">
-						{{i.montosubsidio}}
+						{{#unless desktopOrJumbo}}<br>{{/unless}} {{i.montosubsidio}}
 					</td>
 					<td data-title="Suman Documentos" class="text-right">
-						{{i.sumandocumentos}}
+						{{#unless desktopOrJumbo}}<br>{{/unless}} {{i.sumandocumentos}}
 					</td>
 					<td data-title="Saldo" class="text-right">
 						{{i.saldo}}

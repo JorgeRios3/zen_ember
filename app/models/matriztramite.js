@@ -10,12 +10,12 @@ const {
 } = Ember;
 export default DS.Model.extend({
   tramite: attr('number'),
-  total: attr('number'),
-  totalFormateado: computed('total', {
+  total: attr('formattedint')
+  /*totalFormateado: computed('total', {
     get: function() {
       let valor = new Intl.NumberFormat('en-US');
       return valor.format(get(this, 'total'));
     }
-  })
+  })*/
 
 });

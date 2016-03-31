@@ -21,7 +21,7 @@ export default Ember.Controller.extend({
         let a = get(item, 'tramite');
         let tramite = get(this, 'catalogoTramites').findBy('id', `${a}`);
         let descripcion = get(tramite, 'descripcion');
-        let objeto = { tramite:  descripcion, total: get(item, 'totalFormateado') };
+        let objeto = { tramite:  descripcion, total: get(item, 'total') };
         get(this, 'tramitesTotales').pushObject(objeto);
       });
     });
