@@ -8,7 +8,6 @@
     "eonasdan-bootstrap-datetimepicker": "~4.14.30",
     "uri.js": "^1.17.1",
     "selectize": "miguelcobain/selectize.js#master",
-    "mailcheck": "^1.1.1",
-    "intl": "^1.1.0"
+    "mailcheck": "^1.1.1"
   }
 }

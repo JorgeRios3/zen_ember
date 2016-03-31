@@ -1,6 +1,7 @@
 import Ember from 'ember';
 //import ajax from "ember-ajax";
 import RouteAuthMixin from "../mixins/routeauth";
+import FormatterMixin from "../mixins/formatter";
 import AuthenticatedRouteMixin from "ember-simple-auth/mixins/authenticated-route-mixin";
 const info = Ember.Logger.info;
 const {
@@ -10,7 +11,7 @@ const {
 
 const etapas = [53,54,55,57]; // actualice aqui cuando hay nuevos fraccionamientos, poniendo el nuevo a la derecha y suprimiendo el de mas izquierda
 export default Ember.Route.extend(AuthenticatedRouteMixin,
-RouteAuthMixin , 
+RouteAuthMixin, FormatterMixin,
 {
 	ajax:Ember.inject.service(),
 	beforeModel(){
@@ -29,7 +30,7 @@ RouteAuthMixin ,
 			set(controller, "nombre" + indice, get(model,"nombres_etapas")[etapa][0]);
 		}
 		try{
-			get(model,"kvalores").forEach(function(kvalor){
+			get(model,"kvalores").forEach((kvalor)=> {
 				let linea = get(model,"valores")[kvalor];
 				var t = 0;
 				for ( let etapa of etapas){
@@ -38,12 +39,12 @@ RouteAuthMixin ,
 				var objeto = Ember.Object.create({
 						titulo: linea[-1],
 						tipo: linea[0] === "GCMEX" ? "CONSTRUCTOR" : linea[0],
-						total: t
+						total: this.formatter(t, 2, '.', ',', true)
 				});
 				var indice = 0;
 				for ( var etapa of etapas ){
 					indice++;
-					set(objeto, "etapa" + indice, linea[etapa]);
+					set(objeto, "etapa" + indice, this.formatter(linea[etapa], 2, '.', ',', true));
 				}
 				get(controller,"data.content").pushObject(
 					objeto
