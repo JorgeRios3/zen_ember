@@ -1,22 +1,26 @@
 <br>
 <div class="h3 text text-info">Detalle Cobranza</div>
-
-<div id="no-more-tables">
-	<table  class="table table-bordered table-striped table-condensed cf">
-		<thead>
-			<tr>
-				{{#each titulosresumen as | titulo | }}
-					<th>{{titulo}}</th>
+{{#if mostrarResumen}}
+	<div id="no-more-tables">
+			<table  class="table table-bordered table-striped table-condensed cf">
+			<thead>
+				<tr>
+					{{#each titulosresumen as | titulo | }}
+						<th>{{titulo}}</th>
+					{{/each}}
+				</tr>
+			</thead>
+			<tbody>
+				{{#each resumencobranza as | record | }}
+					{{bsz-row record=record titleCols=titulosresumen alignments=alignments useBr='true'}}
 				{{/each}}
-			</tr>
-		</thead>
-		<tbody>
-			{{#each resumencobranza as | record | }}
-				{{bsz-row record=record titleCols=titulosresumen}}
-			{{/each}}
-		</tbody>
-	</table>
-</div>
+			</tbody>
+		</table>
+	</div>
+	<div class="btn btn-warning" {{action 'mostrarCerrar'}}>Cerrar Resumen</div>
+	{{else}}
+	<div class="btn btn-success" {{action 'mostrarCerrar'}}>Mostrar Resumen</div>
+{{/if}}
 {{#if cargando}}
 	<div class=" h5 text text-success">Cargando datos...</div>
 {{else}}
