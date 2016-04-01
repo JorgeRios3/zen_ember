@@ -1,6 +1,9 @@
 
 	{{#each columns as | column | }}
-		<td data-title="{{column.dataTitle}}">
+		<td data-title="{{column.dataTitle}}" class="text-{{if column.alignment column.alignment}}">
+			{{#if useBr}}
+				{{#unless desktopOrJumbo}}<br>{{/unless}}
+			{{/if}}
 			{{column.value}}
 		</td>
 	{{/each}}

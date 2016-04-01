@@ -55,6 +55,7 @@ export default Ember.Controller.extend({
   cargando: false,
   resultPage: '',
   resultPages: '',
+  mostrarResumen: false,
   resultRowCountFormatted: '',
   requestedPage: '',
   inmueblesLista: '',
@@ -95,7 +96,7 @@ export default Ember.Controller.extend({
   },
   limpiar() {
     // limpiando totales
-    for ( let key of "totDocumentos totMontoCredito totMontoSubsidio".w()) {
+    for (let key of 'totDocumentos totMontoCredito totMontoSubsidio'.w()) {
       set(this, key, '');
     }
     set(this, 'inmuebles', null);
@@ -124,7 +125,6 @@ export default Ember.Controller.extend({
     }
     */
     this.limpiar();
-    
   }),
 
   observaFechas: observer('fechaInicial', 'fechaFinal', function() {
@@ -184,6 +184,9 @@ export default Ember.Controller.extend({
     });
   }),
   actions: {
+    mostrarCerrar() {
+      this.toggleProperty('mostrarResumen');
+    },
     cerrarModal() {
       this.toggleProperty('mostrarCaracteristicas');
     },
@@ -191,8 +194,7 @@ export default Ember.Controller.extend({
       let { inmueble: Inmueble, manzana, lote } = record.getProperties('inmueble', 'manzana', 'lote');
       info(`Obtuve el inmueble ${Inmueble}`);
       set(this, 'manzanaLoteFormateado', `${manzana} ${lote}`);
-      //let that = this;
-      
+      // let that = this;
       let domicilio = '';
       let selectedPrecio = '';
       let PrecioCatalogo = '';

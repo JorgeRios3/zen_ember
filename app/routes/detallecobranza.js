@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import RouteAuthMixin from '../mixins/routeauth';
+import FormatterMixin from '../mixins/formatter';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 const {
   set,
@@ -8,7 +9,7 @@ const {
   RSVP: { hash }
 } = Ember;
 
-export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
+export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, FormatterMixin,
 {
   beforeModel(transition) {
     this._super(...arguments);
@@ -36,7 +37,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       // info(rubro, rubronombre, etapa, etapanombre, cantidad, cantidadformateada);
       if (rubro !== prevRubro) {
         if (prevRubro !== null) {
-          record.total = total;
+          record.total = this.formatter(total, 2, '.', ',', true);
           ap.pushObject(record);
         }
         prevRubro = rubro;
@@ -53,7 +54,21 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       ap.pushObject(record);
     }
     titulosresumen.add('Total');
-    ctrl.setProperties({ etapas, resumencobranza: ap, camposresumen: Object.keys(record), titulosresumen });
+    let contador = 0;
+    titulosresumen.forEach((item)=> {
+      contador++;
+    });
+    let alignments = ['left'];
+    for (let i = 1; i < contador; i++) {
+      alignments.push('right');
+    }
+    let listaTitulos = [];
+    titulosresumen.forEach((item)=> {
+      listaTitulos.push(item);
+    });
+    // info('alignments en ruta',alignments);
+
+    ctrl.setProperties({ etapas, resumencobranza: ap, camposresumen: Object.keys(record), titulosresumen: listaTitulos, alignments });
   },
   model() {
     let { store } = this;
