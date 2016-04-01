@@ -35,9 +35,7 @@ RouteAuthMixin, FormatterMixin,
     let indice = 0;
     for (let etapa of etapas) {
       indice++;
-      info('valor de nombres etapas', get(model.resumen, 'nombres_etapas')[etapa][0]);
       set(controller, `nombre${indice}`, get(model.resumen, 'nombres_etapas')[etapa][0]);
-      info(`nombre + ${indice}`);
     }
     try {
       get(model.resumen, 'kvalores').forEach((kvalor)=> {
