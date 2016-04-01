@@ -6,10 +6,12 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 const {
 	get,
 	set,
-	Logger: { info }
+	Logger: { info },
+  RSVP: { hash }
 } = Ember;
 
-const etapas = [53,54,55,57]; // actualice aqui cuando hay nuevos fraccionamientos, poniendo el nuevo a la derecha y suprimiendo el de mas izquierda
+// const etapas = [53,54,55,57];
+// actualice aqui cuando hay nuevos fraccionamientos, poniendo el nuevo a la derecha y suprimiendo el de mas izquierda
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin, FormatterMixin,
 {
@@ -19,19 +21,27 @@ RouteAuthMixin, FormatterMixin,
     info('voy en beforemodel de resumenoperativo');
   },
   setupController(controller, model) {
+    let etapas = [];
+    for (let i = 0; i < 4; i++) {
+      let val = model.etapas.objectAt(i);
+      etapas.push(parseInt((get(val, 'id'))));
+    }
+    etapas = etapas.reverse();
     controller.setProperties({
       data: Ember.ArrayProxy.create({ content: [] }),
       showComponent: false,
-      fecha: get(model, 'fecha')
+      fecha: get(model.resumen, 'fecha')
     });
     let indice = 0;
     for (let etapa of etapas) {
       indice++;
-      set(controller, `nombre + ${indice}`, get(model, 'nombres_etapas')[etapa][0]);
+      info('valor de nombres etapas', get(model.resumen, 'nombres_etapas')[etapa][0]);
+      set(controller, `nombre${indice}`, get(model.resumen, 'nombres_etapas')[etapa][0]);
+      info(`nombre + ${indice}`);
     }
     try {
-      get(model, 'kvalores').forEach((kvalor)=> {
-        let linea = get(model, 'valores')[kvalor];
+      get(model.resumen, 'kvalores').forEach((kvalor)=> {
+        let linea = get(model.resumen, 'valores')[kvalor];
         let t = 0;
         for (let etapa of etapas) {
           t = t + linea[etapa];
@@ -44,7 +54,7 @@ RouteAuthMixin, FormatterMixin,
         let indice = 0;
         for (let etapa of etapas) {
           indice++;
-          set(objeto, 'etapa' + indice, this.formatter(linea[etapa], 2, '.', ',', true));
+          set(objeto, `etapa${indice}`, this.formatter(linea[etapa], 2, '.', ',', true));
         }
         get(controller, 'data.content').pushObject(
           objeto
@@ -56,7 +66,11 @@ RouteAuthMixin, FormatterMixin,
     }
   },
   model() {
-    return get(this, 'ajax').request('/api/ropiclar');
+    return hash({
+      etapas: this.store.findAll('etapastramite'),
+      resumen: get(this, 'ajax').request('/api/ropiclar')
+    });
+    // return get(this, 'ajax').request('/api/ropiclar');
   },
   actions: {
     error(error, transition) {
