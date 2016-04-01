@@ -1,5 +1,4 @@
 import Ember from 'ember';
-
 const {
 	get,
 	set,
@@ -71,8 +70,7 @@ export default Ember.Controller.extend({
   otro: '',
   inmuebleSorteado: null,
   record: null,
-
-  init: function() {
+  init() {
     this._super(...arguments);
     this.setProperties({
       etapas: Ember.ArrayProxy.create({ content: [] }),
@@ -80,14 +78,12 @@ export default Ember.Controller.extend({
       inmueblesFiltrados: Ember.ArrayProxy.create({ content: [] })
     });
   },
-
   limpiaValores() {
     'fechaEstEntrega fechaRealEntrega fechaVencimiento fechaInicio record'.w().forEach((item)=> {
       set(this, item, '');
     });
     this.transitionToRoute('index');
   },
-
   ponerInmueble(loteoficial) {
     let cual = get(this, 'lotesArray').findBy('lote', loteoficial);
     let inmueble = get(cual, 'inmueble');
@@ -101,11 +97,11 @@ export default Ember.Controller.extend({
     .then((dato) => {
       that.setProperties({
         domicilio: get(dato, 'domicilio'),
-        inmueble: inmueble,
+        inmueble,
         precioCatalogo: get(dato, 'precioCatalogo'),
         selectedPrecio: 0
       });
-      that.store.query('caracteristicasinmueble', { inmueble: inmueble })
+      that.store.query('caracteristicasinmueble', { inmueble })
       .then((data)=> {
         if (get(data, 'length') > 0) {
           set(that, 'hayCaracteristicas', true);
@@ -117,7 +113,6 @@ export default Ember.Controller.extend({
       });
     });
   }),
-
   actions: {
     selectedEtapaAction(item) {
       set(this, 'currentManzana', '0');
@@ -133,118 +128,109 @@ export default Ember.Controller.extend({
         manzanasTramite: this.store.query('manzanastramite', { etapa: item.id })
       });
       this.store.find('etapastramite', item.id)
-      .then((data) => {
+      .then((data)=> {
         set(_this, 'departamento', get(data, 'departamento'));
       });
       this.store.query('inmueblestramite', {
         etapa: get(this, 'selectedEtapa')
-      }).then((data) => {
-        set(_this, 'cuantosInmueblesDisponibles', get(data,'length'));
+      }).then((data)=> {
+        set(_this, 'cuantosInmueblesDisponibles', get(data, 'length'));
         set(_this, 'inmueblesdisponibles', data);
       });
-			// set(this, 'selectedManzana', null);
     },
-
-		seleccionaManzana(item) {
-			if (typeof(item) === 'string') {
-				return;
-			}
-			set(this, 'caracteristicasLista', null);
-			set(this, 'hayCaracteristicas', false);
-			set(this, 'currentNumeroInterior', '0');
-			let manzana= get(item, 'manzana');
-			let that = this;
-			let mySet = new Set([]);
-			this.setProperties({
-				tramitesLista:  '',
-				inmueble: '',
-				muestraZonaCaptura: false,
-				numerosExteriores: mySet
-			});
-			
-			let numerosExteriores = get(this, 'numerosExteriores');
-			let l = get(this, 'lotesArray');
-			l.clear();
-			get(this, 'inmueblesdisponibles').forEach((item)=> {
-				if(manzana === item.get('manzana')){
-					lote = get(item,'lote');
-					l.pushObject(
+    seleccionaManzana(item) {
+      if (typeof (item) === 'string') {
+        return;
+      }
+      set(this, 'caracteristicasLista', null);
+      set(this, 'hayCaracteristicas', false);
+      set(this, 'currentNumeroInterior', '0');
+      let manzana = get(item, 'manzana');
+      let that = this;
+      let mySet = new Set([]);
+      this.setProperties({
+        tramitesLista:  '',
+        inmueble: '',
+        muestraZonaCaptura: false,
+        numerosExteriores: mySet
+      });
+      let numerosExteriores = get(this, 'numerosExteriores');
+      let l = get(this, 'lotesArray');
+      l.clear();
+      get(this, 'inmueblesdisponibles').forEach((item)=> {
+        if (manzana === item.get('manzana')) {
+          lote = get(item, 'lote');
+          l.pushObject(
 						Ember.Object.create({
-						 manzana: get(item,'manzana'),
-						 lote: lote,
-						 loteSort: parseInt(lote),
-						 inmueble: get(item,'id')
-						})
-					);
-					get(that, 'numerosExteriores').add(lote.substring(0,2));
-				}			
-			});
-			//info('inmuebles ', get(l, 'length'));
-  			set(this,'sortedTodosDesc', Ember.computed.sort('lotesArray', 'todosSortingDesc'));
-		},
-
-		loteElegido(item) {
-			if(typeof(item)==='string'){
-				return;
-			}
-			let cual=get(item, 'lote');
-			this.ponerInmueble(cual);
-		},
-
-		numeroExteriorElegido(edificio) {
-			set(this, 'currentNumeroInterior', '0');
-			set(this, 'numeroexterior', edificio);
-			set(this, 'inmueble', '');
-			set(this, 'hayCaracteristicas', false)
-			set(this, 'caracteristicasLista', null);
-			let that = this;
-			let mySet2 = new Set([]);
-			set(this, 'numerosInteriores', mySet2 );
-			return get(this, 'inmueblesdisponibles').filter((item)=> {
-				var lote = get(item,'lote');
-				if ( edificio === lote.substring(0,2) ){
-					get(that, 'numerosInteriores').add(lote.substring(2,5));
-					return true;
-				} else {
-					return false;
-				}
-			});
-		},
-		
-		numeroInteriorElegido(depa) {
-			if (parseInt(depa)===0) {
-				return ;
-			}
-			let that=this;
-			const ne = get(this, 'numeroexterior');
-			const loteoficial = `${ne}${depa}`;
-			let l= get(this, 'inmueblesdisponibles');
-			let cual=l.findBy('lote', loteoficial);
-			this.store.find('inmuebleindividual', cual.id).
-			then((dato)=> {
-				that.setProperties(
-					{
-					domicilio: get(dato, 'domicilio'),
-					selectedPrecio: 0,
-					precioCatalogo: get(dato, 'precioCatalogo'),
-					carateristicasLista: that.store.query('caracteristicasinmueble',
-						{
-							inmueble: cual.id, 
-							precio: get(that,'selectedPrecio'),
-						 	precioCatalogo: get(that, 'precioCatalogo'),
-						  	etapa: get(that, 'selectedEtapa')
-						}
-					)
-					}
-				);
-				
-			});
-			set(this, 'inmueble', loteoficial);
-			set(this, 'hayCaracteristicas', true);
-		},
-		buscar() {
-			set(this, 'etapas',this.store.findAll('etapastramite', { reload: true }) );
-		}
-		
-	}
+              manzana: get(item, 'manzana'),
+              lote,
+              loteSort: parseInt(lote),
+              inmueble: get(item, 'id')
+            })
+          );
+          get(that, 'numerosExteriores').add(lote.substring(0, 2));
+        }
+      });
+      set(this, 'sortedTodosDesc', Ember.computed.sort('lotesArray', 'todosSortingDesc'));
+    },
+    loteElegido(item) {
+      if (typeof (item) === 'string') {
+        return;
+      }
+      let cual = get(item, 'lote');
+      this.ponerInmueble(cual);
+    },
+    numeroExteriorElegido(edificio) {
+      set(this, 'currentNumeroInterior', '0');
+      set(this, 'numeroexterior', edificio);
+      set(this, 'inmueble', '');
+      set(this, 'hayCaracteristicas', false);
+      set(this, 'caracteristicasLista', null);
+      let that = this;
+      let mySet2 = new Set([]);
+      set(this, 'numerosInteriores', mySet2);
+      return get(this, 'inmueblesdisponibles').filter((item)=> {
+        let lote = get(item, 'lote');
+        if (edificio === lote.substring(0, 2)) {
+          get(that, 'numerosInteriores').add(lote.substring(2, 5));
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
+    numeroInteriorElegido(depa) {
+      if (parseInt(depa) === 0) {
+        return;
+      }
+      let that = this;
+      let ne = get(this, 'numeroexterior');
+      let loteoficial = `${ne}${depa}`;
+      let l = get(this, 'inmueblesdisponibles');
+      let cual = l.findBy('lote', loteoficial);
+      this.store.find('inmuebleindividual', cual.id)
+      .then((dato)=> {
+        that.setProperties(
+        {
+          domicilio: get(dato, 'domicilio'),
+          selectedPrecio: 0,
+          precioCatalogo: get(dato, 'precioCatalogo'),
+          carateristicasLista: that.store.query('caracteristicasinmueble',
+            {
+              inmueble: cual.id,
+              precio: get(that, 'selectedPrecio'),
+              precioCatalogo: get(that, 'precioCatalogo'),
+              etapa: get(that, 'selectedEtapa')
+            }
+          )
+        }
+		    );
+      });
+      set(this, 'inmueble', loteoficial);
+      set(this, 'hayCaracteristicas', true);
+    },
+    buscar() {
+      set(this, 'etapas', this.store.findAll('etapastramite', { reload: true }));
+    }
+  }
 });
