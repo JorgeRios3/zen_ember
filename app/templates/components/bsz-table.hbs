@@ -1,0 +1,14 @@
+<div id="no-more-tables">
+	<table  class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				{{#each titleCols as | titulo | }}
+					<th>{{titulo}}</th>
+				{{/each}}
+			</tr>
+		</thead>
+		<tbody>
+			{{yield}}
+		</tbody>
+	</table>
+</div>
