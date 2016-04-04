@@ -4,10 +4,10 @@ const {
 	computed
 } = Ember;
 export default Ember.Component.extend({
-	value : 0,
-	masuno: computed("value",{
-		get(){
-			return get(this,"value") + 1;
-		}
-	})
+  value: 0,
+  masuno: computed('value', {
+    get() {
+      return get(this, 'value') + 1;
+    }
+  })
 });
