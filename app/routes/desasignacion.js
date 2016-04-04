@@ -31,7 +31,6 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       muestroErrores: false,
       cuantos: '',
       maximo: computed.lt('cuantos', 101),
-      erroresHabidos: ''
     });
   },
   setupController(ctrl, model) {
