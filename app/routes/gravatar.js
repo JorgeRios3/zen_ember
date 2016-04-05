@@ -1,16 +1,13 @@
 import Ember from 'ember';
-import AuthenticatedRouteMixin from "ember-simple-auth/mixins/authenticated-route-mixin";
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
- 
- setupController(ctrlr, model) {
-    
-    ctrlr.set("content",model);
-    ctrlr.set("gravatar_email", model.get("gravataremail"));
-    
+  setupController(ctrlr, model) {
+    ctrlr.set('content', model);
+    ctrlr.set('gravatarEmail', model.get('gravataremail'));
   },
   model() {
-  	
-    return this.store.find('gravatar',1);
+    let { store } = this;
+    return store.findRecord('gravatar', 1);
   }
 });
 

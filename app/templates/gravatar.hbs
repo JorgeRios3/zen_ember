@@ -6,14 +6,14 @@
 <div class="alert alert-info"><a class="close" data-dismiss="alert" href="#">x</a>Digite su correo electr&oacute;nico registrado en Gravatar si tiene cuenta all&iacute;</div>
 <form {{action 'actualizaGravatar' on='submit'}}>
         <div class="form-group">
-          <label for="gravatar_email">Correo Electr&oacute;nico</label>
+          <label for="gravatarEmail">Correo Electr&oacute;nico</label>
           <div class="row">
             <div class="col-xs-8 col-md-4">
-            {{!input id='gravatar_email' placeholder='Digite Usuario' class='form-control' value=gravatar_email}}
+            
             {{mail-check
             	name='gravatar_email'
   				type='email'
-  				value=gravatar_email
+  				value=gravatarEmail
   				inputClass='form-control'
   				placeholder='Digite email'
   				hintMessage='No parece ser una dirección válida'
