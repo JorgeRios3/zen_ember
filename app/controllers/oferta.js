@@ -9,7 +9,7 @@ const {
   observer,
   isEmpty,
   getOwner,
-  Loger: { info },
+  Logger: { info },
   inject: { service }
 } = Ember;
 
@@ -261,7 +261,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           return false;
         } else {
           return true;
-		}
+        }
       } else {
         return true;
       }
@@ -316,7 +316,6 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       set(this, 'afiliacionOk', false);
     }
   }),
-
   observaSelectedInmueble: observer('selectedInmueble', function() {
     let that = this;
     let antes = get(this, 'selectedInmueblePrevio');
@@ -363,13 +362,14 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           if (get(data, 'length') > 0) {
             set(that, 'carateristicasLista', data);
           } else {
-          	set(that, 'carateristicasLista', null);
+            set(that, 'carateristicasLista', null);
           }
         });
         if (!isEmpty(get(that, 'prospecto'))) {
-          that.store.query('comisionventa', {
-            inmueble: despues,
-            prospecto: get(that, 'prospecto')
+          that.store.query('comisionventa',
+            {
+              inmueble: despues,
+              prospecto: get(that, 'prospecto')
             }
 		  ).then((data)=> {
             set(that, 'comision', false);
@@ -378,10 +378,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
               set(that, 'comision', comision);
               let error = comision === true ? '' : 'El asesor no tiene comision';
               set(that, 'errorMessageComision', error);
-            });	
+            });
           });
         }
-				
       }
     }
   }),
@@ -392,7 +391,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     let prospecto = get(this, 'prospecto');
     let that = this;
     set(this, 'isProspecto', false);
-    if (prospecto.length > 5 ) {
+    if (prospecto.length > 5) {
       this.store.find('prospectoconcliente', prospecto).then((item)=> {
         let cuenta = get(item, 'cuenta');
         info('valor de cuenta', cuenta);
@@ -407,8 +406,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           set(that, 'afiliacionOk', true);
         }
       });
-    }            
-    if (!get(this, 'prospectoNoChecar')) {					
+    }
+    if (!get(this, 'prospectoNoChecar')) {
       this.store.query('prospectosoferta', { prospecto })
       .then((data)=> {
         data.forEach((item)=> {
@@ -421,7 +420,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
             nombre: get(item, 'nombre'),
             nombrevendedor: get(item, 'nombrevendedor'),
             gerente: get(item, 'gerente'),
-            nombregerente: get(item, 'nombregerente') 
+            nombregerente: get(item, 'nombregerente')
           }));
           set(that, 'isProspecto', !isEmpty(get(that, 'prospecto')));
         });
@@ -440,7 +439,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       } else {
         this.send('submitProspecto');
       }
-	}
+    }
   }),
   highLightAndTrue: function(key) {
     if (!isEmpty(key)) {
@@ -455,7 +454,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     let afi = get(this, 'afiliacion');
     let digits = afi.split('');
     let acumula = 0;
-    if (afi.length === 11) { 
+    if (afi.length === 11) {
       for (let i = 0; i < 10; i++) {
         let digito = parseInt(digits[i]);
         let factor = 2;
@@ -484,7 +483,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       this.trigger('highlightandtrue');
     }
   }),
-  mislotes: computed('selectedManzana', { 
+  mislotes: computed('selectedManzana', {
     get() {
       let that = this;
       let manzana = get(this, 'selectedManzana');
@@ -492,13 +491,13 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       let isDepto = get(this, 'departamento');
       if (get(this, 'departamento')) {
         let mySet = new Set([]);
-        set(this, 'numerosExteriores', mySet );
+        set(this, 'numerosExteriores', mySet);
       }
       return c.filter((item)=> {
         let m = get(item, 'manzana');
         let lote = get(item, 'lote');
         if (m === manzana) {
-          if (isDepto) {	
+          if (isDepto) {
             get(that, 'numerosExteriores').add(lote.substring(0, 2));
           }
           return true;
@@ -512,7 +511,6 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   misprecios: computed('selectedEtapa', {
     get() {
       let etapa = parseInt(get(this, 'selectedEtapa'));
-      // info('valor de tapa', etapa);
       let v = get(this, 'precios').clear();
       // let c = get(v, 'content');
       let c = this.store.findAll('preciosinmueble');
@@ -522,7 +520,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         data.forEach((item)=> {
           let e = get(item, 'etapa');
           if (e === etapa) {
-          	let { descripcion, id, precio, precioraw, sustentable } = item.getProperties();
+            let { descripcion, id, precio, precioraw, sustentable } = item.getProperties();
             // get(this,'precios.content').pushObject(
             v.pushObject(
               miPrecio.create({
@@ -567,7 +565,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     set(this, 'inmueblesdisponibles', idisp);
   }),
   observarCliente: observer('cliente', function() {
-    let cliente = get(this, 'cliente');	
+    let cliente = get(this, 'cliente');
     set(this, 'clientesofertas', this.store.query('clientesoferta', { cliente }));
     let _this = this;
     if (cliente) {
@@ -576,7 +574,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         let ref = data.referenciasrapconclientesincuenta.referencia;
         set(_this, 'referencia', ref);
       });
-	}
+    }
   }),
   observaAfiliacion: observer('afiliacion', function() {
     let afiliacion = get(this, 'afiliacion');
@@ -595,14 +593,14 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
             nombre: get(item, 'nombre'),
             nombrevendedor: get(item, 'nombrevendedor'),
             gerente: get(item, 'gerente'),
-            nombregerente: get(item, 'nombregerente') 
-          }));	
+            nombregerente: get(item, 'nombregerente')
+          }));
         });
       });
     } else {
       this.toggleProperty('afiliacionNoChecar');
     }
-  }),	
+  }),
   observaManzana: observer('selectedManzana', function() {
     set(this, 'selectedInmueble', null);
   }),
@@ -622,6 +620,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       return;
     }
     let that = this;
+
     let listaPrecios = get(this, 'misprecios');
     get(that, 'misprecios').forEach((item)=> {
       if (get(that, 'selectedPrecio') === get(item, 'id')) {
@@ -632,7 +631,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           set(that, 'nuevoPrecioRaw', get(item, 'precioraw'));
         }
       }
-	});
+    });
     that.store.query('caracteristicasinmueble', { precio: isEmpty(get(that, 'selectedPrecio')) ? 0 : get(that, 'selectedPrecio') })
     .then((data)=> {
       if (get(data, 'length') > 0) {
@@ -640,7 +639,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       } else {
         set(that, 'carateristicasLista', null);
       }
-    });	
+    });
   }),
   hayCamposObligatorios: computed('inmueble', 'cliente', {
     get() {
@@ -820,7 +819,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
                 chosen: false
               })
             );
-          });		
+          });
         });
 
         get(that, 'ajax').post('/api/useremail?query=1')
@@ -1021,7 +1020,6 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     enteradoHuboErrorAlGrabar() {
       this.toggleProperty('huboErrorAlGrabar');
     },
-
     enteradoInspeccionarErrores() {
       this.toggleProperty('muestroErrores');
     },
