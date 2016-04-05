@@ -1,5 +1,4 @@
 import Ember from 'ember';
-
 const {
   Logger: { info },
   getOwner
@@ -10,16 +9,16 @@ export default Ember.Mixin.create({
     this._super(transition);
     let ruta = this.routeName;
     let ajax = getOwner(this).lookup('service:ajax');
-    ajax.post( `/api/routeauth?route=${ruta}`)
-    .then((data)=>{
-      if (data.access === "1") {
+    ajax.post(`/api/routeauth?route=${ruta}`)
+    .then((data)=> {
+      if (data.access === '1') {
         info('ruta aceptada');
       } else {
         info('ruta rechazada');
-        this.transitionTo('index')
+        this.transitionTo('index');
       }
-    }, (error)=>{
-      info('ruta rechazada por error');
+    }, (error)=> {
+      info('ruta rechazada por error', error);
     });
   }
 });
