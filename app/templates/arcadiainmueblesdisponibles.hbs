@@ -1,0 +1,8 @@
+<br><br>
+<div class="h3 text text-info">Arcadia - Inmuebles Disponibles</div>
+
+{{#bsz-table titleCols=titleCols}}
+  {{#each inmueblesdisponibles as | record |}}
+    {{bsz-row record=record titleCols=titleCols alignments=alignments}}
+  {{/each}}
+{{/bsz-table}}

@@ -1,14 +1,15 @@
 {{#if isCliente}}
-	{{#link-to  opcion (query-params prospecto="" afiliacion="" origenOferta="") class="btn btn-primary" role="button"}}Ir a opción &raquo;{{/link-to}}
+	{{#link-to  opcion (query-params prospecto="" afiliacion="" origenOferta="") class=bsClass role="button"}}Ir a opción &raquo;{{/link-to}}
 {{else}}
 	{{#if isOferta}}
-		{{#link-to  opcion (query-params  afiliacion="" prospecto="") class="btn btn-primary" role="button"}}Ir a opción &raquo;{{/link-to}}
+		{{#link-to  opcion (query-params  afiliacion="" prospecto="") class=bsClass role="button"}}Ir a opción &raquo;{{/link-to}}
 	{{else}}
 		{{#if consulta}}
 		
-			{{#link-to  opcion class="btn btn-primary" role="button"}}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>Ir a opción &raquo;{{/link-to}}
+			{{#link-to  opcion class=bsClass role="button"}}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>Ir a opción &raquo;{{/link-to}}
 		{{else}}
-			{{#link-to  opcion class="btn btn-primary" role="button"}}Ir a opción &raquo;{{/link-to}}
+		    
+				{{#link-to  opcion class=bsClass role="button"}}Ir a opción &raquo; {{/link-to}}
 		{{/if}}
 	{{/if}}
 {{/if}}

@@ -21,3 +21,4 @@ inflector.irregular('chilpayate', 'hijos');
 inflector.irregular('referenciasrapconclientesincuenta', 'referenciasrapconclientesincuentas');
 inflector.irregular('ventaspordia', 'ventaspordias');
 inflector.irregular('panorama', 'panoramas');
+inflector.irregular('lotesdisponiblesarcadia', 'lotesdisponiblesarcadias');
