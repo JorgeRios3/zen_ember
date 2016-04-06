@@ -12,12 +12,12 @@
 				<label for="idnumerosexteriores" class="control-label">Etapa</label>
 				<div class="row">
 					<div class="col-md-5">
-						{{#x-select value='0' action="selectedEtapaAction" class="form-control form-control-inline"}}
-  							{{#x-option value='0'}}Elija etapa{{/x-option}}
-  							{{#each etapas as |item|}}
-  								{{#x-option value=item}}{{item.nombre}}{{/x-option}}
-							{{/each}}
-						{{/x-select}}
+						{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+						{{#x-option value=''}}Elija etapa{{/x-option}}
+						{{#each etapas as |item|}}
+							{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
 					</div>
 				</div>
 			</div>
@@ -37,13 +37,13 @@
 			</div>
 			{{#if isManzanaFiltrado}}
 				<div class="form-group">
-					<label for="idmanzanas" class="control-label">Manzana</label>
+					<label for="idmanzanas" class="control-label">Manzana Filtrado</label>
 					<div class="row">
 						<div class="col-md-5">
-							{{#x-select value='0' action="selectedManzanaFiltrado" class="form-control form-control-inline" id="x-manzana-filtrado"}}
-  								{{#x-option value='0'}}Elija manzana{{/x-option}}
-  								{{#each manzanasTramite as |item|}}
-  									{{#x-option value=item.manzana}}{{item.manzana}}{{/x-option}}
+							{{#x-select value=selectedManzanaFiltrado action=(action  (mut selectedManzanaFiltrado)) class="form-control form-control-inline" id="x-manzana-filtrado"}}
+								{{#x-option value=''}}Elija manzana{{/x-option}}
+								{{#each manzanasTramite as |item|}}
+									{{#x-option value=item.manzana}}{{item.manzana}}{{/x-option}}
 								{{/each}}
 							{{/x-select}}
 						</div>
@@ -56,12 +56,12 @@
 						<label for="idlotefiltrado" class="control-label">Lote Filtrado</label>
 						<div class="row">
 							<div class="col-md-5">
-								{{#x-select value="0" action="loteElegido" class="form-control form-control-inline" id="x-lote-filtrado"}}
-  									{{#x-option value='0'}}inmueble filtrado{{/x-option}}
-									{{#each sortedTodosDesc as |item|}}
-  											{{#x-option value=item.lote}}{{item.lote}}{{/x-option}}
-									{{/each}}
-  								{{/x-select}}
+								{{#x-select value=loteElegido action=(action  (mut loteElegido)) class="form-control form-control-inline" id="x-lote-filtrado"}}
+								{{#x-option value=''}}inmueble filtrado{{/x-option}}
+								{{#each sortedTodosDesc as |item|}}
+									{{#x-option value=item.lote}}{{item.lote}}{{/x-option}}
+								{{/each}}
+							{{/x-select}}
   								</div>
   								</div>				
 					</div>
@@ -81,8 +81,8 @@
 					<label for="idmanzanas" class="control-label">Manzana</label>
 					<div class="row">
 						<div class="col-md-5">
-							{{#x-select value='0' action="selectedManzana" class="form-control form-control-inline" }}
-  								{{#x-option value='0'}}Elija manzana{{/x-option}}
+							{{#x-select value=selectedManzana action=(action (mut selectedManzana)) class="form-control form-control-inline" }}
+  								{{#x-option value=''}}Elija manzana{{/x-option}}
   								{{#each manzanasTramite as |item|}}
   									{{#x-option value=item.manzana}}{{item.manzana}}{{/x-option}}
 								{{/each}}
@@ -96,8 +96,8 @@
 						<label for="idnumerosexteriores" class="control-label">Numero Exterior</label>
 						<div class="row">
 							<div class="col-md-5">
-								{{#x-select value='0' action="numeroExteriorElegido" class="form-control form-control-inline" id="x-exterior"}}
- 		 							{{#x-option value='0'}}Elija Número{{/x-option}}
+								{{#x-select value=selectedNumeroExteriorElegido action=(action (mut selectedNumeroExteriorElegido)) class="form-control form-control-inline" id="x-exterior"}}
+ 		 							{{#x-option value=''}}Elija Número{{/x-option}}
   									{{#each numerosExteriores as |item|}}
   										{{#x-option value=item}}{{item}}{{/x-option}}
 									{{/each}}
@@ -111,8 +111,8 @@
 						<label for="idnumerosinteriores" class="control-label">Numero Interior</label>
 						<div class="row">
 							<div class="col-md-5">
-								{{#x-select value='0' action="numeroInteriorElegido" class="form-control form-control-inline" id="x-interior"}}
-  									{{#x-option value='0'}}Elija Número{{/x-option}}
+								{{#x-select value=selectedNumeroInteriorElegido action=(action (mut selectedNumeroInteriorElegido)) class="form-control form-control-inline" id="x-interior"}}
+  									{{#x-option value=''}}Elija Número{{/x-option}}
   									{{#each numerosInteriores as |item|}}
   										{{#x-option value=item}}{{item}}{{/x-option}}
 									{{/each}}
@@ -126,15 +126,15 @@
 					<label for="idofertachoicelote" class="control-label">Lote</label>
 					<div class="row">
 						<div class="col-md-5">
-							{{#x-select value='0' action="loteElegido" class="form-control form-control-inline" id="X-inmueble"}}
+							{{#x-select value=loteElegido action=(action  (mut loteElegido)) class="form-control form-control-inline" id="X-inmueble"}}
   								{{#if inmueble}}
-  									{{#x-option value="0"}}{{inmueble}}{{/x-option}}
+  									{{#x-option value=loteElegido}}{{inmueble}}{{/x-option}}
 									{{#each sortedTodosDesc as |item|}}
   										{{#x-option value=item.lote}}{{item.lote}}{{/x-option}}
 									{{/each}}
 					
 								{{else}}
-  									{{#x-option value='0'}}Elija Lote{{/x-option}}
+  									{{#x-option value=''}}Elija Lote{{/x-option}}
    									{{#each sortedTodosDesc as |item|}}
   										{{#x-option value=item.lote}}{{item.lote}}{{/x-option}}
 									{{/each}}
@@ -281,13 +281,7 @@
             				{{bs-datetimepicker date=fechaInicial updateDate=(action (mut fechaInicial)) showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" }}
             			</div>
 
-            			{{#if fechaInicial}}
-							<div class="checkbox col-xs-10 col-md-3">
-								<label>
-									{{input type="checkbox" name="limpiarFecha" checked=limpiarFecha }}Limpiar Fecha
-								</label>
-							</div>
-						{{/if}}
+            			
 					</div>
 				</div>
         			
