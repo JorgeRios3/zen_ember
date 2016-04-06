@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import ajax from 'ember-ajax';
 import moment from 'moment';
-import EmberValidations from 'ember-validations';
+// import EmberValidations from 'ember-validations';
 import config from '../config/environment';
 
 const {
@@ -12,7 +12,7 @@ const {
   isEmpty,
   Logger: { info },
   getOwner,
-  inject = { service }
+  inject: { service }
 } = Ember;
 
 let etapa = Ember.Object.extend({
@@ -23,14 +23,14 @@ let etapa = Ember.Object.extend({
 
 let lote = Ember.Object.extend({
   manzana: '',
-  lote: '',	
+  lote: ''
 });
 
 let inmuebleFiltrado = Ember.Object.extend({
-  id: '', 
-  manzana: '', 
-  tramite: '', 
-  etapa: '', 
+  id: '',
+  manzana: '',
+  tramite: '',
+  etapa: '',
   lote: '',
   entero: computed('lote', {
     get() {
@@ -57,20 +57,20 @@ export default Ember.Controller.extend({
   apartado: '',
   gastosadministrativos: '',
   precioseguro: '',
-  inmueblesdisponibles:'',
-  cuantosInmueblesDisponibles:'',
+  inmueblesdisponibles: null,
+  cuantosInmueblesDisponibles: '',
   tramiteConsiderado: 0,
   selectedEtapa: null,
   etapas: '',
   manzanasTramite: '',
-  bnumeroCredito: true, 
+  bnumeroCredito: true,
   bmontoCredito: true,
   bmontoSubsidio: true,
   numeroCredito: '',
   montoCredito: '',
   montoSubsidio: '',
   comentario: '',
-  selectedManzana: null,
+  selectedManzana: '',
   selectedInmueble: 0,
   numerointerior: '',
   numeroexterior: '',
@@ -108,15 +108,210 @@ export default Ember.Controller.extend({
   record: null,
   mostrarTabla: true,
   descripcionTramite: '',
-  init(){
+  mutInmueble: '',
+  mutInterior: '',
+  selectedManzanaFiltrado: '',
+  loteElegido: '',
+  selectedNumeroExteriorElegido: '',
+  selectedNumeroInteriorElegido: '',
+
+  observarNumeroInteriorElegido: observer('selectedNumeroInteriorElegido', function() {
+    if (get(this, 'selectedNumeroInteriorElegido') === '') {
+      return;
+    }
+    let depa = get(this, 'selectedNumeroInteriorElegido');
+    let that = this;
+    let ne = get(this, 'numeroexterior');
+    let loteoficial = `${ne}${depa}`;
+    let l = get(this, 'inmueblesdisponibles');
+    let cual = l.findBy('lote', loteoficial);
+    this.store.find('inmuebleindividual', cual.id)
+    .then((dato)=> {
+      set(that, 'domicilio', get(dato, 'domicilio'));
+    });
+    set(this, 'inmueble', loteoficial);
+    this.send('llenarTramites', cual.id);
+  }),
+
+  observaSelectedNumeroExteriorElegido: observer('selectedNumeroExteriorElegido', function() {
+    if (get(this, 'selectedNumeroExteriorElegido') === '') {
+      return;
+    }
+    let edificio = get(this, 'selectedNumeroExteriorElegido');
+    info('entro en obserervaSelectedNumroExterior nuevo', edificio);
+    set(this, 'selectedNumeroInteriorElegido', '');
+    Ember.$('#X-inmueble option[value=0]').prop('selected', true);
+    Ember.$('#x-interior option[value=0]').prop('selected', true);
+    set(this, 'otro', '');
+    set(this, 'numeroexterior', edificio);
+    set(this, 'inmueble', '');
+    set(this, 'tramitesLista', '');
+    let that = this;
+    let v = get(this, 'inmueblesdisponibles');
+    let c = v.get('content');
+    let mySet2 = new Set([]);
+    set(this, 'numerosInteriores', mySet2);
+    return c.filter((item)=> {
+      let lote = get(item, 'lote');
+      if (edificio === lote.substring(0, 2)) {
+        get(that, 'numerosInteriores').add(lote.substring(2, 5));
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }),
+
+  observaSelectedManzana: observer('selectedManzana', function() {
+    if (get(this, 'selectedManzana') === '') {
+      return;
+    }
+    let manzana = get(this, 'selectedManzana');
+    info('entro en observa selectedManzana');
+    Ember.$('#X-inmueble option[value=0]').prop('selected', true);
+    Ember.$('#x-exterior option[value=0]').prop('selected', true);
+    Ember.$('#x-interior option[value=0]').prop('selected', true);
+    let that = this;
+    set(this, 'tramitesLista', '');
+    set(this, 'inmueble', '');
+    set(this, 'muestraZonaCaptura', false);
+    let numerosExteriores = get(this, 'numerosExteriores');
+    let c = get(this, 'inmueblesdisponibles');
+    let l = get(this, 'lotesArray');
+    let mySet = new Set([]);
+    l.clear();
+    set(this, 'numerosExteriores', mySet);
+    info('paso el crear set y limpiar lotes array');
+    c.forEach((item)=> {
+      if (manzana === item.get('manzana')) {
+        lote = get(item, 'lote');
+        l.pushObject(Ember.Object.create({
+          manzana: get(item, 'manzana'),
+          lote,
+          loteSort: parseInt(lote),
+          inmueble: get(item, 'id')
+        }));
+        get(that, 'numerosExteriores').add(lote.substring(0, 2));
+      }
+    });
+    set(this, 'sortedTodosDesc', computed.sort('lotesArray', 'todosSortingDesc'));
+  }),
+
+  observaLoteElegido: observer('loteElegido', function() {
+    if (get(this, 'loteElegido') === '') {
+      return;
+    }
+    let cual = get(this, 'loteElegido');
+    info('valor de lote', cual);
+    this.ponerInmueble(cual);
+  }),
+
+  observaManzanaFiltradoSeleccionada: observer('selectedManzanaFiltrado', function() {
+    if (get(this, 'selectedManzanaFiltrado') === '') {
+      return;
+    }
+    info('entro en observer manzanafiltradoselccionada');
+    let that = this;
+    let manzana = get(this, 'selectedManzanaFiltrado');
+    this.store.unloadAll('inmueblesfiltrado');
+    set(this, 'tramitesLita', '');
+    set(this, 'inmueble', '');
+    set(this, 'muestraZonaCaptura', false);
+    let numerosExteriores = get(this, 'numerosExteriores');
+    try {
+      let l = get(this, 'lotesArray');
+      l.clear();
+      info('entro valor de manzana filtrado', manzana);
+      let tramite = get(this, 'selectedTramite');
+      let etapa = get(this, 'selectedEtapa');
+      let origen = '';
+      let catalogo = get(this, 'catalogoTramites');
+      catalogo.forEach((item)=> {
+        if (get(item, 'id') === tramite) {
+          origen = get(item, 'origen');
+        }
+      });
+      this.store.unloadAll('inmueblesfiltrado');
+      this.store.query('inmueblesfiltrado', { etapa, origen, tramite, manzana })
+      .then((data)=> {
+        if (get(data, 'length')) {
+          set(that, 'siHayInmuebleFiltrado', true);
+        } else {
+          set(that, 'siHayInmuebleFiltrado', false);
+        }
+        data.forEach((item)=> {
+          l.pushObject(inmuebleFiltrado.create({
+            manzana: get(item, 'manzana'),
+            tramite: get(item, 'tramite'),
+            etapa: get(item, 'etapa'),
+            lote: get(item, 'lote'),
+            inmueble: get(item, 'id'),
+            loteSort: parseInt(get(item, 'lote'))
+          }));
+        });
+        info('aqui llego manzana filtrado');
+        set(that, 'sortedTodosDesc', computed.sort('lotesArray', 'todosSortingDesc'));
+        Ember.$('#x-lote-filtrado option[value=0]').prop('selected', true);
+      });
+    } catch(e) {
+      info('error en el try', e);
+    }
+  }),
+
+  observaEtapaSeleccionada: observer('selectedEtapa', function() {
+    if (get(this, 'selectedEtapa') === '') {
+      return;
+    } else {
+      info('paso por aqui', get(this, 'selectedEtapa'));
+      let etapa = get(this, 'selectedEtapa');
+      let inmueblesdisponibles = get(this, 'inmueblesdisponibles');
+      inmueblesdisponibles.clear();
+      set(this, 'tramitesLista', '');
+      set(this, 'inmueble', '');
+      // set(this, 'selectedEtapa', item.id);
+      let _this = this;
+      set(_this, 'cuantosInmueblesDisponibles', 0);
+      set(this, 'manzanasTramite', this.store.query('manzanastramite', { etapa }));
+      this.store.find('etapastramite', etapa)
+      .then((data)=> {
+        set(_this, 'departamento', data.get('departamento'));
+      });
+      this.store.query('inmueblestramite', { etapa })
+      .then((data)=> {
+        try {
+          let cuantos = get(data, 'length');
+          info('cuantos es ', cuantos);
+          set(_this, 'cuantosInmueblesDisponibles', cuantos);
+          data.forEach((item)=> {
+            inmueblesdisponibles.pushObject(item);
+          });
+        } catch (e) {
+          info('callo en error buscado', e);
+        }
+      });
+      this.store.find('parametrosetapa', get(this, 'selectedEtapa'))
+      .then((data)=> {
+        'anticipocomision apartado gastosadministrativos precioseguro'.w().forEach((key)=> {
+          set(_this, key, data.get(key));
+        });
+      });
+      set(this, 'selectedManzana', null);
+      Ember.$('#x-manzana-filtrado option[value=0]').prop('selected', true);
+      set(this, 'selectedTramite', null);
+      set(this, 'muestraZonaCaptura', false);
+    }
+  }),
+
+  init() {
     this._super(...arguments);
-    this.set('etapas', Ember.ArrayProxy.create({ content: [] }));
-    this.set('lotesArray', Ember.ArrayProxy.create({ content: [] }));
-    this.set('inmueblesFiltrados', Ember.ArrayProxy.create({ content: [] }));
+    'etapas lotesArray inmueblesFiltrados inmueblesdisponibles'.w().forEach((item)=> {
+      this.set(item, Ember.ArrayProxy.create({ content: [] }));
+    });
+
   },
   limpiaValores() {
     let that = this;
-    'fechaEstEntrega fechaRealEntrega fechaVencimiento fechaInicio record'.w().forEach((item)=>{
+    'fechaEstEntrega fechaRealEntrega fechaVencimiento fechaInicio record'.w().forEach((item)=> {
       set(that, item, '');
     });
     this.transitionToRoute('index');
@@ -132,17 +327,17 @@ export default Ember.Controller.extend({
       });
     }
   }),
-  validanumero: observer('numeroCredito', 'montoCredito', 'montoSubsidio', function(){
+  validanumero: observer('numeroCredito', 'montoCredito', 'montoSubsidio', function() {
     let that = this;
     ['numeroCredito','montoCredito','montoSubsidio'].forEach((item)=> {
       if (isEmpty(get(that, item))) {
-        set(that, 'b'+item, true);
+        set(that, `b${item}`, true);
       } else {
-        set(that, 'b'+item, Ember.$.isNumeric(get(that, item))) ;
+        set(that, `b${item}`, Ember.$.isNumeric(get(that, item)));
       }
     });
   }),
-  observaTramite: observer('selectedTramite', function() {			
+  observaTramite: observer('selectedTramite', function() {
     set(this, 'tramitesLista', '');
     let a = !isEmpty(get(this, 'selectedTramite'));
     info('valor de a', a);
@@ -150,18 +345,21 @@ export default Ember.Controller.extend({
     Ember.$('#x-manzana-filtrado option[value=0]').prop('selected', true);
     Ember.$('#x-lote-filtrado option[value=0]').prop('selected', true);
   }),
-  observaManzana: observer('selectedManzana', function() {		
-    set(this, 'selectedInmueble',null);
+  observaManzana: observer('selectedManzana', function() {
+    set(this, 'selectedInmueble', null);
   }),
   ponerInmueble(loteoficial) {
     info('lote oficial este es lote filtrado', loteoficial);
-    let cual = get(this, 'lotesArray').findBy('lote', loteoficial );
+    let cual = get(this, 'lotesArray').findBy('lote', loteoficial);
     let inmueble = cual.get('inmueble');
     this.send('llenarTramites', inmueble);
     set(this, 'inmueble', inmueble);
     set(this, 'selectedInmueble', inmueble);
   },
-  observaSelectedInmueble: observer('selectedInmueble', function() { 
+  observaSelectedInmueble: observer('selectedInmueble', function() {
+    if (get(this, 'selectedInmueble') === null) {
+      return;
+    }
     let inmueble = get(this, 'selectedInmueble');
     info('valor de inmueble en observar selectedInmuebke', inmueble);
     let that = this;
@@ -172,7 +370,7 @@ export default Ember.Controller.extend({
     });
     set(this, 'mostrarTabla', true);
     this.store.unloadAll('tramite');
-    set(this, 'tramitesLista', this.store.query('tramite',{ inmueble }));
+    set(this, 'tramitesLista', this.store.query('tramite', { inmueble }));
   }),
 
   observaFecha: observer('fechaInicial', function() {
@@ -188,7 +386,7 @@ export default Ember.Controller.extend({
     } else {
       set(this, 'esGrabable', false);
     }
-  }),	
+  }),
   actions: {
     abreCatalogoTramite() {
       let that = this;
@@ -196,7 +394,7 @@ export default Ember.Controller.extend({
       get(this, 'catalogoTramitePorAgregar')
       .then((data)=> {
         that.toggleProperty('agregarTramite');
-	  });
+      });
     },
     agregaTramiteSelect(tram) {
       let that = this;
@@ -227,18 +425,17 @@ export default Ember.Controller.extend({
     },
     enteradoHuboErrorAlGrabar() {
       set(this, 'huboErrorAlGrabar', false);
+      set(this, 'mostrarTabla', true);
     },
-
     cancelar() {
       set(this, 'muestraZonaCaptura', false);
       set(this, 'mostrarTabla', true);
     },
-
     grabar() {
       let record = get(this, 'record');
-      let valorFecha ='';
+      let valorFecha = '';
       let that = this;
-      'fechaInicial fechaEstEntrega fechaRealEntrega fechaVencimiento fechaInicio'.w().forEach(function(item){
+      'fechaInicial fechaEstEntrega fechaRealEntrega fechaVencimiento fechaInicio'.w().forEach((item)=> {
         let valor = get(that, item);
         set(that, item, valor);
         if (valor) {
@@ -252,20 +449,18 @@ export default Ember.Controller.extend({
       'numeroCredito montoCredito montoSubsidio comentario'.w().forEach((item)=> {
         record.set(item, get(that, item));
       });
-			
       record.save().then(()=> {
         set(that, 'muestraZonaCaptura', false);
         set(that, 'mostrarTabla', true);
-      },(error)=> {
+      }, (error)=> {
         set(that, 'huboErrorAlGrabar', true);
-        set(that, 'mostrarTabla', true);
         set(that, 'tramitesLista', '');
         set(that, 'error', error.errors.resultado[0]);
         set(that, 'muestraZonaCaptura', false);
+        set(that, 'mostrarTabla', true);
       });
 
     },
-
     eliminar() {
       let that = this;
       let record = get(this, 'record');
@@ -273,51 +468,43 @@ export default Ember.Controller.extend({
       info('eliminar tramite', id);
       this.store.find('tramite', id).then((tramite)=> {
         tramite.deleteRecord();
-        tramite.get('isDeleted'); // => true
-		tramite.save(); // => DELETE to /posts/1
-          set(that, 'muestraZonaCaptura', false);
-          set(that, 'mostrarTabla', true);
-        },(error)=> {
-          set(that, 'huboErrorAlGrabar', true);
-          set(that, 'mostrarTabla', true);
-        });
-
-      },
-
-    selectedEtapaAction(item){
+        // tramite.get('isDeleted'); // => true
+        tramite.save(); // => DELETE to /posts/1
+        set(that, 'muestraZonaCaptura', false);
+        set(that, 'mostrarTabla', true);
+      }, (error)=> {
+        set(that, 'huboErrorAlGrabar', true);
+        set(that, 'mostrarTabla', true);
+      });
+    },
+    /*selectedEtapaAction(item) {
       set(this, 'tramitesLista', '');
       set(this, 'inmueble', '');
       set(this, 'selectedEtapa', item.id);
-			
       let _this = this;
       set(_this, 'cuantosInmueblesDisponibles', 0);
-      set(this, 'manzanasTramite', this.store.query('manzanastramite', { etapa : item.id }));
+      set(this, 'manzanasTramite', this.store.query('manzanastramite', { etapa: item.id }));
       this.store.find('etapastramite', item.id)
       .then((data)=> {
         set(_this, 'departamento', data.get('departamento'));
       });
-      this.store.query('inmueblestramite', { etapa : get(this, 'selectedEtapa') })
+      this.store.query('inmueblestramite', { etapa: get(this, 'selectedEtapa') })
       .then((data)=> {
         set(_this, 'cuantosInmueblesDisponibles', data.get('length'));
         set(_this, 'inmueblesdisponibles', data);
-				
       });
       this.store.find('parametrosetapa', get(this, 'selectedEtapa'))
       .then((data)=> {
-			
-        'anticipocomision apartado gastosadministrativos precioseguro'.w().forEach(function(key){
+        'anticipocomision apartado gastosadministrativos precioseguro'.w().forEach((key)=> {
           set(_this, key, data.get(key));
         });
       });
-      // set(this, 'inmueblesdisponibles', idisp);
       set(this, 'selectedManzana', null);
       Ember.$('#x-manzana-filtrado option[value=0]').prop('selected', true);
       set(this, 'selectedTramite', null);
       set(this, 'muestraZonaCaptura', false);
-			
-    },
-
-    seleccionar(tramite) { 
+    },*/
+    seleccionar(tramite) {
       let that = this;
       set(this, 'tramiteConsiderado', tramite);
       set(this, 'muestraZonaCaptura', true);
@@ -341,7 +528,7 @@ export default Ember.Controller.extend({
         set(that, 'montoSubsidio', get(data, 'montoSubsidio'));
       });
     },
-    selectedManzana(manzana) {
+    /*selectedManzana(manzana) {
       info('entro');
       Ember.$('#X-inmueble option[value=0]').prop('selected', true);
       Ember.$('#x-exterior option[value=0]').prop('selected', true);
@@ -360,33 +547,33 @@ export default Ember.Controller.extend({
       c.forEach((item)=> {
         if (manzana === item.get('manzana')) {
           lote = get(item, 'lote');
-          l.pushObject(Ember.Object.create({ 
+          l.pushObject(Ember.Object.create({
             manzana: get(item, 'manzana'),
             lote,
             loteSort: parseInt(lote),
-            inmueble: get(item, 'id') 
+            inmueble: get(item, 'id')
           }));
           get(that, 'numerosExteriores').add(lote.substring(0, 2));
-        }			
+        }
       });
       set(this, 'sortedTodosDesc', computed.sort('lotesArray', 'todosSortingDesc'));
-    },
+    },*/
 
-    selectedManzanaFiltrado(manzana) {
-      var that = this;
+    /*selectedManzanaFiltrado(manzana) {
+      let that = this;
       this.store.unloadAll('inmueblesfiltrado');
       set(this, 'tramitesLita', '');
-      set(this, 'inmueble', '');	
+      set(this, 'inmueble', '');
       set(this, 'muestraZonaCaptura', false);
       let numerosExteriores = get(this, 'numerosExteriores');
       try {
         let l = get(this, 'lotesArray');
-        l.clear(); 
+        l.clear();
         info('entro valor de manzana filtrado', manzana);
         let tramite = get(this, 'selectedTramite');
         let etapa = get(this, 'selectedEtapa');
         let origen = '';
-        let catalogo = get (this, 'catalogoTramites');
+        let catalogo = get(this, 'catalogoTramites');
         catalogo.forEach((item)=> {
           if (get(item, 'id') === tramite) {
             origen = get(item, 'origen');
@@ -403,9 +590,9 @@ export default Ember.Controller.extend({
           }
           data.forEach((item)=> {
             l.pushObject(inmuebleFiltrado.create({
-              manzana: get(item, 'manzana'), 
-              tramite: get(item, 'tramite'), 
-              etapa: get(item, 'etapa'), 
+              manzana: get(item, 'manzana'),
+              tramite: get(item, 'tramite'),
+              etapa: get(item, 'etapa'),
               lote: get(item, 'lote'),
               inmueble: get(item, 'id'),
               loteSort: parseInt(get(item, 'lote'))
@@ -415,19 +602,22 @@ export default Ember.Controller.extend({
           set(that, 'sortedTodosDesc', computed.sort('lotesArray', 'todosSortingDesc'));
           Ember.$('#x-lote-filtrado option[value=0]').prop('selected', true);
 
-		});
+        });
       } catch(e) {
         info('error en el try');
       }
 
-    },
+    },*/
 
-    loteElegido(cual) {
+    /*loteElegido(cual) {
       info('valor de lote', cual);
       this.ponerInmueble(cual);
-    },
+    },*/
 
-    numeroExteriorElegido(edificio) {
+    /*numeroExteriorElegido(edificio) {
+      Ember.$('#X-inmueble option[value=0]').prop('selected', true);
+      Ember.$('#x-interior option[value=0]').prop('selected', true);
+      set(this, 'otro', '');
       set(this, 'numeroexterior', edificio);
       set(this, 'inmueble', '');
       set(this, 'tramitesLista', '');
@@ -437,7 +627,7 @@ export default Ember.Controller.extend({
       let mySet2 = new Set([]);
       set(this, 'numerosInteriores', mySet2);
       return c.filter((item)=> {
-        let lote = get(item,'lote');
+        let lote = get(item, 'lote');
         if (edificio === lote.substring(0, 2)) {
           get(that, 'numerosInteriores').add(lote.substring(2, 5));
           return true;
@@ -445,12 +635,8 @@ export default Ember.Controller.extend({
           return false;
         }
       });
-      Ember.$('#X-inmueble option[value=0]').prop('selected', true);
-      Ember.$('#x-interior option[value=0]').prop('selected', true);
-      set(this, 'otro', '');
-      set(this, 'inmueble', '');
-    },		
-    numeroInteriorElegido(depa) {
+    },*/
+    /*numeroInteriorElegido(depa) {
       let that = this;
       let ne = get(this, 'numeroexterior');
       let loteoficial = `${ne}${depa}`;
@@ -462,22 +648,21 @@ export default Ember.Controller.extend({
       });
       set(this, 'inmueble', loteoficial);
       this.send('llenarTramites', cual.id);
-    },
+    },*/
 
     llenarTramites(lote) {
       set(this, 'tramitesLista', null);
       set(this, 'tramitesLista', this.store.query('tramite', { inmueble: lote }));
       set(this, 'tramiteNuevoInmueble', lote);
-      set(this, 'catalogoTramitePorAgregar', this.store.query('catalogotramiteporagregar',{ inmueble: lote }));
+      set(this, 'catalogoTramitePorAgregar', this.store.query('catalogotramiteporagregar', { inmueble: lote }));
     },
 
-    buscar(){
+    buscar() {
       let that = this;
       this.store.findAll('etapastramite')
       .then((etapa)=> {
         set(that, 'etapas', etapa);
       });
-    },
-		
+    }
   }
 });

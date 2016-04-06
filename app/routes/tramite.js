@@ -24,7 +24,14 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
       nullFechaInicio: '',
       selectedEtapa: '',
       muestraZonaCaptura: false,
-      inmueble: ''
+      inmueble: '',
+      mutInmueble: '',
+      mutInterior: '',
+      selectedManzanaFiltrado: '',
+      loteElegido: '',
+      selectedManzana: '',
+      selectedNumeroExteriorElegido: '',
+      selectedNumeroInteriorElegido: ''
     });
   },
   model() {
