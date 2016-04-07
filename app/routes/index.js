@@ -43,7 +43,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     this.controllerFor('index').setProperties({
       usuario: '',
       perfil: '',
-      hoy: moment()
+      hoy: moment(),
+      selectedCategoria: 'todos',
+      selectedMenu: 'todos'
     });
   },
 
@@ -62,7 +64,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       perfil: get(model.zenusuario, 'perfil'),
       usuario: get(model.zenusuario, 'usuario'),
       hasTwoFactorAuthentication: get(model.twofactor, 'hasTwoFactorAuthentication'),
-      isTwoFactorAuthenticated: get(model.twofactor, 'isTwoFactorAuthenticated')
+      isTwoFactorAuthenticated: get(model.twofactor, 'isTwoFactorAuthenticated'),
+      categoriasMenu: model.categoriasMenu
     });
     // let listaperfiles = this.profileHandler(perfil);
     let menu = Ember.A();
@@ -109,7 +112,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       zenusuario: store.find('zenusuario', 1),
       twofactor: store.find('twofactor', 1),
       gravatar: store.find('gravatar', 1),
-      menu: store.findAll('menu', { reload: true })
+      menu: store.findAll('menu', { reload: true }),
+      categoriasMenu: store.findAll('categoriasmenu')
     };
     if (requestLocation) {
       promises.geolocation = get(this, 'geolocation').getLocation();

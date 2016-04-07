@@ -1,5 +1,6 @@
 import Ember from 'ember';
-
+import RouteAuthMixin from '../mixins/routeauth';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 const {
   setProperties,
   getProperties,
@@ -7,13 +8,16 @@ const {
   RSVP: { hash }
 } = Ember;
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(RouteAuthMixin, AuthenticatedRouteMixin,
+{
+  beforeModel() {
+    this._super(...arguments);
+  },
   setupController(controller, model) {
-    
     let lotesdisponibles = Ember.A();
     model.lotesdisponibles.forEach((item)=> {
       lotesdisponibles.pushObject(getProperties(item, 'etapa', 'cuantos', 'valuacion'));
-    })
+    });
     setProperties(controller, {
       titleCols: ['Etapa', 'Ocurrencias', 'Valuacion'],
       alignments: ['left', 'right', 'right'],

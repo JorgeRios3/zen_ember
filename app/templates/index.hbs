@@ -41,7 +41,19 @@
               value=selectedMenu
             }}
     </div>
-  </p>{{link-to 'Configurar Menú' 'ordenarmenu'}}
+    {{link-to 'Configurar Menú' 'ordenarmenu'}}
+    {{#if opcionesMenuEsTodos }}
+      <div class="col-md-4">
+            {{ember-selectize
+              content=opcionesCategoria
+              optionValuePath="content.id"
+              optionLabelPath="content.ruta"
+              placeholder="Todos"
+              value=selectedCategoria
+            }}
+      </div>
+    {{/if}}
+  </p>
 </div>
 {{/if}}
 <div class="row">

@@ -26,6 +26,7 @@ export default Ember.Controller.extend({
   isTwoFactorAuthenticated: false,
   twoFactorValue: false,
   selectedMenu: 'todos',
+  selectedCategoria: 'todos',
   init() {
     this._super(...arguments);
     this.setProperties({
@@ -38,13 +39,34 @@ export default Ember.Controller.extend({
       return get(this, 'media.isJumbo') || get(this, 'media.isDesktop');
     }
   }),
-  opcionesMenu: computed('', {
+  opcionesCategoria: computed('categoriasMenu', {
+    get() {
+      let categoriasMenu = get(this, 'categoriasMenu');
+      let mySet = new Set([]);
+      categoriasMenu.forEach((item)=> {
+        let valor = get(item, 'categoria');
+        mySet.add(valor);
+      });
+      let menusCategorias = Ember.A();
+      mySet.forEach((item)=> {
+        let valorDespliegue = item;
+        if (valorDespliegue === 'todos') {
+          valorDespliegue = 'Todas las categorias'
+        }
+        info('valor de item en el mySet', item);
+        menusCategorias.pushObject({ ruta: valorDespliegue, id: item });
+      });
+      return menusCategorias;
+    }
+  }),
+  opcionesMenuEsTodos: computed.equal('selectedMenu', 'todos'),
+  opcionesMenu: computed('menu', {
     get() {
       let listaMenu = get(this, 'menu');
       let lista = [];
-      lista.addObject({ id: 'todos', nombre: 'todos' });
+      lista.addObject({ id: 'todos', nombre: 'Todas las opciones' });
       listaMenu.forEach((item)=> {
-        lista.addObject({ id: get(item, 'ruta'), nombre: get(item, 'ruta' )});
+        lista.addObject({ id: get(item, 'ruta'), nombre: get(item, 'ruta')});
       });
       return lista;
     }
@@ -101,19 +123,31 @@ export default Ember.Controller.extend({
       }
     }
   }),*/
-  menuVisible: computed("selectedMenu", { 
+  menuVisible: computed('selectedMenu', 'selectedCategoria', { 
     get: function(){
-      //var that = this;
+      let that = this;
       let menuItem = this.getWithDefault('selectedMenu', 'todos');
-      info("valor de selectedMenu", menuItem);
+      let categoria = this.getWithDefault('selectedCategoria', 'todos');
       let menu = get(this, 'menu');
       return menu.filter((item)=> {
-        if ( menuItem === get(item, 'ruta')){
+        let ruta = get(item, 'ruta');
+        if (menuItem === ruta) {
           return true;
         } else {
-          return  menuItem === 'todos' ? true : false;
+          if(categoria === 'todos') {
+            return  menuItem === 'todos' ? true : false;
+          } else {
+            info('categoria != todos');
+            let flag = false;
+            get(that, 'categoriasMenu').forEach((cm)=> {     
+              if (get(cm, 'categoria') === categoria && ruta === get(cm, 'menu')) {
+                flag = true;
+              }
+            });
+            return flag;
+          }
         }
-      });
+      }); 
     }
   }),
   actions: {
