@@ -46,9 +46,6 @@ export default Ember.Controller.extend({
         });
       });
   	  set(this, 'mostrarBoton', false);
-  	},
-  	error(errro) {
-  	  info("aqui truena", error);
   	}
   }
 });
