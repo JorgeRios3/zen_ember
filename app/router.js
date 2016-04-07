@@ -49,6 +49,7 @@ Router.map(function() {
   this.route('matriztramites');
   this.route('detallecobranza');
   this.route('arcadialotesdisponibles');
+  this.route('arcadiaventascuadro');
 });
 
 export default Router;
