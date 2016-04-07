@@ -1,17 +1,29 @@
 <h2 class="text-info">Estado de Cuenta</h2>
+<div class="form-group">
+<div class="checkbox">
+	<label>{{input type="checkbox" name="isArcadia" checked=isArcadia }}Arcadia</label>
+</div>
+</div>
+{{#if etapas.length}}
+
 	<div class="form-group">
 		<label for="etapas" class="control-label">Etapa</label>
 		<div class="row">
 			<div class="col-md-5">
+				
 				{{#x-select value='0' action="selectedEtapa" class="form-control form-control-inline"}}
 		  			{{#x-option value='0'}}Elija etapa{{/x-option}}
-		  			{{#each etapas as |item|}}
-		  				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
-					{{/each}}
+		  			
+		  			  {{#each etapas as |item|}}
+		  				  {{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					  {{/each}}
+					
 				{{/x-select}}
+		
 			</div>
 		</div>
 	</div>
+{{/if}}
 	<div class="form-group">
 		<label for="idclientenombre" class="control-label">Nombre</label>
 		<div class="row">
@@ -137,6 +149,7 @@
 				<th>Abono</th>
 				<th>Saldo</th>
 				<th>Fecha</th>
+				<th>Fecha Vencimiento</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -167,6 +180,13 @@
 				</td>
 				<td data-title="Fecha">
 					{{t.fecha}}
+				</td>
+				<td data-title="Fecha Vencimiento">
+					{{#if t.documentoVencido}}
+			         	<div class="text {{if t.documentoVencido 'text-danger'}} ">{{t.fechavencimiento}} ({{t.diasvencimiento}})</div>
+			         {{else}}
+			         	{{t.fechavencimiento}}
+			         {{/if}}
 				</td>
 			</tr>
 			{{/each}}

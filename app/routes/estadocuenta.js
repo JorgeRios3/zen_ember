@@ -3,13 +3,21 @@ import RouteAuthMixin from '../mixins/routeauth';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 const{
   set,
-  RSVP: { hash }
+  get,
+  setProperties,
+  RSVP: { hash },
+  Logger: { info }
 } = Ember;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
   etapas: '',
   setupController(ctrlr, model) {
-    set(ctrlr, 'etapas', model.etapas);
+    //let { etapas, etapasArcadia } = model;
+    //setProperties(ctrlr, { etapas, etapasArcadia });
+    
+    //info('cuantos es', get(etapas, 'length'));
+    //info('cuantos es', get(etapasArcadia, 'length'));
+    ctrlr.notifyPropertyChange('isArcadia');
   },
   beforeModel(transition) {
     this._super(...arguments);
@@ -23,6 +31,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
       lote: '',
       cuenta: '',
       saldo: '',
+      company: '',
       saldoPagaresFormateado: '',
       catalogoNombres: null,
       documentosPagares: null,
@@ -30,10 +39,18 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
       movimientosdocumento: null
     });
   },
+  /*
   model() {
     let { store } = this;
     return hash({
-      etapas: store.findAll('etapastramite', { reload: true })
+      etapas: store.findAll('etapastramite', { reload: true }),
+      etapasArcadia: store.query('etapastramite', { company: 'arcadia' })
     });
+  },
+  */
+  actions: {
+    error(error) {
+      info(error);
+    }
   }
 });
