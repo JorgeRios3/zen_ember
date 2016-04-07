@@ -1,5 +1,11 @@
 <br><br>
-<div class="h3 text text-info">Arcadia - Ventas cuadro</div>
+	<div class="h3 text text-info">Arcadia - Cuadro de Ventas - {{if enganche 'con' 'sin'}} enganche  </div>
+<div class="checkbox">
+	<label>{{input type="checkbox" name="engache" checked=enganche }}Con Enganche</label>
+</div>
+{{#if mostrarBoton}}
+	<div class="btn btn-info" {{action "pedir"}}>Mostrar Datos</div>
+{{/if}}
 
 {{#bsz-table titleCols=titleCols}}
   {{#each ventascuadro as | record |}}

@@ -27,6 +27,7 @@ export default Ember.Controller.extend({
   twoFactorValue: false,
   selectedMenu: 'todos',
   selectedCategoria: 'todos',
+  hasCategorias: computed.gt('opcionesCategoria.length', 1),
   init() {
     this._super(...arguments);
     this.setProperties({
