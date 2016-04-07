@@ -23,6 +23,7 @@
             </p>
 </div>
 
+
 {{#if logoutPrompt}}
   {{#modal-bs title="Que hago o que" ok="logoutConfirmation" close="removeModal"}}
    Abandono la sesión?
@@ -43,6 +44,7 @@
     </div>
     {{link-to 'Configurar Menú' 'ordenarmenu'}}
     {{#if opcionesMenuEsTodos }}
+      {{#if hasCategorias}}
       <div class="col-md-4">
             {{ember-selectize
               content=opcionesCategoria
@@ -52,6 +54,7 @@
               value=selectedCategoria
             }}
       </div>
+      {{/if}}
     {{/if}}
   </p>
 </div>

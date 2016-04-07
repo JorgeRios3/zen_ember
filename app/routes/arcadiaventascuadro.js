@@ -6,44 +6,18 @@ const {
   setProperties,
   getProperties,
   get,
+  set,
   Logger: { info },
   RSVP: { hash }
 } = Ember;
 
-export default Ember.Route.extend(
+export default Ember.Route.extend(RouteAuthMixin, AuthenticatedRouteMixin,
 {
   beforeModel() {
     this._super(...arguments);
   },
   setupController(controller, model) {
-    let ventascuadro = Ember.A();
-    let llaves = ['mes'];
-    let titleCols = ['Mes'];
-    let alignments = ['left'];
-    let a = moment();
-
-    for (let i = 2000; i<=a.year(); i++){
-      llaves.push(`a${i}`);
-      titleCols.push(i);
-      alignments.push('right');
-    }
-    model.ventascuadro.forEach((item)=> {
-      //ventascuadro.pushObject(objeto);
-      ventascuadro.pushObject(getProperties(item, llaves));
-
-    });
-    setProperties(controller, {
-      titleCols,
-      alignments,
-      ventascuadro
-    });
-  },
-  model() {
-    let { store } = this;
-    let reload = { reload: true };
-    return hash({
-      ventascuadro: store.findAll('ventascuadroarcadia', reload)
-    });
+  	controller.notifyPropertyChange('enganche');
   },
   actions: {
     error(error) {
