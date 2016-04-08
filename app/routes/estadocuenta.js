@@ -9,14 +9,9 @@ const{
   Logger: { info }
 } = Ember;
 
-export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
-  etapas: '',
+export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, 
+{
   setupController(ctrlr, model) {
-    //let { etapas, etapasArcadia } = model;
-    //setProperties(ctrlr, { etapas, etapasArcadia });
-    
-    //info('cuantos es', get(etapas, 'length'));
-    //info('cuantos es', get(etapasArcadia, 'length'));
     ctrlr.notifyPropertyChange('isArcadia');
   },
   beforeModel(transition) {
@@ -36,18 +31,12 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
       catalogoNombres: null,
       documentosPagares: null,
       docsCliente: null,
-      movimientosdocumento: null
+      movimientosdocumento: null,
+      showButton: false,
+      showData: false,
+      isArcadia: false
     });
   },
-  /*
-  model() {
-    let { store } = this;
-    return hash({
-      etapas: store.findAll('etapastramite', { reload: true }),
-      etapasArcadia: store.query('etapastramite', { company: 'arcadia' })
-    });
-  },
-  */
   actions: {
     error(error) {
       info(error);

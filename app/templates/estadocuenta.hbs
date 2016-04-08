@@ -30,7 +30,9 @@
 			<div class="col-xs-8 col-md-5">
 				{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idclientenombre" class="text-uppercase" }}
 			</div>
-			<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+			{{#if showButton}}
+				<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+			{{/if}}
 		</div>
 	</div>
 	{{#if cuantos}}
@@ -55,40 +57,15 @@
 			<div class="h3 text text-warning">hay {{cuantos}} clientes la lista es muy larga intenta filtrar mas el nombre </div>
 		{{/if}}
 	{{/if}}
+	{{#if showData}}
+    <dl class="dl-horizontal">
+    	<dt>{{if isArcadia 'Terreno' 'Inmueble'}}</dt><dd>{{#if isArcadia }} {{lote}} {{manzana}}{{else}}{{manzana}} {{lote}}{{/if}}</dd>
+    	<dt>Cuenta</dt><dd>{{cuenta}}</dd>
+    	<dt>Saldo</dt><dd>{{saldoFormateado}}</dd>
 
-	<div class="form-group">
-		<label class="control-label">Manzana</label>
-		<div class="row">
-			<div class="col-xs-4 col-md-2">
-				<p class="form-control-static text text-info">{{manzana}}</p>
-			</div>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label class="control-label">Lote</label>
-		<div class="row">
-			<div class="col-xs-4 col-md-2">
-				<p class="form-control-static text text-info">{{lote}}</p>
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label">Cuenta</label>
-		<div class="row">
-			<div class="col-xs-4 col-md-2">
-				<p class="form-control-static text text-info">{{cuenta}}</p>
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label">Saldo De La Cuenta</label>
-		<div class="row">
-			<div class="col-xs-4 col-md-2">
-				<p class="form-control-static text text-info">{{saldo}}</p>
-			</div>
-		</div>
-	</div>
+    </dl>
+	
+	
 
 	{{#if conPagares}}
 	<div class="form-group">
@@ -225,3 +202,4 @@
 			{{/each}}
 		</tbody>
 	</table>
+	{{/if}}

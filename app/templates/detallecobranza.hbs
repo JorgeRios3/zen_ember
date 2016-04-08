@@ -6,13 +6,15 @@
 			{{bsz-row record=record titleCols=titulosresumen alignments=alignments useBr='true'}}
 		{{/each}}
 	{{/bsz-table}}
-	<div class="btn btn-warning" {{action 'mostrarCerrar'}}>Cerrar Resumen</div>
-	{{else}}
-	<div class="btn btn-success" {{action 'mostrarCerrar'}}>Mostrar Resumen</div>
+	<div class="btn btn-warning" {{action 'mostrarCerrar'}}>Cerrar Resumen</div><br>
+{{else}}
+	<button class="btn btn-success" {{action 'mostrarCerrar'}}>Mostrar Resumen</button><br>
 {{/if}}
+<br>
 {{#if cargando}}
 	<div class=" h5 text text-success">Cargando datos...</div>
 {{else}}
+
 	<div class="form-group">
 		<label class="control-label">Etapa</label>
 		<div class="row">
@@ -81,6 +83,7 @@
 			<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
 		</div>
 	{{/if}}
+	<div><span class="badge badge-info">{{inmuebles.length}}</span></div>
 	{{#if desktopOrJumbo}}
 		{{#if showNavigation}}
 			<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
@@ -90,6 +93,8 @@
 			{{#if hayPagSiguientes}}
 				<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
 			{{/if}}
+		
+			
 		{{/if}}
 		{{#if mostrarCaracteristicas}}	
 	  		{{#modal-bs title="Caracteristicas del inmueble" close="cerrarModal"}}
@@ -102,24 +107,24 @@
 		{{/if}}
 	{{else}}
 		{{#if showNavigation}}
-		<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
-		{{#if hayPagPrevias}}
-			<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-up"></span>&nbsp;Bloque Previo</button>
+			<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
+			{{#if hayPagPrevias}}
+				<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-up"></span>&nbsp;Bloque Previo</button>
+			{{/if}}
+			<br><br>
+			{{#if hayPagSiguientes}}
+				<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-down"></span></button>
+			{{/if}}
 		{{/if}}
-		<br><br>
-		{{#if hayPagSiguientes}}
-			<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-down"></span></button>
-		{{/if}}
-	{{/if}}
-	{{#if mostrarCaracteristicas}}	
-  		{{#modal-bs title="Caracteristicas del inmueble" close="cerrarModal"}}
-  			<div class="h4">Inmueble {{manzanaLoteFormateado}}</div>
-  			{{#each carateristicasLista as |c|}}
-  			<div>{{c.cantidad}} - {{c.descripcion}}</div>
-  			{{/each}}
-  		{{/modal-bs}}
+		{{#if mostrarCaracteristicas}}	
+  			{{#modal-bs title="Caracteristicas del inmueble" close="cerrarModal"}}
+  				<div class="h4">Inmueble {{manzanaLoteFormateado}}</div>
+  				{{#each carateristicasLista as |c|}}
+  				<div>{{c.cantidad}} - {{c.descripcion}}</div>
+  				{{/each}}
+  			{{/modal-bs}}
 
-	{{/if}}
+		{{/if}}
 	{{/if}}
 	<br><hr>
 	<div id="no-more-tables">
