@@ -1,7 +1,5 @@
 import Ember from 'ember';
-// import ajax from 'ember-ajax';
-// import EmberValidations from 'ember-validations';
-// import config from '../config/environment';
+import FormatterMixin from '../mixins/formatter';
 
 const {
   get,
@@ -13,7 +11,8 @@ const {
   inject: { service }
 } = Ember;
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(FormatterMixin,
+{
   session: service(),
   selectedNombre: '',
   selectedEtapa: null,
@@ -36,10 +35,28 @@ export default Ember.Controller.extend({
   maximo: computed.lt('cuantos', 101),
   conPagares: null,
   saldoPagares: '',
-  saldoFormateado: '',
+  showButton: false,
+  showData: false,
   saldoPagaresFormateado: '',
   documentosPagares: null,
   saldoCuenta: '',
+  saldoFormateado: computed('saldo', {
+    get() {
+      return this.formatter(get(this, 'saldo'));
+    }
+  }),
+  observaNombre: observer('nombre', function() {
+    if (get(this, 'nombre').length > 2) {
+      this.setProperties({
+        showButton: true
+      });
+    }
+  }),
+  observaTodo: observer('isArcadia', 'selectedEtapa', 'nombre', function() {
+    this.setProperties({
+      showData: false
+    });
+  }),
   observaIsArcadia: observer('isArcadia', function() {
     info('aqui ando en observacion');
     let isArcadia = get(this, 'isArcadia');
@@ -73,6 +90,7 @@ export default Ember.Controller.extend({
       set(this, 'documentosPagares', this.store.query('documentopagare', { cuenta }));
     }
     set(this, 'cliente', cual.get('cliente'));
+    set(this, 'showData', true);
   }),
 
   actions: {
@@ -106,6 +124,7 @@ export default Ember.Controller.extend({
           return this.store.query('clientesconcuentanosaldada', { etapa, nombre, estadocuenta: 1, company })
             .then((data)=> {
               set(that, 'catalogoNombres', data);
+              
             });
         }
       });
