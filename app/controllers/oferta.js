@@ -371,7 +371,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
               inmueble: despues,
               prospecto: get(that, 'prospecto')
             }
-		  ).then((data)=> {
+          ).then((data)=> {
             set(that, 'comision', false);
             data.forEach((item)=> {
               let comision = get(item, 'comision');
@@ -965,9 +965,10 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         });
 
         Ember.run.later(function() {
-          let { caracteristicasPdf, anexoPdf, ofertaPdf, emailaddress : emailAddress } = that.getProperties('caracteristicasPdf', 'anexoPdf', 'emailaddress');
+          let { caracteristicasPdf, anexoPdf, ofertaPdf, rapPdf, emailaddress: emailAddress } = that.getProperties('caracteristicasPdf', 'anexoPdf', 'ofertaPdf', 'rapPdf', 'emailaddress');
           let request = function(tipoDestino, destino, listaDeArchivos) {
             listaDeArchivos.forEach((archivo)=> {
+              info('pasando por lista de archvios con el archivo', archivo);
               get(that, 'ajax').request(`/api/otro?${tipoDestino}=${destino}&pdf=${archivo}`);
             });
           };
@@ -986,6 +987,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
               archivosValidos = false;
             }
           });
+          info('apunto de mandar correos');
           if (that.get('enviarEmail') && tieneValor(email) && archivosValidos) {
             request('email', email, archivos);
           }
