@@ -85,9 +85,11 @@ export default Ember.Controller.extend(EmberValidations, {
     let that = this;
     ['precioCatalogo'].forEach(function(item) {
       if (isEmpty(get(that, item))) {
-        set(that, 'b' + item, true);
+        set(that, `b${item}`, true);
       } else {
-        set(that, 'b' + item, Ember.$.isNumeric(get(that, item)));
+        set(that, `b${item}`, Ember.$.isNumeric(get(that, item)));
+        // set(that, 'b' + item, Ember.$.isNumeric(get(that, item)));
+
       }
     });
   }),
@@ -270,67 +272,55 @@ export default Ember.Controller.extend(EmberValidations, {
       c.forEach((item)=> {
         if (manzana === item.get('manzana')) {
           lote = get(item, 'lote');
-          l.pushObject(Ember.Object.create({ manzana: get(item, 'manzana'), lote, loteSort: parseInt(lote), inmueble: get(item,'id') }));
-          get(that, 'numerosExteriores').add(lote.substring(0,2));
+          l.pushObject(Ember.Object.create({ manzana: get(item, 'manzana'), lote, loteSort: parseInt(lote), inmueble: get(item, 'id') }));
+          get(that, 'numerosExteriores').add(lote.substring(0, 2));
         }
       });
-      set(this,'sortedTodosDesc', Ember.computed.sort('lotesArray', 'todosSortingDesc'));
+      set(this, 'sortedTodosDesc', Ember.computed.sort('lotesArray', 'todosSortingDesc'));
     },
-
-		loteElegido(item){
-			if(typeof(item)==='string'){
-				info('entro aqui en lote elegido', item);
-				return;
-			}
-			var cual=get(item, 'lote');
-			//var that = this; 
-			this.ponerInmueble(cual);
-		},
-		
-		numeroExteriorElegido(edificio){
-			//Ember.$('#x-numero-interior option[value=0]').prop('selected',true);
-			set(this, 'currentNumeroInterior', '0');
-			set(this, 'currentLoteElegido', '0');
-			set(this, 'numeroexterior', edificio);
-			set(this, 'inmueble', '');
-			set(this, 'caracteristicasLista', null);
-			set(this, 'hayCaracteristicas', false);
-			set(this, 'muestraZonaCaptura', false);
-			set(this, 'mostrarForma', false);
-			var that=this;
-			var c=get(this, 'inmueblesdisponibles');
-			var mySet2 = new Set([]);
-			set(this, 'numerosInteriores', mySet2 );
-			return c.filter(function(item) {
-				var lote = get(item,'lote');
-				if ( edificio === lote.substring(0,2) ){
-					get(that, 'numerosInteriores').add(lote.substring(2,5));
-					return true;
-				} else {
-					return false;
-				}
-			});
-		},
-
-		numeroInteriorElegido(depa){
-			if(parseInt(depa)===0){
-				return ;
-			}
-			info('valor de depa', depa, typeof(depa));
-			const ne = get(this, 'numeroexterior');
-			const loteoficial = `${ne}${depa}`;
-			this.ponerInmueble(loteoficial);
-		},
-
-		precioElegido(precio){
-			set(this, 'precioCatalogo',get(precio, 'id'));
-			set(this, 'precioNumero', get(precio, 'precio'));
-		},
-		/*buscar(){
-			set( this, 'etapas', 
-				this.store.findAll('etapastramite', {reload: true})
-			);
-			
-		},*/
-	}
+    loteElegido(item) {
+      if (typeof (item) === 'string') {
+        info('entro aqui en lote elegido', item);
+        return;
+      }
+      let cual = get(item, 'lote');
+      this.ponerInmueble(cual);
+    },
+    numeroExteriorElegido(edificio) {
+      set(this, 'currentNumeroInterior', '0');
+      set(this, 'currentLoteElegido', '0');
+      set(this, 'numeroexterior', edificio);
+      set(this, 'inmueble', '');
+      set(this, 'caracteristicasLista', null);
+      set(this, 'hayCaracteristicas', false);
+      set(this, 'muestraZonaCaptura', false);
+      set(this, 'mostrarForma', false);
+      let that = this;
+      let c = get(this, 'inmueblesdisponibles');
+      let mySet2 = new Set([]);
+      set(this, 'numerosInteriores', mySet2);
+      return c.filter((item)=> {
+        let lote = get(item, 'lote');
+        if (edificio === lote.substring(0, 2)) {
+          get(that, 'numerosInteriores').add(lote.substring(2, 5));
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
+    numeroInteriorElegido(depa) {
+      if (parseInt(depa) === 0) {
+        return;
+      }
+      info('valor de depa', depa, typeof (depa));
+      let ne = get(this, 'numeroexterior');
+      let loteoficial = `${ne}${depa}`;
+      this.ponerInmueble(loteoficial);
+    },
+    precioElegido(precio) {
+      set(this, 'precioCatalogo', get(precio, 'id'));
+      set(this, 'precioNumero', get(precio, 'precio'));
+    }
+  }
 });
