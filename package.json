@@ -20,7 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.2.0",
-    "ember-ajax": "0.7.1",
+    "ember-ajax": "^2.0.1",
     "ember-bootstrap-datetimepicker": "1.0.2",
     "ember-browserify": "1.1.8",
     "ember-cli": "2.4.3",
@@ -41,7 +41,7 @@
     "ember-cli-spinkit": "1.0.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^1.2.0",
-    "ember-data": "2.4.3",
+    "ember-data": "^2.5.1",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-drag-drop": "0.3.2",
     "ember-export-application-global": "^1.0.5",
