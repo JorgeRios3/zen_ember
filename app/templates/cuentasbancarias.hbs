@@ -1,0 +1,83 @@
+<div class="h3 text text-info">Cuentas Bancarias</div>
+<br><br>
+{{#bsz-table titleCols=titleCols}}
+	{{#each lista as |row i|}}
+			<tr>
+				<td data-title="Empresa">{{row.empresa}}</td>
+				<td data-title="Cuenta">{{row.cuenta}}</td>
+				<td data-title="En Transito" class="text-right">{{row.entransito}}</td>
+				<td data-title="Saldo Banco" class="text-right">{{row.saldobanco}}</td>
+				<td data-title="Saldo Disponible" class="text-right">{{row.saldodisponible}}</td>
+			</tr>
+		{{/each}}
+{{/bsz-table}}
+<div class="h5 text text-info">escoje el tipo de dato</div>
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">tipos</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Elija tipo{{/x-option}}
+			{{#each opciones as |item|}}
+				{{#x-option value=item.id}}{{item.opcion}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+<br>
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Empresas</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEmpresa action=(action  (mut selectedEmpresa)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Todas las Empresas{{/x-option}}
+			{{#each catalogoEmpresas as |item|}}
+				{{#x-option value=item.empresaid}}{{item.empresa}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+<div class="h5 text text-success">seleccion de intervalo de fechas a mostrar</div>
+<div class="form-group">
+	<label for="datewidget" class="control-label">Fecha Inicial</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+			{{bs-datetimepicker date=nullFechaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaInicial))}}
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label for="datewidget" class="control-label">Fecha Final</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+			{{bs-datetimepicker date=nullFechaFial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaFinal))}}
+		</div>
+	</div>
+</div>
+<div class="btn btn-info" {{action 'pedir'}}>Mostrar Datos</div>
+<br>
+{{#if hayCuantos}}
+	<div><br><span class="badge">{{cuantos}}</span></div>
+{{/if}}
+{{#if showNavigation}}
+			<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
+			{{#if hayPagPrevias}}
+				<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
+			{{/if}}
+			{{#if hayPagSiguientes}}
+				<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+			{{/if}}
+		
+			
+		{{/if}}
+{{#if dataCheques.length}}
+{{#bsz-table titleCols=titulosCheques}}
+  		{{#each dataCheques as |record|}}
+  		 {{bsz-row titleCols=titulosCheques record=record alignments=alignments}}
+  		{{/each}}
+ 	{{/bsz-table}}
+	
+{{/if}}
+

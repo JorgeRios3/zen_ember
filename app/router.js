@@ -50,6 +50,7 @@ Router.map(function() {
   this.route('detallecobranza');
   this.route('arcadialotesdisponibles');
   this.route('arcadiaventascuadro');
+  this.route('cuentasbancarias');
 });
 
 export default Router;

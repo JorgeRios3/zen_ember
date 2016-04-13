@@ -5,31 +5,31 @@ import EmberValidations from 'ember-validations';
 import config from '../config/environment';
 
 const {
-	get,
-	set,
-	computed,
-	observer,
-	isEmpty
-}= Ember;
+  get,
+  set,
+  computed,
+  observer,
+  isEmpty
+} = Ember;
 
-var info=Ember.Logger.info;
+var info = Ember.Logger.info;
 
 export default Ember.Controller.extend({
-	session:Ember.inject.service(),
-	selectedEtapa:"",
-	selectedGerente:"",
-	selectedEstatus:"",
-	selectedOrden:"",
-	catalogo:"",
-	fechaInicial:"",
-	fechaFinal:"",
-	fechaInicial:null,
-	fechaFinal:null,
-	resultPage : '',
-	resultPages : '',
-	resultRowCountFormatted : '',
-	requestedPage : 0,
-	metaRDB:"",
+  session:Ember.inject.service(),
+  selectedEtapa:"",
+  selectedGerente:"",
+  selectedEstatus:"",
+  selectedOrden:"",
+  catalogo:"",
+  fechaInicial:"",
+  fechaFinal:"",
+  fechaInicial:null,
+  fechaFinal:null,
+  resultPage : '',
+  resultPages : '',
+  resultRowCountFormatted : '',
+  requestedPage : 0,
+  metaRDB:"",
 
 	hayPagPrevias : computed("resultPage", {
 		get(){
