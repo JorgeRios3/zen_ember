@@ -5,11 +5,10 @@ const {
 	set,
 	Logger: { info },
 	RSVP: { hash }
-} = Ember
+} = Ember;
 
 export default Ember.Route.extend({
   setupController(controller, model) {
-  	info('en setupController');
     set(controller, 'empresas', model.empresas);
     set(controller, 'solicitudes', model.solicitudes);
     controller.send('pedir');
@@ -24,7 +23,6 @@ export default Ember.Route.extend({
   },
   actions: {
   	error(error) {
-      info('hay error');
   	  info(error);
   	}
   }

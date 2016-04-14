@@ -1,9 +1,12 @@
 <h2 class="text-info">Estado de Cuenta</h2>
-<div class="form-group">
-<div class="checkbox">
-	<label>{{input type="checkbox" name="isArcadia" checked=isArcadia }}Arcadia</label>
-</div>
-</div>
+{{#if derechosArcadia}}
+  
+	<div class="form-group">
+		<div class="checkbox">
+			<label>{{input type="checkbox" name="isArcadia" checked=isArcadia }}Arcadia</label>
+		</div>		
+	</div>
+{{/if}}
 {{#if etapas.length}}
 
 	<div class="form-group">
@@ -62,6 +65,11 @@
     	<dt>{{if isArcadia 'Terreno' 'Inmueble'}}</dt><dd>{{#if isArcadia }} {{lote}} {{manzana}}{{else}}{{manzana}} {{lote}}{{/if}}</dd>
     	<dt>Cuenta</dt><dd>{{cuenta}}</dd>
     	<dt>Saldo</dt><dd>{{saldoFormateado}}</dd>
+    	<dt>Cargos</dt><dd>{{cargosFormateado}}</dd>
+    	<dt>Abonos</dt><dd>{{abonosFormateado}}</dd>
+    	{{#if totalVencido}}
+    		<dt>Vencido</dt><dd>{{totalVencidoFormateado}}&nbsp;({{documentosVencidos}} docs.)</dd>
+    	{{/if}}
 
     </dl>
 	
@@ -115,7 +123,7 @@
 	{{/if}}
 
 
-	<div class="text text-info">Documentos</div>
+	<div class="text text-info"><span>Documentos</span>&nbsp;<span class="badge badge-info">{{numeroDocumentos}}</span></div>
 	<table class="table table-bordered table-striped table-condensed cf">
 		<thead>
 			<tr>
