@@ -34,8 +34,14 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       movimientosdocumento: null,
       showButton: false,
       showData: false,
-      isArcadia: false
+      isArcadia: false,
+      totalVencido: 0,
+      documentosVencidos: 0,
+      numeroDocumentos: 0,
+      cargos: 0,
+      abonos: 0
     });
+    info(new Error().stack);
   },
   actions: {
     error(error) {

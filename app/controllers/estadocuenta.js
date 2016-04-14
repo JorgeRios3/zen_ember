@@ -8,12 +8,18 @@ const {
   computed,
   isEmpty,
   Logger: { info },
-  inject: { service }
+  inject: { service, controller }
 } = Ember;
 
 export default Ember.Controller.extend(FormatterMixin,
 {
   session: service(),
+  ci: controller('index'),
+  totalVencido: 0,
+  documentosVencidos: 0,
+  numeroDocumentos: 0,
+  cargos: 0,
+  abonos: 0,
   selectedNombre: '',
   selectedEtapa: null,
   selectedDoc: null,
@@ -40,9 +46,39 @@ export default Ember.Controller.extend(FormatterMixin,
   saldoPagaresFormateado: '',
   documentosPagares: null,
   saldoCuenta: '',
+  derechosArcadia: computed('ci.perfil', {
+    get() {
+      let permiso = false;
+      switch (get(this, 'ci.perfil')) {
+        case 'admin':
+        case 'finanzas':
+        case 'cobranza': 
+          permiso = true;
+          break;
+        default:
+          permiso = false;
+      }
+      return permiso;
+    }
+  }),
   saldoFormateado: computed('saldo', {
     get() {
       return this.formatter(get(this, 'saldo'));
+    }
+  }),
+  cargosFormateado: computed('cargos', {
+    get() {
+      return this.formatter(get(this, 'cargos'));
+    }
+  }),
+  abonosFormateado: computed('abonos', {
+    get() {
+      return this.formatter(get(this, 'abonos'));
+    }
+  }),
+  totalVencidoFormateado: computed('totalVencido', {
+    get() {
+      return this.formatter(get(this, 'totalVencido'));
     }
   }),
   observaNombre: observer('nombre', function() {
@@ -62,16 +98,22 @@ export default Ember.Controller.extend(FormatterMixin,
     let isArcadia = get(this, 'isArcadia');
     let company = isArcadia ? 'arcadia' : '';
     let etapas = Ember.A();
+    let { store } = this;
     set(this, 'company', company);
-    this.store.unloadAll('etapastramite');
-    this.store.unloadAll('documentoscliente');
-    this.store.unloadAll('movimientosdocumento');
-    this.store.unloadAll('clientescuantosconcuentanosaldada');
+    store.unloadAll('etapastramite');
+    store.unloadAll('documentoscliente');
+    store.unloadAll('movimientosdocumento');
+    store.unloadAll('clientescuantosconcuentanosaldada');
     set(this, 'catalogoNombres', null);
     set(this, 'etapas', this.store.query('etapastramite', { company }));
   }),
   observaSelectedNombre: observer('selectedNombre', function() {
     let that = this;
+    let totalVencido = 0;
+    let numeroDocumentos = 0;
+    let documentosVencidos = 0;
+    let cargos = 0;
+    let abonos = 0;
     let company = get(this, 'company');
     this.store.unloadAll('documentoscliente');
     let cuenta = get(this, 'selectedNombre');
@@ -79,6 +121,23 @@ export default Ember.Controller.extend(FormatterMixin,
     let cual = get(this, 'catalogoNombres').findBy('cuenta', cuenta);
     // info(`valor de cual ${cual}`);
     let p = this.store.query('documentoscliente', { cuenta, company });
+    p.then((data)=> {  
+      data.forEach((item)=> {
+        if (get(item, 'documentoVencido')) {
+          totalVencido += parseFloat(get(item, 'saldo').replace(',',''));
+          documentosVencidos++;
+        }
+        numeroDocumentos++;
+        cargos += parseFloat(get(item, 'cargo').replace(',',''));
+        abonos += parseFloat(get(item, 'abono').replace(',',''));
+      });
+      info('total vencido', totalVencido, 'yessir');
+      set(this, 'totalVencido', totalVencido);
+      set(this, 'documentosVencidos', documentosVencidos);
+      set(this, 'numeroDocumentos', numeroDocumentos);
+      set(this, 'cargos', cargos);
+      set(this, 'abonos', abonos);
+    });
     set(this, 'docsCliente', p);
     set(this, 'cuenta', cual.get('cuenta'));
     set(this, 'manzana', cual.get('manzana'));
