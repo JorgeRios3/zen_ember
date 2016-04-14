@@ -51,6 +51,7 @@ Router.map(function() {
   this.route('arcadialotesdisponibles');
   this.route('arcadiaventascuadro');
   this.route('cuentasbancarias');
+  this.route('solicitudes');
 });
 
 export default Router;
