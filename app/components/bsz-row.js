@@ -21,23 +21,17 @@ export default Ember.Component.extend({
   }),
   columns: computed('record', {
     get() {
-      // info('valor de desktopOrJumbo', get(this, 'desktopOrJumbo'));
       let br = get(this, 'br');
       let ap = Ember.ArrayProxy.create({ content: [] });
       if (get(this, 'record') !== null) {
         let record = get(this, 'record');
         let i = 0;
         let titleCols = get(this, 'titleCols');
-        // info('valor de titleCols', titleCols);
         let alignments = get(this, 'alignments');
-        // info('luego de asginar tengo', alignments);
-        if (alignments === []) {
+        if (alignments.length === 0) {
           for (let j = 0; j < titleCols.length; j++) {
-            // info(`j = ${j}`);
             alignments.push('left');
           }
-        } else {
-          // info('else alignments', alignments);
         }
         Object.keys(record).forEach((key)=> {
           let field = get(record, key);
