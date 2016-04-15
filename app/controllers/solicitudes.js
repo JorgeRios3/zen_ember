@@ -8,6 +8,7 @@ const {
 	isEmpty,
 	observer,
 	getProperties,
+	computed,
 	Logger: { info }
 } = Ember;
 
@@ -17,6 +18,8 @@ export default Ember.Controller.extend(FormatterMixin,
   cuantos: 0,
   listaSolicitudes: Ember.A(),
   fecha: '',
+  cargandoDatos: false,
+  hayDatos: '',
   fechaDescriptiva: '',
   titleCols: ['Usuario', 'Identificador', 'Empresa', 'Beneficiario', 'Concepto', 'Anexo', 'Detalle Anexo', 'Observaciones', 'Cantidad'],
   alignments: ['left', 'left', 'left', 'left', 'left', 'left', 'left', 'left', 'right'],
@@ -25,6 +28,7 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
   actions: {
     pedir() {
+      set(this, 'cargandoDatos', true);
       let objeto = {};
       let campos = ['usuario', 'identificador', 'empresa', 'beneficiario', 'concepto', 'anexo', 'detalleanexo', 'observaciones'];
       let total = 0;
@@ -53,6 +57,7 @@ export default Ember.Controller.extend(FormatterMixin,
         });
         set(this, 'cuantos', lista.length);
         if (lista.length > 0) {
+          set(this, 'hayDatos', '');
           let row = {};
           campos.forEach((field)=> {
             row[field] = '';
@@ -60,7 +65,10 @@ export default Ember.Controller.extend(FormatterMixin,
           row.cantidad = this.formatter(total);
           row.observaciones = 'Total';
           lista.pushObject(row);
+        } else {
+          set(this, 'hayDatos', 'No hay datos que mostrar');
         }
+        set(this, 'cargandoDatos', false);
         set(this, 'listaSolicitudes', lista);
       });
     }
