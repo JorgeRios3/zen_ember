@@ -5,6 +5,7 @@ const {
   get,
   observer,
   isEmpty,
+  getProperties,
   Logger: { info },
   computed
 } = Ember;
@@ -159,13 +160,14 @@ export default Ember.Controller.extend({
           if (primerInmueble !== get(item, 'inmueble')) {
             let manzana = get(item , 'manzana');
             let lote = get(item, 'lote');
-            record = Ember.Object.create({ inmueble: `${manzana} ${lote}` });
+            record = { inmueble: `${manzana} ${lote}` };
             primerInmueble = get(item, 'inmueble');
           }
           let tram = `tramite${get(item, 'tramite')}`;
-          set(record, tram, get(item, 'fecha'));
+          record[tram] = get(item, 'fecha');
         }
         inmuebles.pushObject(record);
+
       });
       info('termino de armar el record');
     }
