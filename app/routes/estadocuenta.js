@@ -43,6 +43,13 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     });
     info(new Error().stack);
   },
+
+  willTransition() {
+    store.unloadAll('etapastramite');
+    store.unloadAll('documentoscliente');
+    store.unloadAll('movimientosdocumento');
+    store.unloadAll('clientescuantosconcuentanosaldada');
+  },
   actions: {
     error(error) {
       info(error);

@@ -22,9 +22,11 @@
 		</div>
 	</div>
 </div>
-
+{{#unless cargandoDatos}}
 <div class="btn btn-info" {{action 'pedir'}}>Mostrar Datos</div>
+{{/unless}}
 <br><br>
+{{hayDatos}}
 {{#if cuantos}}
 <span class="badge badgeinfo">{{cuantos}}</span>&nbsp;{{fechaDescriptiva}}<br>
 	{{#bsz-table titleCols=titleCols}}

@@ -167,6 +167,7 @@ export default Ember.Controller.extend({
         }
         inmuebles.pushObject(record);
       });
+      info('termino de armar el record');
     }
   }
 });
