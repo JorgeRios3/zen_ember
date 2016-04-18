@@ -37,7 +37,6 @@ export default Ember.Controller.extend(ExcelRequestMixin, {
         let objeto = { tramite:  descripcion, total: get(item, 'total') };
         get(this, 'tramitesTotales').pushObject(objeto);
       });
-      //this.send('prueba');
       this.requestExcel(fileName, email);
       /*if (!isEmpty(fileName)) {
         let urlp = `/api/otro?printer=null&tipo=generaexcel&filename=${fileName}`;
@@ -63,13 +62,6 @@ export default Ember.Controller.extend(ExcelRequestMixin, {
     },
     mandarEmail(emailAddress) {
       set(this, 'emailAddress', emailAddress);
-    },
-    prueba(fileName) {
-      var orig_func = this._super;
-      Ember.run.next(function(){
-        orig_func(fileName);
-     });
-    
     }
   }
 });
