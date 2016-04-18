@@ -52,6 +52,7 @@ Router.map(function() {
   this.route('arcadiaventascuadro');
   this.route('cuentasbancarias');
   this.route('solicitudes');
+  this.route('situacionfinancieraobras');
 });
 
 export default Router;

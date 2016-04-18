@@ -1,0 +1,11 @@
+<br><br><div class="h3 text text-info">Situacion Financiera Obras</div>
+{{#bsz-table titleCols=titleCols}}
+	{{#each datos as |record|}}
+		{{bsz-row titleCols=titleCols record=record alignments=alignments}}
+	{{/each}}
+{{/bsz-table}}
+
+{{check-excelemail  hacer=(action (mut emailAddress))}}
+{{#if emailAddress}}
+<div class="btn btn-info" {{action 'enviar'}}>Enviar</div>
+{{/if}}
