@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ExcelRequestMixin from '../mixins/excelrequest';
 
 const {
   get,
@@ -9,7 +10,8 @@ const {
   inject: { service }
 } = Ember;
 
-export default Ember.Controller.extend({
+
+export default Ember.Controller.extend(ExcelRequestMixin, {
   ajax: service(),
   selectedEtapa: '',
   catalogoTramites: null,
@@ -23,7 +25,7 @@ export default Ember.Controller.extend({
     let that = this;
     let reportePdf = null;
     let email = get(this, 'emailAddress');
-  	get(this, 'tramitesTotales').clear();
+    get(this, 'tramitesTotales').clear();
     this.store.unloadAll('matriztramite');
     this.store.query('matriztramite', { etapa: get(this, 'selectedEtapa'), excel: get(this, 'emailAddress') }).then((data)=> {
       info(get(data, 'meta.filename'));
@@ -35,7 +37,9 @@ export default Ember.Controller.extend({
         let objeto = { tramite:  descripcion, total: get(item, 'total') };
         get(this, 'tramitesTotales').pushObject(objeto);
       });
-      if (!isEmpty(fileName)) {
+      //this.send('prueba');
+      this.requestExcel(fileName, email);
+      /*if (!isEmpty(fileName)) {
         let urlp = `/api/otro?printer=null&tipo=generaexcel&filename=${fileName}`;
         get(this, 'ajax').request(urlp).then((data)=> {
           info(data);
@@ -49,10 +53,9 @@ export default Ember.Controller.extend({
           let URL_EMAIL = `/api/otro?email=${email}&pdf=${reportePdf}&xls=1`;
           get(that, 'ajax').request(URL_EMAIL);
         }, 5000);
-      }
+      }*/
     });
   }),
-
 
   actions: {
     togglePrinterComponent() {
@@ -60,6 +63,13 @@ export default Ember.Controller.extend({
     },
     mandarEmail(emailAddress) {
       set(this, 'emailAddress', emailAddress);
+    },
+    prueba(fileName) {
+      var orig_func = this._super;
+      Ember.run.next(function(){
+        orig_func(fileName);
+     });
+    
     }
   }
 });
