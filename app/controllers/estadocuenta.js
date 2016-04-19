@@ -46,13 +46,16 @@ export default Ember.Controller.extend(FormatterMixin,
   saldoPagaresFormateado: '',
   documentosPagares: null,
   saldoCuenta: '',
+  recibo: '',
+  recibosmovimientosLista: null,
+  movimientosMayorAUno: computed.gt('recibosmovimientosLista.length', 1),
   derechosArcadia: computed('ci.perfil', {
     get() {
       let permiso = false;
       switch (get(this, 'ci.perfil')) {
         case 'admin':
         case 'finanzas':
-        case 'cobranza': 
+        case 'cobranza':
           permiso = true;
           break;
         default:
@@ -121,15 +124,15 @@ export default Ember.Controller.extend(FormatterMixin,
     let cual = get(this, 'catalogoNombres').findBy('cuenta', cuenta);
     // info(`valor de cual ${cual}`);
     let p = this.store.query('documentoscliente', { cuenta, company });
-    p.then((data)=> {  
+    p.then((data)=> {
       data.forEach((item)=> {
         if (get(item, 'documentoVencido')) {
-          totalVencido += parseFloat(get(item, 'saldo').replace(',',''));
+          totalVencido += parseFloat(get(item, 'saldo').replace(',', ''));
           documentosVencidos++;
         }
         numeroDocumentos++;
-        cargos += parseFloat(get(item, 'cargo').replace(',',''));
-        abonos += parseFloat(get(item, 'abono').replace(',',''));
+        cargos += parseFloat(get(item, 'cargo').replace(',', ''));
+        abonos += parseFloat(get(item, 'abono').replace(',', ''));
       });
       info('total vencido', totalVencido, 'yessir');
       set(this, 'totalVencido', totalVencido);
@@ -153,6 +156,14 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
 
   actions: {
+    procesaRecibo(recibo) {
+      let isArcadia = get(this, 'isArcadia');
+      let company = isArcadia ? 'arcadia' : '';
+      info('valor de recibo', recibo);
+      set(this, 'recibo', recibo);
+      this.store.unloadAll('recibomovimiento');
+      set(this, 'recibosmovimientosLista', this.store.query('recibomovimiento', { company, recibo }));
+    },
     procesaDocumento(idDocumento, abono) {
       let company = get(this, 'company');
       this.store.unloadAll('movimientosdocumento');
@@ -183,7 +194,6 @@ export default Ember.Controller.extend(FormatterMixin,
           return this.store.query('clientesconcuentanosaldada', { etapa, nombre, estadocuenta: 1, company })
             .then((data)=> {
               set(that, 'catalogoNombres', data);
-              
             });
         }
       });

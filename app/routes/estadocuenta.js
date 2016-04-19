@@ -12,6 +12,8 @@ const{
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, 
 {
   setupController(ctrlr, model) {
+    let a= this.controllerFor('index');
+    //info('revisnado pèrfolñ', a.perfil);
     ctrlr.notifyPropertyChange('isArcadia');
   },
   beforeModel(transition) {
