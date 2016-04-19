@@ -73,17 +73,17 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     if (menuitems) {
       menuitems.forEach((item)=> {
         let obj = model.menu.findBy('item', item);
-        let { title, intro, consulta } = obj.getProperties('title', 'intro', 'consulta');
+        let { title, intro, consulta, reciente } = obj.getProperties('title', 'intro', 'consulta', 'reciente');
         let arcadia = item.includes('arcadia');
         // info(`${title} ${intro} -- valen title e intro`);
-        menu.pushObject({ ruta: item, title, intro, consulta, arcadia });
+        menu.pushObject({ ruta: item, title, intro, consulta, arcadia, reciente });
       });
     } else {
       model.menu.forEach((item)=> {
-        let { title, intro, consulta } = item.getProperties('title', 'intro', 'consulta');
+        let { title, intro, consulta, reciente } = item.getProperties('title', 'intro', 'consulta', 'reciente');
         let ruta = get(item, 'item');
         let arcadia = ruta.includes('arcadia');
-        menu.pushObject({ ruta ,title, intro, consulta, arcadia });
+        menu.pushObject({ ruta ,title, intro, consulta, arcadia, reciente });
       });
     }
     /*menuitems.forEach((item)=> {

@@ -7,5 +7,6 @@ export default DS.Model.extend({
   item: attr('string'),
   title: attr('string'),
   intro: attr('string'),
-  consulta: attr('boolean')
+  consulta: attr('boolean'),
+  reciente: attr('boolean', {default: false})
 });
