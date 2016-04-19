@@ -21,6 +21,7 @@ RouteAuthMixin, {
     set(ctrl, 'listaUsuarios', listaUsuarios);
   },
   model() {
+  	this.store.unloadAll('logusuarioruta');
   	return this.store.query('logusuarioruta', { solousuarios: '1' });
   }
 });
