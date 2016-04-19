@@ -53,6 +53,7 @@ Router.map(function() {
   this.route('cuentasbancarias');
   this.route('solicitudes');
   this.route('situacionfinancieraobras');
+  this.route('logusuariosrutas');
 });
 
 export default Router;
