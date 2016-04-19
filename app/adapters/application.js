@@ -26,3 +26,4 @@ inflector.irregular('ventascuadroarcadia', 'ventascuadroarcadias');
 inflector.irregular('cuentabancaria', 'cuentabancarias');
 inflector.irregular('solicitud', 'solicitudes');
 inflector.irregular('situacionfinacieraobra', 'situacionfinacieraobras');
+inflector.irregular('logusuarioruta', 'logusuariorutas');

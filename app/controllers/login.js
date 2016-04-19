@@ -46,7 +46,7 @@ export default Ember.Controller.extend(
     if (config.AUTOMATIC_LOGIN) {
       info('doing automatic');
       set(this, 'identification', config.AUTOMATIC_LOGIN_IDENTIFICATION);
-      set(this, 'password', config.AUTOMATIC_LOGIN_PASSWORD.slice(0, -2));
+      set(this, 'password', config.AUTOMATIC_LOGIN_PASSWORD);
     }
   },
   actions: {

@@ -1,0 +1,18 @@
+<div class="form-group">
+		<label for="usuarios" class="control-label">Usuario</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedUSuario action=(action  (mut selectedUsuario)) class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija usuario{{/x-option}}
+		  			{{#each listaUsuarios as |item|}}
+		  				{{#x-option value=item.usuario}}{{item.usuario}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+</div>
+{{#bsz-table titleCols=titleCols}}
+		{{#each listaTabla as |record|}}
+			{{bsz-row titleCols=titleCols record=record}}
+  		{{/each}}
+	{{/bsz-table}}
