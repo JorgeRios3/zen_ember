@@ -12,7 +12,7 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, FormatterMixin, {
   beforeModel(transition) {
-  	this._super(...arguments);
+    this._super(...arguments);
   },
   setupController(ctrl, model) {
     ctrl.setProperties({
@@ -50,7 +50,6 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, Forma
         estimadoporfacturar: this.formatter(get(model, 'meta.totalestimadoporfacturar')) };
     get(ctrl, 'datos').pushObject(objeto);
     get(ctrl, 'datos').forEach((item)=> {
-      info(item);
     });
 
   },
