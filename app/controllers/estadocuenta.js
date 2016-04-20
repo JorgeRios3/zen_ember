@@ -48,7 +48,12 @@ export default Ember.Controller.extend(FormatterMixin,
   saldoCuenta: '',
   recibo: '',
   recibosmovimientosLista: null,
+  documentosSelec: null,
   movimientosMayorAUno: computed.gt('recibosmovimientosLista.length', 1),
+  cuentaBuscar: '',
+  mostrarNombreClienteAlert: false,
+  showName: '',
+  showCuenta: '',
   derechosArcadia: computed('ci.perfil', {
     get() {
       let permiso = false;
@@ -88,6 +93,26 @@ export default Ember.Controller.extend(FormatterMixin,
     if (get(this, 'nombre').length > 2) {
       this.setProperties({
         showButton: true
+      });
+    }
+  }),
+  observaCuentaBuscar: observer('cuentaBuscar', function() {
+    if (get(this, 'cuentaBuscar').length >= 4) {
+      let company = get(this, 'company');
+      let cuenta = get(this, 'cuentaBuscar');
+      this.store.query('cuentabreve', { company, cuenta })
+      .then((data)=> {
+        data.forEach((item)=> {
+          if (get(item, 'id') && get(item, 'nombre')) {
+            set(this, 'mostrarNombreClienteAlert', true);
+            set(this, 'showName', get(item, 'nombre'));
+            set(this, 'showCuenta', get(item, 'id'));
+          } else {
+            set(this, 'mostrarNombreClienteAlert', false);
+            set(this, 'showName', '');
+            set(this, 'showCuenta', '');
+          }
+        });
       });
     }
   }),
@@ -156,13 +181,97 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
 
   actions: {
-    procesaRecibo(recibo) {
+    buscarConCuenta(){
+      let nombre = get(this, 'showName');
+      let cuenta = get(this, 'showCuenta');
+      let company = get(this, 'isArcadia');
+      let p = this.store.query('documentoscliente', { cuenta, company });
+      p.then((data)=> {
+        data.forEach((item)=> {
+          if (get(item, 'documentoVencido')) {
+            totalVencido += parseFloat(get(item, 'saldo').replace(',', ''));
+            documentosVencidos++;
+          }
+          numeroDocumentos++;
+          cargos += parseFloat(get(item, 'cargo').replace(',', ''));
+          abonos += parseFloat(get(item, 'abono').replace(',', ''));
+        });
+        info('total vencido', totalVencido, 'yessir');
+        set(this, 'totalVencido', totalVencido);
+        set(this, 'documentosVencidos', documentosVencidos);
+        set(this, 'numeroDocumentos', numeroDocumentos);
+        set(this, 'cargos', cargos);
+        set(this, 'abonos', abonos);
+      });
+      set(this, 'docsCliente', p);
+      set(this, 'cuenta', cual.get('cuenta'));
+      set(this, 'manzana', cual.get('manzana'));
+      set(this, 'lote', cual.get('lote'));
+      set(this, 'saldo', cual.get('saldo'));
+      set(this, 'conPagares', get(cual, 'conpagares'));
+      set(this, 'saldoPagaresFormateado', get(cual, 'saldopagaresformateado'));
+      if (get(this, 'conPagares') === true) {
+        set(this, 'documentosPagares', this.store.query('documentopagare', { cuenta }));
+      }
+      set(this, 'cliente', cual.get('cliente'));
+      set(this, 'showData', true);
+    },
+    cerrarModal() {
+
+    },
+    saldarRecibo() {
+      let listaDocumentos =[]
+      let recibo = get(this, 'recibo');
+      let lista = get(this, 'recibosmovimientosLista');
+      lista.forEach((item)=> {
+        if (get(item, 'elegido') === true) {
+          listaDocumentos.push(get(item, 'movimiento'));
+        }
+      });
+      info('cancelando', listaDocumentos.join(','),    recibo);
+      let movsLista = listaDocumentos.join(',');
+      var record = this.store.createRecord('recibocancelacion', {
+        recibo: recibo,
+        movimientos: movsLista
+      });
+      record.save().then(()=> {
+        info('se grabo correctamente');
+      }, (error)=> {
+        info('hubo un error al grabar');
+      });
+
+    },
+    procesaReciboDocumento(documento) {
+      let docs = get(this, "recibosmovimientosLista");
+      let cual = docs.findBy("documento", documento);
+      if (get(cual, 'elegido') === false) {
+        set(cual, 'elegido', true);
+      } else {
+        set(cual, 'elegido', false);
+      }
+    },
+    procesaRecibo(recibo, id) {
+      let lista = Ember.A();
       let isArcadia = get(this, 'isArcadia');
       let company = isArcadia ? 'arcadia' : '';
-      info('valor de recibo', recibo);
+      info('valor de recibo de recibo', id);
       set(this, 'recibo', recibo);
       this.store.unloadAll('recibomovimiento');
-      set(this, 'recibosmovimientosLista', this.store.query('recibomovimiento', { company, recibo }));
+      // set(this, 'recibosmovimientosLista', this.store.query('recibomovimiento', { company, recibo }));
+      this.store.query('recibomovimiento', { company, recibo }).then((data)=> {
+        data.forEach((item)=> {
+          if (id === get(item, 'movimiento')) {
+            let { movimiento, fecha, cantidad, documento } = item.getProperties('movimiento', 'fecha', 'cantidad', 'documento');
+            let elegido = true;
+            lista.pushObject({ elegido, movimiento, fecha, cantidad, documento });
+          } else{
+            let { movimiento, fecha, cantidad, documento } = item.getProperties('movimiento', 'fecha', 'cantidad', 'documento');
+            let elegido = false;
+            lista.pushObject({ elegido, movimiento, fecha, cantidad, documento });
+          }
+        });
+      });
+      set(this, 'recibosmovimientosLista', lista);
     },
     procesaDocumento(idDocumento, abono) {
       let company = get(this, 'company');

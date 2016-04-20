@@ -38,6 +38,20 @@
 			{{/if}}
 		</div>
 	</div>
+	<div class="form-group">
+		<label for="idcuentaCliente" class="control-label">Cuenta</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=cuentaBuscar class="form-control" placeholder="Cuenta" id="idcuentaCliente" type="number"}}
+			</div>
+			
+
+		</div>
+	</div>
+	{{#if mostrarNombreClienteAlert}}
+		<div class="alert alert-success" role="alert">Cliente: {{showName}}  Cuenta: {{showCuenta}}</div>
+		<div class="btn btn-info" {{ action 'buscarConCuenta'}}>Buscar</div>
+	{{/if}}
 	{{#if cuantos}}
 		{{#if maximo}}
 			<div class="h3 text text-success">hay {{cuantos}} clientes</div>
@@ -205,7 +219,7 @@
 				</td>
 				<td data-title="Saldo" class="text-right">
 					{{#if isArcadia}}
-						<a href="" {{ action 'procesaRecibo' m.recibo }}>{{m.recibo}}</a>
+						<a href="" {{ action 'procesaRecibo' m.recibo m.id }}>{{m.recibo}}</a>
 					{{else}}
 						{{m.recibo}}
 					{{/if}}
@@ -221,6 +235,7 @@
 	<table  class="table table-bordered table-striped table-condensed cf">
 	<thead>
 			<tr>
+				<th>Sel</th>
 				<th>Movimiento</th>
                 <th>Fecha</th>
 				<th>cantidad</th>
@@ -230,6 +245,13 @@
 		<tbody>
 			{{#each recibosmovimientosLista as |m|}}
 			<tr>
+				<td data-title="Sel">
+					{{#if m.elegido}}
+						<span class="glyphicon glyphicon-check"></span>
+						{{else}}
+						<span></span>
+					{{/if}}
+			    </td>
                 <td data-title="Id">
 					{{m.movimiento}}
 				</td>
@@ -240,7 +262,7 @@
 					{{m.cantidad}}
 				</td>
 				<td data-title="Documento" class="text-right">
-					{{m.documento}}
+					<a href="" {{ action 'procesaReciboDocumento' m.documento }}>{{m.documento}}</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -255,5 +277,5 @@
 		{{/if}}
 	{{/if}}
 {{#if recibo}}
-	<div class="btn btn-warning">Saldar Recibo</div>
+	<div class="btn btn-warning" {{action 'saldarRecibo'}}>Saldar Recibo</div>
 {{/if}}

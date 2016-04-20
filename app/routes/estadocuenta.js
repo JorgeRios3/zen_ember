@@ -43,7 +43,6 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       cargos: 0,
       abonos: 0
     });
-    info(new Error().stack);
   },
 
   willTransition() {
