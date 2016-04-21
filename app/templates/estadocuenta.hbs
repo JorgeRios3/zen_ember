@@ -7,8 +7,23 @@
 		</div>		
 	</div>
 {{/if}}
-{{#if etapas.length}}
+<div class="form-group">
+		<label for="idcuentaCliente" class="control-label">Cuenta</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=cuentaBuscar class="form-control" placeholder="Cuenta" id="idcuentaCliente" type="number"}}
+			</div>
+			
 
+		</div>
+	</div>
+	{{#if mostrarNombreClienteAlert}}
+		<div class="alert alert-success" role="alert">Cliente: {{showName}}  Cuenta: {{showCuenta}}</div>
+		<div class="btn btn-info" {{ action 'buscarConCuenta'}}>Mostrar</div>
+		<br>
+	{{/if}}
+{{#if etapas.length}}
+	<br>
 	<div class="form-group">
 		<label for="etapas" class="control-label">Etapa</label>
 		<div class="row">
@@ -38,20 +53,7 @@
 			{{/if}}
 		</div>
 	</div>
-	<div class="form-group">
-		<label for="idcuentaCliente" class="control-label">Cuenta</label>
-		<div class="row">
-			<div class="col-xs-8 col-md-5">
-				{{input type="text" value=cuentaBuscar class="form-control" placeholder="Cuenta" id="idcuentaCliente" type="number"}}
-			</div>
-			
-
-		</div>
-	</div>
-	{{#if mostrarNombreClienteAlert}}
-		<div class="alert alert-success" role="alert">Cliente: {{showName}}  Cuenta: {{showCuenta}}</div>
-		<div class="btn btn-info" {{ action 'buscarConCuenta'}}>Buscar</div>
-	{{/if}}
+	
 	{{#if cuantos}}
 		{{#if maximo}}
 			<div class="h3 text text-success">hay {{cuantos}} clientes</div>
@@ -228,54 +230,62 @@
 			{{/each}}
 		</tbody>
 	</table>
-	{{#if recibo}}
-	<div class="h4 text text-danger">Movimientos implicados del recibo {{recibo}}</div>
-	{{/if}}
-	<div id="no-more-tables">
-	<table  class="table table-bordered table-striped table-condensed cf">
-	<thead>
-			<tr>
-				<th>Sel</th>
-				<th>Movimiento</th>
-                <th>Fecha</th>
-				<th>cantidad</th>
-				<th>Documento</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each recibosmovimientosLista as |m|}}
-			<tr>
-				<td data-title="Sel">
-					{{#if m.elegido}}
-						<span class="glyphicon glyphicon-check"></span>
-						{{else}}
-						<span></span>
-					{{/if}}
-			    </td>
-                <td data-title="Id">
-					{{m.movimiento}}
-				</td>
-				<td data-title="Fecha">
-					{{m.fecha}}
-				</td>
-				<td data-title="Cantidad" class="text-right">
-					{{m.cantidad}}
-				</td>
-				<td data-title="Documento" class="text-right">
-					<a href="" {{ action 'procesaReciboDocumento' m.documento }}>{{m.documento}}</a>
-				</td>
-			</tr>
-			{{/each}}
-		</tbody>
-	</table>
-</div>
-{{#if movimientosMayorAUno}}	
-	  		{{#modal-bs title="Aviso" close="cerrarModal"}}
-	  			<div class="h4 text-warning">Este Recibo {{recibo}} implica los movimientos desplegados en la tabla</div>
-	  		{{/modal-bs}}
-
+	{{#if isArcadia}}
+		{{#if recibo}}
+		<div class="h4 text text-danger">Movimientos implicados del recibo {{recibo}}</div>
 		{{/if}}
+		<div id="no-more-tables">
+		<table  class="table table-bordered table-striped table-condensed cf">
+		<thead>
+				<tr>
+					<th>Sel</th>
+					<th>Movimiento</th>
+	                <th>Fecha</th>
+					<th>cantidad</th>
+					<th>Documento</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each recibosmovimientosLista as |m|}}
+				<tr>
+					<td data-title="Sel">
+						{{#if m.elegido}}
+							<span class="glyphicon glyphicon-check"></span>
+							{{else}}
+							<span></span>
+						{{/if}}
+				    </td>
+	                <td data-title="Id">
+						{{m.movimiento}}
+					</td>
+					<td data-title="Fecha">
+						{{m.fecha}}
+					</td>
+					<td data-title="Cantidad" class="text-right">
+						{{m.cantidad}}
+					</td>
+					<td data-title="Documento" class="text-right">
+						<a href="" {{ action 'procesaReciboDocumento' m.documento }}>{{m.documento}}</a>
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+	{{#if errorMessage}}
+		{{#modal-bs title="Aviso" close="enteradoError"}}
+		 	<div class="h4 text-warning">Hubo error al intentar saldar el recibo {{error}}</div>
+		{{/modal-bs}}
+			
+	{{/if}}	
+	{{#if movimientosMayorAUno}}	
+		  		{{#modal-bs title="Aviso" close="cerrarModal"}}
+		  			<div class="h4 text-warning">Este Recibo {{recibo}} implica los movimientos desplegados en la tabla</div>
+		  		{{/modal-bs}}
+
+			{{/if}}
+		{{/if}}
+	{{#if recibo}}
+		<div class="btn btn-warning" {{action 'saldarRecibo'}}>Saldar Recibo</div>
 	{{/if}}
-{{#if recibo}}
-	<div class="btn btn-warning" {{action 'saldarRecibo'}}>Saldar Recibo</div>
 {{/if}}
