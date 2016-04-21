@@ -27,3 +27,4 @@ inflector.irregular('cuentabancaria', 'cuentabancarias');
 inflector.irregular('solicitud', 'solicitudes');
 inflector.irregular('situacionfinacieraobra', 'situacionfinacieraobras');
 inflector.irregular('logusuarioruta', 'logusuariorutas');
+inflector.irregular('cuentabreve', 'cuentabreves');

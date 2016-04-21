@@ -41,9 +41,11 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       documentosVencidos: 0,
       numeroDocumentos: 0,
       cargos: 0,
-      abonos: 0
+      abonos: 0,
+      showName: '',
+      showCuenta: '',
+      cuentaBuscar: '',
     });
-    info(new Error().stack);
   },
 
   willTransition() {

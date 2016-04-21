@@ -36,16 +36,16 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, Forma
       	get(ctrl, 'datos').pushObject(objeto);
     });
     let objeto = {
-    	contrato: '**',
+    	contrato: '***',
         obra: 'Totales',
-        fecha: '**',
+        fecha: '',
         valorcontrato: this.formatter(get(model, 'meta.totalvalorcontrato')),
         facturado: this.formatter(get(model, 'meta.totalfacturado')),
-        porfacturar: '**',
+        porfacturar: '',
         pagado: this.formatter(get(model, 'meta.totalpagado')),
         porpagar:  this.formatter(get(model, 'meta.totalporpagar')),
-        porcentajeavanceobra: '**',
-        porcentajeavancepagado: '**',
+        porcentajeavanceobra: '',
+        porcentajeavancepagado: '',
         estimado: this.formatter(get(model, 'meta.totalestimado')),
         estimadoporfacturar: this.formatter(get(model, 'meta.totalestimadoporfacturar')) };
     get(ctrl, 'datos').pushObject(objeto);

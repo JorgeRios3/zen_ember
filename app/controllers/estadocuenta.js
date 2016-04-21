@@ -48,7 +48,13 @@ export default Ember.Controller.extend(FormatterMixin,
   saldoCuenta: '',
   recibo: '',
   recibosmovimientosLista: null,
+  documentosSelec: null,
   movimientosMayorAUno: computed.gt('recibosmovimientosLista.length', 1),
+  cuentaBuscar: '',
+  mostrarNombreClienteAlert: false,
+  showName: '',
+  showCuenta: '',
+  errorMessage: '',
   derechosArcadia: computed('ci.perfil', {
     get() {
       let permiso = false;
@@ -91,12 +97,61 @@ export default Ember.Controller.extend(FormatterMixin,
       });
     }
   }),
+  observaCuentaBuscar: observer('cuentaBuscar', function() {
+    try {
+    let isArcadia = get(this, 'isArcadia');
+    let cuenta = get(this, 'cuentaBuscar');
+    if (!isArcadia && parseInt(cuenta) < 1000) {
+      return;
+    }
+    if (true) {
+      let company = get(this, 'company');
+      let cuenta = get(this, 'cuentaBuscar');
+      info('valor de company', company);
+      this.store.unloadAll('cuentabreve');
+      this.store.query('cuentabreve', { company, cuenta })
+      .then((data)=> {
+        data.forEach((item)=> {
+          if (get(item, 'id') && get(item, 'nombre')) {
+            set(this, 'mostrarNombreClienteAlert', true);
+            set(this, 'showName', get(item, 'nombre'));
+            set(this, 'showCuenta', get(item, 'id'));
+          } else {
+            set(this, 'mostrarNombreClienteAlert', false);
+            set(this, 'showName', '');
+            set(this, 'showCuenta', '');
+          }
+        });
+      });
+
+    }
+  } catch (e) {
+    info('trono en cuentabuscar',e);
+  }
+  }),
+
   observaTodo: observer('isArcadia', 'selectedEtapa', 'nombre', function() {
     this.setProperties({
       showData: false
     });
   }),
+
   observaIsArcadia: observer('isArcadia', function() {
+    this.setProperties({
+      nombre: '',
+      cuentaBuscar: '',
+      documentosPagares: null,
+      docsCliente: null,
+      movimientosdocumento: null,
+      recibosmovimientosLista: null,
+      mostrarNombreClienteAlert: false,
+      selectedEtapa: '',
+      showButton: false,
+      showName: '',
+      showCuenta: '',
+      showData: '',
+      cuantos: ''
+    });
     info('aqui ando en observacion');
     let isArcadia = get(this, 'isArcadia');
     let company = isArcadia ? 'arcadia' : '';
@@ -106,11 +161,12 @@ export default Ember.Controller.extend(FormatterMixin,
     store.unloadAll('etapastramite');
     store.unloadAll('documentoscliente');
     store.unloadAll('movimientosdocumento');
-    store.unloadAll('clientescuantosconcuentanosaldada');
-    set(this, 'catalogoNombres', null);
     set(this, 'etapas', this.store.query('etapastramite', { company }));
   }),
   observaSelectedNombre: observer('selectedNombre', function() {
+    info('valor de selectedNombre', get(this, 'selectedNombre'));
+    this.store.unloadAll('documentoscliente');
+    this.store.unloadAll('documentopagare');
     let that = this;
     let totalVencido = 0;
     let numeroDocumentos = 0;
@@ -118,12 +174,12 @@ export default Ember.Controller.extend(FormatterMixin,
     let cargos = 0;
     let abonos = 0;
     let company = get(this, 'company');
-    this.store.unloadAll('documentoscliente');
     let cuenta = get(this, 'selectedNombre');
-    // info(`valor de cuenta ${cuenta}`);
-    let cual = get(this, 'catalogoNombres').findBy('cuenta', cuenta);
-    // info(`valor de cual ${cual}`);
-    let p = this.store.query('documentoscliente', { cuenta, company });
+    // info(`valor de cuenta en observer selectednombre ${cuenta}`);
+    info('revisando catalogo antes de pasar ', get(this, 'catalogoNombres'));
+    let cual = get(this, 'catalogoNombres').findBy('cuenta', get(this, 'selectedNombre'));
+    info(`valor de cual ${cual}`);
+    let p = this.store.query('documentoscliente', { cuenta: get(this, 'selectedNombre'), company });
     p.then((data)=> {
       data.forEach((item)=> {
         if (get(item, 'documentoVencido')) {
@@ -134,35 +190,105 @@ export default Ember.Controller.extend(FormatterMixin,
         cargos += parseFloat(get(item, 'cargo').replace(',', ''));
         abonos += parseFloat(get(item, 'abono').replace(',', ''));
       });
-      info('total vencido', totalVencido, 'yessir');
+      // info('total vencido', totalVencido, 'yessir');
       set(this, 'totalVencido', totalVencido);
       set(this, 'documentosVencidos', documentosVencidos);
       set(this, 'numeroDocumentos', numeroDocumentos);
       set(this, 'cargos', cargos);
       set(this, 'abonos', abonos);
     });
-    set(this, 'docsCliente', p);
-    set(this, 'cuenta', cual.get('cuenta'));
-    set(this, 'manzana', cual.get('manzana'));
-    set(this, 'lote', cual.get('lote'));
-    set(this, 'saldo', cual.get('saldo'));
-    set(this, 'conPagares', get(cual, 'conpagares'));
-    set(this, 'saldoPagaresFormateado', get(cual, 'saldopagaresformateado'));
+    try {
+      set(this, 'docsCliente', p);
+      set(this, 'cuenta', get(cual, 'cuenta'));
+      set(this, 'cuentaBuscar', get(cual, 'cuenta'));
+      set(this, 'manzana', get(cual, 'manzana'));
+      set(this, 'lote', get(cual, 'lote'));
+      set(this, 'saldo', get(cual, 'saldo'));
+      set(this, 'conPagares', get(cual, 'conpagares'));
+      set(this, 'saldoPagaresFormateado', get(cual, 'saldopagaresformateado'));
+    } catch(e) {
+      info('el error es ', e);
+    }
     if (get(this, 'conPagares') === true) {
       set(this, 'documentosPagares', this.store.query('documentopagare', { cuenta }));
     }
-    set(this, 'cliente', cual.get('cliente'));
+    set(this, 'cliente', get(cual, 'cliente'));
     set(this, 'showData', true);
   }),
 
   actions: {
-    procesaRecibo(recibo) {
+    buscarConCuenta() {
+      let that = this;
+      let nombre = get(this, 'showName');
+      set(this, 'nombre', nombre);
+      this.send('buscar');
+      Ember.run.later(function() {
+        let cuenta = get(that, 'showCuenta');
+        set(that, 'selectedNombre', parseInt(cuenta));
+      }, 1000);
+    },
+    cerrarModal() {
+    },
+    enteradoError() {
+      set(this, 'errorMessage', '');
+    },
+    saldarRecibo() {
+      let listaDocumentos = [];
+      let recibo = get(this, 'recibo');
+      let lista = get(this, 'recibosmovimientosLista');
+      lista.forEach((item)=> {
+        if (get(item, 'elegido') === true) {
+          listaDocumentos.push(get(item, 'movimiento'));
+        }
+      });
+      info('cancelando', listaDocumentos.join(','),    recibo);
+      let movsLista = listaDocumentos.join(',');
+      let record = this.store.createRecord('recibocancelacion', {
+        recibo,
+        movimientos: movsLista
+      });
+      record.save().then(()=> {
+        info('se grabo correctamente');
+        this.notifyPropertyChange('selectedNombre');
+      }, (error)=> {
+        info('log hubo error al grabar', error.errors);
+        set(this, 'errorMessage', true);
+        set(this, 'error', error.errors);
+
+      });
+
+    },
+    procesaReciboDocumento(documento) {
+      let docs = get(this, 'recibosmovimientosLista');
+      let cual = docs.findBy('documento', documento);
+      if (get(cual, 'elegido') === false) {
+        set(cual, 'elegido', true);
+      } else {
+        set(cual, 'elegido', false);
+      }
+    },
+    procesaRecibo(recibo, id) {
+      let lista = Ember.A();
       let isArcadia = get(this, 'isArcadia');
       let company = isArcadia ? 'arcadia' : '';
-      info('valor de recibo', recibo);
+      info('valor de recibo de recibo', id);
       set(this, 'recibo', recibo);
       this.store.unloadAll('recibomovimiento');
-      set(this, 'recibosmovimientosLista', this.store.query('recibomovimiento', { company, recibo }));
+      // set(this, 'recibosmovimientosLista', this.store.query('recibomovimiento', { company, recibo }));
+      this.store.query('recibomovimiento', { company, recibo }).then((data)=> {
+        data.forEach((item)=> {
+          if (id === get(item, 'movimiento')) {
+            let { movimiento, fecha, cantidad, documento } = item.getProperties('movimiento', 'fecha', 'cantidad', 'documento');
+            let elegido = true;
+            lista.pushObject({ elegido, movimiento, fecha, cantidad, documento });
+          } else {
+            let { movimiento, fecha, cantidad, documento } = item.getProperties('movimiento', 'fecha', 'cantidad', 'documento');
+            let elegido = false;
+            lista.pushObject({ elegido, movimiento, fecha, cantidad, documento });
+          }
+        });
+      });
+      set(this, 'recibosmovimientosLista', lista);
     },
     procesaDocumento(idDocumento, abono) {
       let company = get(this, 'company');
@@ -170,19 +296,19 @@ export default Ember.Controller.extend(FormatterMixin,
       info(`valor de id documento ${idDocumento} valor de abono ${abono}`);
       set(this, 'movimientosdocumento', this.store.query('movimientosdocumento', { documento: idDocumento, company }));
     },
-    selectedNombre(item) {
-      set(this, 'selectedNombre', item.cuenta);
-    },
     selectedEtapa(item) {
       set(this, 'selectedEtapa', item.id);
     },
     buscar() {
+      // info('entro en buscar desde llmada externa');
       let that = this;
+      let a = Ember.A();
       let company = get(this, 'company');
       let nombre = get(this, 'nombre');
       let etapa = get(this, 'selectedEtapa');
-      info(`valor de selectedEtapa ${etapa}`);
-      set(this, 'catalogoNombres', null);
+      info('valor de selectedEtapa', get(this, 'selectedEtapa'));
+      this.store.unloadAll('clientescuantosconcuentanosaldada');
+      this.store.unloadAll('clientesconcuentanosaldada');
       this.store.query('clientescuantosconcuentanosaldada' , { etapa, nombre, estadocuenta: 1, company })
       .then((data)=> {
         if (get(data, 'length')) {
@@ -191,10 +317,19 @@ export default Ember.Controller.extend(FormatterMixin,
           });
         }
         if (parseInt(get(this, 'cuantos')) <= 100) {
-          return this.store.query('clientesconcuentanosaldada', { etapa, nombre, estadocuenta: 1, company })
-            .then((data)=> {
-              set(that, 'catalogoNombres', data);
+          this.store.query('clientesconcuentanosaldada', { etapa, nombre, estadocuenta: 1, company })
+          .then((data)=> {
+            data.forEach((item)=> {
+              let { cliente, conpagares, cuenta, inmueble, manzana, nombre, oferta, saldo, saldoformateado, saldopagares, saldopagaresformateado } = item.getProperties('cliente',
+               'conpagares', 'cuenta', 'inmueble',
+               'manzana', 'nombre', 'oferta', 'saldo',
+                'saldoformateado', 'saldopagares', 'saldopagaresformateado');
+
+              a.pushObject({ cliente, conpagares, cuenta, inmueble, manzana, nombre, oferta, saldo, saldoformateado, saldopagares, saldopagaresformateado });
             });
+            set(this, 'catalogoNombres', a);
+            info('valor de catalogoNombres, en buscar', get(this, 'catalogoNombres'));
+          });
         }
       });
     }
