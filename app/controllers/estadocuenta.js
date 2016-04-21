@@ -7,6 +7,8 @@ const {
   observer,
   computed,
   isEmpty,
+  setProperties,
+  getProperties,
   Logger: { info },
   inject: { service, controller }
 } = Ember;
@@ -99,45 +101,46 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
   observaCuentaBuscar: observer('cuentaBuscar', function() {
     try {
-    let isArcadia = get(this, 'isArcadia');
-    let cuenta = get(this, 'cuentaBuscar');
-    if (!isArcadia && parseInt(cuenta) < 1000) {
-      return;
-    }
-    if (true) {
-      let company = get(this, 'company');
+      let { store } = this;
+      let isArcadia = get(this, 'isArcadia');
       let cuenta = get(this, 'cuentaBuscar');
-      info('valor de company', company);
-      this.store.unloadAll('cuentabreve');
-      this.store.query('cuentabreve', { company, cuenta })
-      .then((data)=> {
-        data.forEach((item)=> {
-          if (get(item, 'id') && get(item, 'nombre')) {
-            set(this, 'mostrarNombreClienteAlert', true);
-            set(this, 'showName', get(item, 'nombre'));
-            set(this, 'showCuenta', get(item, 'id'));
-          } else {
-            set(this, 'mostrarNombreClienteAlert', false);
-            set(this, 'showName', '');
-            set(this, 'showCuenta', '');
-          }
+      if (!isArcadia && parseInt(cuenta) < 1000) {
+        return;
+      }
+      if (true) {
+        let company = get(this, 'company');
+        let cuenta = get(this, 'cuentaBuscar');
+        info('valor de company', company);
+        store.unloadAll('cuentabreve');
+        store.query('cuentabreve', { company, cuenta })
+        .then((data)=> {
+          data.forEach((item)=> {
+            if (get(item, 'id') && get(item, 'nombre')) {
+              set(this, 'mostrarNombreClienteAlert', true);
+              set(this, 'showName', get(item, 'nombre'));
+              set(this, 'showCuenta', get(item, 'id'));
+            } else {
+              set(this, 'mostrarNombreClienteAlert', false);
+              set(this, 'showName', '');
+              set(this, 'showCuenta', '');
+            }
+          });
         });
-      });
 
+      }
+    } catch (e) {
+      info('trono en cuentabuscar', e);
     }
-  } catch (e) {
-    info('trono en cuentabuscar',e);
-  }
   }),
 
   observaTodo: observer('isArcadia', 'selectedEtapa', 'nombre', function() {
-    this.setProperties({
+    setProperties(this, {
       showData: false
     });
   }),
 
   observaIsArcadia: observer('isArcadia', function() {
-    this.setProperties({
+    setProperties(this, {
       nombre: '',
       cuentaBuscar: '',
       documentosPagares: null,
@@ -164,9 +167,10 @@ export default Ember.Controller.extend(FormatterMixin,
     set(this, 'etapas', this.store.query('etapastramite', { company }));
   }),
   observaSelectedNombre: observer('selectedNombre', function() {
+    let { store } = this;
     info('valor de selectedNombre', get(this, 'selectedNombre'));
-    this.store.unloadAll('documentoscliente');
-    this.store.unloadAll('documentopagare');
+    store.unloadAll('documentoscliente');
+    store.unloadAll('documentopagare');
     let that = this;
     let totalVencido = 0;
     let numeroDocumentos = 0;
@@ -191,11 +195,14 @@ export default Ember.Controller.extend(FormatterMixin,
         abonos += parseFloat(get(item, 'abono').replace(',', ''));
       });
       // info('total vencido', totalVencido, 'yessir');
-      set(this, 'totalVencido', totalVencido);
-      set(this, 'documentosVencidos', documentosVencidos);
-      set(this, 'numeroDocumentos', numeroDocumentos);
-      set(this, 'cargos', cargos);
-      set(this, 'abonos', abonos);
+      setProperties(this, {
+        totalVencido,
+        documentosVencidos,
+        numeroDocumentos,
+        cargos,
+        abonos
+      });
+      
     });
     try {
       set(this, 'docsCliente', p);
@@ -233,6 +240,7 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'errorMessage', '');
     },
     saldarRecibo() {
+      let { store } = this;
       let listaDocumentos = [];
       let recibo = get(this, 'recibo');
       let lista = get(this, 'recibosmovimientosLista');
@@ -243,7 +251,7 @@ export default Ember.Controller.extend(FormatterMixin,
       });
       info('cancelando', listaDocumentos.join(','),    recibo);
       let movsLista = listaDocumentos.join(',');
-      let record = this.store.createRecord('recibocancelacion', {
+      let record = store.createRecord('recibocancelacion', {
         recibo,
         movimientos: movsLista
       });
@@ -251,9 +259,11 @@ export default Ember.Controller.extend(FormatterMixin,
         info('se grabo correctamente');
         this.notifyPropertyChange('selectedNombre');
       }, (error)=> {
-        info('log hubo error al grabar', error.errors);
+        // info('log hubo error al grabar', error.errors);
         set(this, 'errorMessage', true);
-        set(this, 'error', error.errors);
+        set(this, 'error', error.errors.resultado[0]);
+        store.unloadAll('recibomovimiento');
+        set(this, 'recibosmovimientosLista', Ember.A());
 
       });
 
@@ -261,21 +271,25 @@ export default Ember.Controller.extend(FormatterMixin,
     procesaReciboDocumento(documento) {
       let docs = get(this, 'recibosmovimientosLista');
       let cual = docs.findBy('documento', documento);
+      
       if (get(cual, 'elegido') === false) {
         set(cual, 'elegido', true);
       } else {
         set(cual, 'elegido', false);
       }
+    
+      
     },
     procesaRecibo(recibo, id) {
+      let { store } = this;
       let lista = Ember.A();
       let isArcadia = get(this, 'isArcadia');
       let company = isArcadia ? 'arcadia' : '';
       info('valor de recibo de recibo', id);
       set(this, 'recibo', recibo);
-      this.store.unloadAll('recibomovimiento');
+      store.unloadAll('recibomovimiento');
       // set(this, 'recibosmovimientosLista', this.store.query('recibomovimiento', { company, recibo }));
-      this.store.query('recibomovimiento', { company, recibo }).then((data)=> {
+      store.query('recibomovimiento', { company, recibo }).then((data)=> {
         data.forEach((item)=> {
           if (id === get(item, 'movimiento')) {
             let { movimiento, fecha, cantidad, documento } = item.getProperties('movimiento', 'fecha', 'cantidad', 'documento');

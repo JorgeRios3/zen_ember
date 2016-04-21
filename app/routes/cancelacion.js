@@ -8,7 +8,7 @@ const {
 }= Ember;
 
 
-export default Route.extend(
+export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
 
   setupController(ctrl, model) {

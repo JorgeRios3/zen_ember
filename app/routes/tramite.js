@@ -13,6 +13,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
     set(ctrl, 'catalogoTramites', model.catalogoTramites);
   },
   beforeModel(transition) {
+    this._super(...arguments);
     let controller = this.controllerFor(this.routeName);
     controller.setProperties({
       descripcionTramite: '',

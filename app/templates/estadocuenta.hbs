@@ -1,6 +1,5 @@
 <h2 class="text-info">Estado de Cuenta</h2>
 {{#if derechosArcadia}}
-  
 	<div class="form-group">
 		<div class="checkbox">
 			<label>{{input type="checkbox" name="isArcadia" checked=isArcadia }}Arcadia</label>
@@ -8,20 +7,18 @@
 	</div>
 {{/if}}
 <div class="form-group">
-		<label for="idcuentaCliente" class="control-label">Cuenta</label>
-		<div class="row">
-			<div class="col-xs-8 col-md-5">
-				{{input type="text" value=cuentaBuscar class="form-control" placeholder="Cuenta" id="idcuentaCliente" type="number"}}
-			</div>
-			
-
-		</div>
+	<label for="idcuentaCliente" class="control-label">Cuenta</label>
+	<div class="row">
+		<div class="col-xs-8 col-md-5">
+			{{input type="text" value=cuentaBuscar class="form-control" placeholder="Cuenta" id="idcuentaCliente" type="number"}}
+		</div>		
 	</div>
-	{{#if mostrarNombreClienteAlert}}
-		<div class="alert alert-success" role="alert">Cliente: {{showName}}  Cuenta: {{showCuenta}}</div>
-		<div class="btn btn-info" {{ action 'buscarConCuenta'}}>Mostrar</div>
-		<br>
-	{{/if}}
+</div>
+{{#if mostrarNombreClienteAlert}}
+	<div class="alert alert-success" role="alert">Cliente: {{showName}}  Cuenta: {{showCuenta}}</div>
+	<div class="btn btn-info" {{ action 'buscarConCuenta'}}>Mostrar</div>
+	<br>
+{{/if}}
 {{#if etapas.length}}
 	<br>
 	<div class="form-group">
@@ -42,41 +39,42 @@
 		</div>
 	</div>
 {{/if}}
-	<div class="form-group">
-		<label for="idclientenombre" class="control-label">Nombre</label>
-		<div class="row">
-			<div class="col-xs-8 col-md-5">
-				{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idclientenombre" class="text-uppercase" }}
-			</div>
-			{{#if showButton}}
-				<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
-			{{/if}}
+<div class="form-group">
+	<label for="idclientenombre" class="control-label">Nombre</label>
+	<div class="row">
+		<div class="col-xs-8 col-md-5">
+			{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idclientenombre" class="text-uppercase" }}
 		</div>
+		{{#if showButton}}
+			<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+		{{/if}}
 	</div>
+</div>
 	
-	{{#if cuantos}}
-		{{#if maximo}}
-			<div class="h3 text text-success">hay {{cuantos}} clientes</div>
-			<div class="form-group">
-			<label>Elija Nombre</label>
-				<div class="row">	
+{{#if cuantos}}
+	{{#if maximo}}
+		<div class="h3 text text-success">hay {{cuantos}} clientes</div>
+		<div class="form-group">
+		<label>Elija Nombre</label>
+			<div class="row">	
 				<div class="col-md-8">
 					{{ember-selectize
-						content=catalogoNombres
-						optionValuePath="content.cuenta"
-						optionLabelPath="content.nombre"
-						placeholder="Todos"
-						value=selectedNombre
+					content=catalogoNombres
+					optionValuePath="content.cuenta"
+					optionLabelPath="content.nombre"
+					placeholder="Todos"
+					value=selectedNombre
 					}}
 				</div>
-				</div>
+			</div>
 			</div>
 
-			{{else}}
-			<div class="h3 text text-warning">hay {{cuantos}} clientes la lista es muy larga intenta filtrar mas el nombre </div>
-		{{/if}}
+	{{else}}
+		<div class="h3 text text-warning">hay {{cuantos}} clientes la lista es muy larga intenta filtrar mas el nombre </div>
 	{{/if}}
-	{{#if showData}}
+{{/if}}
+
+{{#if showData}}
     <dl class="dl-horizontal">
     	<dt>{{if isArcadia 'Terreno' 'Inmueble'}}</dt><dd>{{#if isArcadia }} {{lote}} {{manzana}}{{else}}{{manzana}} {{lote}}{{/if}}</dd>
     	<dt>Cuenta</dt><dd>{{cuenta}}</dd>
@@ -231,8 +229,9 @@
 		</tbody>
 	</table>
 	{{#if isArcadia}}
+	
 		{{#if recibo}}
-		<div class="h4 text text-danger">Movimientos implicados del recibo {{recibo}}</div>
+			<div class="h4 text text-danger">Movimientos implicados del recibo {{recibo}}</div>
 		{{/if}}
 		<div id="no-more-tables">
 		<table  class="table table-bordered table-striped table-condensed cf">
@@ -271,21 +270,22 @@
 				{{/each}}
 			</tbody>
 		</table>
-	</div>
+		</div>
 	{{#if errorMessage}}
 		{{#modal-bs title="Aviso" close="enteradoError"}}
-		 	<div class="h4 text-warning">Hubo error al intentar saldar el recibo {{error}}</div>
+		 	<div class="h4 text-warning">Hubo error al intentar saldar el recibo: <br>{{error}}</div>
 		{{/modal-bs}}
 			
 	{{/if}}	
 	{{#if movimientosMayorAUno}}	
 		  		{{#modal-bs title="Aviso" close="cerrarModal"}}
-		  			<div class="h4 text-warning">Este Recibo {{recibo}} implica los movimientos desplegados en la tabla</div>
+		  			<div class="h4 text-warning">Este Recibo {{recibo}} implica mas de un documento </div>
 		  		{{/modal-bs}}
 
-			{{/if}}
+	{{/if}}
 		{{/if}}
 	{{#if recibo}}
 		<div class="btn btn-warning" {{action 'saldarRecibo'}}>Saldar Recibo</div>
 	{{/if}}
+
 {{/if}}
