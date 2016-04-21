@@ -9,11 +9,11 @@ const{
   Logger: { info }
 } = Ember;
 
-export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, 
+export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
   setupController(ctrlr, model) {
-    let a= this.controllerFor('index');
-    //info('revisnado pèrfolñ', a.perfil);
+    // let a= this.controllerFor('index');
+    // info('revisnado pèrfolñ', a.perfil);
     ctrlr.notifyPropertyChange('isArcadia');
   },
   beforeModel(transition) {
@@ -44,11 +44,12 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       abonos: 0,
       showName: '',
       showCuenta: '',
-      cuentaBuscar: '',
+      cuentaBuscar: ''
     });
   },
 
   willTransition() {
+    let { store } = this;
     store.unloadAll('etapastramite');
     store.unloadAll('documentoscliente');
     store.unloadAll('movimientosdocumento');
