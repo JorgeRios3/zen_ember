@@ -54,6 +54,7 @@ Router.map(function() {
   this.route('solicitudes');
   this.route('situacionfinancieraobras');
   this.route('logusuariosrutas');
+  this.route('conteomedios');
 });
 
 export default Router;
