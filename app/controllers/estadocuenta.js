@@ -57,6 +57,7 @@ export default Ember.Controller.extend(FormatterMixin,
   showName: '',
   showCuenta: '',
   errorMessage: '',
+  hayReciboElegido: false,
   derechosArcadia: computed('ci.perfil', {
     get() {
       let permiso = false;
@@ -282,6 +283,7 @@ export default Ember.Controller.extend(FormatterMixin,
 
     },
     procesaReciboDocumento(documento) {
+      let hayReciboElegido = false;
       let docs = get(this, 'recibosmovimientosLista');
       let cual = docs.findBy('documento', documento);
       
@@ -290,6 +292,12 @@ export default Ember.Controller.extend(FormatterMixin,
       } else {
         set(cual, 'elegido', false);
       }
+      docs.forEach((item)=> {
+        if(get(item, 'elegido') === true) {
+          hayReciboElegido = true
+        }
+        set(this, 'hayReciboElegido', hayReciboElegido)
+      })
     
       
     },
@@ -308,6 +316,7 @@ export default Ember.Controller.extend(FormatterMixin,
             let { movimiento, fecha, cantidad, documento } = item.getProperties('movimiento', 'fecha', 'cantidad', 'documento');
             let elegido = true;
             lista.pushObject({ elegido, movimiento, fecha, cantidad, documento });
+            set(this, 'hayReciboElegido', true);
           } else {
             let { movimiento, fecha, cantidad, documento } = item.getProperties('movimiento', 'fecha', 'cantidad', 'documento');
             let elegido = false;
