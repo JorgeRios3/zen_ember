@@ -101,18 +101,28 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
   observaCuentaBuscar: observer('cuentaBuscar', function() {
     try {
+
+      info('viendo valor de cuentabuscar al cambiar de company', get(this, 'cuentabuscar'));
       let { store } = this;
       let isArcadia = get(this, 'isArcadia');
       let cuenta = get(this, 'cuentaBuscar');
+      if (isEmpty(cuenta)) {
+        info('cuenta buscar no vale nada');
+        return;
+      }
       if (!isArcadia && parseInt(cuenta) < 1000) {
         return;
       }
       if (true) {
+        let objeto = {};
+        if (get(this, 'company')) {
+          objeto.company = get(this, 'company');
+        }
         let company = get(this, 'company');
-        let cuenta = get(this, 'cuentaBuscar');
+        objeto.cuenta = get(this, 'cuentaBuscar');
         info('valor de company', company);
         store.unloadAll('cuentabreve');
-        store.query('cuentabreve', { company, cuenta })
+        store.query('cuentabreve', objeto )
         .then((data)=> {
           data.forEach((item)=> {
             if (get(item, 'id') && get(item, 'nombre')) {
@@ -258,12 +268,15 @@ export default Ember.Controller.extend(FormatterMixin,
       record.save().then(()=> {
         info('se grabo correctamente');
         this.notifyPropertyChange('selectedNombre');
+        set(this, 'recibo', '');
+        set(this, 'movimientosdocumento', null);
       }, (error)=> {
         // info('log hubo error al grabar', error.errors);
         set(this, 'errorMessage', true);
         set(this, 'error', error.errors.resultado[0]);
         store.unloadAll('recibomovimiento');
         set(this, 'recibosmovimientosLista', Ember.A());
+        set(this, 'recibo', '');
 
       });
 

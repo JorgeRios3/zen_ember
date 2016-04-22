@@ -87,55 +87,51 @@
 
     </dl>
 	
-	
-
 	{{#if conPagares}}
-	<div class="form-group">
-		<label class="control-label">Saldo Pagares</label>
-		<div class="row">
-			<div class="col-xs-4 col-md-2">
-				<p class="form-control-static text text-info">{{saldoPagaresFormateado}}</p>
+		<div class="form-group">
+			<label class="control-label">Saldo Pagares</label>
+			<div class="row">
+				<div class="col-xs-4 col-md-2">
+					<p class="form-control-static text text-info">{{saldoPagaresFormateado}}</p>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="text text-info">Pagares</div>
-	<table class="table table-bordered table-striped table-condensed cf">
-		<thead>
-			<tr>
-				<th>Fecha</th>
-                <th>Fecha De Vencimiento</th>
-				<th>Saldo</th>
-				<th>Cargo</th>
-				<th>Abono</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each documentosPagares as |t|}}
-			<tr>
+		<div class="text text-info">Pagares</div>
+		<table class="table table-bordered table-striped table-condensed cf">
+			<thead>
+				<tr>
+					<th>Fecha</th>
+	                <th>Fecha De Vencimiento</th>
+					<th>Saldo</th>
+					<th>Cargo</th>
+					<th>Abono</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each documentosPagares as |t|}}
+				<tr>
 
-				<td data-title="Fecha">		
-					{{t.fecha}}
-			    </td>
-                <td data-title="Fecha De Vencimiento">
-                	<div class="text {{if t.estavencido 'text-danger'}} ">{{t.fechavencimientocompleto}}</div>
-				</td>
-				<td data-title="Saldo" class="text-right">
-					{{t.saldo}}
-				</td>
-				<td data-title="Cargo" class="text-right">
-					{{t.cargo}}
-				</td>
-				<td data-title="Abono" class="text-right">
-					{{t.abono}}
-				</td>
-			</tr>
-			{{/each}}
-		</tbody>
-	</table>
-
+					<td data-title="Fecha">		
+						{{t.fecha}}
+				    </td>
+	                <td data-title="Fecha De Vencimiento">
+	                	<div class="text {{if t.estavencido 'text-danger'}} ">{{t.fechavencimientocompleto}}</div>
+					</td>
+					<td data-title="Saldo" class="text-right">
+						{{t.saldo}}
+					</td>
+					<td data-title="Cargo" class="text-right">
+						{{t.cargo}}
+					</td>
+					<td data-title="Abono" class="text-right">
+						{{t.abono}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
 	{{/if}}
-
 
 	<div class="text text-info"><span>Documentos</span>&nbsp;<span class="badge badge-info">{{numeroDocumentos}}</span></div>
 	<table class="table table-bordered table-striped table-condensed cf">
@@ -191,7 +187,7 @@
 			{{/each}}
 		</tbody>
 	</table>
-	
+	<br>
 	<table class="table table-bordered table-striped table-condensed cf">
 		<thead>
 			<tr>
@@ -232,58 +228,56 @@
 	
 		{{#if recibo}}
 			<div class="h4 text text-danger">Movimientos implicados del recibo {{recibo}}</div>
+			<div id="no-more-tables">
+			<table  class="table table-bordered table-striped table-condensed cf">
+			<thead>
+					<tr>
+						<th>Sel</th>
+						<th>Movimiento</th>
+		                <th>Fecha</th>
+						<th>cantidad</th>
+						<th>Documento</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each recibosmovimientosLista as |m|}}
+					<tr>
+						<td data-title="Sel">
+							{{#if m.elegido}}
+								<span class="glyphicon glyphicon-check"></span>
+								{{else}}
+								<span></span>
+							{{/if}}
+					    </td>
+		                <td data-title="Id">
+							{{m.movimiento}}
+						</td>
+						<td data-title="Fecha">
+							{{m.fecha}}
+						</td>
+						<td data-title="Cantidad" class="text-right">
+							{{m.cantidad}}
+						</td>
+						<td data-title="Documento" class="text-right">
+							<a href="" {{ action 'procesaReciboDocumento' m.documento }}>{{m.documento}}</a>
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+			</div>
 		{{/if}}
-		<div id="no-more-tables">
-		<table  class="table table-bordered table-striped table-condensed cf">
-		<thead>
-				<tr>
-					<th>Sel</th>
-					<th>Movimiento</th>
-	                <th>Fecha</th>
-					<th>cantidad</th>
-					<th>Documento</th>
-				</tr>
-			</thead>
-			<tbody>
-				{{#each recibosmovimientosLista as |m|}}
-				<tr>
-					<td data-title="Sel">
-						{{#if m.elegido}}
-							<span class="glyphicon glyphicon-check"></span>
-							{{else}}
-							<span></span>
-						{{/if}}
-				    </td>
-	                <td data-title="Id">
-						{{m.movimiento}}
-					</td>
-					<td data-title="Fecha">
-						{{m.fecha}}
-					</td>
-					<td data-title="Cantidad" class="text-right">
-						{{m.cantidad}}
-					</td>
-					<td data-title="Documento" class="text-right">
-						<a href="" {{ action 'procesaReciboDocumento' m.documento }}>{{m.documento}}</a>
-					</td>
-				</tr>
-				{{/each}}
-			</tbody>
-		</table>
-		</div>
-	{{#if errorMessage}}
-		{{#modal-bs title="Aviso" close="enteradoError"}}
-		 	<div class="h4 text-warning">Hubo error al intentar saldar el recibo: <br>{{error}}</div>
-		{{/modal-bs}}
-			
-	{{/if}}	
-	{{#if movimientosMayorAUno}}	
-		  		{{#modal-bs title="Aviso" close="cerrarModal"}}
-		  			<div class="h4 text-warning">Este Recibo {{recibo}} implica mas de un documento </div>
-		  		{{/modal-bs}}
-
+		{{#if errorMessage}}
+			{{#modal-bs title="Aviso" close="enteradoError"}}
+			 	<div class="h4 text-warning">Hubo error al intentar saldar el recibo: <br>{{error}}</div>
+			{{/modal-bs}}	
+		{{/if}}	
+		{{#if movimientosMayorAUno}}	
+	  		{{#modal-bs title="Aviso" close="cerrarModal"}}
+	  			<div class="h4 text-warning">Este Recibo {{recibo}} implica mas de un documento </div>
+	  		{{/modal-bs}}
+		{{/if}}
 	{{/if}}
-		{{/if}}
 	{{#if recibo}}
 		<div class="btn btn-warning" {{action 'saldarRecibo'}}>Saldar Recibo</div>
 	{{/if}}
