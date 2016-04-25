@@ -20,6 +20,7 @@ export default Ember.Controller.extend({
   resultRowCountFormatted: '',
   requestedPage: 0,
   huboEnBusqueda: true,
+  nombreLen: true,
   hayPagPrevias: computed('resultPage', {
     get() {
       if (get(this, 'resultPage') === '') {
@@ -58,6 +59,8 @@ export default Ember.Controller.extend({
   afiliacionOk: false,
   numeroprospecto: '',
   nombreprospecto: '',
+  apellidomaternoprospecto: '',
+  nombrepilaprospecto: '',
   afiliacion: '',
   cuantosBusqueda: 0,
   fini: '',
@@ -171,6 +174,17 @@ export default Ember.Controller.extend({
       set(this, 'afiliacionOk', false);
     }
   }),
+  observaNombreLen: observer('nombreprospecto', 'criterioFiltro', function() {
+    if (get(this, 'criterioEsNombre')) {
+      if (get(this, 'nombreprospecto').length >= 3) {
+        set(this, 'nombreLen', true);
+      } else {
+        set(this, 'nombreLen', false);
+      } 
+    } else {
+      set(this, 'nombreLen', true);
+    }
+  }),
   actions: {
     copiarAfiliacion(afiliacion, prospecto) {
       set(this, 'prospecto', '');
@@ -208,6 +222,8 @@ export default Ember.Controller.extend({
       let criterio = {
         numeroprospecto: get(this, 'numeroprospecto') || '0',
         nombreprospecto: get(this, 'nombreprospecto') || '',
+        apellidomaternoprospecto: get(this, 'apellidomaternoprospecto') || '',
+        nombrepilaprospecto: get(this, 'nombrepilaprospecto')  || '',
         afiliacion: get(this, 'afiliacion') || '',
         criterio: get(this, 'criterioFiltro')  || 'numero',
         page: requestedPage

@@ -68,10 +68,26 @@
 		{{/if}}
 		{{#if criterioEsNombre}}
 			<div class="form-group">
-				<label for="idnombrebus" class="control-label">Nombre</label>
+				<label for="idnombrebus" class="control-label">Apellido Paterno</label>
 				<div class="row">
 					<div class="col-xs-11 col-md-7">
 						{{input type="text" value=nombreprospecto class="form-control" placeholder="Digite parte del nombre" id="idnombrebus"}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="materno" class="control-label">Apellido Materno</label>
+				<div class="row">
+					<div class="col-xs-11 col-md-7">
+						{{input type="text" value=apellidomaternoprospecto class="form-control" placeholder="Apellido Materno"}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="nombre" class="control-label">Nombre Prospecto</label>
+				<div class="row">
+					<div class="col-xs-11 col-md-7">
+						{{input type="text" value=nombrepilaprospecto class="form-control" placeholder="nombre"}}
 					</div>
 				</div>
 			</div>
@@ -92,7 +108,9 @@
 			</div>
 	
 		{{/if}}
-      	<button {{action 'mostrarCriterioIndividual'}} class="btn btn-info" style="margin: 5px;">Muestra Resultado</button>
+		{{#if nombreLen}}
+      		<button {{action 'mostrarCriterioIndividual'}} class="btn btn-info" style="margin: 5px;">Muestra Resultado</button>
+      	{{/if}}
 	{{else}}
 	<div class="form-group">
 				<label  class="control-label">Tipo de Resultado</label>
