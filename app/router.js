@@ -56,6 +56,7 @@ Router.map(function() {
   this.route('logusuariosrutas');
   this.route('conteomedios');
   this.route('estimacionpagos');
+  this.route('xmenu');
 });
 
 export default Router;
