@@ -72,6 +72,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     let menuitems = get(model.zenusuario, 'menuitems').w();
     if (menuitems) {
       menuitems.forEach((item)=> {
+        info('trono aqui');
         let obj = model.menu.findBy('item', item);
         let { title, intro, consulta, reciente } = obj.getProperties('title', 'intro', 'consulta', 'reciente');
         let arcadia = item.includes('arcadia');
@@ -80,6 +81,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       });
     } else {
       model.menu.forEach((item)=> {
+        info('trono aca');
         let { title, intro, consulta, reciente } = item.getProperties('title', 'intro', 'consulta', 'reciente');
         let ruta = get(item, 'item');
         let arcadia = ruta.includes('arcadia');

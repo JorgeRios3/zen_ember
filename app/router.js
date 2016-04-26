@@ -55,6 +55,7 @@ Router.map(function() {
   this.route('situacionfinancieraobras');
   this.route('logusuariosrutas');
   this.route('conteomedios');
+  this.route('estimacionpagos');
 });
 
 export default Router;
