@@ -38,8 +38,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   geolocation: service(),
   beforeModel(transition) {
     this._super(transition);
-    let cl = get(get(this, 'geolocation'), 'currentLocation');
-    info(`bmodel currentLocation ${cl}`);
+    // let cl = get(get(this, 'geolocation'), 'currentLocation');
+    // info(`bmodel currentLocation ${cl}`);
+    let app = getOwner(this).lookup('controller:application');
+    set(app, 'expirationFlag', true);
     this.controllerFor('index').setProperties({
       usuario: '',
       perfil: '',
@@ -148,6 +150,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       }
     }
 
+  },
+  willTransition() {
+    let app = getOwner(this).lookup('controller:application');
+    set(app, 'expirationFlag', false);
   },
   actions: {
     error(error) {

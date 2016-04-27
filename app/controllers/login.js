@@ -37,7 +37,7 @@ export default Ember.Controller.extend(
   }),
   passwordLength: computed('password', {
     get() {
-      let password = get( this, 'password');
+      let password = get(this, 'password');
       return password.length;
     }
   }),
@@ -52,7 +52,12 @@ export default Ember.Controller.extend(
   actions: {
     authenticate() {
       let { identification, password } = this.getProperties('identification', 'password');
-      get(this, 'session').authenticate('authenticator:oauth2', identification, password).catch((reason) => {
+      get(this, 'session').authenticate('authenticator:oauth2', identification, password)
+      .then(()=> {
+        set(this, 'comodin.usuario', get(this, 'identification'));
+        set(this, 'comodin.loginTime', moment());
+      })
+      .catch((reason)=> {
         set(this, 'errorMessage', reason.error || reason);
       });
     }
