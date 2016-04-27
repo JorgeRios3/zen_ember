@@ -7,6 +7,8 @@ const {
   computed,
   observer,
   isEmpty,
+  getProperties,
+  getOwner,
   Logger: { info },
   inject: { service, controller }
 } = Ember;
@@ -15,6 +17,11 @@ export default Ember.Controller.extend({
   selectedMenu: '',
   ci: controller('index'),
   session: service(),
+  comodin: service(),
+  currentTime: moment(),
+  restante: null,
+  expirationFlag: false,
+  loginTime: computed.alias('comodin.loginTime'),
   opcionesMenu: computed('', {
     get() {
       let ci = get(this, 'ci');
@@ -30,6 +37,19 @@ export default Ember.Controller.extend({
   isDev: computed('', {
     get() {
       return config.AUTOMATIC_LOGIN;
+    }
+  }),
+  secondsLeft: computed('currentTime', 'loginTime', {
+    get() {
+      let { currentTime, loginTime } = getProperties(this, 'currentTime loginTime'.w());
+      if (!isEmpty(currentTime) && !isEmpty(loginTime)) {
+        let loqueva = currentTime.diff(loginTime, 'minutes');
+        let restante =  60 - parseInt(loqueva);
+        set(this, 'restante', restante);
+        return restante;
+      } else {
+        return 60;
+      }
     }
   }),
   opciones: [{ id: 'prospecto', nombre: 'prospecto' },
