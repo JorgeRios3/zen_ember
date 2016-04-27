@@ -1,0 +1,32 @@
+<br><br>
+<div class="h3 text text-info">Hipotecaria</div>
+{{check-excelemail  hacer=(action (mut emailAddress))}}
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Etapa</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Elija etapa{{/x-option}}
+			{{#each etapas as |item|}}
+				{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label for="datewidget" class="control-label">Fecha</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+			{{bs-datetimepicker date=nullFecha showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fecha))}}
+		</div>
+	</div>
+</div>
+<div class="btn btn-info" {{action "pedir"}}>Pedir</div>
+<br><br>
+{{#bsz-table titleCols=titleCols}}
+	{{#each datos as |record|}}
+		{{bsz-row titleCols=titleCols record=record alignments=alignments}}
+	{{/each}}
+{{/bsz-table}}
