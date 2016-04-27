@@ -57,6 +57,7 @@ Router.map(function() {
   this.route('conteomedios');
   this.route('estimacionpagos');
   this.route('xmenu');
+  this.route('hipotecaria');
 });
 
 export default Router;
