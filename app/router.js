@@ -60,6 +60,7 @@ Router.map(function() {
   this.route('hipotecaria');
   this.route('pruebagrafica');
   this.route('mediospublicitarios');
+  this.route('vendedores');
 });
 
 export default Router;
