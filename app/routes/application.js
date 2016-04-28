@@ -13,7 +13,9 @@ export default Ember.Route.extend(ApplicationRouteMixin,
   setupController(controller, model) {
     this._super(...arguments);
     this.startWatchingTime(controller);
+    // info(new Error().stack);
     controller.setProperties({
+      invalidable: false,
       isDev: computed('', {
         get() {
           return config.AUTOMATIC_LOGIN;
@@ -32,7 +34,7 @@ export default Ember.Route.extend(ApplicationRouteMixin,
     }
     let that = this;
     set(controller, 'currentTime', moment());
-    if (get(controller, 'restante') === 59) {
+    if (get(controller, 'restante') === 59 && get(controller, 'invalidable')) {
       if (get(controller, 'expirationFlag')) {
         info('pasando');
         that.invalidateSession(controller);

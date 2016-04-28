@@ -56,6 +56,8 @@ export default Ember.Controller.extend(
       .then(()=> {
         set(this, 'comodin.usuario', get(this, 'identification'));
         set(this, 'comodin.loginTime', moment());
+        let app = getOwner(this).lookup('controller:application');
+        set(app, 'invalidable', true);
       })
       .catch((reason)=> {
         set(this, 'errorMessage', reason.error || reason);

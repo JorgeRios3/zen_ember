@@ -156,7 +156,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       info('error en index', error);
     },
     willTransition(transition) {
+    let target = get(transition, 'targetName');
     let app = getOwner(this).lookup('controller:application');
+    set(app, 'invalidable', false);
     set(app, 'expirationFlag', false);
   },
   }
