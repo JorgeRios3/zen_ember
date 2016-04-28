@@ -22,6 +22,9 @@ export default Ember.Controller.extend({
   restante: null,
   expirationFlag: false,
   loginTime: computed.alias('comodin.loginTime'),
+  observerExpirationFlag: observer('expirationFlag', function() {
+    info('expirationFlag is ', get(this, 'expirationFlag'));
+  }),
   opcionesMenu: computed('', {
     get() {
       let ci = get(this, 'ci');
