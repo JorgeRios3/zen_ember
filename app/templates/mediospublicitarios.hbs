@@ -1,0 +1,31 @@
+<br><br>
+{{#if comparativo}}
+	<div class="h3 text text-info">Medios Publicitarios Comparativo</div>
+{{else}}
+	<div class="h3 text text-info">Medios Publicitarios</div>
+{{/if}}
+
+<div class="form-group">
+	<label for="datewidget" class="control-label">Fecha Inicial</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+        	{{bs-datetimepicker date=nullFechaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaInicial))}}
+    	</div>
+	</div>
+</div>
+<div class="form-group">
+	<div class="checkbox">
+		<label>{{input type="checkbox" name="compartivo" checked=comparativo }}Comparativo</label>
+	</div>		
+</div>
+<br><br><br>
+{{#if comparativo}}
+	<div class="row h4 text text-success">Fecha Inicial: {{fechaInicialActual}}       Fecha Final: {{fechaFinalActual}}</div>
+	<div class="row h4 text text-success">Fecha Inicial Previa: {{fechaInicialPrevia}}     Fecha Fial Previa: {{fechaFinalPrevia}} </div>
+{{else}}
+	<div class="row h4 text text-success">Fecha Inicial: {{fechaInicialActual}}       Fecha Final: {{fechaFinalActual}}</div>
+{{/if}}
+<br><br>
+{{bar-chart data=datos options=options}}
+
+

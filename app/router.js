@@ -58,6 +58,8 @@ Router.map(function() {
   this.route('estimacionpagos');
   this.route('xmenu');
   this.route('hipotecaria');
+  this.route('pruebagrafica');
+  this.route('mediospublicitarios');
 });
 
 export default Router;
