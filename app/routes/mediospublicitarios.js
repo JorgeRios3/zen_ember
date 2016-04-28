@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import RouteAuthMixin from "../mixins/routeauth";
+import AuthenticatedRouteMixin from "ember-simple-auth/mixins/authenticated-route-mixin";
 
 const {
   get,
@@ -6,7 +8,11 @@ const {
   Logger: { info }
 } = Ember;
 
-export default Ember.Route.extend({
+export default Ember.Route.extend( AuthenticatedRouteMixin,
+RouteAuthMixin,{
+  beforeModel() {
+   this._super(...arguments);
+  },
   setupController(ctrl, model) {
   	let a = get(model, 'promesa');
   	let lista = [];
