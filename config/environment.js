@@ -33,7 +33,7 @@ module.exports = function(environment) {
   };
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
-    ENV.LINK = true;
+    ENV.DEVLINK = 'mediospublicitarios';
     ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;

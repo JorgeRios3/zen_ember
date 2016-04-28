@@ -1,0 +1,32 @@
+procedimiento para incorporar ruta para desarrollar
+1- crear la ruta en la aplicacion
+2- poner la ruta en el template de index con link que solo funciona para la variable config.DEVLINK
+3- con herramienta mypassword.py hacer python mypassword.py -z admin -r "ruta" -i -d
+donde ruta es la ruta a agregar
+4- en la ruta nueva incoporar mixines routeauth y simpleauth
+5- con la ruta xmenu dar de alta el menu para menuitems y asi aparezca el boton
+
+
+procedimiento para incorporar ruta en produccion
+1- con herramienta mypassword.py hacer python mypassword.py -z "profile" -r "ruta" -i
+donde ruta es la ruta a agregar y profile es el profile.
+2- con la ruta xmenu dar de alta el menu para menuitems y asi aparezca el boton
+3- repetir el paso 1 para cada perfile que acceda a la ruta.
+
+
+
+Procedimiento para agregar features
+en la tabla "zen_features" agregar un feature con las siguientes caracteristicas:
+{feature:"nombre de feature sin espacios" , users:["lista de appids de tabla usuarios inplicados"], route:"la ruta implicada"}
+
+Manipulacion de features
+al declarar una ruta con routeauth routeauth te entregara el pojo features en la llave features de ember si la ruta aparece en la tabla zen_features
+si el usuario en cuestion es elegible para el feature correspodiente tendra true si no false. en el setupController tomar el pojo de la lleve de ember
+de la ruta features y aplicarla al controller. se sugiere que se llame features en el controller 
+
+
+para agregar elemento a campo lista de rethinkdb ejemplo.
+r.db("iclar").table("chutame").update({lista: r.row("lista").append(5)})
+
+para agregar elemento a campo lista de rethinkdb estilo Set para no repetir elemento ejemplo.
+r.db("iclar").table("chutame").update({lista: r.row("lista").setInsert(7)})

@@ -1,5 +1,6 @@
 import Ember from 'ember';
 const {
+  set,
   Logger: { info },
   getOwner
 } = Ember;
@@ -13,6 +14,7 @@ export default Ember.Mixin.create({
     .then((data)=> {
       if (data.access === '1') {
         info('ruta aceptada');
+        set(this, 'features', data.features);
       } else {
         info('ruta rechazada');
         this.transitionTo('index');
