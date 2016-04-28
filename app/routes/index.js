@@ -151,14 +151,14 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     }
 
   },
-  willTransition() {
-    let app = getOwner(this).lookup('controller:application');
-    set(app, 'expirationFlag', false);
-  },
   actions: {
     error(error) {
       info('error en index', error);
-    }
+    },
+    willTransition(transition) {
+    let app = getOwner(this).lookup('controller:application');
+    set(app, 'expirationFlag', false);
+  },
   }
 });
 

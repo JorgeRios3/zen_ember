@@ -2,7 +2,7 @@ import Ember from 'ember';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import config from '../config/environment';
 import moment from 'moment';
-const { 
+const {
   Logger: { info },
   set,
   get,
@@ -11,32 +11,35 @@ const {
 export default Ember.Route.extend(ApplicationRouteMixin,
 {
   setupController(controller, model) {
-  	this._super(...arguments);
-  	this.startWatchingTime(controller);
-  	controller.setProperties({
-  	  isDev: computed('', {
-  	    get() {
-  	  	  return config.AUTOMATIC_LOGIN;
-  	  	}
-  	  })
-  	});
+    this._super(...arguments);
+    this.startWatchingTime(controller);
+    controller.setProperties({
+      isDev: computed('', {
+        get() {
+          return config.AUTOMATIC_LOGIN;
+        }
+      })
+    });
   },
 
+  invalidateSession(controller) {
+    set(controller, 'expirationFlag', false);
+    controller.send('invalidateSession');
+  },
   startWatchingTime(controller) {
-  	if (get(controller, 'isDev')) {
-  	  return;
-  	}
+    if (get(controller, 'isDev')) {
+      return;
+    }
     let that = this;
     set(controller, 'currentTime', moment());
-   /* if (get(controller, 'restante') === 59) {
+    if (get(controller, 'restante') === 59) {
       if (get(controller, 'expirationFlag')) {
         info('pasando');
-        controller.send('invalidateSession');
+        that.invalidateSession(controller);
       }
-
-    }*/
+    }
     if (get(controller, 'restante') === 5) {
-      controller.send('invalidateSession');
+      that.invalidateSession(controller);
     }
     Ember.run.later(()=> {
       info('ciclo');
