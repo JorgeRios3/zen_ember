@@ -27,12 +27,12 @@ export default Ember.Controller.extend({
   twoFactorValue: false,
   selectedMenu: 'todos',
   selectedCategoria: 'todos',
-  muestraLink: false,
+  devLink: '',
   hasCategorias: computed.gt('opcionesCategoria.length', 1),
   init() {
     this._super(...arguments);
-    if (config.LINK) {
-      set(this, 'muestraLink', true);
+    if (config.DEVLINK) {
+      set(this, 'devLink', config.DEVLINK);
     }
     this.setProperties({
       bootTime: moment()

@@ -3,7 +3,11 @@
 	{{#each tablaConteo as |record|}}
 		<tr>
 			<td data-title="Conteo">
-				<a href="#" {{action 'suma' record}}>{{record.conteo}}</a>
+				{{#if features.editable}}
+					<a href="#" {{action 'suma' record}}>{{record.conteo}}</a>
+				{{else}}
+					{{record.conteo}}
+				{{/if}}
 			</td>
 			<td data-title="Descripcion">
 				{{record.descripcion}}
