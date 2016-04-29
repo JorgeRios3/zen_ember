@@ -4,7 +4,7 @@ module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'zeniclar',
     environment: environment,
-    baseURL: '/zeniclar/',
+    rootURL: '/zeniclar/',
     locationType: 'hash',
     contentSecurityPolicyHeader: 'Content-Security-Policy',
     EmberENV: {
