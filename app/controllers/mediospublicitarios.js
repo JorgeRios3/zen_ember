@@ -17,6 +17,7 @@ export default Ember.Controller.extend({
   fechaFinalActual: '',
   fechaInicialPrevia: '',
   fechaFinalPrevia: '',
+  prospectos: false,
   observaFecha: observer('fechaInicial', function() {
     let fInicial = get(this, 'fechaInicial');
     let fechainicial = !isEmpty(fInicial) ? fInicial.format('YYYY/MM/DD') : '';
@@ -29,14 +30,19 @@ export default Ember.Controller.extend({
     this.notifyPropertyChange('comparativo');
   }),
 
-  observaComparativo: observer('comparativo', function() {
+  observaComparativo: observer('comparativo', 'prospectos', function() {
   	info('entro en observer');
+    let prospectos = get(this, 'prospectos');
+    let prospectosQuery = ''
+    if(prospectos) {
+      prospectosQuery = 1;
+    }
   	let lista = [];
   	this.store.unloadAll('mediopublicitario');
   	let fInicial = get(this, 'fechaInicial');
     let fechainicial = !isEmpty(fInicial) ? fInicial.format('YYYY/MM/DD') : '';
     let comparativo = get(this, 'comparativo');
-    this.store.query('mediopublicitario', { fecha:fechainicial }).then((data)=> {
+    this.store.query('mediopublicitario', { fecha: fechainicial, prospectos: prospectosQuery }).then((data)=> {
       if(comparativo) {
       	info('se fue por comparativo');
         set(this, 'fechaInicialActual', get(data, 'meta.fechainicialactual'));
