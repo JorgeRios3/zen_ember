@@ -1,8 +1,15 @@
 <br><br>
 {{#if comparativo}}
 	<div class="h3 text text-info">Medios Publicitarios Comparativo</div>
+	{{#if prospectos}}
+
+	<div class="h3 text text-warning">Sobre Prospectos</div>
+	{{/if}}
 {{else}}
 	<div class="h3 text text-info">Medios Publicitarios</div>
+	{{#if prospectos}}
+	<div class="h3 text text-warning">Sobre Prospectos</div>
+	{{/if}}
 {{/if}}
 
 <div class="form-group">
@@ -16,6 +23,11 @@
 <div class="form-group">
 	<div class="checkbox">
 		<label>{{input type="checkbox" name="compartivo" checked=comparativo }}Comparativo</label>
+	</div>		
+</div>
+<div class="form-group">
+	<div class="checkbox">
+		<label>{{input type="checkbox" name="prospectos" checked=prospectos }}Sobre Prospectos</label>
 	</div>		
 </div>
 <br><br><br>
