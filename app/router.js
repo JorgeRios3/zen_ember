@@ -62,6 +62,7 @@ Router.map(function() {
   this.route('mediospublicitarios');
   this.route('vendedores');
   this.route('asignadasporsemana');
+  this.route('preciosubicacion');
 });
 
 export default Router;
