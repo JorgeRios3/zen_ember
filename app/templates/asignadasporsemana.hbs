@@ -1,0 +1,39 @@
+<br><br>
+<div class="h3 text text-info">Asignadas por semana</div>
+<br>
+{{bar-chart data=model options=options}}
+{{#if consulta}}
+	<div class="form-group">
+		<label class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+						{{#x-option value='1'}}Todas{{/x-option}}
+						{{#each etapas as |item|}}
+							{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label">Semanas</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedSemana action=(action  (mut selectedSemana)) class="form-control form-control-inline"}}
+						{{#x-option value='0'}}Elija Semana{{/x-option}}
+						{{#each semanas as |item|}}
+							{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<br>
+	<br>
+	<div class="btn btn-success" {{action "pedirDatos"}}>Consultar</div>
+	<div class="btn btn-warning" {{action "consulta"}}>Cancelar</div>
+	{{else}}
+	<div class="btn btn-info" {{action "consulta"}}>Cambiar consulta</div>
+{{/if}}
