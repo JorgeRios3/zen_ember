@@ -96,11 +96,7 @@
 		{{#each recientes  as |r|}}
 		<tr>
 			<td data-title="Id">
-				{{#if copiable}}
 					{{r.id}}
-				{{else}}
-					{{r.id}}
-				{{/if}}
 			</td>
 			<td data-title="Apellido Pat">
 				{{r.apellidopaterno}}
@@ -114,18 +110,22 @@
 			<td data-title="Afiliacion">
 				{{#if r.afiliacionvalida}}
 					<span class="glyphicon glyphicon-thumbs-up"></span>
-				{{else}}
-					<span class="glyphicon glyphicon-thumbs-down"></span>
-				{{/if}}
-				{{#if copiable}}
+					{{#if copiable}}
+
 					{{#unless r.vendido}}
 						<a href="" {{action 'copiarAfiliacion' r.afiliacion r.id}}>Copiar {{r.afiliacion}}</a>
 					{{else}}
-						{{r.afiliacion}}
+						Esta Vendido {{r.afiliacion}}
 					{{/unless}}
+					
 				{{else}}
 					{{r.afiliacion}}
 				{{/if}}
+				{{else}}
+					<span class="glyphicon glyphicon-thumbs-down"></span>
+					{{r.afiliacion}}
+				{{/if}}
+
 			</td>
 			<td data-title="Fecha Alta">
 				{{r.fecha}}
