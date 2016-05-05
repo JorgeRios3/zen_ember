@@ -3,6 +3,56 @@
 
 {{#bsz-table titleCols=titleCols}}
   {{#each lotesdisponibles as | record |}}
-    {{bsz-row record=record titleCols=titleCols alignments=alignments}}
+  <tr>
+  	<td data-title="Etapa"><a href="" {{action "selectedEtapa" record.etapa}}>{{record.etapa}}</a></td>
+	<td data-title="Cuantos">{{record.cuantos}}</td>
+	<td data-title="Valuacion">{{record.valuacion}}</td>
+  </tr>
   {{/each}}
 {{/bsz-table}}
+<span class="badge">{{listaInmuebles.length}}</span>
+<br><br>
+<div id="no-more-tables">
+	<table  class="table table-bordered table-striped table-condensed cf">
+
+		<thead>
+		<tr>
+			<th>Item</th>
+			<th>Manzana</th>
+			<th>Lote</th>
+			<th>Inmueble</th>
+			<th>Precio Por Metro</th>
+			<th>Superficie</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each listaInmuebles as |i z|}}
+			<tr>
+				<td data-title="Item">{{z}}</td>
+				<td data-title="Manzana">{{i.manzana}}</td>
+				<td data-title="Lote">{{i.lote}}</td>
+				<td data-title="Inmueble">{{i.inmueble}}</td>
+				<td data-title="Precio Por Metro"><a href="" {{action "levantarModel" i}}>{{i.preciopormetro}}</a></td>
+				<td data-title="Superficie">{{i.superficie}}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</div>
+{{#if mostrarModal}}
+	{{#modal-bs title="Cabiar Precio de Inmueble"  ok="ok"}}
+		<div>Inmueble: {{selectedInmueble}}</div>
+  		<div>Manzana: {{manzanaInmueble}}</div>
+  		<div>Lote: {{loteInmueble}}</div>
+  		<div>Precio: {{precioPorMetroInmueble}}</div>
+  		<div>Superficie: {{superficieInmueble}}</div>
+  		<div class="form-group">
+		<label for="idclienteconyugenombre" class="control-label">Precio Nuevo</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=nuevoValor class="form-control" placeholder="Precio" id="idclienteconyugenombre"}}
+			</div>
+		</div>
+	</div>
+	{{/modal-bs}}
+{{/if}}
