@@ -1,11 +1,14 @@
 import Ember from 'ember';
+import RouteAuthMixin from "../mixins/routeauth";
+import AuthenticatedRouteMixin from "ember-simple-auth/mixins/authenticated-route-mixin";
 const {
 	get,
 	set,
 	getProperties,
 	Logger: { info }
 } = Ember;
-export default Ember.Route.extend({
+export default Ember.Route.extend(AuthenticatedRouteMixin,
+RouteAuthMixin , {
   setupController(ctrl, model) {
   	let lista = Ember.A();
   	let totalVendidos = 0;
