@@ -1,4 +1,8 @@
 import DS from 'ember-data';
+ const {
+ 	isEmpty,
+ 	get
+ } = Ember;
 
 export default DS.Model.extend({
 	num : DS.attr("string"),
@@ -12,5 +16,11 @@ export default DS.Model.extend({
 	rfc : DS.attr("string"),
 	curp : DS.attr("string"),
 	gerente : DS.attr("string"),
-	vendedor : DS.attr("string")
+	vendedor : DS.attr("string"),
+	afiliacionvalida : DS.attr("boolean"),
+	vendido:computed("fechacierre", {
+		get(){
+			return !isEmpty(get(this, 'fechacierre')));
+		}
+	})
 });

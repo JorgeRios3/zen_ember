@@ -4,7 +4,9 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 const {
   Logger: { info },
   RSVP: { hash },
-  setProperties
+  setProperties,
+  get,
+  set
 } = Ember;
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
@@ -44,6 +46,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
   },
 
   setupController(ctrlr, model) {
+    let features = get(this, 'features');
+    info("features vale",features.generarafiliacion);
+    set(ctrlr, 'features', features);
     info('setupController buscarprospecto');
     ctrlr.setProperties({
       model: model.model,
