@@ -11,6 +11,14 @@ export default Ember.Route.extend({
         ['Houston, TX', 2099000, 1953000],
         ['Philadelphia, PA', 1526000, 1517000]
       ],
+      data2: [
+        ['City', '2000 Population'],
+        ['New York City, NY', 8008000],
+        ['Los Angeles, CA', 3694000],
+        ['Chicago, IL', 2896000],
+        ['Houston, TX', 1953000],
+        ['Philadelphia, PA', 1517000]
+      ],
 
       promesa: this.store.findAll('etapastramite'),
 

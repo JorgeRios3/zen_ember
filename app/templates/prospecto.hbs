@@ -1,4 +1,5 @@
 <br><br>
+{{#if afiliacionDisponible}}
 <h3>
 	<div class="row">
 		<span class="col-xs-6 col-md-3">Prospecto</span>		
@@ -7,6 +8,7 @@
 		{{/link-to }}
 	</div>
 </h3>
+<div>Afiliaciones Disponibles {{afiliacionDisponible}}</div>
 <form role="form" {{ action "grabar" on="submit"}}>
 	<div class="form-group">
 				<label class="control-label">Tipo de Cuenta</label>
@@ -207,3 +209,6 @@
 	{{/if}} 
 
 </form>
+{{else}}
+<div class="h3 text text-warning">No hay afiliaciones para capturar hablar con el departamento de sistemas</div>
+{{/if}}

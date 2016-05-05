@@ -26,7 +26,7 @@ module.exports = function(environment) {
   ENV['contentSecurityPolicy'] = {
     'default-src': "'none'",
     'script-src': "'self' 'unsafe-eval' *.google.com *.gstatic.com",
-    'style-src': "'self' 'unsafe-inline' *.google.com *.googleapis.com",
+    'style-src': "'self' 'unsafe-inline' *.google.com *.googleapis.com *.gstatic.com",
     'connect-src': "'self' localhost:4200 ws://10.0.1.124:8888/zen ws://10.0.1.124:8889/zen wss://zen.grupoiclar.com/zen",
     'img-src': "'self'",
     'font-src': "'self' https://s3.amazonaws.com/streams.grupoiclar.com/zeniclar/fonts *.gstatic.com *.googleapis.com"

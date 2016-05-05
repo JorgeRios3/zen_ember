@@ -29,7 +29,7 @@ RouteAuthMixin,
     // let where = arguments.callee.toString();
     // whereIAm(arguments);
     // let { gtevdor, gerentesventas: apGerentesventas,  vendedor: apVendedors, mediospublicitario: apMediospublicitarios, prospectosreciente: apProspectosrecientes } = model;
-    let { gtevdor, gerentesventa: apGerentesventas, vendedor: apVendedors, mediospublicitario: apMediospublicitarios } = model;
+    let { gtevdor, gerentesventa: apGerentesventas, vendedor: apVendedors, mediospublicitario: apMediospublicitarios, afiliacionesdisponible } = model;
     /*
     info('apGerentesventas', get(apGerentesventas, 'length'));
     info('apVendedors', get(apVendedors, 'length'));
@@ -37,11 +37,13 @@ RouteAuthMixin,
     info('gtevdor', gtevdor);
     info(new Error().stack);
     */
+    info(get(afiliacionesdisponible, 'disponibles'));
     ctrlr.setProperties({
       gtevdor,
       apGerentesventas,
       apVendedors,
-      apMediospublicitarios
+      apMediospublicitarios,
+      afiliacionDisponible: get(afiliacionesdisponible, 'disponibles')
     });
   },
   beforeModel(transition) {
@@ -85,7 +87,8 @@ RouteAuthMixin,
       gtevdor: store.findRecord('gtevdor', 1),
       gerentesventa: store.findAll('gerentesventa', reload),
       vendedor: store.findAll('vendedor', reload),
-      mediospublicitario: store.findAll('mediospublicitario', reload)
+      mediospublicitario: store.findAll('mediospublicitario', reload),
+      afiliacionesdisponible: store.findRecord('afiliaciondisponible', 1)
     });
   },
   actions: {
