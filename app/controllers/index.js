@@ -156,6 +156,9 @@ export default Ember.Controller.extend({
     }
   }),
   actions: {
+    carrusel() {
+
+    }, 
     getOut() {
       let app = getOwner(this).lookup('controller:application');
       app.send('invalidateSession');

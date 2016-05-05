@@ -21,9 +21,12 @@
             <p>
               <img src="/image/logosmall.jpg">
             </p>
-{{#if devLink}}
-  {{link-to devLink devLink}}
-{{/if}}
+  <div class="row">
+    {{#if devLink}}
+      {{link-to devLink devLink}}
+       <a href="" {{action "carrusel"}} >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;carrusel</a>
+    {{/if}}
+  </div>
 </div>
 
 
