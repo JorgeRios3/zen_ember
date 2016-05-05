@@ -18,9 +18,9 @@ export default DS.Model.extend({
 	gerente : DS.attr("string"),
 	vendedor : DS.attr("string"),
 	afiliacionvalida : DS.attr("boolean"),
-	vendido:computed("fechacierre", {
+	vendido: computed("fechacierre", {
 		get(){
-			return !isEmpty(get(this, 'fechacierre')));
+			return !isEmpty(get(this, 'fechacierre'));
 		}
 	})
 });
