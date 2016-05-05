@@ -186,6 +186,18 @@ export default Ember.Controller.extend({
     }
   }),
   actions: {
+    generaAfiliacion(prospecto) {
+      info(Object.keys(prospecto));
+      info(get(prospecto, 'apellidopaterno'));
+      set(prospecto, 'afiliacion', '1');
+      prospecto.save().then(()=> {
+        info('ya se grabo bien');
+        this.transitionToRoute('index');
+      },(error)=> {
+        info('no se grabo se fue por error');
+      })
+      info('entro en generarAfialiacion');
+    },
     copiarAfiliacion(afiliacion, prospecto) {
       set(this, 'prospecto', '');
       get(this, 'comodin').setProperties({

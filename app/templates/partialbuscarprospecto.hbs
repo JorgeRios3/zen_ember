@@ -46,7 +46,17 @@
 				{{p.nombre}}
 			</td>
 			<td data-title="Afiliacion">
-				{{p.afiliacion}}
+				{{#if p.afiliacionvalida}}
+					<span class="glyphicon glyphicon-thumbs-up"></span>
+					{{p.afiliacion}}
+					{{else}}
+					<span class="glyphicon glyphicon-thumbs-down"></span>
+					{{#unless vendido}}
+					{{#if features.generarafiliacion}}
+					<a href="" {{action "generaAfiliacion" p}}>Generar Afiliacion</a>
+					{{/if}}
+					{{/unless}}
+				{{/if}}
 			</td>
 			<td data-title="Fecha Alta">
 				{{p.fechaalta}}
