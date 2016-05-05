@@ -1,7 +1,8 @@
 import DS from 'ember-data';
  const {
  	isEmpty,
- 	get
+ 	get,
+ 	computed
  } = Ember;
 
 export default DS.Model.extend({
