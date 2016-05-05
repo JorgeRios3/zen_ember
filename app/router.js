@@ -63,6 +63,7 @@ Router.map(function() {
   this.route('vendedores');
   this.route('asignadasporsemana');
   this.route('preciosubicacion');
+  this.route('arcadiavendidos');
 });
 
 export default Router;
