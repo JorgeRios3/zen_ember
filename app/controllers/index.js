@@ -14,6 +14,7 @@ const {
 
 export default Ember.Controller.extend({
   session: service(),
+  carrusel: service(),
   gvCtrlr: controller('gravatar'),
   controllerApplication: controller('application'),
   perfil: '',
@@ -157,8 +158,14 @@ export default Ember.Controller.extend({
   }),
   actions: {
     carrusel() {
-
-    }, 
+      let carousel = get(this, 'carrusel');
+      set(carousel, 'activateCarousel', true);
+      this.get('carrusel').hazCarrusel();
+    },
+    stopCarrusel() {
+      let g= get(this, 'carrusel');
+      set(g, 'activateCarousel', false);
+    },
     getOut() {
       let app = getOwner(this).lookup('controller:application');
       app.send('invalidateSession');
