@@ -9,6 +9,7 @@ const {
   set,
   isEmpty,
   computed,
+  observer,
   Logger: { info },
   inject: { service },
   getOwner
@@ -35,6 +36,7 @@ function distance(lat1, lon1, lat2, lon2) {
 }
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
+  carrusel: service(),
   geolocation: service(),
   beforeModel(transition) {
     this._super(transition);
@@ -52,6 +54,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   },
 
   setupController(controller, model) {
+    let carrusel = get(this, 'carrusel');
+    let listaCarrusel = get(model.zenusuario, 'menuitems');
+    set(carrusel, 'listaCarrusel', listaCarrusel);
+    set(carrusel, 'activateCarousel', false);
     // info('entro en setupController');
     let perfil = get(model.zenusuario, 'perfil');
     set(this.controllerFor('gravatar'), 'model', model.gravatar);
