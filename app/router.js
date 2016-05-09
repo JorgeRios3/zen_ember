@@ -64,6 +64,8 @@ Router.map(function() {
   this.route('asignadasporsemana');
   this.route('preciosubicacion');
   this.route('arcadiavendidos');
+  this.route('arcadialotespagados');
+  this.route('arcadiacarteravencida');
 });
 
 export default Router;

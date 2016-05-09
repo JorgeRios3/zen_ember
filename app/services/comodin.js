@@ -4,5 +4,6 @@ export default Ember.Service.extend({
 	usuario: 'smartics',
 	socketURL: 'ws://localhost:8099',
 	afiliacion: '',
-	prospecto: ''
+	prospecto: '',
+	cuenta: ''
 });

@@ -14,6 +14,9 @@
 		</div>		
 	</div>
 </div>
+{{#if proxyCuenta}}
+<a href="#" {{action "copiaCuenta"}}>Copiar Cuenta</a>
+{{/if}}
 {{#if mostrarNombreClienteAlert}}
 	<div class="alert alert-success" role="alert">Cliente: {{showName}}  Cuenta: {{showCuenta}}</div>
 	<div class="btn btn-info" {{ action 'buscarConCuenta'}}>Mostrar</div>
