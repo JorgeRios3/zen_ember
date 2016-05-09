@@ -21,6 +21,9 @@ RouteAuthMixin , {
     }
   }),
   setupController(controller, model) {
+    let features = get(this, 'features');
+    info("features vale",features);
+    set(controller, 'features', features);
     let width = 400;
     if (get(this, 'desktopOrJumbo')) {
       width = 700;

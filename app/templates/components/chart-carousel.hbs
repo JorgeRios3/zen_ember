@@ -1,12 +1,14 @@
-{{#if onOrOff}}
-<span class="badge badge-info">{{contador}}</span>
-{{/if}}
-<div class="btn btn-{{if onOrOff 'warning' 'info'}}" {{action "carrusel"}}>{{if onOrOff 'Parar' 'Carrusel'}}</div>
-<div class="btn btn-success" {{action "controlTiempo"}}>Cambiar Tiepo</div>
-{{#if cambiaTiempo}}
-<div>cambiar tiempo</div>
-<div class="col-xs-10 col-md-3">
-	{{input type="text" value=tiempo class="form-control" placeholder="tiempo" id="tiempo"}}
-</div>
+{{#if features.carousel}}
+	{{#if onOrOff}}
+		<span class="badge badge-info">{{contador}}</span>
+	{{/if}}
+		<div class="btn btn-{{if onOrOff 'warning' 'info'}}" {{action "carrusel"}}>{{if onOrOff 'Parar' 'Carrusel'}}</div>
+		<div class="btn btn-success" {{action "controlTiempo"}}>Cambiar Tiepo</div>
+	{{#if cambiaTiempo}}
+		<div>cambiar tiempo</div>
+		<div class="col-xs-10 col-md-3">
+			{{input type="text" value=tiempo class="form-control" placeholder="tiempo" id="tiempo"}}
+		</div>
+	{{/if}}
 {{/if}}
 

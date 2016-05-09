@@ -4,13 +4,18 @@ import config from '../config/environment';
 import moment from 'moment';
 const {
   Logger: { info },
+  inject: { service },
   set,
   get,
   computed
 } = Ember;
 export default Ember.Route.extend(ApplicationRouteMixin,
 {
+  //carrusel: service(),
   setupController(controller, model) {
+    let features = get(this, 'features');
+    //info("features vale",features.carousel);
+    //info('valor', features.value);
     this._super(...arguments);
     this.startWatchingTime(controller);
     // info(new Error().stack);
