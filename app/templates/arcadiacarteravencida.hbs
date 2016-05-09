@@ -1,0 +1,47 @@
+<br><br>
+<div class="h3 text text-info">Cartera Vencida Arcadia</div>
+<table class="table table-bordered table-striped table-condensed cf">
+	<thead>
+		<tr>
+			<th>Etapa</th>
+            <th>Manzana</th>
+			<th>Lote</th>
+			<th>Cliente</th>
+			<th>Nombre</th>
+			<th>Saldo</th>
+			<th>Cuenta</th>
+			<th>Congelada</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each model as |r|}}
+		<tr>
+
+			<td data-title="Etapa">
+				{{r.etapa}}
+		    </td>
+            <td data-title="Manzana">
+				{{r.manzana}}
+			</td>
+			<td data-title="Lote">
+				{{r.lote}}
+			</td>
+			<td data-title="Cliente" class="text-right">
+				{{r.cliente}}
+			</td>
+			<td data-title="Nombre" class="text-right">
+				{{r.nombre}}
+			</td>
+			<td data-title="Saldo" class="text-right">
+				{{r.saldo}}
+			</td>
+			<td data-title="Cuenta">
+				<a href="#"  {{action "buscarCuenta"  r.cuenta}}>{{r.cuenta}} </a>
+			</td>
+			<td data-title="Congelada">
+				{{if r.congelada 'si' ''}}
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

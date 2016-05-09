@@ -16,6 +16,12 @@ const {
 export default Ember.Controller.extend(FormatterMixin,
 {
   session: service(),
+  comodin: service(),
+  proxyCuenta: computed('comodin', {
+    get() {
+      return get(this, 'comodin.cuenta');
+    }
+  }),
   ci: controller('index'),
   totalVencido: 0,
   documentosVencidos: 0,
@@ -235,6 +241,11 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
 
   actions: {
+    copiaCuenta() {
+      let cuenta = get(this, 'comodin.cuenta');
+      set(this, 'cuentaBuscar', cuenta);
+      set(this, 'comodin.cuenta', '');
+    },
     buscarConCuenta() {
       let that = this;
       let nombre = get(this, 'showName');
