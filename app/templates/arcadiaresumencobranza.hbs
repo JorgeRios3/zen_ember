@@ -1,0 +1,32 @@
+<br><br>
+<div class="h3 text text-info">Resumen Cobranza Arcadia</div>
+{{#if diffYear}}
+	<div class="h4 text text-info">considerando {{currentYear}} a {{diffYear}}</div>
+{{else}}
+	<div class="h4 text text-info">considerando {{currentYear}}</div>
+{{/if}}
+<div class="p">{{fecha}}</div>
+<br><br>
+<div class="form-group">
+	<label for="years" class="control-label">Año</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedYear action=(action  (mut selectedYear)) class="form-control form-control-inline"}}
+			{{#x-option value='1'}}Elija año{{/x-option}}
+			{{#each yearsList as |item|}}
+				{{#x-option value=item}}{{item.nombre}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+	<div class="checkbox">
+	<label>{{input type="checkbox" name="reconstruir" checked=reconstruir }}Reconstruir</label>
+</div>
+</div>
+<br><br>
+<span class="badge badge-info">{{datos.length}}</span>
+{{#bsz-table titleCols=titleCols}}
+	{{#each datos as |record|}}
+		{{bsz-row titleCols=titleCols record=record alignments=alignments}}
+	{{/each}}
+{{/bsz-table}}
