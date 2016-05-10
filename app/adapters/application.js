@@ -33,3 +33,4 @@ inflector.irregular('cuentabreve', 'cuentabreves');
 inflector.irregular('hipotecaria', 'hipotecarias');
 inflector.irregular('lotespagadosarcadia', 'lotespagadosarcadias');
 inflector.irregular('carteravencidaarcadia', 'carteravencidaarcadias');
+inflector.irregular('resumencobranzaarcadia', 'resumencobranzaarcadias');

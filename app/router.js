@@ -66,6 +66,7 @@ Router.map(function() {
   this.route('arcadiavendidos');
   this.route('arcadialotespagados');
   this.route('arcadiacarteravencida');
+  this.route('arcadiaresumencobranza');
 });
 
 export default Router;
