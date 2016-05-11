@@ -25,6 +25,8 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
   session: service(),
   //  needs: ['gerentesventas', 'vendedors', 'mediospublicitarios'],
   rfc: '',
+  prospectoExistente: false,
+  errorProspecto: '',
   apellidopaterno: '',
   apellidomaterno: '',
   gerenteVendedor: '',
@@ -223,7 +225,7 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
       exclusion: { in: [null], message: 'Debe seleccionar medio publicitario' }
     },
     selectedVendedor: {
-      exclusion: { in: [null], message: 'Debe seleccionar un vendedor' }
+      exclusion: { in: [null, 0, '0'], message: 'Debe seleccionar un vendedor' }
     },
     selectedGerente: {
       exclusion: { in: [null], message: 'Debe seleccionar un gerente' }
@@ -254,15 +256,16 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
       this.toggleProperty('muestroErrores');
     },
     enteradoInspeccionarErrores() {
-      this.toggleProperty('muestroErrores');
+      set(this, 'muestroErrores', false)
+      set(this, 'prospectoExistente', false);
     },
     llenar() {
       set(this, 'fechadenacimiento', '1991/01/06');
       set(this, 'apellidopaterno', 'rios');
       set(this, 'apellidomaterno', 'beltran');
       set(this, 'nombre', 'jorge carlos');
-      set(this, 'rfc', 'rib060191991');
-      set(this, 'curp', '111112345678909876');
+      set(this, 'rfc', 'ribj910106hjc');
+      set(this, 'curp', 'ribj910106hjc');
       set(this, 'telefonocasa', '37925738');
       set(this, 'telefonooficina', '984894984');
       set(this, 'extensionoficina', '');
@@ -319,7 +322,11 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
           selectedVendedor: null
         });
         that.transitionToRoute('buscarprospecto');
-      }, Ember.K);
+      }, (error)=> {
+        set(this, 'prospectoExistente', true);
+        set(this, 'errorProspecto', error.errors.resultado[0]);
+
+      });
     },
     getDateValue(result) {
       set(this, result.tag, result.value);

@@ -5,7 +5,8 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 const {
   RSVP: { hash },
   Logger: { info },
-  get
+  get,
+  set
 } = Ember;
 
 /*
@@ -37,6 +38,13 @@ RouteAuthMixin,
     info('gtevdor', gtevdor);
     info(new Error().stack);
     */
+    let gerente = get(gtevdor, 'idgerente');
+    let vendedor = get(gtevdor, 'idvendedor');
+    if (gerente !== 0 && vendedor !== 0) {
+      info('tiene gerente y vendedor');
+      set(ctrlr, 'selectedGerente', gerente);
+      set(ctrlr, 'selectedVendedor', vendedor);
+    }
     info(get(afiliacionesdisponible, 'disponibles'));
     ctrlr.setProperties({
       gtevdor,
