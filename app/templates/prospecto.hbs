@@ -198,6 +198,11 @@
 		{{/if}}
 		</div>
 	{{/if}}
+	{{#if prospectoExistente}}
+		{{#modal-bs title="Error Al Grabar Prospecto" close="enteradoInspeccionarErrores"}}
+		{{errorProspecto}}
+  		{{/modal-bs}}
+	{{/if}}
 	{{#if muestroErrores}}		
 		{{#modal-bs title="Errores antes de poder grabar" close="enteradoInspeccionarErrores"}}
   			<ul>
