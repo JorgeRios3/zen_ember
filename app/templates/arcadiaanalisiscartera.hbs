@@ -1,0 +1,60 @@
+<br><br>
+<div class="h3 text text-info">Analisis Cartera Arcadia</div>
+<br><br>
+<div class="h4 text text-info">Cartera a Estimación Actual</div>
+<div id="no-more-tables">
+	<table  class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Etapa</th>
+			<th>Terrenos</th>
+			<th>Clientes</th>
+			<th>Saldo Total</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each listaEstimacion as |r|}}
+			<tr>
+				<td data-title="Etapa" class="text-right">{{r.etapa}}</td>
+				<td data-title="Terrenos" class="text-right">{{r.terrenos}}</td>
+				<td data-title="Clientes" class="text-right">{{r.clientes}}</td>
+				<td data-title="Saldo Total" class="text-right">{{r.saldo}}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</div>
+<br><br>
+<div class="h4 text text-info">Cartera Vencida a Estimación Actual</div>
+<div id="no-more-tables">
+	<table  class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Etapa</th>
+			<th>No Venc</th>
+			<th>Venc Hasta 30</th>
+			<th>Venc 31-90</th>
+			<th>Vec + 90</th>
+			<th>Ctes</th>
+			<th>Ter</th>
+			<th>Vencido</th>
+			<th>Ptje</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each listaVencido as |r|}}
+			<tr>
+				<td data-title="Etapa" class="text-right">{{r.etapa}}</td>
+				<td data-title="No Venc" class="text-right">{{r.documentosnovencidos}}</td>
+				<td data-title="Venc Hasta 30" class="text-right">{{r.vencidohasta30}}</td>
+				<td data-title="Venc 31-90" class="text-right">{{r.vencido3190}}</td>
+				<td data-title="Vec + 90" class="text-right">{{r.vencidomas90}}</td>
+				<td data-title="Ctes" class="text-right">{{r.clientes}}</td>
+				<td data-title="Ter" class="text-right">{{r.terrenos}}</td>
+				<td data-title="Vencido" class="text-right">{{r.vencido}}</td>
+				<td data-title="Ptje" class="text-right">{{r.porcentaje}}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</div>
