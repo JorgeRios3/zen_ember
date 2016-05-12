@@ -1,12 +1,13 @@
 import Ember from 'ember';
 import RouteAuthMixin from '../mixins/routeauth';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import FormatterMixin from '../mixins/formatter';
 const {
 	set,
 	get,
 	Logger: { info }
 } = Ember;
-export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
+export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, FormatterMixin, {
   setupController(controller, model) {
     let r = get(model, 'resumen');
     let fecha = get(r, 'meta.fecha');
@@ -24,8 +25,14 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
     set(controller, 'titleCols', ['Rubro', 'Enganche', 'OE', 'Porcentaje Enganche', 'Pagos', 'OP', 'Porcentaje Pagos', 'Total']);
     set(controller, 'alignments', ['right', 'right', 'right', 'right', 'right', 'right', 'right', 'right', 'right', 'right']);
     promesaResumen.forEach((item)=> {
-      let { enganche, ocurrenciasenganche, ocurrenciaspagos, pagos, porcentajeenganche, porcentajepagos, rubro, total } = item.getProperties('enganche ocurrenciasenganche ocurrenciaspagos pagos porcentajeenganche porcentajepagos rubro total'.w());
-      lista.pushObject({ rubro, enganche, ocurrenciasenganche, porcentajeenganche, pagos, ocurrenciaspagos, porcentajepagos, total });
+      if (parseInt(get(item, 'rubro'))<2000) {
+          let { enganche, ocurrenciasenganche, ocurrenciaspagos, pagos, porcentajeenganche, porcentajepagos, rubro, total, suma } = item.getProperties('enganche ocurrenciasenganche ocurrenciaspagos pagos porcentajeenganche porcentajepagos rubro total suma'.w());
+        lista.pushObject({ rubro, enganche, ocurrenciasenganche, porcentajeenganche, pagos, ocurrenciaspagos, porcentajepagos, suma });
+
+      } else {
+        let { enganche, ocurrenciasenganche, ocurrenciaspagos, pagos, porcentajeenganche, porcentajepagos, rubro, total } = item.getProperties('enganche ocurrenciasenganche ocurrenciaspagos pagos porcentajeenganche porcentajepagos rubro total'.w());
+        lista.pushObject({ rubro, enganche, ocurrenciasenganche, porcentajeenganche, pagos, ocurrenciaspagos, porcentajepagos, total });
+      }
     });
     set(controller, 'datos', lista);
   },
