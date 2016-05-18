@@ -25,6 +25,7 @@ let lote = Ember.Object.extend({
 });
 
 export default Ember.Controller.extend(EmberValidations, {
+  precioCantidad: '',
   session: Ember.inject.service(),
   todosSortingDesc: ['loteSort:asc'],
   habilitarInmueble: false,
@@ -93,12 +94,12 @@ export default Ember.Controller.extend(EmberValidations, {
       }
     });
   }),
-  precioCantidad: computed('precioNumero', {
+  /*precioCantidad: computed('precioNumero', {
     get() {
       let sabono = get(this, 'precioNumero').replace(',', '');
       return parseFloat(sabono);
     }
-  }),
+  }),*/
   ponerInmueble(loteoficial) {
     info('loteoficial', loteoficial);
     let cual = get(this, 'lotesArray').findBy('lote', loteoficial);
@@ -111,10 +112,11 @@ export default Ember.Controller.extend(EmberValidations, {
   },
   observaSelectedInmueble: observer('selectedInmueble', function() {
     let inmueble = get(this, 'selectedInmueble');
+    info('valor de inmueble', inmueble);
     this.store.unloadAll('inmuebleindividual');
     this.store.unloadAll('caracteristicasinmueble');
     this.store.unloadAll('catalogoprecio');
-    let precioOtro = '';
+    // let precioOtro = '';
     if (isEmpty(inmueble)) {
       return;
     }
@@ -123,7 +125,7 @@ export default Ember.Controller.extend(EmberValidations, {
     p.then((dato)=> {
       set(that, 'domicilio', dato.get('domicilio'));
       set(that, 'inmueble', inmueble);
-      precioOtro = get(dato, 'precioRaw');
+      // precioOtro = get(dato, 'precioRaw');
       return this.store.find('catalogoprecio', inmueble)
       .then((dato)=> {
         that.setProperties({
@@ -137,10 +139,15 @@ export default Ember.Controller.extend(EmberValidations, {
         });
         let idPrecioCatalogo = get(dato, 'idPrecioCatalogo');
         if (idPrecioCatalogo !== 0) {
+          info('valor de idPrecioCatalogo en observar', idPrecioCatalogo);
           let precios = get(that, 'precios.content');
           let elegido = precios.findBy('id',  `${idPrecioCatalogo}`);
           set(that, 'currentValue', elegido);
-          set(that, 'idPrecioCatalogo', get(dato, 'idPrecioCatalogo'));
+          set(that, 'idPrecioCatalogo', idPrecioCatalogo);
+          info('varibale enber idPrecioCatalogo', get(that, 'idPrecioCatalogo'));
+          set(that, 'precioNumero', get(elegido, 'precio'));
+          set(that, 'precioCantidad', get(elegido, 'precioraw'));
+          info('valor de precioCantidad en select', get(that, 'precioCantidad'));
         } else {
           info('se fue por el else');
           set(that, 'idPrecioCatalogo', 0);
@@ -184,7 +191,7 @@ export default Ember.Controller.extend(EmberValidations, {
       let record = get(this, 'record');
       info('valor de record id', get(record, 'id'));
       record.setProperties({
-        idPrecioCatalogo: get(this, 'precioCatalogo'),
+        idPrecioCatalogo: get(this, 'idPrecioCatalogo'),
         candadoPrecio: get(this, 'candadoPrecio'),
         precioCatalogo: get(this, 'precioCantidad'),
         habilitarInmueble: get(this, 'habilitarInmueble')
@@ -319,8 +326,8 @@ export default Ember.Controller.extend(EmberValidations, {
       this.ponerInmueble(loteoficial);
     },
     precioElegido(precio) {
-      set(this, 'precioCatalogo', get(precio, 'id'));
-      set(this, 'precioNumero', get(precio, 'precio'));
+      set(this, 'idPrecioCatalogo', parseInt(get(precio, 'id')));
+      set(this, 'precioCantidad', get(precio, 'precioraw'));
     }
   }
 });
