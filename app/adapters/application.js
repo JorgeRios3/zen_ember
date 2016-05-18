@@ -35,3 +35,4 @@ inflector.irregular('lotespagadosarcadia', 'lotespagadosarcadias');
 inflector.irregular('carteravencidaarcadia', 'carteravencidaarcadias');
 inflector.irregular('resumencobranzaarcadia', 'resumencobranzaarcadias');
 inflector.irregular('analisiscarteraarcadia', 'analisiscarteraarcadias');
+inflector.irregular('gixanip', 'gixanips');
