@@ -1,1 +1,52 @@
-{{outlet}}
+<br><br>
+<div class="h3 text text-info">Busqueda Referencias Rap</div>
+<div class="form-group">	
+	<label for="idafiliacion" class="control-label">Referencia Rap</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+	{{input type="text" value=referenciaRap class="form-control" placeholder="Referencia Rap" maxlength="11" id="idafiliacion"}}
+		</div>
+	</div>
+</div>
+<dl class="dl-horizontal">
+	<dt>Nombre</dt><dd>{{nombre}}</dd>
+	<dt>Cuenta</dt><dd>{{cuenta}}</dd>
+	<dt>Referencia</dt><dd>{{referencia}}</dd>
+	<dt>Cliente</dt><dd>{{cliente}}</dd>
+	<dt>Etapa</dt><dd>{{etapa}}</dd>
+	<dt>Manzana</dt><dd>{{manzana}}</dd>
+	<dt>Lote</dt><dd>{{lote}}</dd>
+	<dt>Saldo</dt><dd>{{saldo}}</dd>
+</dl>
+<div class="btn btn-info" {{action "limpiarLista"}}>Limpiar Tabla</div>
+<br><br>
+<div id="no-more-tables">
+<table  class="table table-bordered table-striped table-condensed cf">
+	<thead>
+	<tr>
+		<th>Nombre</th>
+		<th>Cuenta</th>
+		<th>Referencia</th>
+		<th>Cliente</th>
+		<th>Etapa</th>
+		<th>Manzana</th>
+		<th>Lote</th>
+		<th>Saldo</th>
+	</tr>
+	</thead>
+	<tbody>
+	{{#each clientesLista as |c|}}
+		<tr>
+			<td data-title="Nombre">{{c.nombre}}</td>
+			<td data-title="Cuenta">{{c.cuenta}}</td>
+			<td data-title="Referencia">{{c.referencia}}</td>
+			<td data-title="Cliente">{{c.cliente}}</td>
+			<td data-title="Etapa">{{c.etapa}}</td>
+			<td data-title="Manzana">{{c.manzana}}</td>
+			<td data-title="Lote">{{c.lote}}</td>
+			<td data-title="Saldo">{{c.saldo}}</td>
+		</tr>
+	{{/each}}
+	</tbody>
+</table>
+</div>
