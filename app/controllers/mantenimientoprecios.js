@@ -328,6 +328,7 @@ export default Ember.Controller.extend(EmberValidations, {
     precioElegido(precio) {
       set(this, 'idPrecioCatalogo', parseInt(get(precio, 'id')));
       set(this, 'precioCantidad', get(precio, 'precioraw'));
+      set(this, 'precioCatalogo', get(precio, 'precioraw'));
     }
   }
 });

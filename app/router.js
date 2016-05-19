@@ -69,6 +69,7 @@ Router.map(function() {
   this.route('arcadiaresumencobranza');
   this.route('arcadiaanalisiscartera');
   this.route('xvendedor');
+  this.route('referenciasrapcuenta');
 });
 
 export default Router;

@@ -1,0 +1,29 @@
+<br><br>
+<div class="h3 text text-info">Usuarios Para Registrar en zen</div>
+<div id="no-more-tables">
+			<table  class="table table-bordered table-striped table-condensed cf">
+			
+				<thead>
+				<tr>
+					<th>Vendedor</th>
+					<th>Nombre</th>
+					<th>Usuario</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{#each model as |u|}}
+					<tr><td data-title="Usuario"><a href="#" {{action "usuario" u}}>{{u.vendedor}}</a></td>
+						<td data-title="Password">{{u.nombre}}</td>
+						<td data-title="Perfil">{{u.usuario}}</td>
+					</tr>
+				{{/each}}
+				</tbody>
+			</table>
+			</div>
+<dl class="dl-horizontal">
+	<dt>Usuario</dt><dd>{{usuario}}</dd>
+	<dt>Vendedor</dt><dd>{{vendedor}}</dd>
+</dl>
+{{#if usuario}}
+<div class="btn btn-info" {{action "agrega"}}>Agregar a Rethink</div>
+{{/if}}
