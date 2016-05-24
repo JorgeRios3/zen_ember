@@ -7,7 +7,12 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,
   setupController(ctrl, model) {
     ctrl.setProperties({
       etapas: model,
-      inmueble: ''
+      inmueble: '',
+      carateristicasLista: '',
+      currentNumeroInterior: '0',
+      currentLoteElegido: 0,
+      currentManzana: '0',
+      cuantosInmueblesDisponibles: ''
     });
   },
   model() {
