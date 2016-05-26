@@ -66,6 +66,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   session: service(),
   ajax: service(),
   queryParams: ['origenCliente', 'cliente', 'afiliacion', 'prospecto'],
+  conteoSuma: '',
   etapasofertas: '',
   tieneComision: true,
   manzanasdisponibles: '',
@@ -656,6 +657,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       try {
         let n = Number(_this.getWithDefault(key, 0));
         total = total + n;
+        set(this, 'conteoSuma', total);
       } catch(err) {
         info(err.message);
       }
