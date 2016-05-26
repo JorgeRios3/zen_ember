@@ -102,7 +102,9 @@ export default Ember.Component.extend({
       get(this, 'impresoras.content').objectAt(cual).toggleProperty('chosen');
     },
     imprimir() {
-      set(this, 'botonHabilitado', false);
+      Ember.run(()=> {
+        set(this, 'botonHabilitado', false);
+      });
       let reporte = get(this, 'reporte');
       let parametro1 = get(this, 'parametro1');
       let valorParametro1 = get(this, 'valorParametro1');
