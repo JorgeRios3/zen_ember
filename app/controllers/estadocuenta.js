@@ -24,6 +24,7 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
   ci: controller('index'),
   totalVencido: 0,
+  etapaBreve:'',
   documentosVencidos: 0,
   numeroDocumentos: 0,
   cargos: 0,
@@ -136,6 +137,8 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'mostrarNombreClienteAlert', true);
               set(this, 'showName', get(item, 'nombre'));
               set(this, 'showCuenta', get(item, 'id'));
+              set(this, 'etapaBreve', get(item, 'etapa'));
+              info('viendo etapaBreve', get(this, 'etapaBreve'));
             } else {
               set(this, 'mostrarNombreClienteAlert', false);
               set(this, 'showName', '');
@@ -199,6 +202,7 @@ export default Ember.Controller.extend(FormatterMixin,
     // info(`valor de cuenta en observer selectednombre ${cuenta}`);
     info('revisando catalogo antes de pasar ', get(this, 'catalogoNombres'));
     let cual = get(this, 'catalogoNombres').findBy('cuenta', get(this, 'selectedNombre'));
+    info('cual',cual);
     info(`valor de cual ${cual}`);
     let p = this.store.query('documentoscliente', { cuenta: get(this, 'selectedNombre'), company });
     p.then((data)=> {
@@ -226,7 +230,7 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'cuenta', get(cual, 'cuenta'));
       set(this, 'cuentaBuscar', get(cual, 'cuenta'));
       set(this, 'manzana', get(cual, 'manzana'));
-      set(this, 'lote', get(cual, 'lote'));
+      set(this, 'lote', get(cual, 'inmueble'));
       set(this, 'saldo', get(cual, 'saldo'));
       set(this, 'conPagares', get(cual, 'conpagares'));
       set(this, 'saldoPagaresFormateado', get(cual, 'saldopagaresformateado'));
@@ -345,6 +349,7 @@ export default Ember.Controller.extend(FormatterMixin,
     },
     selectedEtapa(item) {
       set(this, 'selectedEtapa', item.id);
+      set(this, 'nombre', '');
     },
     buscar() {
       // info('entro en buscar desde llmada externa');
