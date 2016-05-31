@@ -19,10 +19,7 @@ export default Ember.Component.extend({
   observaGenerarExcel: observer('generarExcel', function() {
     this.sendAction('hacer', get(this, 'generarExcel') ? get(this, 'emailaddress') : '');
   }),
-
-
   init() {
-
     this._super(...arguments);
     let that = this;
     info('pasando por init de compoennte correro');
@@ -33,5 +30,5 @@ export default Ember.Component.extend({
         set(that, 'emailaddress', data.email);
       }
     });
-  },
+  }
 });

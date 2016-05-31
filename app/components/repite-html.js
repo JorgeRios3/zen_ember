@@ -4,9 +4,9 @@ export default Ember.Component.extend({
   vueltas : 0,
   didReceiveAttrs() {
     let vueltas = [];
-    for(let vuelta = 0; vuelta < this.attrs.value; vuelta++) {
+    for( let vuelta = 0; vuelta < this.attrs.value; vuelta++ ) {
       vueltas.push(vuelta + 1);
     }
-      this.set("vueltas", vueltas);
+    this.set('vueltas', vueltas);
   }
 });
