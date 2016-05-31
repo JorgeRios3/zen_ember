@@ -155,6 +155,23 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
     } else {
       set(this, 'afiliacionOk', false);
     }
+    if ( get(this, 'afiliacion').length === 11) {
+      info('pidiendo en server');
+      this.store.find('validaafiliacion', get(this, 'afiliacion'))
+      .then((data)=> {
+        let disponible = get(data, 'disponible');
+        let validacion = get(data, 'validacion');
+        if ( disponible === true && validacion === "") {
+          info('si estan bien los 2');
+          set(this, 'afiliacionOk', true);
+        } else {
+          info('este ya existe');
+          set(this, 'afiliacionOk', false);
+          set(this, 'prospectoExistente', true);
+          set(this, 'errorProspecto', validacion);
+        }
+      })
+    }
   }),
   observaCurp: observer('curp', function() {
     let fecha = get(this, 'curp');
