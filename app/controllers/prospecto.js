@@ -42,6 +42,7 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
   fechanacimiento: '',
   nullfechadenacimiento: '',
   afiliacionOk: false,
+  mediopublicitariosugerido: '',
   afiliacion: '',
   rfcValido: false,
   muestroErrores: false,
