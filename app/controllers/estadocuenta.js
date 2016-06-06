@@ -25,6 +25,7 @@ export default Ember.Controller.extend(FormatterMixin,
   ci: controller('index'),
   totalVencido: 0,
   etapaBreve:'',
+  loteBreve: '',
   documentosVencidos: 0,
   numeroDocumentos: 0,
   cargos: 0,
@@ -138,6 +139,7 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'showName', get(item, 'nombre'));
               set(this, 'showCuenta', get(item, 'id'));
               set(this, 'etapaBreve', get(item, 'etapa'));
+              set(this, 'loteBreve', get(item, 'lote'))
               info('viendo etapaBreve', get(this, 'etapaBreve'));
             } else {
               set(this, 'mostrarNombreClienteAlert', false);
