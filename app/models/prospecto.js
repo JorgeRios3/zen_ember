@@ -16,7 +16,7 @@ export default DS.Model.extend({
   telefonocelular : DS.attr("string"),
   lugardetrabajo : DS.attr("string", { defaultValue: '' }),
   idmediopublicitario : DS.attr("number"),
-  mediopublicitariosugerido : DS.attr("string"),
+  mediopublicitariosugerido : DS.attr("string", { defaultValue: '' }),
   contado : DS.attr("boolean"),
   hipotecaria : DS.attr("boolean"),
   pensiones: DS.attr("boolean"),
