@@ -85,7 +85,8 @@ RouteAuthMixin,
       selectedMedio: null,
       selectedGerente: null,
       selectedVendedor: null,
-      tipoCuenta: 'infonavit'
+      tipoCuenta: 'infonavit',
+      mediopublicitariosugerido: ''
     });
   },
   model() {
