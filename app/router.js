@@ -70,6 +70,7 @@ Router.map(function() {
   this.route('arcadiaanalisiscartera');
   this.route('xvendedor');
   this.route('referenciasrapcuenta');
+  this.route('revinculacion');
 });
 
 export default Router;

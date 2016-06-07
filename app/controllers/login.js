@@ -21,6 +21,7 @@ export default Ember.Controller.extend(
   password: '',
   oscillator: null,
   audiocontext: null,
+  logoEffect: false,
   buttonReady: computed('identification', 'password', {
     get() {
       return !isEmpty(get(this, 'identification')) && !isEmpty(get(this, 'password'));

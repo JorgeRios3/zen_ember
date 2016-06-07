@@ -11,7 +11,9 @@
 <div class="alert alert-info"><a class="close" data-dismiss="alert" href="#">x</a>Ingrese su usuario y contrase&ntilde;a</div>
 
 {{/if}}
+{{#liquid-if logoEffect use='toLeft'}}
 <img src="/image/logosmall.jpg">
+{{/liquid-if}}
 <form {{action 'authenticate' on='submit'}}>
         <div class="form-group">
           <label>{{ts}}</label><br>
