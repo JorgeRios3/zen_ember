@@ -8,6 +8,6 @@ export default DS.Model.extend({
 	gerente: DS.attr('number'),
 	nombregerente: DS.attr('string'),
 	tieneComision: DS.attr('boolean'),
-	curpo: DS.attr('string')
+	curp: DS.attr('string')
   				
 });
