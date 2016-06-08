@@ -38,3 +38,4 @@ inflector.irregular('analisiscarteraarcadia', 'analisiscarteraarcadias');
 inflector.irregular('gixanip', 'gixanips');
 inflector.irregular('referenciasrapcuenta', 'referenciasrapcuentas');
 inflector.irregular('validaafiliacion', 'validaafiliacions');
+inflector.irregular('transicionprospecto', 'transicionprospectos');
