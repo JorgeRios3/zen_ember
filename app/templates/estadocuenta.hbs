@@ -82,6 +82,7 @@
     	<dt>{{if isArcadia 'Terreno' 'Inmueble'}}</dt><dd>{{#if isArcadia }} {{lote}} {{manzana}}{{else}}{{manzana}} {{loteBreve}}{{/if}}</dd>
     	<dt>Etapa</dt><dd>{{etapaBreve}}</dd>
     	<dt>Cuenta</dt><dd>{{cuenta}}</dd>
+    	{{#if ofertaCliente}}<dt>Oferta</dt><dd>{{ofertaCliente}}</dd>{{/if}}
     	<dt>Saldo</dt><dd>{{saldoFormateado}}</dd>
     	<dt>Cargos</dt><dd>{{cargosFormateado}}</dd>
     	<dt>Abonos</dt><dd>{{abonosFormateado}}</dd>

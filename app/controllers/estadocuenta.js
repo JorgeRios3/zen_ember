@@ -25,6 +25,7 @@ export default Ember.Controller.extend(FormatterMixin,
   ci: controller('index'),
   totalVencido: 0,
   etapaBreve:'',
+  ofertaCliente: '',
   loteBreve: '',
   documentosVencidos: 0,
   numeroDocumentos: 0,
@@ -205,6 +206,7 @@ export default Ember.Controller.extend(FormatterMixin,
     info('revisando catalogo antes de pasar ', get(this, 'catalogoNombres'));
     let cual = get(this, 'catalogoNombres').findBy('cuenta', get(this, 'selectedNombre'));
     info('cual',cual);
+    info(get(cual, 'oferta'));
     info(`valor de cual ${cual}`);
     let p = this.store.query('documentoscliente', { cuenta: get(this, 'selectedNombre'), company });
     p.then((data)=> {
@@ -236,6 +238,7 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'saldo', get(cual, 'saldo'));
       set(this, 'conPagares', get(cual, 'conpagares'));
       set(this, 'saldoPagaresFormateado', get(cual, 'saldopagaresformateado'));
+      set(this, 'ofertaCliente', get(cual, 'oferta'));
     } catch(e) {
       info('el error es ', e);
     }
