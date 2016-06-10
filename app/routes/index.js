@@ -134,10 +134,13 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   },
 
   afterModel(model, transition) {
+    let currentLocation;
     let hasTwoFactorAuthentication = get(model.twofactor, 'hasTwoFactorAuthentication');
     let isTwoFactorAuthenticated = get(model.twofactor, 'isTwoFactorAuthenticated');
-    let currentLocation = get(get(this, 'geolocation'), 'currentLocation');
-    info('valor de geolocation', get(this, 'geolocation'));
+    Ember.run(()=> {
+      currentLocation = get(get(this, 'geolocation'), 'currentLocation');
+      info('valor de geolocation', get(this, 'geolocation'));
+    });
     info(`valor de currentLocation ${currentLocation}`);
     let radioIclar = 1; // 200 metros
     if (config.DISTANCIA) {
