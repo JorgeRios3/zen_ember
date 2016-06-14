@@ -107,6 +107,8 @@ export default Ember.Controller.extend(FormatterMixin,
       this.setProperties({
         showButton: true
       });
+    } else {
+      set(this, 'showButton', false);
     }
   }),
   observaCuentaBuscar: observer('cuentaBuscar', function() {
@@ -354,6 +356,9 @@ export default Ember.Controller.extend(FormatterMixin,
     },
     selectedEtapa(item) {
       set(this, 'selectedEtapa', item.id);
+      set(this, 'catalogoNombres', null);
+      set(this, 'cuantos', 0);
+      this.store.unloadAll('clientesconcuentanosaldada');
       set(this, 'nombre', '');
     },
     buscar() {
