@@ -143,6 +143,12 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'showCuenta', get(item, 'id'));
               set(this, 'etapaBreve', get(item, 'etapa'));
               set(this, 'loteBreve', get(item, 'lote'))
+              if ( isArcadia) {
+                info('en arcadia lote', get(item, 'lote'));
+                info('en arcadia lote', get(item, 'manzana'));
+                set(this, 'lote', get(item, 'lote'));
+                set(this, 'manzana', get(item, 'manzana'));
+              }
               info('viendo etapaBreve', get(this, 'etapaBreve'));
             } else {
               set(this, 'mostrarNombreClienteAlert', false);
@@ -235,8 +241,12 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'docsCliente', p);
       set(this, 'cuenta', get(cual, 'cuenta'));
       set(this, 'cuentaBuscar', get(cual, 'cuenta'));
-      set(this, 'manzana', get(cual, 'manzana'));
-      set(this, 'lote', get(cual, 'inmueble'));
+      if (!get(this, 'isArcadia')) {
+        info( 'valor de manzana en iclar', get(cual, 'manzana'));
+        info( 'valor de inmueble', get(cual, 'inmueble'));
+        set(this, 'manzana', get(cual, 'manzana'));
+        set(this, 'lote', get(cual, 'inmueble'));
+      }
       set(this, 'saldo', get(cual, 'saldo'));
       set(this, 'conPagares', get(cual, 'conpagares'));
       set(this, 'saldoPagaresFormateado', get(cual, 'saldopagaresformateado'));
