@@ -24,11 +24,6 @@ RouteAuthMixin, FormatterMixin,
   },
   setupController(controller, model) {
     var that = this;
-    let elixir = get(this, 'features.resumen_elixir');
-    if (elixir) {
-      info('hubo elixir', elixir);
-       model.resumen = model.resumen2;
-    }
     let etapas = [];
     for (let i = 0; i < 4; i++) {
       let val = model.etapas.objectAt(i);
@@ -76,8 +71,7 @@ RouteAuthMixin, FormatterMixin,
     let additional='';
     return hash({
       etapas: this.store.findAll('etapastramite'),
-      resumen: get(this, 'ajax').request(`/api/ropiclar`),
-      resumen2: get(this, 'ajax').request(`/api/ropiclar?elixir=true`),
+      resumen: get(this, 'ajax').request(`/api/ropiclar`)
 
     });
     // return get(this, 'ajax').request('/api/ropiclar');
