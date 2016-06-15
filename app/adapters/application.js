@@ -39,3 +39,4 @@ inflector.irregular('gixanip', 'gixanips');
 inflector.irregular('referenciasrapcuenta', 'referenciasrapcuentas');
 inflector.irregular('validaafiliacion', 'validaafiliacions');
 inflector.irregular('transicionprospecto', 'transicionprospectos');
+inflector.irregular('inmueblearcadia', 'inmueblearcadias');
