@@ -6,6 +6,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 const {
 	get,
 	set,
+  isEmpty,
 	Logger: { info },
   RSVP: { hash }
 } = Ember;
@@ -16,11 +17,18 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin, FormatterMixin,
 {
   ajax: Ember.inject.service(),
-  beforeModel() {
+  beforeModel(transition){
     this._super(...arguments);
-    info('voy en beforemodel de resumenoperativo');
+    info('saliendo en befores', get(this, 'features'));
+
   },
   setupController(controller, model) {
+    var that = this;
+    let elixir = get(this, 'features.resumen_elixir');
+    if (elixir) {
+      info('hubo elixir', elixir);
+       model.resumen = model.resumen2;
+    }
     let etapas = [];
     for (let i = 0; i < 4; i++) {
       let val = model.etapas.objectAt(i);
@@ -64,9 +72,13 @@ RouteAuthMixin, FormatterMixin,
     }
   },
   model() {
+    info('voy en beforemodel de resumenoperativo2', get(this, 'features'));
+    let additional='';
     return hash({
       etapas: this.store.findAll('etapastramite'),
-      resumen: get(this, 'ajax').request('/api/ropiclar')
+      resumen: get(this, 'ajax').request(`/api/ropiclar`),
+      resumen2: get(this, 'ajax').request(`/api/ropiclar?elixir=true`),
+
     });
     // return get(this, 'ajax').request('/api/ropiclar');
   },
