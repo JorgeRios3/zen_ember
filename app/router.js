@@ -71,6 +71,7 @@ Router.map(function() {
   this.route('xvendedor');
   this.route('referenciasrapcuenta');
   this.route('revinculacion');
+  this.route('arcadiainmuebles');
 });
 
 export default Router;
