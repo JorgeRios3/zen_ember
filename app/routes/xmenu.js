@@ -9,9 +9,6 @@ const {
 } = Ember;
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
-  beforeModel(transition) {
-    this._super(...arguments);
-  },
   model() {
   	return this.store.findAll('xmenu', {reload: true});
   }

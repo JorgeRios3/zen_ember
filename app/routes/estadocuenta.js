@@ -16,8 +16,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     // info('revisnado pèrfolñ', a.perfil);
     ctrlr.notifyPropertyChange('isArcadia');
   },
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    // this._super(...arguments);
     let controller = this.controllerFor(this.routeName);
     controller.setProperties({
       selectedEtapa: '',

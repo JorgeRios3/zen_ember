@@ -10,10 +10,7 @@ const {
 	Logger: { info }
 } = Ember;
 export default Ember.Route.extend(FormatterMixin, RouteAuthMixin, AuthenticatedRouteMixin, {
-  beforeModel() {
-    this._super(...arguments);
-  },
-  
+ 
   desktopOrJumbo: computed('media.isJumbo', 'media.isDesktop', {
     get() {
       return get(this, 'media.isJumbo') || get(this, 'media.isDesktop');

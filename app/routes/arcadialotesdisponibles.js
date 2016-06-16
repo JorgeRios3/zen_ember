@@ -10,9 +10,6 @@ const {
 
 export default Ember.Route.extend(RouteAuthMixin, AuthenticatedRouteMixin,
 {
-  beforeModel() {
-    this._super(...arguments);
-  },
   setupController(controller, model) {
     let lotesdisponibles = Ember.A();
     model.lotesdisponibles.forEach((item)=> {

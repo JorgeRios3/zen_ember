@@ -12,8 +12,8 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    //this._super(...arguments);
     let c = this.controllerFor(this.routeName);
     let datos = Ember.A();
     datos.push(['Semana', 'Unidades', { role: 'never' }]);

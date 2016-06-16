@@ -11,9 +11,6 @@ const {
 } = Ember;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,{
-  beforeModel(transition) {
-    this._super(...arguments);
-  },
   setupController(ctrl, model) {
   	set(ctrl, 'titleCols', ['id Gerente', 'Nombre Gerente', 'id Vendedor', 'Nombre Vendedor']);
   	let lista = Ember.A();

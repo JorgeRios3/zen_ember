@@ -13,8 +13,8 @@ const {
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
   etapas: '',
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    // this._super(...arguments);
     let controller = this.controllerFor(this.routeName);
     controller.setProperties({
       selectedEtapa: '',
@@ -30,7 +30,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       processingGrabar: false,
       muestroErrores: false,
       cuantos: '',
-      maximo: computed.lt('cuantos', 101),
+      maximo: computed.lt('cuantos', 101)
     });
   },
   setupController(ctrl, model) {

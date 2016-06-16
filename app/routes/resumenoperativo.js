@@ -8,7 +8,8 @@ const {
 	set,
   isEmpty,
 	Logger: { info },
-  RSVP: { hash }
+  RSVP: { hash },
+  getOwner
 } = Ember;
 
 // const etapas = [53,54,55,57];
@@ -17,9 +18,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin, FormatterMixin,
 {
   ajax: Ember.inject.service(),
-  beforeModel(transition){
-    this._super(...arguments);
-    info('saliendo en befores', get(this, 'features'));
+  beforeModel2(){
+    // this._super(...arguments);
+    // info('saliendo en befores', get(this, 'features'));
 
   },
   setupController(controller, model) {
@@ -67,13 +68,18 @@ RouteAuthMixin, FormatterMixin,
     }
   },
   model() {
-    info('voy en beforemodel de resumenoperativo2', get(this, 'features'));
+    // info('voy en beforemodel de resumenoperativo2', get(this, 'features'));
+    let app = getOwner(this).lookup('controller:application');
+    let usuario = get(app, 'usuario');
     let additional='';
-    return hash({
-      etapas: this.store.findAll('etapastramite'),
-      resumen: get(this, 'ajax').request(`/api/ropiclar`)
-
-    });
+    let promesas = { etapas: this.store.findAll('etapastramite'),
+      resumen: get(this, 'ajax').request(`/api/ropiclar`), 
+    }
+    if (usuario === "SMARTICS" || usuario === "smartics") {
+      info('es smartics en resumen');
+      promesas.resumen = get(this, 'ajax').request(`/api/ropiclar?elixir=1`);
+    }
+    return hash(promesas);
     // return get(this, 'ajax').request('/api/ropiclar');
   },
   actions: {

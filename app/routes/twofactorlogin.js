@@ -9,8 +9,8 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin, {
-  beforeModel() {
-    this._super(...arguments);
+  beforeModel2() {
+    // this._super(...arguments);
     let c = this.controllerFor('twofactorlogin');
     c.setProperties({
       twoFactorToken: '',

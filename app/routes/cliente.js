@@ -6,8 +6,8 @@ var log = Ember.Logger.info;
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin,
 {
-	beforeModel(transition){
-    this._super(transition);
+	beforeModel2(transition){
+    // this._super(...arguments);
     var controller = this.controllerFor(this.routeName);
     var url = this.get("router.url");
     controller.setProperties(
