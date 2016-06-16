@@ -12,8 +12,9 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    //this._super(...arguments);
+    info('entrando en la ruta ');
     let c = this.controllerFor(this.routeName);
     let datos = Ember.A();
     datos.push(['Semana', 'Unidades', { role: 'never' }]);
@@ -47,6 +48,7 @@ RouteAuthMixin , {
         }
       }
     });
+    info('termino hook before de ruta');
   },
   desktopOrJumbo: computed('media.isJumbo', 'media.isDesktop', {
     get() {
@@ -55,7 +57,7 @@ RouteAuthMixin , {
   }),
   setupController(controller, model) {
     let features = get(this, 'features');
-    info("features vale",features);
+    info('features vale', features);
     set(controller, 'features', features);
     let width = 400;
     if (get(this, 'desktopOrJumbo')) {

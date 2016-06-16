@@ -54,8 +54,8 @@ RouteAuthMixin,
       afiliacionDisponible: get(afiliacionesdisponible, 'disponibles')
     });
   },
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    // this._super(...arguments);
     // getFunctionName();
     // info(new Error().stack);
     let controller = this.controllerFor(this.routeName);

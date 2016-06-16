@@ -11,9 +11,6 @@ const {
 } = Ember;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, FormatterMixin, {
-  beforeModel(transition) {
-    this._super(...arguments);
-  },
   setupController(ctrl, model) {
     ctrl.setProperties({
       datos: Ember.A(),

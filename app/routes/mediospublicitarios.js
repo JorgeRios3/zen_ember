@@ -10,9 +10,6 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin, {
-  beforeModel() {
-    this._super(...arguments);
-  },
   setupController(ctrl, model) {
     let features = get(this, 'features');
     // info("features vale",features);

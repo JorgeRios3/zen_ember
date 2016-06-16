@@ -10,9 +10,6 @@ const {
 } = Ember;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,{
-  beforeModel(transition) {
-    this._super(...arguments);
-  },
   setupController(controller, model) {
     set(controller, 'empresas', model.empresas);
     set(controller, 'solicitudes', model.solicitudes);

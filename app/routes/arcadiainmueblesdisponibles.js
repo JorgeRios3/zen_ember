@@ -7,9 +7,9 @@ const {
   RSVP: { hash }
 } = Ember;
 
-export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,{
+export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
   beforeModel(transition) {
-    this._super(...arguments);
+    return this._super(...arguments);
   },
   setupController(controller, model) {
     let { inmueblesdisponibles } = model;

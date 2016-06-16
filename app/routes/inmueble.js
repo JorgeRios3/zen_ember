@@ -4,8 +4,8 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    // this._super(...arguments);
     var controller = this.controllerFor(this.routeName);
     controller.setProperties({
       disponible:false,

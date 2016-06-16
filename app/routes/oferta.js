@@ -15,8 +15,8 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
   cliente: '',
   noModel: false,
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2(transition) {
+    //this._super(...arguments);
     set(this, 'cliente', '');
     set(this, 'noModel', false);
     let controller = this.controllerFor(this.routeName);

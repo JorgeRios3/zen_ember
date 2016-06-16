@@ -11,8 +11,8 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, FormatterMixin,
 {
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    // this._super(...arguments);
     let c = this.controllerFor(this.routeName);
     c.setProperties({
       inmuebles: null,

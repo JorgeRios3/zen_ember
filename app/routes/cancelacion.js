@@ -15,8 +15,8 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
   	set(ctrl, 'etapas', model.etapas);
   },
 
-  beforeModel(transition){
-    this._super(...arguments);
+  beforeModel2(){
+    //this._super(...arguments);
     var controller = this.controllerFor(this.routeName);
 
     controller.setProperties({

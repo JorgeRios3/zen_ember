@@ -14,7 +14,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
     });
 
   },*/
-  model(){
-  	return this.store.findAll('carteravencidaarcadia');
+  model() {
+    return this.store.findAll('carteravencidaarcadia');
   }
 });

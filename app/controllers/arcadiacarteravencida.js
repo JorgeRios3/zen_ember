@@ -9,9 +9,9 @@ const {
 export default Ember.Controller.extend({
   comodin: service(),
   actions: {
-  	buscarCuenta(cuenta) {
-  	  set(this, 'comodin.cuenta', cuenta);
-  	  this.transitionToRoute('estadocuenta');
-  	}
+    buscarCuenta(cuenta) {
+      set(this, 'comodin.cuenta', cuenta);
+      this.transitionToRoute('estadocuenta');
+    }
   }
 });

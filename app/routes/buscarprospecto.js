@@ -10,8 +10,8 @@ const {
 } = Ember;
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    //this._super(...arguments);
     info('en beforeModel de buscarprospecto');
     let controller = this.controllerFor(this.routeName);
     controller.setProperties({

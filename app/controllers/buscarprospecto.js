@@ -180,7 +180,7 @@ export default Ember.Controller.extend({
         set(this, 'nombreLen', true);
       } else {
         set(this, 'nombreLen', false);
-      } 
+      }
     } else {
       set(this, 'nombreLen', true);
     }
@@ -193,9 +193,9 @@ export default Ember.Controller.extend({
       prospecto.save().then(()=> {
         info('ya se grabo bien');
         this.transitionToRoute('index');
-      },(error)=> {
+      }, (error)=> {
         info('no se grabo se fue por error');
-      })
+      });
       info('entro en generarAfialiacion');
     },
     copiarAfiliacion(afiliacion, prospecto) {

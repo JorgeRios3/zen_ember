@@ -10,8 +10,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , 
 {
   
-  beforeModel(transition){
-    this._super(...arguments);
+  beforeModel2(transition){
+    // this._super(...arguments);
     info("paso por ofertaasignacion before");
     var controller = this.controllerFor(this.routeName);
     var url = get(this,"router.url");

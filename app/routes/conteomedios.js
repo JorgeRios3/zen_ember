@@ -10,10 +10,6 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
-  beforeModel(transition) {
-    this._super(...arguments);
-   
-  },
   setupController(ctrl,model) {
 
     let lista = Ember.A(); 

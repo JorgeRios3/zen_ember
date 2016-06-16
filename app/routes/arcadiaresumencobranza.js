@@ -25,8 +25,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, Forma
     set(controller, 'titleCols', ['Rubro', 'Enganche', 'OE', 'Porcentaje Enganche', 'Pagos', 'OP', 'Porcentaje Pagos', 'Total']);
     set(controller, 'alignments', ['right', 'right', 'right', 'right', 'right', 'right', 'right', 'right', 'right', 'right']);
     promesaResumen.forEach((item)=> {
-      if (parseInt(get(item, 'rubro'))<2000) {
-          let { enganche, ocurrenciasenganche, ocurrenciaspagos, pagos, porcentajeenganche, porcentajepagos, rubro, total, suma } = item.getProperties('enganche ocurrenciasenganche ocurrenciaspagos pagos porcentajeenganche porcentajepagos rubro total suma'.w());
+      if (parseInt(get(item, 'rubro')) < 2000) {
+        let { enganche, ocurrenciasenganche, ocurrenciaspagos, pagos, porcentajeenganche, porcentajepagos, rubro, total, suma } = item.getProperties('enganche ocurrenciasenganche ocurrenciaspagos pagos porcentajeenganche porcentajepagos rubro total suma'.w());
         lista.pushObject({ rubro, enganche, ocurrenciasenganche, porcentajeenganche, pagos, ocurrenciaspagos, porcentajepagos, suma });
 
       } else {

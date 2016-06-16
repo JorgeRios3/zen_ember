@@ -7,8 +7,8 @@ const {
 } = Ember;
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin, {
-  beforeModel(transition) {
-    this._super(...arguments);
+  beforeModel2() {
+    // this._super(...arguments);
   },
   setupController(ctrl, model) {
     let listaUsuarios = Ember.A();

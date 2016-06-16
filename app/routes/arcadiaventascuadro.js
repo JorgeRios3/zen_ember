@@ -13,11 +13,8 @@ const {
 
 export default Ember.Route.extend(RouteAuthMixin, AuthenticatedRouteMixin,
 {
-  beforeModel() {
-    this._super(...arguments);
-  },
   setupController(controller, model) {
-  	controller.notifyPropertyChange('enganche');
+    controller.notifyPropertyChange('enganche');
   },
   actions: {
     error(error) {

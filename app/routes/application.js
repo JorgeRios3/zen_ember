@@ -11,11 +11,8 @@ const {
 } = Ember;
 export default Ember.Route.extend(ApplicationRouteMixin,
 {
-  //carrusel: service(),
   setupController(controller, model) {
     let features = get(this, 'features');
-    //info("features vale",features.carousel);
-    //info('valor', features.value);
     this._super(...arguments);
     this.startWatchingTime(controller);
     // info(new Error().stack);
@@ -49,7 +46,6 @@ export default Ember.Route.extend(ApplicationRouteMixin,
       that.invalidateSession(controller);
     }
     Ember.run.later(()=> {
-      info('ciclo');
       that.startWatchingTime(controller);
     }, 20000);
   },

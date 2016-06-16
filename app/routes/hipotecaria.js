@@ -10,8 +10,8 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
   RouteAuthMixin, {
-  beforeModel(transistion) {
-  	this._super(...arguments);
+  beforeModel2() {
+  	// this._super(...arguments);
   	let c = this.controllerFor(this.routeName);
     c.setProperties({
       datos: null,
