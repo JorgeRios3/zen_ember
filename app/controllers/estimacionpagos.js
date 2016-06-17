@@ -9,7 +9,7 @@ const {
   observer,
   setProperties
   } = Ember;
-  let cuantosPrevio = null;
+let cuantosPrevio = null;
 export default Ember.Controller.extend({
   fechaIncial: '',
   fechaFinal: '',
@@ -22,7 +22,7 @@ export default Ember.Controller.extend({
   contrato: '',
   alignments: ['left','right','left','right','right','left','left','left','right'],
   titleCols: ['Nombre Obra', 'Proveedor', 'Estatus', 'Contrato Obra', 'Id Pago Factura Estimacion', 'Razon Social', 'Cheque', 'Fecha Programada', 'Importe'],
-  ordenLista: [{id: '', nombre: 'Ascendente'}, { id:'1', nombre:'Desencente'}],
+  ordenLista: [{ id: '', nombre: 'Ascendente' }, { id: '1', nombre: 'Desencente' }],
 
   resultPage: '',
   resultPages: '',
@@ -56,8 +56,8 @@ export default Ember.Controller.extend({
   }),
 
   observaCuantos: observer('cuantos', function() {
-  	let { store } = this;
-  	let lista = Ember.A();
+    let { store } = this;
+    let lista = Ember.A();
     let objeto = {};
     let cuantos = get(this, 'cuantos');
     if (isEmpty(cuantos)) {
@@ -136,7 +136,7 @@ export default Ember.Controller.extend({
       let cuantos = get(data, 'meta.cuantos');
       setProperties(this, { cuantos });
       if (cuantosPrevio !== cuantos) {
-      	info('entro en notify');
+        info('entro en notify');
         this.notifyPropertyChange('cuantos');
       }
     });

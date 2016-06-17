@@ -24,7 +24,7 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
   ci: controller('index'),
   totalVencido: 0,
-  etapaBreve:'',
+  etapaBreve: '',
   ofertaCliente: '',
   loteBreve: '',
   documentosVencidos: 0,
@@ -134,7 +134,7 @@ export default Ember.Controller.extend(FormatterMixin,
         objeto.cuenta = get(this, 'cuentaBuscar');
         info('valor de company', company);
         store.unloadAll('cuentabreve');
-        store.query('cuentabreve', objeto )
+        store.query('cuentabreve', objeto)
         .then((data)=> {
           data.forEach((item)=> {
             if (get(item, 'id') && get(item, 'nombre')) {
@@ -142,8 +142,8 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'showName', get(item, 'nombre'));
               set(this, 'showCuenta', get(item, 'id'));
               set(this, 'etapaBreve', get(item, 'etapa'));
-              set(this, 'loteBreve', get(item, 'lote'))
-              if ( isArcadia) {
+              set(this, 'loteBreve', get(item, 'lote'));
+              if (isArcadia) {
                 info('en arcadia lote', get(item, 'lote'));
                 info('en arcadia lote', get(item, 'manzana'));
                 set(this, 'lote', get(item, 'lote'));
@@ -213,7 +213,7 @@ export default Ember.Controller.extend(FormatterMixin,
     // info(`valor de cuenta en observer selectednombre ${cuenta}`);
     info('revisando catalogo antes de pasar ', get(this, 'catalogoNombres'));
     let cual = get(this, 'catalogoNombres').findBy('cuenta', get(this, 'selectedNombre'));
-    info('cual',cual);
+    info('cual', cual);
     info(get(cual, 'oferta'));
     info(`valor de cual ${cual}`);
     let p = this.store.query('documentoscliente', { cuenta: get(this, 'selectedNombre'), company });
@@ -235,15 +235,14 @@ export default Ember.Controller.extend(FormatterMixin,
         cargos,
         abonos
       });
-      
     });
     try {
       set(this, 'docsCliente', p);
       set(this, 'cuenta', get(cual, 'cuenta'));
       set(this, 'cuentaBuscar', get(cual, 'cuenta'));
       if (!get(this, 'isArcadia')) {
-        info( 'valor de manzana en iclar', get(cual, 'manzana'));
-        info( 'valor de inmueble', get(cual, 'inmueble'));
+        info('valor de manzana en iclar', get(cual, 'manzana'));
+        info('valor de inmueble', get(cual, 'inmueble'));
         set(this, 'manzana', get(cual, 'manzana'));
         set(this, 'lote', get(cual, 'inmueble'));
       }
@@ -318,20 +317,17 @@ export default Ember.Controller.extend(FormatterMixin,
       let hayReciboElegido = false;
       let docs = get(this, 'recibosmovimientosLista');
       let cual = docs.findBy('documento', documento);
-      
       if (get(cual, 'elegido') === false) {
         set(cual, 'elegido', true);
       } else {
         set(cual, 'elegido', false);
       }
       docs.forEach((item)=> {
-        if(get(item, 'elegido') === true) {
-          hayReciboElegido = true
+        if (get(item, 'elegido') === true) {
+          hayReciboElegido = true;
         }
-        set(this, 'hayReciboElegido', hayReciboElegido)
-      })
-    
-      
+        set(this, 'hayReciboElegido', hayReciboElegido);
+      });
     },
     procesaRecibo(recibo, id) {
       let { store } = this;

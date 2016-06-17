@@ -17,7 +17,7 @@ export default Ember.Mixin.create({
         info('ruta aceptada');
         set(this, 'features', data.features);
         try {
-          if (ruta ==="oferta" || ruta ==="cliente") {
+          if (ruta === 'oferta' || ruta === 'cliente') {
             info('con transition en routeauth');
             this.beforeModel2(transition);
           } else {
@@ -25,7 +25,7 @@ export default Ember.Mixin.create({
             info('termino model2');
           }
         }
-        catch(e){
+        catch(e) {
           info('no hay beforeModel2');
         }
       } else {
