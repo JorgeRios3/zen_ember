@@ -63,13 +63,13 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
   */
 
   habilitaBotones: computed('idProspecto', {
-  	get() {
-  		if( isEmpty( get(this, 'idProspecto'))) {
-  			return true;
-  		} else {
-  			return false;
-  		}
-  	}
+    get() {
+      if (isEmpty(get(this, 'idProspecto'))) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }),
   nombrevendedor: computed('gtevdor', {
     get() {
@@ -97,56 +97,55 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
       set(this, 'cuantosvendedores', 0);
       return c.filter(function(item) {
         let g = get(item, 'gerente');
-        if ( parseInt(idvendedor) === parseInt(get(item, 'id'))) {
-            return;
+        if (parseInt(idvendedor) === parseInt(get(item, 'id'))) {
+          return;
         } else {
           if (g === gte) {
             that.incrementProperty('cuantosvendedores');
             return true;
           } else {
             return false;
-          } 
+          }
         }
       });
     }
   }),
- 
   actions: {
-  	buscaProspecto() {
-  	  let prospecto = get(this, 'NoProspecto');
-  	  info(prospecto);
-  	  this.store.query('prospectosoferta', { prospecto, revinculacion: 1 }).then((data)=> {
-  	  	info('tamano de data', get(data, 'length'));
-  	  	if( get(data, 'length') === 0) {
-  	  	  this.setProperties({
-  	        nombreVendedor: '',
-  	        nombreGerente: '',
-  	        nombreProspecto: '',
-  	        afiliacion: '',
-  	        curp: '',
-  	        idProspecto: ''
-  	      });
-  	  	  set(this, 'noExiste', true);
-  	  	  Ember.run.later(()=> {
-  	  	    set(this, 'noExiste', false);
-  	  	  }, 4000);
-  	  	  return;
-  	  	} else {
-  	      data.forEach((item)=> {
-  	        this.setProperties({
-  	    	  nombreVendedor: get(item, 'nombrevendedor'),
-  	    	  nombreGerente: get(item, 'nombregerente'),
-  	    	  nombreProspecto: get(item, 'nombre'),
-  	    	  afiliacion: get(item, 'afiliacion'),
-  	    	  curp: get(item, 'curp'),
-  	    	  idProspecto: get(item, 'id'),
-  	    	  idVendedor: get(item, 'vendedor')
-  	    	});
-  	      });
-  	    }
-  	  }, (error)=> {
-  	  	info('hubo error', error);
-  	  });
+    buscaProspecto() {
+      let prospecto = get(this, 'NoProspecto');
+      info(prospecto);
+      this.store.query('prospectosoferta', { prospecto, revinculacion: 1 }).then((data)=> {
+        info('tamano de data', get(data, 'length'));
+        if (get(data, 'length') === 0) {
+          this.setProperties({
+            nombreVendedor: '',
+            nombreGerente: '',
+            nombreProspecto: '',
+            afiliacion: '',
+            curp: '',
+            idProspecto: ''
+          });
+          set(this, 'noExiste', true);
+          Ember.run.later(()=> {
+            set(this, 'noExiste', false);
+          }, 4000);
+          return;
+        } else {
+          data.forEach((item)=> {
+            this.setProperties({
+              nombreVendedor: get(item, 'nombrevendedor'),
+              nombreGerente: get(item, 'nombregerente'),
+              nombreProspecto: get(item, 'nombre'),
+              afiliacion: get(item, 'afiliacion'),
+              curp: get(item, 'curp'),
+              idProspecto: get(item, 'id'),
+              idVendedor: get(item, 'vendedor')
+            });
+          });
+        }
+      }, (error)=> {
+        info('hubo error', error);
+      });
     },
     activaRevincular() {
       this.toggleProperty('revincular');
@@ -157,7 +156,7 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
       this.store.query('transicionprospecto', { prospecto })
       .then((data)=> {
         data.forEach((item)=> {
-          let { gerente, vendedor, notas, transicion, fecha } = item.getProperties( ['gerente', 'vendedor', 'notas', 'transicion', 'fecha']);
+          let { gerente, vendedor, notas, transicion, fecha } = item.getProperties(['gerente', 'vendedor', 'notas', 'transicion', 'fecha']);
           datos.pushObject({
             gerente, vendedor, notas, transicion, fecha
           });
@@ -170,35 +169,34 @@ export default Ember.Controller.extend(ModalDispatchMixin, EmberValidations, {
     },
     grabar() {
       info('grabar');
-      let gerente = get(this, 'selectedGerente')
+      let gerente = get(this, 'selectedGerente');
       let vendedor = get(this, 'selectedVendedor');
       let prospecto = get(this, 'idProspecto');
       info('valor de vendedor', vendedor);
       let record = this.store.createRecord('revinculacionprospecto');
-      record.setProperties({
-      	gerente: gerente,
-      	vendedor: vendedor,
-      	prospecto: prospecto
+      record.setProperties({ gerente,
+        vendedor,
+        prospecto
       });
       record.save().then(()=> {
-      	info('se grabo');
-      	this.setProperties({
+        info('se grabo');
+        this.setProperties({
           nombreVendedor: '',
-  	      nombreGerente: '',
-  	      nombreProspecto: '',
-  	      afiliacion: '',
-  	      curp: '',
-  	      idProspecto: '',
-  	      NoProspecto: '',
-  	      datos: null
-  	    });
-      	set(this, 'revincular', false);
-      	set(this, 'saveOk', true);
-      	Ember.run.later(()=> {
-      	  set(this, 'saveOk', false);
-      	}, 4000);
-      },(error)=> {
-      	info('hubo error');
+          nombreGerente: '',
+          nombreProspecto: '',
+          afiliacion: '',
+          curp: '',
+          idProspecto: '',
+          NoProspecto: '',
+          datos: null
+        });
+        set(this, 'revincular', false);
+        set(this, 'saveOk', true);
+        Ember.run.later(()=> {
+          set(this, 'saveOk', false);
+        }, 4000);
+      }, (error)=> {
+        info('hubo error');
       });
     }
   }

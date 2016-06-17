@@ -57,7 +57,7 @@ export default Ember.Controller.extend({
       mySet.forEach((item)=> {
         let valorDespliegue = item;
         if (valorDespliegue === 'todos') {
-          valorDespliegue = 'Todas las categorias'
+          valorDespliegue = 'Todas las categorias';
         }
         info('valor de item en el mySet', item);
         menusCategorias.pushObject({ ruta: valorDespliegue, id: item });
@@ -72,7 +72,7 @@ export default Ember.Controller.extend({
       let lista = [];
       lista.addObject({ id: 'todos', nombre: 'Todas las opciones' });
       listaMenu.forEach((item)=> {
-        lista.addObject({ id: get(item, 'ruta'), nombre: get(item, 'ruta')});
+        lista.addObject({ id: get(item, 'ruta'), nombre: get(item, 'ruta') });
       });
       return lista;
     }
@@ -129,8 +129,8 @@ export default Ember.Controller.extend({
       }
     }
   }),*/
-  menuVisible: computed('selectedMenu', 'selectedCategoria', { 
-    get: function(){
+  menuVisible: computed('selectedMenu', 'selectedCategoria', {
+    get() {
       let that = this;
       let menuItem = this.getWithDefault('selectedMenu', 'todos');
       let categoria = this.getWithDefault('selectedCategoria', 'todos');
@@ -140,8 +140,8 @@ export default Ember.Controller.extend({
         if (menuItem === ruta) {
           return true;
         } else {
-          if(categoria === 'todos') {
-            return  menuItem === 'todos' ? true : false;
+          if (categoria === 'todos') {
+            return menuItem === 'todos' ? true : false;
           } else {
             info('categoria != todos');
             let flag = false;
@@ -153,7 +153,7 @@ export default Ember.Controller.extend({
             return flag;
           }
         }
-      }); 
+      });
     }
   }),
   actions: {
@@ -163,7 +163,7 @@ export default Ember.Controller.extend({
       this.get('carrusel').hazCarrusel();
     },
     stopCarrusel() {
-      let g= get(this, 'carrusel');
+      let g = get(this, 'carrusel');
       set(g, 'activateCarousel', false);
     },
     getOut() {

@@ -48,9 +48,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     });
   }),
   actions: {
-  	enteradoInspeccionarErrores(){
-  	  this.toggleProperty('muestroErrores');
-  	},
+    enteradoInspeccionarErrores() {
+      this.toggleProperty('muestroErrores');
+    },
     desasignar() {
       let that = this;
       let record = this.store.createRecord('desasignacion', { oferta: get(this, 'oferta'), cuenta: get(this, 'cuenta') });
@@ -106,7 +106,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         if (typeof que === 'string' || que instanceof String) {
           let error = get(this, `errors.${que}`);
           if (typeof error[0] === 'string' || error[0] instanceof String) {
-            let errmsg = error[0];
+            let [errmsg] = error;
             if (errmsg === 'is not a number') {
               errmsg = 'no es numérico';
             }

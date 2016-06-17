@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import ExcelRequestMixin from '../mixins/excelrequest';
 
-
 const {
   set,
   get,
@@ -10,7 +9,7 @@ const {
   isEmpty,
   Logger: { info }
 } = Ember;
-export default Ember.Controller.extend(ExcelRequestMixin,{
+export default Ember.Controller.extend(ExcelRequestMixin, {
   selectedEtapa: '',
   fecha: '',
   nullFecha: '',
@@ -42,11 +41,11 @@ export default Ember.Controller.extend(ExcelRequestMixin,{
         data.forEach((item)=> {
           let { cliente, nombre, manzana, lote, numerocredito, montocredito, montosubsidio, codigohipotecaria, domiciliohipotecaria, oferta, documentos, imss } = item.getProperties('cliente nombre manzana lote numerocredito montocredito montosubsidio codigohipotecaria domiciliohipotecaria oferta documentos imss'.w());
           lista.pushObject({ cliente, nombre, manzana, lote, numerocredito, montocredito, montosubsidio, codigohipotecaria, domiciliohipotecaria, oferta, documentos, imss });
-      	});
-      	if (!isEmpty(lista)) {
-      	  info('mando a pedir excelrequest');
-      	  let fileName = get(data, 'meta.filename');
-      	  this.requestExcel(fileName, email);
+      });
+        if (!isEmpty(lista)) {
+          info('mando a pedir excelrequest');
+          let fileName = get(data, 'meta.filename');
+          this.requestExcel(fileName, email);
         }
       });
       set(this, 'datos', lista);

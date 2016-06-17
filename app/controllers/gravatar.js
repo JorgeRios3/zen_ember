@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
       let that = this;
       gv.save().then(()=> {
         that.transitionToRoute('index');
-      },(error)=> {
+      }, (error)=> {
         that.transitionToRoute('index');
       });
     }

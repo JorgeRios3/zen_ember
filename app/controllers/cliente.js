@@ -449,7 +449,7 @@ export default Ember.Controller.extend(EmberValidations, {
         if (typeof que === 'string' || que instanceof String) {
           let error = get(_this, `errors.${que}`);
           if (typeof error[0] === 'string' || error[0] instanceof String) {
-            let errmsg = error[0];
+            let [errmsg] = error;
             if (errmsg === 'is not a number') {
               errmsg = 'no es numérico';
             }

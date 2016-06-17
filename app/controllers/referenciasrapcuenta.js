@@ -21,7 +21,7 @@ export default Ember.Controller.extend({
   init() {
     this._super(...arguments);
     set(this, 'clientesLista', Ember.ArrayProxy.create({ content: [] }));
-    },
+  },
   observaReferenciaRap: observer('referenciaRap', function() {
     let referenciaRap = get(this, 'referenciaRap');
     info('observando', referenciaRap);
@@ -33,7 +33,7 @@ export default Ember.Controller.extend({
         this.setProperties({
           nombre, cuenta, referencia, cliente, etapa, manzana, lote, saldo
         });
-        lista.insertAt(0,{
+        lista.insertAt(0, {
           nombre, cuenta, referencia, cliente, etapa, manzana, lote, saldo
         });
         set(this, 'clientesLista', lista);
