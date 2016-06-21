@@ -38,7 +38,7 @@ let Impresora = Ember.Object.extend({
   }.property('copies', 'online')
 });
 
-var NumeroExterior = Ember.Object.extend({
+let NumeroExterior = Ember.Object.extend({
   numero: ''
 });
 
@@ -145,7 +145,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   socketService: Ember.inject.service('websockets'),
   comodin: Ember.inject.service('comodin'),
   socket: computed('socketService', 'socketU', {
-    get: function() {
+    get() {
       return get(this, 'socketService').socketFor(config.WSOCKETS_URL);
     }
   }),
@@ -163,136 +163,130 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     socket.on('message', this.messageHandler, this);
     socket.on('close', this.closeHandler, this);
   },
-  openHandler: function(event) {
+  openHandler(event) {
     let token = get(this, 'session.session.content.authenticated.access_token');
     // var token = get(this,'session.content').secure.access_token;
-    get(this,'socket').send( { topic: 'token', data: { token: token }}, true);
+    get(this, 'socket').send({ topic: 'token', data: { token } }, true);
     if (!get(this, 'reservados')) {
       this.requestList();
     }
   },
-	requestList: function() {
-		get(this, 'socket').send( { topic : 'list_oferta_home', data: '' }, true);
-		get(this, 'socket').send( { topic : 'list_prospecto', data: '' }, true);
-		get(this, 'socket').send( { topic : 'list_feature', data: '' }, true);
-	},
-	messageHandler: function(event) {
-		let payload = JSON.parse(event.data);
-		let ir, cual, indice;
-		let that = this;
-		if (payload.topic === 'lock_oferta_home') {
-			get(this, 'inmueblesReservados.content').pushObject(InmuebleReservado.create({
-				inmueble: payload.data.inmueble,
-				timestamp: payload.data.timestamp
-				
-			}));
-		}
-		
-		if (payload.topic === 'free_oferta_home') {
-				ir = get(this, 'inmueblesReservados');
-				cual = ir.findBy('timestamp', payload.data.timestamp );
-				indice = ir.indexOf( cual );
-				ir.removeAt(indice);
-		}
-
-		if (payload.topic === 'list_oferta_home') {
-			//var that = this;
-			payload.data.forEach( function( que ) {
-				get(that, 'inmueblesReservados.content').pushObject(InmuebleReservado.create({
-				inmueble: que.inmueble,
-				timestamp: que.timestamp
-				
-				}));
-			});
-		}
-		if (payload.topic === 'lock_prospecto') {
-			
-			get(this, 'prospectosReservados.content').pushObject(ProspectoReservado.create({
-				prospecto: payload.data.prospecto,
-				timestamp: payload.data.timestamp
-				
-			}));
-		}
-		if (payload.topic === 'free_prospecto') {
-				ir = get(this, 'prospectosReservados');
-				cual = ir.findBy('timestamp', payload.data.timestamp );
-				indice = ir.indexOf( cual );
-				ir.removeAt(indice);		
-		}
-		if (payload.topic === 'list_prospecto') {
-			payload.data.forEach( function( que ) {
-				get(that, 'prospectosReservados.content').pushObject(ProspectoReservado.create({
-				prospecto: que.prospecto,
-				timestamp: que.timestamp
-				
-				}));
-			});
-		}
-		if (payload.topic === 'list_feature') {
-			if (payload.data.feature === 'oferta.save') {
-				set(this, 'featureControl', true);
-			}
-
-		}
-		if (payload.topic === 'lock_feature') {
-			if (payload.data.feature === 'oferta.save') {
-				set(this, 'featureControl', true);
-			}
-
-		}
-		if (payload.topic === 'free_feature') {
-			if (payload.data.feature === 'oferta.save') {
-				set(this, 'featureControl', false);
-			}
-
-		}
-
-	},
-	closeHandler: function(event){
-		get(this, 'session').invalidate();
-	},
-	reservados: Ember.computed.alias('inmueblesReservados.content.length'),
-	reservadosProspectos: Ember.computed.alias('prospectosReservados.content.length'),
-	tipoCuentaEsInfonavit: function(){
-		return Ember.isEqual(get(this, 'tipoCuenta'), 'infonavit');
-	}.property('tipoCuenta'),
-	tipoCuentaEsHipotecaria: function(){
-		return Ember.isEqual(get(this, 'tipoCuenta'), 'hipotecaria');
-	}.property('tipoCuenta'),
-	tipoCuentaEsContado: function(){
-		return Ember.isEqual(get(this, 'tipoCuenta'), 'contado');
-	}.property('tipoCuenta'),
-	estaEnInmueblesReservados: function(){
-		var inmueble = get(this, 'inmueble');
-		if (Ember.isEmpty(inmueble)){
-			return false;
-		}
-		inmueble = parseInt(inmueble);
-		var indice = -1;
-		var ir = get(this, 'inmueblesReservados');
-		var cual = ir.findBy('inmueble', inmueble );
-		indice = ir.indexOf( cual );
-		return indice !== -1;
-	}.property('inmueble'),
-	estaEnProspectosReservados: function(){
-		var prospecto = get(this, 'prospecto');
-		if (Ember.isEmpty(prospecto)){
-			return false;
-		}
-		prospecto = parseInt(prospecto);
-		var indice = -1;
-		var ir = get(this, 'prospectosReservados');
-		var cual = ir.findBy('prospecto', prospecto );
-		indice = ir.indexOf( cual );
-		return indice !== -1;
-	}.property('prospecto'),
-	observaFlagLista: function(){
-		if ( get(this, 'flagLista')){
-			this.requestList();
-			this.toggleProperty('flagLista');
-		}
-
-	}.observes('flagLista'),
+  requestList() {
+    get(this, 'socket').send({ topic: 'list_oferta_home', data: '' }, true);
+    get(this, 'socket').send({ topic: 'list_prospecto', data: '' }, true);
+    get(this, 'socket').send({ topic: 'list_feature', data: '' }, true);
+  },
+  messageHandler(event) {
+    let payload = JSON.parse(event.data);
+    let ir, cual, indice;
+    let that = this;
+    if (payload.topic === 'lock_oferta_home') {
+      get(this, 'inmueblesReservados.content').pushObject(InmuebleReservado.create({
+        inmueble: payload.data.inmueble,
+        timestamp: payload.data.timestamp
+      }));
+    }
+    if (payload.topic === 'free_oferta_home') {
+      ir = get(this, 'inmueblesReservados');
+      cual = ir.findBy('timestamp', payload.data.timestamp);
+      indice = ir.indexOf(cual);
+      ir.removeAt(indice);
+    }
+    if (payload.topic === 'list_oferta_home') {
+      // var that = this;
+      payload.data.forEach((que)=> {
+        get(that, 'inmueblesReservados.content').pushObject(InmuebleReservado.create({
+          inmueble: que.inmueble,
+          timestamp: que.timestamp
+        }));
+      });
+    }
+    if (payload.topic === 'lock_prospecto') {
+      get(this, 'prospectosReservados.content').pushObject(ProspectoReservado.create({
+        prospecto: payload.data.prospecto,
+        timestamp: payload.data.timestamp
+      }));
+    }
+    if (payload.topic === 'free_prospecto') {
+      ir = get(this, 'prospectosReservados');
+      cual = ir.findBy('timestamp', payload.data.timestamp);
+      indice = ir.indexOf(cual);
+      ir.removeAt(indice);
+    }
+    if (payload.topic === 'list_prospecto') {
+      payload.data.forEach((que)=> {
+        get(that, 'prospectosReservados.content').pushObject(ProspectoReservado.create({
+          prospecto: que.prospecto,
+          timestamp: que.timestamp
+        }));
+      });
+    }
+    if (payload.topic === 'list_feature') {
+      if (payload.data.feature === 'oferta.save') {
+        set(this, 'featureControl', true);
+      }
+    }
+    if (payload.topic === 'lock_feature') {
+      if (payload.data.feature === 'oferta.save') {
+        set(this, 'featureControl', true);
+      }
+    }
+    if (payload.topic === 'free_feature') {
+      if (payload.data.feature === 'oferta.save') {
+        set(this, 'featureControl', false);
+      }
+    }
+  },
+  closeHandler(event) {
+    get(this, 'session').invalidate();
+  },
+  reservados: Ember.computed.alias('inmueblesReservados.content.length'),
+  reservadosProspectos: Ember.computed.alias('prospectosReservados.content.length'),
+  tipoCuentaEsInfonavit: function() {
+    return Ember.isEqual(get(this, 'tipoCuenta'), 'infonavit');
+  }.property('tipoCuenta'),
+  tipoCuentaEsHipotecaria: function() {
+    return Ember.isEqual(get(this, 'tipoCuenta'), 'hipotecaria');
+  }.property('tipoCuenta'),
+  /* hayPagPrevias: computed('resultPage', {
+    get() { */
+  tipoCuentaEsContado: computed('tipoCuenta', {
+    get() {
+      return Ember.isEqual(get(this, 'tipoCuenta'), 'contado');
+    }
+  }),
+  estaEnInmueblesReservados: computed('inmueble', {
+    get() {
+      let inmueble = get(this, 'inmueble');
+      if (Ember.isEmpty(inmueble)) {
+        return false;
+      }
+      inmueble = parseInt(inmueble);
+      let indice = -1;
+      let ir = get(this, 'inmueblesReservados');
+      let cual = ir.findBy('inmueble', inmueble);
+      indice = ir.indexOf(cual);
+      return indice !== -1;
+    }
+  }),
+  estaEnProspectosReservados: function() {
+    let prospecto = get(this, 'prospecto');
+    if (Ember.isEmpty(prospecto)) {
+      return false;
+    }
+    prospecto = parseInt(prospecto);
+    let indice = -1;
+    let ir = get(this, 'prospectosReservados');
+    let cual = ir.findBy('prospecto', prospecto );
+    indice = ir.indexOf(cual);
+    return indice !== -1;
+  }.property('prospecto'),
+  observaFlagLista: function() {
+    if (get(this, 'flagLista')) {
+      this.requestList();
+      this.toggleProperty('flagLista');
+    }
+  }.observes('flagLista'),
 	observandoTipoCuenta : function(){
 		if ( get(this, 'tipoCuentaEsContado') || this.get('tipoCuentaEsHipotecaria')){
 			set(this, 'afiliacionOk', true);
