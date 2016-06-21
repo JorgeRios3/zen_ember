@@ -287,63 +287,57 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       this.toggleProperty('flagLista');
     }
   }.observes('flagLista'),
-	observandoTipoCuenta : function(){
-		if ( get(this, 'tipoCuentaEsContado') || this.get('tipoCuentaEsHipotecaria')){
-			set(this, 'afiliacionOk', true);
-		} else {
-			set(this, 'afiliacion', '');
-			set(this, 'afiliacionOk', false);
-		}
-	}.observes('tipoCuenta'),
+  observandoTipoCuenta : function() {
+    if (get(this, 'tipoCuentaEsContado') || this.get('tipoCuentaEsHipotecaria')) {
+      set(this, 'afiliacionOk', true);
+    } else {
+      set(this, 'afiliacion', '');
+      set(this, 'afiliacionOk', false);
+    }
+  }.observes('tipoCuenta'),
+  observaSelectedInmueble: function() {
+    let that = this;
+    let antes = get(this, 'selectedInmueblePrevio');
+    let despues = get(this, 'selectedInmueble');
+    set(this, 'inmueble', despues );
+    if (Ember.isEmpty(antes) && Ember.isEmpty(despues)) {
 
-	observaSelectedInmueble: function(){
-		var that = this;
-		var antes = get(this, 'selectedInmueblePrevio');
-		var despues = get(this, 'selectedInmueble');
-		set(this, 'inmueble', despues );
-		if (Ember.isEmpty(antes) && Ember.isEmpty(despues)){
+    } else {
+      if ( Ember.isEmpty(despues)) {
+        set(this, 'domicilio', '');
+        this.send('freeInmueble', antes);
+      } else {
+        this.send('submitInmueble');
+        let p = this.store.find('inmuebleindividual', despues);
+        p.then((dato)=> {
+          set(that, 'domicilio', dato.get('domicilio'));
+          set(that, 'candadoPrecio', dato.get('candadoPrecio'));
+          set(that, 'precioCatalogo', dato.get('precioCatalogo'));
+          set(that,'selectedPrecio',0);
+          let p1 = that.store.find('catalogoprecio', despues);
+          p1.then((dato)=> {
+            let idPrecioCatalogo=get(dato, 'idPrecioCatalogo');
+            if (idPrecioCatalogo !==0) {
+              info('paso la prueba', get(dato, 'idPrecioCatalogo'));
+            } else {
+              info('se fue por el else no hay idPrecioCatalogo');
+              return;
+            }
+          });
+          let p2 = that.store.query('caracteristicasinmueble', { inmueble: despues, precio: get(that,'selectedPrecio'), precioCatalogo: get(that, 'precioCatalogo'), etapa: get(that, 'selectedEtapa') });
+          p2.then((data)=> {
+            if (get(data,'length') > 0) {
+              set(that, 'carateristicasLista', data);
+            } else {
+              set(that, 'carateristicasLista', null);
+            }
+          }, (error)=> {
 
-		} else {
-			if ( Ember.isEmpty(despues)){
-				set(this, 'domicilio', '');
-				this.send('freeInmueble', antes);
-			} else {
-			
-				this.send('submitInmueble');
-				var p = this.store.find('inmuebleindividual', despues);
-				p.then(function(dato){
-			 		set(that, 'domicilio', dato.get('domicilio'));
-			 		set(that, 'candadoPrecio', dato.get('candadoPrecio'));
-			 		set(that, 'precioCatalogo', dato.get('precioCatalogo'));
-			 		set(that,'selectedPrecio',0);
-			 		var p1 = that.store.find('catalogoprecio', despues);
-					p1.then(function(dato){
-						var idPrecioCatalogo=get(dato, 'idPrecioCatalogo');
-						if(idPrecioCatalogo !==0){
-							info('paso la prueba', get(dato, 'idPrecioCatalogo'));
-						}else{
-							info('se fue por el else no hay idPrecioCatalogo');
-							return;
-						}
-					});
-
-			 		var p2 = that.store.query('caracteristicasinmueble', {inmueble: despues, precio: get(that,'selectedPrecio'), precioCatalogo: get(that, 'precioCatalogo'), etapa: get(that, 'selectedEtapa')});
-					p2.then((data)=>{
-						if(get(data,'length')>0){
-							set(that, 'carateristicasLista', data);
-						} else{
-							set(that, 'carateristicasLista', null);
-
-						}
-					},(error)=>{
-
-					});					 		
-				});
-			}
-		}
-		
-	}.observes('selectedInmueble'),
-
+          });
+        });
+      }
+    }
+  }.observes('selectedInmueble'),
 	observaProspecto: function(){
 		var prospecto = get(this, 'prospecto');
 		if (!get(this, 'prospectoNoChecar')){
