@@ -504,9 +504,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     let precioid = get(this, 'selectedPrecio');
     // var v = get(this,'controllers.preciosinmuebles');
     let c = get(this, 'preciosinmuebles');
-    let item = c.findBy('id', precioid );
+    let item = c.findBy('id', precioid);
     if (!get(this, 'candadoPrecio')) {
-      set(this, 'precioRaw', get(item,'precioraw'));
+      set(this, 'precioRaw', get(item, 'precioraw'));
     }
   }.observes('selectedPrecio'),
   hayCamposObligatorios: function() {
@@ -633,21 +633,21 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     },
     grabar() {
       try {
-        info('valor de inmueble ' ,get(this, 'inmueble'));
-        info('valor de cliente ',get(this, 'clienteId'));
-        info('valor de oferta ',get(this, 'oferta'));
-        info('valor de precio ',get(this, 'precioCatalogo'));
-        info('valor de precalifiacion',get(this, 'precalificacion'));
+        info('valor de inmueble ', get(this, 'inmueble'));
+        info('valor de cliente ', get(this, 'clienteId'));
+        info('valor de oferta ', get(this, 'oferta'));
+        info('valor de precio ', get(this, 'precioCatalogo'));
+        info('valor de precalifiacion', get(this, 'precalificacion'));
         info('valor de avaluo ', get(this, 'avaluo'));
-        info('valor de subsidio',get(this, 'subsidio'));
-        info('valor de pagare ',get(this, 'pagare'));
-        info('valor de prerecibo ',get(this, 'prerecibo'));
-        info('valor de prereciboadicional ',get(this, 'prereciboadicional'));
+        info('valor de subsidio', get(this, 'subsidio'));
+        info('valor de pagare ', get(this, 'pagare'));
+        info('valor de prerecibo ', get(this, 'prerecibo'));
+        info('valor de prereciboadicional ', get(this, 'prereciboadicional'));
       } catch(e) {
         return;
       }
       set(this, 'processingGrabar', true);
-      get(this,'socket').send( { topic : 'lock_feature', data: { feature : 'oferta.save' }}, true);
+      get(this, 'socket').send({ topic: 'lock_feature', data: { feature: 'oferta.save' } }, true);
       let model = this.store.createRecord('asignacion', {
         inmueble: get(this, 'inmueble'),
         cliente: get(this, 'clienteId'),
@@ -670,7 +670,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
               impresora: imp.get('printerid'),
               online: imp.get('online'),
               copies: imp.get('copies'),
-              chosen: false 
+              chosen: false
             }));
           });
         });
@@ -690,7 +690,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           processingGrabar: false,
           ofertaGenerada: data.get('id')
         });
-        get(that, 'socket').send( { topic: 'free_feature', data: { feature: 'oferta.save' } }, true);
+        get(that, 'socket').send({ topic: 'free_feature', data: { feature: 'oferta.save' } }, true);
       }, (error)=> {
         set(that, 'errorAlGrabar', '');
         that.toggleProperty('huboErrorAlGrabar');
@@ -702,124 +702,106 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           log('error en obtencion de error', er.message);
         }
         set(that, 'errorAlGrabar', errorGenerado);
-        get(this,'socket').send( { topic : 'free_feature', data: { feature : 'oferta.save' }}, true);
+        get(this, 'socket').send({ topic: 'free_feature', data: { feature: 'oferta.save' } }, true);
       });
     },
-		
-		submitInmueble: function(){
-			var inmueble = parseInt(this.get('inmueble'));
-			get(this, 'socket').send( { topic : 'lock_oferta_home', data: { inmueble : inmueble }}, true);
-		},
-		freeInmueble: function(x){
-			var inmueble = parseInt(x);
-			get(this, 'socket').send( { topic : 'free_oferta_home', data: { inmueble : inmueble }}, true);
-		},
-		submitProspecto: function(){
-			var prospecto = parseInt(this.get('prospecto'));
-			get(this, 'socket').send({ topic : 'lock_prospecto', data: { prospecto : prospecto }}, true);
-		},
-		freeProspecto: function(x){
-			var prospecto = parseInt(x);
-			get(this, 'socket').send( { topic : 'free_prospecto', data: { prospecto : prospecto }}, true);
-		},
-		buscarClientesSinOfertas : function(){
-			var _this = this;
-			var cso = this.store.findAll('clientessinoferta');
-			cso.then(function(data){
-				set(_this, 'hayClientesSinOfertas', data.get('length') > 0 ? true : false ); 
-			});
-			set(this,'clientessinofertas',cso);
-		},
-		cerrarBusquedaCliente : function(){
-			this.toggleProperty('hayClientesSinOfertas');
-		},
-		savemessage: function( what ){
-			Ember.Logger.info('estoy en savemessage', what);
-		},
-		revisarErrores : function(){
-			var _this = this;
-			
-			get(this, 'erroresHabidos.content').clear();
-
-			Object.keys(this.get('errors')).forEach(function(que){
-				if ( typeof que === 'string' || que instanceof String ){
-					var error = get(_this, 'errors.'+ que);
-					if ( typeof error[0] === 'string' || error[0] instanceof String ){
-						var errmsg = error[0];
-						if ( errmsg === 'is not a number') { errmsg = 'no es numérico';}
-					    	get(_this, 'erroresHabidos.content').pushObject(ErrorValidacion.create({
-							variable: que,
-							mensaje : errmsg,
-							campo : _this.getWithDefault('label'+que.capitalize(), '')
-						}));
-						
-					}
-				}
-			});
-			this.toggleProperty('muestroErrores');			
-		},
-		imprimir: function(){
-			set(this, 'processingGrabar', true);
-			//var email = this.get('email');
-			var email = 'webmaster@grupoiclar.com';
-			
-			var oferta = parseInt(get(this, 'ofertaGenerada'));
-			
-			var etapa = get(this, 'selectedEtapa');
-			
-			var precalificacion = this.getWithDefault('precalificacion',0) || 0;
-			var avaluo = this.getWithDefault('avaluo',0) || 0; 
-			var subsidio = this.getWithDefault('subsidio',0) || 0;
-			var pagare = this.getWithDefault('pagare', 0) || 0;
-			var cliente = this.get('cliente') || 0;
-			
-			//var ofertaPdf = '';
-			var anexoPdf = '';
-			var caracteristicasPdf = '';
-			//var rapPdf = '';
-			var that = this;
-			//var rep = new Ember.RSVP.Promise();
-
-			
-			
-			if ( true ) {
-      			/*ajax( { type: 'GET' , 
-            			async : false,
-            			url: '/api/otro?printer=null&tipo=oferta&etapa='+etapa+'&oferta='+oferta }
-          		).then(
-            		function(data){
-            			if (data.error){
-            				return;
-            			}
-            			ofertaPdf = data.name;
-            			set(that, 'ofertaPdf', ofertaPdf);              			
-            		}
-          		);
-          		//log( 'fin del if al final del ajax de generar oferta en pdf');
-				*/
-          		get(this, 'ajax').request('/api/otro?printer=null&tipo=caracteristicas&etapa='+etapa+'&oferta='+oferta)
-          		.then(
-            		function(data){
-            			if (data.error){
-            				return;
-            			}
-            			caracteristicasPdf = data.name;
-            			that.set('caracteristicasPdf', caracteristicasPdf);              			
-            		}
-          		);
-          		var url = '/api/otro?printer=null&tipo=anexo&etapa='+etapa+'&oferta='+oferta+'&precalificacion='+precalificacion+'&avaluo='+avaluo+'&subsidio='+subsidio+'&pagare='+pagare;
-          		get(this, 'ajax').request(url)
-          		.then(
-            		function(data){
-            			if (data.error){
-            				return;
-            			}
-            			anexoPdf = data.name;
-            			set(that, 'anexoPdf', anexoPdf);
-            		}
-          		);
-
-          		/*ajax( { type: 'GET' , 
+    submitInmueble() {
+      let inmueble = parseInt(this.get('inmueble'));
+      get(this, 'socket').send({ topic: 'lock_oferta_home', data: { inmueble: inmueble } }, true);
+    },
+    freeInmueble(x) {
+      let inmueble = parseInt(x);
+      get(this, 'socket').send({ topic: 'free_oferta_home', data: { inmueble: inmueble } }, true);
+    },
+    submitProspecto() {
+      let prospecto = parseInt(this.get('prospecto'));
+      get(this, 'socket').send({ topic: 'lock_prospecto', data: { prospecto: prospecto } }, true);
+    },
+    freeProspecto(x) {
+      let prospecto = parseInt(x);
+      get(this, 'socket').send({ topic: 'free_prospecto', data: { prospecto: prospecto } }, true);
+    },
+    buscarClientesSinOfertas() {
+      let _this = this;
+      let cso = this.store.findAll('clientessinoferta');
+      cso.then((data)=> {
+        set(_this, 'hayClientesSinOfertas', data.get('length') > 0 ? true : false);
+      });
+      set(this, 'clientessinofertas', cso);
+    },
+    cerrarBusquedaCliente() {
+      this.toggleProperty('hayClientesSinOfertas');
+    },
+    savemessage(what) {
+      Ember.Logger.info('estoy en savemessage', what);
+    },
+    revisarErrores() {
+      let _this = this;
+      get(this, 'erroresHabidos.content').clear();
+      Object.keys(this.get('errors')).forEach((que)=> {
+        if (typeof que === 'string' || que instanceof String) {
+          let error = get(_this, 'errors.' + que);
+          if (typeof error[0] === 'string' || error[0] instanceof String) {
+            let errmsg = error[0];
+            if (errmsg === 'is not a number') {
+              errmsg = 'no es numérico';
+            }
+            get(_this, 'erroresHabidos.content').pushObject(ErrorValidacion.create({
+              variable: que,
+              mensaje: errmsg,
+              campo: _this.getWithDefault('label'+que.capitalize(), '')
+            }));
+          }
+        }
+      });
+      this.toggleProperty('muestroErrores');
+    },
+    imprimir() {
+      set(this, 'processingGrabar', true);
+      // var email = this.get('email');
+      let email = 'webmaster@grupoiclar.com';
+      let oferta = parseInt(get(this, 'ofertaGenerada'));
+      let etapa = get(this, 'selectedEtapa');
+      let precalificacion = this.getWithDefault('precalificacion', 0) || 0;
+      let avaluo = this.getWithDefault('avaluo', 0) || 0;
+      let subsidio = this.getWithDefault('subsidio', 0) || 0;
+      let pagare = this.getWithDefault('pagare', 0) || 0;
+      let cliente = this.get('cliente') || 0;
+      // var ofertaPdf = '';
+      let anexoPdf = '';
+      let caracteristicasPdf = '';
+      // var rapPdf = '';
+      let that = this;
+      // var rep = new Ember.RSVP.Promise();
+      if (true) {
+        /*ajax( { type: 'GET' ,
+        async : false,
+        url: '/api/otro?printer=null&tipo=oferta&etapa='+etapa+'&oferta='+oferta }).then(function(data){
+        if (data.error){
+        return;
+        }
+        ofertaPdf = data.name;
+        set(that, 'ofertaPdf', ofertaPdf);
+        );
+        log( 'fin del if al final del ajax de generar oferta en pdf');
+        */
+        get(this, 'ajax').request(`/api/otro?printer=null&tipo=caracteristicas&etapa=${etapa}&oferta=${oferta}`)
+        .then((data)=> {
+          if (data.error) {
+            return;
+          }
+          caracteristicasPdf = data.name;
+          that.set('caracteristicasPdf', caracteristicasPdf);
+        });
+        let url = `/api/otro?printer=null&tipo=anexo&etapa=${etapa}&oferta=${oferta}&precalificacion=${precalificacion}&avaluo=${avaluo}&subsidio=${subsidio}&pagare=${pagare}`;
+        get(this, 'ajax').request(url).then((data)=> {
+          if (data.error) {
+            return;
+          }
+          anexoPdf = data.name;
+          set(that, 'anexoPdf', anexoPdf);
+        });
+        /*ajax( { type: 'GET' ,
             			async : false,
             			url: '/api/otro?printer=null&tipo=rap&cliente='+cliente }
           		).then(
@@ -831,109 +813,90 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
             			set(that, 'rapPdf', rapPdf);
             		}
           		);*/
-          		Ember.run.later(function(){
-          			var caracteristicasPdf = get(that, 'caracteristicasPdf');
-          			var anexoPdf = get(that, 'anexoPdf');
-          			var ofertaPdf = get(that, 'ofertaPdf');
-          			var emailAddress = get(that, 'emailaddress');
-
-          			var request = function( tipo_destino, destino, lista_de_archivos){
-          				lista_de_archivos.forEach(
-
-          					function(archivo){
-          						get(that, 'ajax').request('/api/otro?'+tipo_destino+'='+destino+'&pdf='+archivo );
-          					}
-          				);
-          			};
-
-          			var request_for_printing = function( destino , archivo, copies ){
-          				var promesa = null;
-          				promesa = get(that, 'ajax').request('/api/otro?printer='+destino+'&pdf='+archivo+'&copies='+copies );
-          				return promesa;
-          			};
-
-          			var tieneValor = function( que ){
-          				return !Ember.isEmpty(que);
-          			};
-          			
-          			var archivos = [caracteristicasPdf, anexoPdf];
-
-          			var archivos_validos = true;
-          			archivos.forEach(function(archivo){
-          				if (Ember.isEmpty(archivo)){
-          					archivos_validos = false;
-          				}
-          			});
-          			
-          			if (get(that, 'enviarEmail') && tieneValor(email) && archivos_validos){
-    			
-          				request( 'email', email, archivos );
-          		
-          			}
-          			
-          			if (get(that, 'enviarEmail') && tieneValor(emailAddress) && archivos_validos ){
-          				request( 'email', emailAddress, archivos );
-          			}
-          			var impresoras = get(that, 'impresoras.content');
-					if (!that.get('soloEmail') &&  archivos_validos && impresoras.length > 0 ){
-          				impresoras.forEach(function( impresora ){
-          				if ( impresora.get('chosen')){
-          					//request_for_printing( impresora.get('impresora'), ofertaPdf, get(that, 'copiasOferta') );
-          					request_for_printing( impresora.get('impresora'), caracteristicasPdf, get(that, 'copiasCaracteristicas') );
-          					request_for_printing( impresora.get('impresora'), anexoPdf, get(that, 'copiasAnexo') );
-          					//request_for_printing( impresora.get('impresora'), rapPdf, get(that, 'copiasRap') );
-          				}
-          			});
-          			}
-
-          		},5000);
-          		
-			}
-
-			
-			this.setProperties({
-				muestraOpcionesImpresion: false
-			});
-
-			Ember.run.later(function(){
-				get(that, 'session').invalidate();
-			}, 7000);
-		},
-		enteradoHuboErrorAlGrabar: function(){
-			this.toggleProperty('huboErrorAlGrabar');
-		},
-		enteradoInspeccionarErrores: function(){
-			this.toggleProperty('muestroErrores');
-		},
-		elegirImpresora(cual){
-			get(this, 'impresoras.content').objectAt(cual).toggleProperty('chosen');
-		},
-		numeroExteriorElegido(edificio){
-			set(this, 'numeroexterior', edificio);
-			var that = this;
-			//var v = get(this, 'controllers.inmueblesdisponibles');
-			var c = get(this,'inmueblesdisponibles');
-			var mySet2 = new Set([]);
-			set(this, 'numerosInteriores', mySet2 );
-			return c.filter(function(item) {
-				var lote = item.get('lote');
-				if ( edificio === lote.substring(0,2) ){
-					get(that, 'numerosInteriores').add(lote.substring(2,5));
-					return true;
-				} else {
-					return false;
-				}
-			});
-		},
-
-		numeroInteriorElegido(depa){
-			const ne = get(this, 'numeroexterior');
-			const loteoficial = `${ne}${depa}`;
-			var misLotes = get(this, 'mislotes');
-			var cual = misLotes.findBy('lote', loteoficial );
-			const inmueble = cual.get('id');
-
-			set(this, 'selectedInmueble', inmueble);
-		}
-	}
+        Ember.run.later(function() {
+          let caracteristicasPdf = get(that, 'caracteristicasPdf');
+          let anexoPdf = get(that, 'anexoPdf');
+          let ofertaPdf = get(that, 'ofertaPdf');
+          let emailAddress = get(that, 'emailaddress');
+          let request = function(tipo_destino, destino, lista_de_archivos) {
+            lista_de_archivos.forEach((archivo)=> {
+              get(that, 'ajax').request(`/api/otro?${tipo_destino}=${destino}&pdf=${archivo}`);
+            });
+          };
+          let requestForPrinting = function(destino, archivo, copies) {
+          let promesa = null;
+          promesa = get(that, 'ajax').request(`/api/otro?printer=${destino}&pdf=${archivo}&copies=${copies}`);
+          return promesa;
+        };
+          let tieneValor = function(que) {
+            return !Ember.isEmpty(que);
+          };
+          let archivos = [caracteristicasPdf, anexoPdf];
+          let archivosValidos = true;
+          archivos.forEach((archivo)=> {
+            if (Ember.isEmpty(archivo)) {
+              archivosValidos = false;
+            }
+          });
+          if (get(that, 'enviarEmail') && tieneValor(email) && archivosValidos) {
+            request('email', email, archivos);
+          }
+          if (get(that, 'enviarEmail') && tieneValor(emailAddress) && archivosValidos) {
+            request('email', emailAddress, archivos);
+          }
+          let impresoras = get(that, 'impresoras.content');
+          if (!that.get('soloEmail') &&  archivosValidos && impresoras.length > 0) {
+            impresoras.forEach((impresora)=> {
+              if (impresora.get('chosen')) {
+                // requestForPrinting( impresora.get('impresora'), ofertaPdf, get(that, 'copiasOferta') );
+                requestForPrinting(impresora.get('impresora'), caracteristicasPdf, get(that, 'copiasCaracteristicas'));
+                requestForPrinting(impresora.get('impresora'), anexoPdf, get(that, 'copiasAnexo'));
+                // requestForPrinting( impresora.get('impresora'), rapPdf, get(that, 'copiasRap') );
+              }
+            });
+          }
+        }, 5000);
+      }
+      this.setProperties({
+        muestraOpcionesImpresion: false
+      });
+      Ember.run.later(function() {
+        get(that, 'session').invalidate();
+      }, 7000);
+    },
+    enteradoHuboErrorAlGrabar() {
+      this.toggleProperty('huboErrorAlGrabar');
+    },
+    enteradoInspeccionarErrores() {
+      this.toggleProperty('muestroErrores');
+    },
+    elegirImpresora(cual) {
+      get(this, 'impresoras.content').objectAt(cual).toggleProperty('chosen');
+    },
+    numeroExteriorElegido(edificio) {
+      set(this, 'numeroexterior', edificio);
+      let that = this;
+      // var v = get(this, 'controllers.inmueblesdisponibles');
+      let c = get(this, 'inmueblesdisponibles');
+      let mySet2 = new Set([]);
+      set(this, 'numerosInteriores', mySet2);
+      return c.filter(function(item) {
+        let lote = item.get('lote');
+        if (edificio === lote.substring(0, 2)) {
+          get(that, 'numerosInteriores').add(lote.substring(2, 5));
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
+    numeroInteriorElegido(depa) {
+      let ne = get(this, 'numeroexterior');
+      let loteoficial = `${ne}${depa}`;
+      let misLotes = get(this, 'mislotes');
+      let cual = misLotes.findBy('lote', loteoficial);
+      let inmueble = cual.get('id');
+      set(this, 'selectedInmueble', inmueble);
+    }
+  }
 });
