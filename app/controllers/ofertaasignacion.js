@@ -277,7 +277,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     prospecto = parseInt(prospecto);
     let indice = -1;
     let ir = get(this, 'prospectosReservados');
-    let cual = ir.findBy('prospecto', prospecto );
+    let cual = ir.findBy('prospecto', prospecto);
     indice = ir.indexOf(cual);
     return indice !== -1;
   }.property('prospecto'),
@@ -287,7 +287,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       this.toggleProperty('flagLista');
     }
   }.observes('flagLista'),
-  observandoTipoCuenta : function() {
+  observandoTipoCuenta: function() {
     if (get(this, 'tipoCuentaEsContado') || this.get('tipoCuentaEsHipotecaria')) {
       set(this, 'afiliacionOk', true);
     } else {
@@ -299,11 +299,11 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     let that = this;
     let antes = get(this, 'selectedInmueblePrevio');
     let despues = get(this, 'selectedInmueble');
-    set(this, 'inmueble', despues );
+    set(this, 'inmueble', despues);
     if (Ember.isEmpty(antes) && Ember.isEmpty(despues)) {
-
+      info('no hay nada');
     } else {
-      if ( Ember.isEmpty(despues)) {
+      if (Ember.isEmpty(despues)) {
         set(this, 'domicilio', '');
         this.send('freeInmueble', antes);
       } else {
@@ -313,20 +313,20 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           set(that, 'domicilio', dato.get('domicilio'));
           set(that, 'candadoPrecio', dato.get('candadoPrecio'));
           set(that, 'precioCatalogo', dato.get('precioCatalogo'));
-          set(that,'selectedPrecio',0);
+          set(that, 'selectedPrecio', 0);
           let p1 = that.store.find('catalogoprecio', despues);
           p1.then((dato)=> {
-            let idPrecioCatalogo=get(dato, 'idPrecioCatalogo');
-            if (idPrecioCatalogo !==0) {
+            let idPrecioCatalogo = get(dato, 'idPrecioCatalogo');
+            if (idPrecioCatalogo !== 0) {
               info('paso la prueba', get(dato, 'idPrecioCatalogo'));
             } else {
               info('se fue por el else no hay idPrecioCatalogo');
               return;
             }
           });
-          let p2 = that.store.query('caracteristicasinmueble', { inmueble: despues, precio: get(that,'selectedPrecio'), precioCatalogo: get(that, 'precioCatalogo'), etapa: get(that, 'selectedEtapa') });
+          let p2 = that.store.query('caracteristicasinmueble', { inmueble: despues, precio: get(that, 'selectedPrecio'), precioCatalogo: get(that, 'precioCatalogo'), etapa: get(that, 'selectedEtapa') });
           p2.then((data)=> {
-            if (get(data,'length') > 0) {
+            if (get(data, 'length') > 0) {
               set(that, 'carateristicasLista', data);
             } else {
               set(that, 'carateristicasLista', null);
@@ -348,7 +348,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     let antes = get(this, 'prospectoPrevio');
     let despues = get(this, 'prospecto');
     if (Ember.isEmpty(antes) && Ember.isEmpty(despues)) {
-
+      info('if en blanco');
     } else {
       if (Ember.isEmpty(despues)) {
         this.send('freeProspecto', antes);
@@ -356,15 +356,14 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         this.send('submitProspecto');
       }
     }
-  }.observes( 'prospecto'),
-	
+  }.observes('prospecto'),
   highLightAndTrue: function(key) {
     if (!Ember.isEmpty(key)) {
-      set(this, key,true);
+      set(this, key, true);
     }
   }.on('highlightandtrue'),
   validaAfiliacion: function() {
-    if ( get(this, 'tipoCuentaEsContado') || get(this, 'tipoCuentaEsHipotecaria')) {
+    if (get(this, 'tipoCuentaEsContado') || get(this, 'tipoCuentaEsHipotecaria')) {
       set(this, 'afiliacionOk', true);
       return;
     }
@@ -384,7 +383,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         }
         acumula = acumula + prod;
       }
-      let resultado = 10 - ( acumula % 10 );
+      let resultado = 10 - (acumula % 10);
       if (resultado === 10) {
         resultado = 0;
       }
@@ -409,21 +408,21 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     let isDepto = get(this, 'departamento');
     if (get(this, 'departamento')) {
       let mySet = new Set([]);
-      set(this, 'numerosExteriores', mySet );
+      set(this, 'numerosExteriores', mySet);
     }
     return c.filter(function(item) {
       let m = item.get('manzana');
       let lote = item.get('lote');
       if (m === manzana) {
         if (isDepto) {
-          get(that, 'numerosExteriores').add(lote.substring(0,2));
+          get(that, 'numerosExteriores').add(lote.substring(0, 2));
         }
         return true;
       } else {
         return false;
       }
     });
-  }.property( 'selectedManzana'),
+  }.property('selectedManzana'),
   misprecios: function() {
     info('aqui truena');
     let etapa = parseInt(get(this, 'selectedEtapa'));
@@ -443,12 +442,12 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       }
     });
     info('la libro mis precios');
-  }.property( 'selectedEtapa'),
+  }.property('selectedEtapa'),
   observaEtapa: function() {
-    var _this = this;
+    let _this = this;
     set(_this, 'cuantosInmueblesDisponibles', 0);
     // get(this, 'manzanasdisponibles').
-    set(this, 'manzanasdisponibles', this.store.query('manzanasdisponible', { etapa: get(this,'selectedEtapa') }));
+    set(this, 'manzanasdisponibles', this.store.query('manzanasdisponible', { etapa: get(this, 'selectedEtapa') }));
     let etapaPromesa =  this.store.find('etapasoferta', get(this, 'selectedEtapa'));
     etapaPromesa.then((data)=> {
       set(_this, 'departamento', data.get('departamento'));
@@ -460,14 +459,14 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     let params = this.store.find('parametrosetapa', get(this, 'selectedEtapa'));
     params.then((data)=> {
       'anticipocomision apartado gastosadministrativos precioseguro'.w().forEach((key)=> {
-        set(_this, key, get(data,key));
+        set(_this, key, get(data, key));
       });
     });
     //  get(this, 'controllers.inmueblesdisponibles').
     set(this, 'inmueblesdisponibles', idisp);
-    //  set(this, 'selectedManzana', null);	
+    //  set(this, 'selectedManzana', null);
   }.observes('selectedEtapa'),
-  observarCliente : function() {
+  observarCliente: function() {
     let cliente = get(this, 'clienteId');
     set(this, 'clientesofertas', this.store.query('clientesoferta', { cliente }));
     let _this = this;
@@ -477,11 +476,11 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     }, ()=> {
       set(_this, 'referencia', '');
     });
-  }.observes('cliente'),	
+  }.observes('cliente'),
   observaAfiliacion: function() {
     let afiliacion = get(this, 'afiliacion');
     if (!get(this, 'afiliacionNoChecar')) {
-      get(this, 'prospectosofertas').set('model', this.store.query('prospectosoferta', { afiliacion: afiliacion }));
+      get(this, 'prospectosofertas').set('model', this.store.query('prospectosoferta', { afiliacion }));
 	} else {
       this.toggleProperty('afiliacionNoChecar');
     }
@@ -489,25 +488,25 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   observaProspectosOfertas: function() {
     let _this = this;
     return get(this, 'prospectosofertas').filter(function(item) {
-      set(_this, 'afiliacionNoChecar',true);
-      set(_this, 'prospectoNoChecar',true);
+      set(_this, 'afiliacionNoChecar', true);
+      set(_this, 'prospectoNoChecar', true);
       set(_this, 'prospecto', item.get('id'));
       set(_this, 'afiliacion', item.get('afiliacion'));
     });
   }.observes('prospectosofertas'),
   observaManzana: function() {
-    set(this, 'selectedInmueble',null);
+    set(this, 'selectedInmueble', null);
   }.observes('selectedManzana'),
-  observaPrecios: function() {	
-    if (isEmpty(get(this,'selectedEtapa'))) {
+  observaPrecios: function() {
+    if (isEmpty(get(this, 'selectedEtapa'))) {
       return;
     }
-    let precioid = get(this,'selectedPrecio');
+    let precioid = get(this, 'selectedPrecio');
     // var v = get(this,'controllers.preciosinmuebles');
-    let c = get(this,'preciosinmuebles');
+    let c = get(this, 'preciosinmuebles');
     let item = c.findBy('id', precioid );
-    if (!get(this,'candadoPrecio')) {
-      set(this,'precioRaw', get(item,'precioraw'));
+    if (!get(this, 'candadoPrecio')) {
+      set(this, 'precioRaw', get(item,'precioraw'));
     }
   }.observes('selectedPrecio'),
   hayCamposObligatorios: function() {
@@ -516,8 +515,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     }
     return true;
   }.property('inmueble', 'cliente'),
-  //clientesofertas : Ember.computed.alias('controllers.clientesofertas'),
-  //clientessinofertas : Ember.computed.alias('controllers.clientessinofertas'),
+  // clientesofertas : Ember.computed.alias('controllers.clientesofertas'),
+  // clientessinofertas : Ember.computed.alias('controllers.clientessinofertas'),
   checaSuma: Ember.observer('precalificacion', 'avaluo', 'subsidio' , 'pagare' , 'prerecibo' , 'prereciboadicional', function() {
     let _this = this;
     let total = 0;
@@ -564,13 +563,13 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       exclusion: { in: [null] , message: 'Debe seleccionar inmueble' }
     },
     tipoCuenta: {
-      exclusion : { in: [null], message: 'Debe seleccionar tipo cuenta' }
+      exclusion: { in: [null], message: 'Debe seleccionar tipo cuenta' }
     },
     sumaCheca: {
-      exclusion: { in: [false], message: 'No checa total con precio'}
+      exclusion: { in: [false], message: 'No checa total con precio' }
     },
     oferta: {
-      numericality: { onlyInteger: true, messages : { onlyInteger: 'la oferta solo debe contenter numeros'}},
+      numericality: { onlyInteger: true, messages: { onlyInteger: 'la oferta solo debe contenter numeros' } }
     }
   },
   actions: {
@@ -623,7 +622,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     },
     requestListAgain() {
       this.requestList();
-   },
+    },
     traerEmail() {
       let that = this;
       get(this, 'ajax').post('/api/useremail?query=1').then((data)=> {
@@ -632,99 +631,80 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         }
       });
     },
-		grabar:function(){
-			try{
-  				info('valor de inmueble ' ,get(this, 'inmueble'));
-  				info('valor de cliente ',get(this, 'clienteId'));
-  				info('valor de oferta ',get(this, 'oferta'));
-
-  				info('valor de precio ',get(this, 'precioCatalogo'));
-  				info('valor de precalifiacion',get(this, 'precalificacion'));
-  				info('valor de avaluo ', get(this, 'avaluo'));
-  				info('valor de subsidio',get(this, 'subsidio'));
-  				info('valor de pagare ',get(this, 'pagare'));
-  				info('valor de prerecibo ',get(this, 'prerecibo'));
-  				info('valor de prereciboadicional ',get(this, 'prereciboadicional'));
-
-			}catch(e){
-				return;
-			}
-			
-			set(this, 'processingGrabar', true);
-			get(this,'socket').send( { topic : 'lock_feature', data: { feature : 'oferta.save' }}, true);
-			
-			var model = this.store.createRecord('asignacion', 
-				{
-					
-  					inmueble : get(this, 'inmueble'),
-  					cliente : get(this, 'clienteId'),
-  					oferta:get(this, 'oferta'),
-  					precio : get(this, 'precioCatalogo'),		
-  					precalificacion: get(this, 'precalificacion'),
-  					avaluo: get(this, 'avaluo'),
-  					subsidio: get(this, 'subsidio'),
-  					pagare: get(this, 'pagare'),
-  					prerecibo: get(this, 'prerecibo'),
-  					prereciboadicional: get(this, 'prereciboadicional')
-				}
-			);
-			var that = this;
-			model.save().then(
-				function(data){
-					that.store.findAll('printer').then(function(data){
-						get(that, 'impresoras.content').clear();
-						data.forEach(function(imp){
-							get(that, 'impresoras.content').pushObject(
-								Impresora.create({
-									nombre : imp.get('displayname'),
-									impresora: imp.get('printerid'),
-									online: imp.get('online'),
-									copies: imp.get('copies'),
-									chosen: false
-								})
-							);
-						});
-				
-					});
-
-					get(that, 'ajax').post('/api/useremail?query=1')
-					.then(
-            			function(data){
-                			if ( data.success === '1'){
-                  				set(that, 'emailaddress', data.email);
-                   			}
-            			}
-          			);
-					that.setProperties({
-					muestraOpcionesImpresion: true,
-					muestraCamposCapturaAdicionales: false,
-					copiasCaracteristicas: 2,
-					copiasAnexo: 2,
-					copiasOferta: 3,
-					enviarEmail: false,
-					soloEmail: false,
-					processingGrabar: false,
-					ofertaGenerada: data.get('id')
-					});
-					get(that,'socket').send( { topic : 'free_feature', data: { feature : 'oferta.save' }}, true);
-
-				},
-				function(error){
-					set(that, 'errorAlGrabar', '');
-					that.toggleProperty('huboErrorAlGrabar');
-					set(that, 'processingGrabar', false);
-					var errorGenerado = '';
-					try{
-						errorGenerado = error.errors.resultado[0];
-					} catch ( er ){
-						log('error en obtencion de error', er.message);
-					}
-					set(that, 'errorAlGrabar', errorGenerado);
-					get(this,'socket').send( { topic : 'free_feature', data: { feature : 'oferta.save' }}, true);
-				}
-			);
-			
-		},
+    grabar() {
+      try {
+        info('valor de inmueble ' ,get(this, 'inmueble'));
+        info('valor de cliente ',get(this, 'clienteId'));
+        info('valor de oferta ',get(this, 'oferta'));
+        info('valor de precio ',get(this, 'precioCatalogo'));
+        info('valor de precalifiacion',get(this, 'precalificacion'));
+        info('valor de avaluo ', get(this, 'avaluo'));
+        info('valor de subsidio',get(this, 'subsidio'));
+        info('valor de pagare ',get(this, 'pagare'));
+        info('valor de prerecibo ',get(this, 'prerecibo'));
+        info('valor de prereciboadicional ',get(this, 'prereciboadicional'));
+      } catch(e) {
+        return;
+      }
+      set(this, 'processingGrabar', true);
+      get(this,'socket').send( { topic : 'lock_feature', data: { feature : 'oferta.save' }}, true);
+      let model = this.store.createRecord('asignacion', {
+        inmueble: get(this, 'inmueble'),
+        cliente: get(this, 'clienteId'),
+        oferta: get(this, 'oferta'),
+        precio: get(this, 'precioCatalogo'),
+        precalificacion: get(this, 'precalificacion'),
+        avaluo: get(this, 'avaluo'),
+        subsidio: get(this, 'subsidio'),
+        pagare: get(this, 'pagare'),
+        prerecibo: get(this, 'prerecibo'),
+        prereciboadicional: get(this, 'prereciboadicional')
+      });
+      let that = this;
+      model.save().then((data)=> {
+        that.store.findAll('printer').then((data)=> {
+          get(that, 'impresoras.content').clear();
+          data.forEach((imp)=> {
+            get(that, 'impresoras.content').pushObject(Impresora.create({
+              nombre: imp.get('displayname'),
+              impresora: imp.get('printerid'),
+              online: imp.get('online'),
+              copies: imp.get('copies'),
+              chosen: false 
+            }));
+          });
+        });
+        get(that, 'ajax').post('/api/useremail?query=1').then((data)=> {
+          if (data.success === '1') {
+            set(that, 'emailaddress', data.email);
+          }
+        });
+        that.setProperties({
+          muestraOpcionesImpresion: true,
+          muestraCamposCapturaAdicionales: false,
+          copiasCaracteristicas: 2,
+          copiasAnexo: 2,
+          copiasOferta: 3,
+          enviarEmail: false,
+          soloEmail: false,
+          processingGrabar: false,
+          ofertaGenerada: data.get('id')
+        });
+        get(that, 'socket').send( { topic: 'free_feature', data: { feature: 'oferta.save' } }, true);
+      }, (error)=> {
+        set(that, 'errorAlGrabar', '');
+        that.toggleProperty('huboErrorAlGrabar');
+        set(that, 'processingGrabar', false);
+        let errorGenerado = '';
+        try {
+          errorGenerado = error.errors.resultado[0];
+        } catch (er) {
+          log('error en obtencion de error', er.message);
+        }
+        set(that, 'errorAlGrabar', errorGenerado);
+        get(this,'socket').send( { topic : 'free_feature', data: { feature : 'oferta.save' }}, true);
+      });
+    },
 		
 		submitInmueble: function(){
 			var inmueble = parseInt(this.get('inmueble'));
