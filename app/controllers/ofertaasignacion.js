@@ -338,176 +338,163 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       }
     }
   }.observes('selectedInmueble'),
-	observaProspecto: function(){
-		var prospecto = get(this, 'prospecto');
-		if (!get(this, 'prospectoNoChecar')){
-			get(this, 'prospectosofertas').
-				set('model', this.store.query('prospectosoferta', { prospecto: prospecto }));
-		} else {
-			this.toggleProperty('prospectoNoChecar');
-		}
-		var antes = get(this, 'prospectoPrevio');
-		var despues = get(this, 'prospecto');
-		if (Ember.isEmpty(antes) && Ember.isEmpty(despues)){
+  observaProspecto: function() {
+    let prospecto = get(this, 'prospecto');
+    if (!get(this, 'prospectoNoChecar')) {
+      get(this, 'prospectosofertas').set('model', this.store.query('prospectosoferta', { prospecto }));
+    } else {
+      this.toggleProperty('prospectoNoChecar');
+    }
+    let antes = get(this, 'prospectoPrevio');
+    let despues = get(this, 'prospecto');
+    if (Ember.isEmpty(antes) && Ember.isEmpty(despues)) {
 
-		} else {
-			if ( Ember.isEmpty(despues)){
-				this.send('freeProspecto', antes);
-			} else {
-				this.send('submitProspecto');
-			}
-		}
-	}.observes( 'prospecto'),
+    } else {
+      if (Ember.isEmpty(despues)) {
+        this.send('freeProspecto', antes);
+      } else {
+        this.send('submitProspecto');
+      }
+    }
+  }.observes( 'prospecto'),
 	
-	highLightAndTrue: function(key){
-		if ( !Ember.isEmpty(key) ) {
-		  set(this, key,true);
-		}
-	}.on('highlightandtrue'),
-	validaAfiliacion: function(){
-		if ( get(this, 'tipoCuentaEsContado') || get(this, 'tipoCuentaEsHipotecaria')){
-			set(this, 'afiliacionOk', true);
-		return;
-		}
-		var afi = get(this, 'afiliacion');
-		var digits = afi.split('');
-		var acumula = 0;
-		if (afi.length === 11) { 
-			for ( var i = 0; i < 10; i++){
-				var digito = parseInt(digits[i]);
-				var factor = 2;
-				if ( (i % 2) === 0){
-					factor = 1;
-				}
-				var prod = factor * digito;
-				if ( prod > 10){
-					prod = prod - 9;
-				}
-				acumula = acumula + prod;
-				
-			}
-			var resultado = 10 - ( acumula % 10 );
-			if ( resultado === 10){
-				resultado = 0;
-			}
-			if ( parseInt(digits[10])  === resultado ){
-				set(this, 'afiliacionOk', true);
-			} else {
-				set(this, 'afiliacionOk', false);
-			}
-		} else {
-			set(this, 'afiliacionOk', false);
-		}
-		if( get(this, 'afiliacionOk') ) {
-			this.trigger('highlightandtrue');
-		}
-	}.observes('afiliacion'),
-	mislotes: function(){
-		var that = this;
-		var manzana = get(this, 'selectedManzana');
-		info('valor de manzana', manzana);
-		//var v = get(this, 'controllers.inmueblesdisponibles');
-		var c = get(this, 'inmueblesdisponibles');
-
-		var isDepto = get(this, 'departamento');
-		if (get(this, 'departamento')){
-			var mySet = new Set([]);
-			set(this, 'numerosExteriores', mySet );
-		}
-		return c.filter(function(item) {
-			var m = item.get('manzana');
-			var lote = item.get('lote');
-			if ( m === manzana ){
-				if (isDepto){	
-					get(that, 'numerosExteriores').add(lote.substring(0,2));
-
-				}
-				return true;
-			} else {
-				return false;
-			}
-		});
-	}.property( 'selectedManzana'),
-	misprecios: function(){
-		info('aqui truena');
-		var etapa = parseInt(get(this, 'selectedEtapa'));
-		info('valor de etapa', etapa);
-		//var v = get(this, 'controllers.preciosinmuebles');
-		var c = get(this, 'preciosinmuebles');
-		var that = this;
-		set(this, 'cuantosprecios', 0);
-		return c.filter(function(item) {
-			var e = item.get('etapa');
-			if ( e === etapa ){	
-				that.incrementProperty('cuantosprecios');
-				info('la libro mis precios');
-				return true;
-			} else {
-				return false;
-			}	
-		});
-		info('la libro mis precios');
-	}.property( 'selectedEtapa'),
-	observaEtapa: function() {
-		
-		var _this = this;
-		set(_this, 'cuantosInmueblesDisponibles',0);
-		//get(this, 'manzanasdisponibles').
-		set(this,'manzanasdisponibles', this.store.query('manzanasdisponible', { etapa : get(this,'selectedEtapa')}));
-		var etapaPromesa =  this.store.find('etapasoferta', get(this, 'selectedEtapa'));
-		etapaPromesa.then(function(data){
-			set(_this, 'departamento', data.get('departamento'));
-		});
-		var idisp = this.store.query('inmueblesdisponible', { etapa : get(this, 'selectedEtapa')});
-		idisp.then(function(data){
-			set(_this, 'cuantosInmueblesDisponibles', data.get('length'));
-			
-		});
-		var params = this.store.find('parametrosetapa', get(this, 'selectedEtapa'));
-		params.then(function(data){
-
-			'anticipocomision apartado gastosadministrativos precioseguro'.w().forEach(function(key){
-				set(_this, key, get(data,key));
-			});
-		});
-		//get(this, 'controllers.inmueblesdisponibles').
-		set(this, 'inmueblesdisponibles', idisp);
-		//set(this, 'selectedManzana', null);
-	
-	}.observes('selectedEtapa'),
-	observarCliente : function(){
-		var cliente = get(this, 'clienteId');
-		set(this, 'clientesofertas', this.store.query('clientesoferta', { cliente : cliente}));
-		var _this = this;
-		var rap = this.store.find('referenciasrapconclientesincuenta',cliente);
-		rap.then(function(data){
-
-			set(_this, 'referencia', data.get('referencia'));
-		}, function(){
-			set(_this, 'referencia', '');
-		});
-	}.observes('cliente'),
-	
-	observaAfiliacion: function(){
-		var afiliacion = get(this, 'afiliacion');
-		if (!get(this, 'afiliacionNoChecar')){
-		  get(this, 'prospectosofertas').
-				set('model', this.store.query('prospectosoferta', { afiliacion: afiliacion }));
-		} else {
-			this.toggleProperty('afiliacionNoChecar');
-		}
-		
-	}.observes('afiliacion'),
-	observaProspectosOfertas: function(){
-		var _this = this;
-		return get(this, 'prospectosofertas').filter(function(item) {
-			set(_this, 'afiliacionNoChecar',true);
-			set(_this, 'prospectoNoChecar',true);
-			set(_this, 'prospecto', item.get('id'));
-			set(_this, 'afiliacion', item.get('afiliacion'));
-			}
-		);
-	}.observes('prospectosofertas'),
+  highLightAndTrue: function(key) {
+    if (!Ember.isEmpty(key)) {
+      set(this, key,true);
+    }
+  }.on('highlightandtrue'),
+  validaAfiliacion: function() {
+    if ( get(this, 'tipoCuentaEsContado') || get(this, 'tipoCuentaEsHipotecaria')) {
+      set(this, 'afiliacionOk', true);
+      return;
+    }
+    let afi = get(this, 'afiliacion');
+    let digits = afi.split('');
+    let acumula = 0;
+    if (afi.length === 11) {
+      for (let i = 0; i < 10; i++) {
+        let digito = parseInt(digits[i]);
+        let factor = 2;
+        if ((i % 2) === 0) {
+          factor = 1;
+        }
+        let prod = factor * digito;
+        if (prod > 10) {
+          prod = prod - 9;
+        }
+        acumula = acumula + prod;
+      }
+      let resultado = 10 - ( acumula % 10 );
+      if (resultado === 10) {
+        resultado = 0;
+      }
+      if (parseInt(digits[10])  === resultado) {
+        set(this, 'afiliacionOk', true);
+      } else {
+        set(this, 'afiliacionOk', false);
+      }
+    } else {
+      set(this, 'afiliacionOk', false);
+    }
+    if (get(this, 'afiliacionOk')) {
+      this.trigger('highlightandtrue');
+    }
+  }.observes('afiliacion'),
+  mislotes: function() {
+    let that = this;
+    let manzana = get(this, 'selectedManzana');
+    info('valor de manzana', manzana);
+    // var v = get(this, 'controllers.inmueblesdisponibles');
+    let c = get(this, 'inmueblesdisponibles');
+    let isDepto = get(this, 'departamento');
+    if (get(this, 'departamento')) {
+      let mySet = new Set([]);
+      set(this, 'numerosExteriores', mySet );
+    }
+    return c.filter(function(item) {
+      let m = item.get('manzana');
+      let lote = item.get('lote');
+      if (m === manzana) {
+        if (isDepto) {
+          get(that, 'numerosExteriores').add(lote.substring(0,2));
+        }
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }.property( 'selectedManzana'),
+  misprecios: function() {
+    info('aqui truena');
+    let etapa = parseInt(get(this, 'selectedEtapa'));
+    info('valor de etapa', etapa);
+    // var v = get(this, 'controllers.preciosinmuebles');
+    let c = get(this, 'preciosinmuebles');
+    let that = this;
+    set(this, 'cuantosprecios', 0);
+    return c.filter(function(item) {
+      let e = item.get('etapa');
+      if (e === etapa) {
+        that.incrementProperty('cuantosprecios');
+        info('la libro mis precios');
+        return true;
+      } else {
+        return false;
+      }
+    });
+    info('la libro mis precios');
+  }.property( 'selectedEtapa'),
+  observaEtapa: function() {
+    var _this = this;
+    set(_this, 'cuantosInmueblesDisponibles', 0);
+    // get(this, 'manzanasdisponibles').
+    set(this, 'manzanasdisponibles', this.store.query('manzanasdisponible', { etapa: get(this,'selectedEtapa') }));
+    let etapaPromesa =  this.store.find('etapasoferta', get(this, 'selectedEtapa'));
+    etapaPromesa.then((data)=> {
+      set(_this, 'departamento', data.get('departamento'));
+    });
+    let idisp = this.store.query('inmueblesdisponible', { etapa: get(this, 'selectedEtapa') });
+    idisp.then((data)=> {
+      set(_this, 'cuantosInmueblesDisponibles', data.get('length'));
+    });
+    let params = this.store.find('parametrosetapa', get(this, 'selectedEtapa'));
+    params.then((data)=> {
+      'anticipocomision apartado gastosadministrativos precioseguro'.w().forEach((key)=> {
+        set(_this, key, get(data,key));
+      });
+    });
+    //  get(this, 'controllers.inmueblesdisponibles').
+    set(this, 'inmueblesdisponibles', idisp);
+    //  set(this, 'selectedManzana', null);	
+  }.observes('selectedEtapa'),
+  observarCliente : function() {
+    let cliente = get(this, 'clienteId');
+    set(this, 'clientesofertas', this.store.query('clientesoferta', { cliente }));
+    let _this = this;
+    let rap = this.store.find('referenciasrapconclientesincuenta', cliente);
+    rap.then((data)=> {
+      set(_this, 'referencia', data.get('referencia'));
+    }, ()=> {
+      set(_this, 'referencia', '');
+    });
+  }.observes('cliente'),	
+  observaAfiliacion: function() {
+    let afiliacion = get(this, 'afiliacion');
+    if (!get(this, 'afiliacionNoChecar')) {
+      get(this, 'prospectosofertas').set('model', this.store.query('prospectosoferta', { afiliacion: afiliacion }));
+	} else {
+      this.toggleProperty('afiliacionNoChecar');
+    }
+  }.observes('afiliacion'),
+  observaProspectosOfertas: function() {
+    let _this = this;
+    return get(this, 'prospectosofertas').filter(function(item) {
+      set(_this, 'afiliacionNoChecar',true);
+      set(_this, 'prospectoNoChecar',true);
+      set(_this, 'prospecto', item.get('id'));
+      set(_this, 'afiliacion', item.get('afiliacion'));
+    });
+  }.observes('prospectosofertas'),
 	
 	observaManzana: function(){
 			set(this, 'selectedInmueble',null);
