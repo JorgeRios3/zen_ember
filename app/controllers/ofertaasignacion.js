@@ -495,156 +495,143 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       set(_this, 'afiliacion', item.get('afiliacion'));
     });
   }.observes('prospectosofertas'),
-	
-	observaManzana: function(){
-			set(this, 'selectedInmueble',null);
-	
-	}.observes('selectedManzana'),
-	observaPrecios: function(){
-			
-		if ( isEmpty(get(this,'selectedEtapa'))) {
-			return;
-		}
-		var precioid = get(this,'selectedPrecio');
-		//var v = get(this,'controllers.preciosinmuebles');
-
-		var c = get(this,'preciosinmuebles');
-		var item = c.findBy('id', precioid );
-		if (!get(this,'candadoPrecio')){
-			set(this,'precioRaw', get(item,'precioraw'));
-		}
-	
-	}.observes('selectedPrecio'),
-
-	hayCamposObligatorios: function(){
-		if ( Ember.isEmpty(get(this, 'inmueble')) || isEmpty(get(this, 'cliente')) ){
-			return false;
-		}
-		return true;
-	}.property('inmueble', 'cliente'),
-	//clientesofertas : Ember.computed.alias('controllers.clientesofertas'),
-	//clientessinofertas : Ember.computed.alias('controllers.clientessinofertas'),
-	checaSuma: Ember.observer('precalificacion', 'avaluo', 'subsidio' , 'pagare' , 'prerecibo' , 'prereciboadicional', function(){
-		var _this = this;
-		var total = 0;
-		'precalificacion avaluo subsidio pagare prerecibo prereciboadicional'.w().forEach(function(key){
-			try{
-			var n = Number(_this.getWithDefault(key, 0));
-			total = total + n;
-			} catch(err) { 
-				Ember.Logger.info(err.message);
-			}
-		});
-		var pr = get(this, 'precioRaw');
-		set(this, 'sumaCheca', total === get(this, 'precioCatalogo') );
-	}),
-	
-	validations:{
-		precalificacion: {
-			numericality: { allowBlank: true}
-		},
-		avaluo: {
-			numericality: { allowBlank: true}
-		},
-		subsidio: {
-			numericality: { allowBlank: true}
-		},
-		pagare: {
-			numericality: { allowBlank: true}
-		},
-		prerecibo: {
-			numericality: { allowBlank: true}
-		},
-		prereciboadicional: {
-			numericality: { allowBlank: true}
-		},
-		selectedEtapa : { 
-			exclusion : { in: [null] , message: 'Debe seleccionar etapa' }
-		},
-		selectedPrecio : {
-			exclusion : { in: [null], message: 'Debe seleccionar precio' }
-		},
-		selectedManzana : { 
-			exclusion : { in: [null], message: 'Debe seleccionar manzana' }
-		},
-		selectedInmueble : { 
-			exclusion : { in: [null] , message: 'Debe seleccionar inmueble' }
-		},
-		tipoCuenta : { 
-			exclusion : { in: [null], message: 'Debe seleccionar tipo cuenta' }
-		},
-		sumaCheca : {
-			exclusion : { in: [false], message: 'No checa total con precio'}
-		},
-		oferta: {
-			numericality: { onlyInteger: true, messages : { onlyInteger: 'la oferta solo debe contenter numeros'}},
-		}
-	},
-	actions : {
-		seleccionar(oferta){
-			info('entrando en la accion de hacer con su parametro', oferta);
-			set(this, 'oferta', oferta);
-			this.send('buscarOferta', oferta);
-		},
-		buscarOferta(oferta){
-			set(this, 'isOferta', false);
-			set(this, 'errorMessage', '');
-			var etapa= get(this, 'selectedEtapa');
-        	var that=this;
-        	var p =this.store.query('ofertasasignacion', {etapa: etapa, oferta: oferta});
-        	p.then((data)=>{
-        		var length = data.get('length');
-        		//info('viendo valor', get(data, 'length'));
-        		if(length){
-        			info('entro en length');
-        			data.forEach(function(item){
-        				if(Object.is(get(item, 'inmueble'), 0)){
-        					set(that, 'isOferta', true);
-        					set(that, 'inmuebleSaldo', item.get('saldo'));
-        					set(that, 'nombreCliente', item.get('nombreCliente'));
-        					//set (that, 'inmueble', item.get('inmueble'));
-        					set(that, 'fechaVenta', item.get('fechaVenta'));
-        					set(that, 'clienteId', item.get('clienteId'));
-        					set(that, 'cuenta', item.get('cuenta'));
-        				} else{
-        					set(that, 'errorMessage', 'La cuenta-oferta ya tiene inmueble asignado');
-        				}
-        			});
-        		} else{
-        			set(that, 'errorMessage', 'No Existe Oferta');
-        			set(that, 'inmuebleSaldo', '');
-        		}
-
-        	});
- 	},
-
-		pegarAfiliacion: function(){
-			set(this, 'afiliacion', get(this, 'comodin.afiliacion'));
-		},
-		mostrarCamposCapturaAdicionales: function(){
-
-			this.toggleProperty('muestraCamposCapturaAdicionales');
-		},
-		descartaInmueble: function(){
-			set(this, 'selectedInmueble', null);
-		}, 
-		descartaProspecto: function(){
-			set(this, 'prospecto', null);
-		},
-		requestListAgain: function(){
-			this.requestList();
-		},
-		traerEmail(){
-			var that = this;
-			get(this, 'ajax').post('/api/useremail?query=1')
-			.then(
-    			function(data){
-        			if ( data.success === '1'){
-          				that.set('emailaddress', data.email);
-        			}
-    			}
-          	);
-		},
+  observaManzana: function() {
+    set(this, 'selectedInmueble',null);
+  }.observes('selectedManzana'),
+  observaPrecios: function() {	
+    if (isEmpty(get(this,'selectedEtapa'))) {
+      return;
+    }
+    let precioid = get(this,'selectedPrecio');
+    // var v = get(this,'controllers.preciosinmuebles');
+    let c = get(this,'preciosinmuebles');
+    let item = c.findBy('id', precioid );
+    if (!get(this,'candadoPrecio')) {
+      set(this,'precioRaw', get(item,'precioraw'));
+    }
+  }.observes('selectedPrecio'),
+  hayCamposObligatorios: function() {
+    if (Ember.isEmpty(get(this, 'inmueble')) || isEmpty(get(this, 'cliente'))) {
+      return false;
+    }
+    return true;
+  }.property('inmueble', 'cliente'),
+  //clientesofertas : Ember.computed.alias('controllers.clientesofertas'),
+  //clientessinofertas : Ember.computed.alias('controllers.clientessinofertas'),
+  checaSuma: Ember.observer('precalificacion', 'avaluo', 'subsidio' , 'pagare' , 'prerecibo' , 'prereciboadicional', function() {
+    let _this = this;
+    let total = 0;
+    'precalificacion avaluo subsidio pagare prerecibo prereciboadicional'.w().forEach((key)=> {
+      try {
+        let n = Number(_this.getWithDefault(key, 0));
+        total = total + n;
+      } catch(err) {
+        Ember.Logger.info(err.message);
+      }
+    });
+    let pr = get(this, 'precioRaw');
+    set(this, 'sumaCheca', total === get(this, 'precioCatalogo'));
+  }),
+  validations: {
+    precalificacion: {
+      numericality: { allowBlank: true }
+    },
+    avaluo: {
+      numericality: { allowBlank: true }
+    },
+    subsidio: {
+      numericality: { allowBlank: true }
+    },
+    pagare: {
+      numericality: { allowBlank: true }
+    },
+    prerecibo: {
+      numericality: { allowBlank: true }
+    },
+    prereciboadicional: {
+      numericality: { allowBlank: true }
+    },
+    selectedEtapa: {
+      exclusion: { in: [null] , message: 'Debe seleccionar etapa' }
+    },
+    selectedPrecio: {
+      exclusion: { in: [null], message: 'Debe seleccionar precio' }
+    },
+    selectedManzana: {
+      exclusion: { in: [null], message: 'Debe seleccionar manzana' }
+    },
+    selectedInmueble: {
+      exclusion: { in: [null] , message: 'Debe seleccionar inmueble' }
+    },
+    tipoCuenta: {
+      exclusion : { in: [null], message: 'Debe seleccionar tipo cuenta' }
+    },
+    sumaCheca: {
+      exclusion: { in: [false], message: 'No checa total con precio'}
+    },
+    oferta: {
+      numericality: { onlyInteger: true, messages : { onlyInteger: 'la oferta solo debe contenter numeros'}},
+    }
+  },
+  actions: {
+    seleccionar(oferta) {
+      info('entrando en la accion de hacer con su parametro', oferta);
+      set(this, 'oferta', oferta);
+      this.send('buscarOferta', oferta);
+    },
+    buscarOferta(oferta) {
+      set(this, 'isOferta', false);
+      set(this, 'errorMessage', '');
+      let etapa = get(this, 'selectedEtapa');
+      let that = this;
+      let p = this.store.query('ofertasasignacion', { etapa, oferta });
+      p.then((data)=> {
+        let length = data.get('length');
+        // info('viendo valor', get(data, 'length'));
+        if (length) {
+          info('entro en length');
+          data.forEach((item)=> {
+            if (Object.is(get(item, 'inmueble'), 0)) {
+              set(that, 'isOferta', true);
+              set(that, 'inmuebleSaldo', item.get('saldo'));
+              set(that, 'nombreCliente', item.get('nombreCliente'));
+              // set (that, 'inmueble', item.get('inmueble'));
+              set(that, 'fechaVenta', item.get('fechaVenta'));
+              set(that, 'clienteId', item.get('clienteId'));
+              set(that, 'cuenta', item.get('cuenta'));
+            } else {
+              set(that, 'errorMessage', 'La cuenta-oferta ya tiene inmueble asignado');
+            }
+          });
+        } else {
+          set(that, 'errorMessage', 'No Existe Oferta');
+          set(that, 'inmuebleSaldo', '');
+        }
+      });
+    },
+    pegarAfiliacion() {
+      set(this, 'afiliacion', get(this, 'comodin.afiliacion'));
+    },
+    mostrarCamposCapturaAdicionales() {
+      this.toggleProperty('muestraCamposCapturaAdicionales');
+    },
+    descartaInmueble() {
+      set(this, 'selectedInmueble', null);
+    },
+    descartaProspecto() {
+      set(this, 'prospecto', null);
+    },
+    requestListAgain() {
+      this.requestList();
+   },
+    traerEmail() {
+      let that = this;
+      get(this, 'ajax').post('/api/useremail?query=1').then((data)=> {
+        if (data.success === '1') {
+          that.set('emailaddress', data.email);
+        }
+      });
+    },
 		grabar:function(){
 			try{
   				info('valor de inmueble ' ,get(this, 'inmueble'));
