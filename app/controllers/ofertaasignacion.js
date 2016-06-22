@@ -33,9 +33,11 @@ let Impresora = Ember.Object.extend({
   online: false,
   copies: 0,
   chosen: false,
-  elegible: function() {
-    return this.get('copies') && this.get('online');
-  }.property('copies', 'online')
+  elegible: computed('copies', 'online', {
+    get() {
+      return this.get('copies') && this.get('online');
+    }
+  })
 });
 
 let NumeroExterior = Ember.Object.extend({
@@ -242,12 +244,16 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   },
   reservados: Ember.computed.alias('inmueblesReservados.content.length'),
   reservadosProspectos: Ember.computed.alias('prospectosReservados.content.length'),
-  tipoCuentaEsInfonavit: function() {
-    return Ember.isEqual(get(this, 'tipoCuenta'), 'infonavit');
-  }.property('tipoCuenta'),
-  tipoCuentaEsHipotecaria: function() {
-    return Ember.isEqual(get(this, 'tipoCuenta'), 'hipotecaria');
-  }.property('tipoCuenta'),
+  tipoCuentaEsInfonavit: computed('tipoCuenta', {
+    get() {
+      return Ember.isEqual(get(this, 'tipoCuenta'), 'infonavit');
+    }
+  }),
+  tipoCuentaEsHipotecaria: computed('tipoCuenta', {
+    get() {
+      return Ember.isEqual(get(this, 'tipoCuenta'), 'hipotecaria');
+    }
+  }),
   /* hayPagPrevias: computed('resultPage', {
     get() { */
   tipoCuentaEsContado: computed('tipoCuenta', {
@@ -269,33 +275,36 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       return indice !== -1;
     }
   }),
-  estaEnProspectosReservados: function() {
-    let prospecto = get(this, 'prospecto');
-    if (Ember.isEmpty(prospecto)) {
-      return false;
+  estaEnProspectosReservados: computed('prospecto', {
+    get() {
+      let prospecto = get(this, 'prospecto');
+      if (Ember.isEmpty(prospecto)) {
+        return false;
+      }
+      prospecto = parseInt(prospecto);
+      let indice = -1;
+      let ir = get(this, 'prospectosReservados');
+      let cual = ir.findBy('prospecto', prospecto);
+      indice = ir.indexOf(cual);
+      return indice !== -1;
     }
-    prospecto = parseInt(prospecto);
-    let indice = -1;
-    let ir = get(this, 'prospectosReservados');
-    let cual = ir.findBy('prospecto', prospecto);
-    indice = ir.indexOf(cual);
-    return indice !== -1;
-  }.property('prospecto'),
-  observaFlagLista: function() {
+  }),
+  // observer('flagLista', function() {
+  observaFlagLista: observer('flagLista', function() {
     if (get(this, 'flagLista')) {
       this.requestList();
       this.toggleProperty('flagLista');
     }
-  }.observes('flagLista'),
-  observandoTipoCuenta: function() {
+  }),
+  observandoTipoCuenta: observer('tipoCuenta', function() {
     if (get(this, 'tipoCuentaEsContado') || this.get('tipoCuentaEsHipotecaria')) {
       set(this, 'afiliacionOk', true);
     } else {
       set(this, 'afiliacion', '');
       set(this, 'afiliacionOk', false);
     }
-  }.observes('tipoCuenta'),
-  observaSelectedInmueble: function() {
+  }),
+  observaSelectedInmueble: observer('selectedInmueble', function() {
     let that = this;
     let antes = get(this, 'selectedInmueblePrevio');
     let despues = get(this, 'selectedInmueble');
@@ -337,8 +346,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         });
       }
     }
-  }.observes('selectedInmueble'),
-  observaProspecto: function() {
+  }),
+  observaProspecto: observer('prospecto', function() {
     let prospecto = get(this, 'prospecto');
     if (!get(this, 'prospectoNoChecar')) {
       get(this, 'prospectosofertas').set('model', this.store.query('prospectosoferta', { prospecto }));
@@ -356,13 +365,13 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         this.send('submitProspecto');
       }
     }
-  }.observes('prospecto'),
+  }),
   highLightAndTrue: function(key) {
     if (!Ember.isEmpty(key)) {
       set(this, key, true);
     }
   }.on('highlightandtrue'),
-  validaAfiliacion: function() {
+  validaAfiliacion: observer('afiliacion', function() {
     if (get(this, 'tipoCuentaEsContado') || get(this, 'tipoCuentaEsHipotecaria')) {
       set(this, 'afiliacionOk', true);
       return;
@@ -398,52 +407,56 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     if (get(this, 'afiliacionOk')) {
       this.trigger('highlightandtrue');
     }
-  }.observes('afiliacion'),
-  mislotes: function() {
-    let that = this;
-    let manzana = get(this, 'selectedManzana');
-    info('valor de manzana', manzana);
-    // var v = get(this, 'controllers.inmueblesdisponibles');
-    let c = get(this, 'inmueblesdisponibles');
-    let isDepto = get(this, 'departamento');
-    if (get(this, 'departamento')) {
-      let mySet = new Set([]);
-      set(this, 'numerosExteriores', mySet);
-    }
-    return c.filter(function(item) {
-      let m = item.get('manzana');
-      let lote = item.get('lote');
-      if (m === manzana) {
-        if (isDepto) {
-          get(that, 'numerosExteriores').add(lote.substring(0, 2));
+  }),
+  mislotes: computed('selectedManzana', {
+    get() {
+      let that = this;
+      let manzana = get(this, 'selectedManzana');
+      info('valor de manzana', manzana);
+      // var v = get(this, 'controllers.inmueblesdisponibles');
+      let c = get(this, 'inmueblesdisponibles');
+      let isDepto = get(this, 'departamento');
+      if (get(this, 'departamento')) {
+        let mySet = new Set([]);
+        set(this, 'numerosExteriores', mySet);
+      }
+      return c.filter(function(item) {
+        let m = item.get('manzana');
+        let lote = item.get('lote');
+        if (m === manzana) {
+          if (isDepto) {
+            get(that, 'numerosExteriores').add(lote.substring(0, 2));
+          }
+          return true;
+        } else {
+          return false;
         }
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }.property('selectedManzana'),
-  misprecios: function() {
-    info('aqui truena');
-    let etapa = parseInt(get(this, 'selectedEtapa'));
-    info('valor de etapa', etapa);
-    // var v = get(this, 'controllers.preciosinmuebles');
-    let c = get(this, 'preciosinmuebles');
-    let that = this;
-    set(this, 'cuantosprecios', 0);
-    return c.filter(function(item) {
-      let e = item.get('etapa');
-      if (e === etapa) {
-        that.incrementProperty('cuantosprecios');
-        info('la libro mis precios');
-        return true;
-      } else {
-        return false;
-      }
-    });
-    info('la libro mis precios');
-  }.property('selectedEtapa'),
-  observaEtapa: function() {
+      });
+    }
+  }),
+  misprecios: computed('selectedEtapa', {
+    get() {
+      info('aqui truena');
+      let etapa = parseInt(get(this, 'selectedEtapa'));
+      info('valor de etapa', etapa);
+      // var v = get(this, 'controllers.preciosinmuebles');
+      let c = get(this, 'preciosinmuebles');
+      let that = this;
+      set(this, 'cuantosprecios', 0);
+      return c.filter(function(item) {
+        let e = item.get('etapa');
+        if (e === etapa) {
+          that.incrementProperty('cuantosprecios');
+          info('la libro mis precios');
+          return true;
+        } else {
+          return false;
+        }
+      });
+      info('la libro mis precios');
+    }
+  }),
+  observaEtapa: observer('selectedEtapa', function() {
     let _this = this;
     set(_this, 'cuantosInmueblesDisponibles', 0);
     // get(this, 'manzanasdisponibles').
@@ -465,8 +478,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     //  get(this, 'controllers.inmueblesdisponibles').
     set(this, 'inmueblesdisponibles', idisp);
     //  set(this, 'selectedManzana', null);
-  }.observes('selectedEtapa'),
-  observarCliente: function() {
+  }),
+  observarCliente: observer('cliente', function() {
     let cliente = get(this, 'clienteId');
     set(this, 'clientesofertas', this.store.query('clientesoferta', { cliente }));
     let _this = this;
@@ -476,16 +489,16 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     }, ()=> {
       set(_this, 'referencia', '');
     });
-  }.observes('cliente'),
-  observaAfiliacion: function() {
+  }),
+  observaAfiliacion: observer('afiliacion', function() {
     let afiliacion = get(this, 'afiliacion');
     if (!get(this, 'afiliacionNoChecar')) {
       get(this, 'prospectosofertas').set('model', this.store.query('prospectosoferta', { afiliacion }));
-	} else {
+    } else {
       this.toggleProperty('afiliacionNoChecar');
     }
-  }.observes('afiliacion'),
-  observaProspectosOfertas: function() {
+  }),
+  observaProspectosOfertas: observer('prospectosofertas', function() {
     let _this = this;
     return get(this, 'prospectosofertas').filter(function(item) {
       set(_this, 'afiliacionNoChecar', true);
@@ -493,11 +506,11 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       set(_this, 'prospecto', item.get('id'));
       set(_this, 'afiliacion', item.get('afiliacion'));
     });
-  }.observes('prospectosofertas'),
-  observaManzana: function() {
+  }),
+  observaManzana: observer('selectedManzana', function() {
     set(this, 'selectedInmueble', null);
-  }.observes('selectedManzana'),
-  observaPrecios: function() {
+  }),
+  observaPrecios: observer('selectedPrecio', function() {
     if (isEmpty(get(this, 'selectedEtapa'))) {
       return;
     }
@@ -508,13 +521,15 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     if (!get(this, 'candadoPrecio')) {
       set(this, 'precioRaw', get(item, 'precioraw'));
     }
-  }.observes('selectedPrecio'),
-  hayCamposObligatorios: function() {
-    if (Ember.isEmpty(get(this, 'inmueble')) || isEmpty(get(this, 'cliente'))) {
-      return false;
+  }),
+  hayCamposObligatorios: computed('inmueble', 'cliente', {
+    get() {
+      if (Ember.isEmpty(get(this, 'inmueble')) || isEmpty(get(this, 'cliente'))) {
+        return false;
+      }
+      return true;
     }
-    return true;
-  }.property('inmueble', 'cliente'),
+  }),
   // clientesofertas : Ember.computed.alias('controllers.clientesofertas'),
   // clientessinofertas : Ember.computed.alias('controllers.clientessinofertas'),
   checaSuma: Ember.observer('precalificacion', 'avaluo', 'subsidio' , 'pagare' , 'prerecibo' , 'prereciboadicional', function() {
@@ -707,19 +722,19 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     },
     submitInmueble() {
       let inmueble = parseInt(this.get('inmueble'));
-      get(this, 'socket').send({ topic: 'lock_oferta_home', data: { inmueble: inmueble } }, true);
+      get(this, 'socket').send({ topic: 'lock_oferta_home', data: { inmueble } }, true);
     },
     freeInmueble(x) {
       let inmueble = parseInt(x);
-      get(this, 'socket').send({ topic: 'free_oferta_home', data: { inmueble: inmueble } }, true);
+      get(this, 'socket').send({ topic: 'free_oferta_home', data: { inmueble } }, true);
     },
     submitProspecto() {
       let prospecto = parseInt(this.get('prospecto'));
-      get(this, 'socket').send({ topic: 'lock_prospecto', data: { prospecto: prospecto } }, true);
+      get(this, 'socket').send({ topic: 'lock_prospecto', data: { prospecto } }, true);
     },
     freeProspecto(x) {
       let prospecto = parseInt(x);
-      get(this, 'socket').send({ topic: 'free_prospecto', data: { prospecto: prospecto } }, true);
+      get(this, 'socket').send({ topic: 'free_prospecto', data: { prospecto } }, true);
     },
     buscarClientesSinOfertas() {
       let _this = this;
@@ -740,16 +755,16 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       get(this, 'erroresHabidos.content').clear();
       Object.keys(this.get('errors')).forEach((que)=> {
         if (typeof que === 'string' || que instanceof String) {
-          let error = get(_this, 'errors.' + que);
+          let error = get(_this, `errors.${que}`);
           if (typeof error[0] === 'string' || error[0] instanceof String) {
-            let errmsg = error[0];
+            let [errmsg] = error;
             if (errmsg === 'is not a number') {
               errmsg = 'no es numérico';
             }
             get(_this, 'erroresHabidos.content').pushObject(ErrorValidacion.create({
               variable: que,
               mensaje: errmsg,
-              campo: _this.getWithDefault('label'+que.capitalize(), '')
+              campo: _this.getWithDefault(`label${que.capitalize()}`, '')
             }));
           }
         }
@@ -818,9 +833,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           let anexoPdf = get(that, 'anexoPdf');
           let ofertaPdf = get(that, 'ofertaPdf');
           let emailAddress = get(that, 'emailaddress');
-          let request = function(tipo_destino, destino, lista_de_archivos) {
-            lista_de_archivos.forEach((archivo)=> {
-              get(that, 'ajax').request(`/api/otro?${tipo_destino}=${destino}&pdf=${archivo}`);
+          let request = function(tipoDestino, destino, listaDeArchivos) {
+            listaDeArchivos.forEach((archivo)=> {
+              get(that, 'ajax').request(`/api/otro?${tipoDestino}=${destino}&pdf=${archivo}`);
             });
           };
           let requestForPrinting = function(destino, archivo, copies) {
