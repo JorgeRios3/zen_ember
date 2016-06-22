@@ -44,5 +44,14 @@ ul#menu li {
 				{{#if showComponent}}
 					{{impresion-reporte store=store reporte="resumen" parametro1="cliente" valorParametro1="" excel=true sinParametro=true submit=(action 'togglePrinterComponent') cancel=(action 'togglePrinterComponent') }}
 				{{else}}
-					<div class="btn btn-info" {{action "togglePrinterComponent"}}>Imprimir Resumen</div>
+					<div class="row">
+						{{#if esBreve}}
+						<div class="btn btn-warning" {{action "resumenBreve"}}>Ver Resumen</div>
+						{{else}}
+							<div class="btn btn-info" {{action "togglePrinterComponent"}}>Imprimir Resumen</div>
+							{{#if esSmartics}}
+								<div class="btn btn-success" {{action "resumenBreve"}}>Ver Resumen Breve</div>
+							{{/if}}
+						{{/if}}
+					</div>
 				{{/if}}
