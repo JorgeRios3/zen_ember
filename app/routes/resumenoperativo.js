@@ -24,6 +24,9 @@ RouteAuthMixin, FormatterMixin,
 
   },
   setupController(controller, model) {
+    set(controller, 'model', model);
+    let app = getOwner(this).lookup('controller:application');
+    let usuario = get(app, 'usuario');
     var that = this;
     let etapas = [];
     for (let i = 0; i < 4; i++) {
@@ -42,7 +45,11 @@ RouteAuthMixin, FormatterMixin,
       set(controller, `nombre${indice}`, get(model.resumen, 'nombres_etapas')[etapa][0]);
     }
     try {
-      get(model.resumen, 'kvalores').forEach((kvalor)=> {
+      let kvalores =  get(model.resumen, 'kvalores'); 
+      if (usuario === "SMARTICS" || usuario === "smartics") {
+        kvalores =  get(model.resumen, 'kvalores');
+      }
+        kvalores.forEach((kvalor)=> {
         let linea = get(model.resumen, 'valores')[kvalor];
         let t = 0;
         for (let etapa of etapas) {
