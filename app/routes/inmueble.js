@@ -6,16 +6,16 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
   beforeModel2() {
     // this._super(...arguments);
-    var controller = this.controllerFor(this.routeName);
+    let controller = this.controllerFor(this.routeName);
     controller.setProperties({
-      disponible:false,
-	  selectedEtapa:'',
-	  listaInmuebles:'',
-	  desplegarResultado:false,
+      disponible: false,
+	    selectedEtapa: '',
+	    listaInmuebles: '',
+	    desplegarResultado: false,
     });
   },
   model() {  
     this.store.unloadAll('inmuebledetalle');
-    return  this.store.findAll('etapastramite', { reload : true });
+    return  this.store.findAll('etapastramite', { reload: true });
   }	
 });
