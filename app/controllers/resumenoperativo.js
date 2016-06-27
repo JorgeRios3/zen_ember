@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import FormatterMixin from '../mixins/formatter';
 const {
-	get,
+  get,
   set,
   computed,
   observer,
