@@ -40,3 +40,4 @@ inflector.irregular('referenciasrapcuenta', 'referenciasrapcuentas');
 inflector.irregular('validaafiliacion', 'validaafiliacions');
 inflector.irregular('transicionprospecto', 'transicionprospectos');
 inflector.irregular('inmueblearcadia', 'inmueblearcadias');
+inflector.irregular('autorizaciondescuento', 'autorizaciondescuentos');
