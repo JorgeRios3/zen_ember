@@ -1,0 +1,239 @@
+<br/><br/>
+<h3>
+	<div class="row">
+		<span class="{{if socketAbierto 'text-success' 'text-danger'}}"></span>&nbsp;Autorizacion Descuentos{{#if reservados}}({{reservados}}){{/if}}
+	</div>
+</h3>
+
+<br>
+{{#liquid-if reservados use="toLeft"}}
+<div class="text-warning">Inmuebles Reservados</div>
+<ul>
+	{{#each inmueblesReservados.content  as |reservado|}}
+		<li>
+			{{reservado.inmueble}}
+		</li>
+	{{/each}}
+</ul>
+{{/liquid-if}}
+
+{{#if estaEnInmueblesReservados}}
+	
+
+  {{#modal-bs title="Alguien está usando el mismo inmueble" ok="descartaInmueble" close="descartaInmueble"}}
+   Por ende se va a rechazar el usar éste.
+   
+  {{/modal-bs}}
+
+{{/if}}
+<form role="form" {{ action "grabar" on="submit"}}>
+
+	<div><a href="" {{action 'traerEmail'}}><span class="glyphicon glyphicon-envelope"></span></a>{{emailaddress}}</div>
+	<div class="form-group">
+				<label class="control-label">Etapa</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Etapa{{/x-option}}
+  							{{#each etapasofertas as |item|}}
+  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	
+	{{#liquid-if cuantosInmueblesDisponibles use="toRight"}}
+		<div class="form-group">
+			<label class="control-label">Inmuebles Disponibles</label>
+			<div class="row">
+				<div class="col-xs-4 col-md-2">
+					<p class="form-control-static text text-info">{{cuantosInmueblesDisponibles}}</p>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+				<label class="control-label">Manzana</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedManzana action=(action  (mut selectedManzana)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Manzana{{/x-option}}
+  							{{#each manzanasdisponibles as |item|}}
+  								{{#x-option value=item.manzana}}{{item.manzana}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{#if departamento}}
+			<div class="form-group">
+				<label for="idnumerosexteriores" class="control-label">Numero Exterior</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value='0' action="numeroExteriorElegido" class="form-control form-control-inline"}}
+
+		  					{{#x-option value='0'}}Elija Número{{/x-option}}
+		  					{{#each numerosExteriores as |item|}}
+		  						{{#x-option value=item}}{{item}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="idnumerosinteriores" class="control-label">Numero Interior</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value='0' action="numeroInteriorElegido" class="form-control form-control-inline"}}
+
+		  					{{#x-option value='0'}}Elija Número{{/x-option}}
+		  					{{#each numerosInteriores as |item|}}
+		  						{{#x-option value=item}}{{item}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+
+		<div class="form-group">
+				<label class="control-label">Lote</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedInmueble action=(action  (mut selectedInmueble)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Lote{{/x-option}}
+  							{{#each mislotes as |item|}}
+  								{{#x-option value=item.id}}{{item.lote}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{#if inmueble}}
+			<div class="form-group">
+		
+				<label for="idofertainmueble" class="control-label">Inmueble</label>
+				<div class="row">
+					<div class="col-xs-4 col-md-6">
+						<p class="form-control-static text text-info">{{inmueble}} &nbsp; {{domicilio}}</p>
+					</div>
+				
+				</div>
+		
+		</div>
+		{{/if}}
+		{{#if hayCaracteristicas}}
+			<div id="no-more-tables">
+				<table class="table table-bordered table-striped table-condensed cf">
+					<thead>
+					<tr>
+						<th>Descripcion</th>
+						<th>Cantidad</th>
+					</tr>
+					</thead>
+					<tbody>
+					{{#each carateristicasLista as |caracteristica|}}
+						<tr>
+							<td data-title="Descripcion">{{caracteristica.descripcion}}</td>
+							<td data-title="Cantidad" class="text-right">{{caracteristica.cantidad}}</td>
+						</tr>
+					{{/each}}
+					</tbody>
+				</table>
+			</div>
+		{{/if}}
+		{{#if candadoPrecio}}
+		    <div>Si hay candado</div>
+		    <div class="text text-info">El precio es: ${{precioCatalogo}}</div>
+
+        {{else}} 
+			<div class="form-group">
+				<label class="control-label">Precio</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedPrecio action=(action  (mut selectedPrecio)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Precio{{/x-option}}
+  							{{#each misprecios as |item|}}
+  								{{#x-option value=item.id}}{{item.precio}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+
+	{{else}}
+			{{#if selectedEtapa}}
+				<div class="form-group">
+					<label class="control-label">Obteniendo Inmuebles Disponibles ...</label>
+				</div>
+			{{/if}}
+	{{/liquid-if}}
+	{{#if inmueble}}
+	<br><br>
+		<div class="form-group">		
+			<label for="idCantidadDescuento" class="control-label">Cantidad Descuento</label>		
+			<div class="row">
+				<div class="col-xs-10 col-md-3">
+					{{input type="text" value=cantidadDescuento class="form-control" placeholder="Cantidad Descuento" maxlength="11" id="idCantidadDescuento"}}
+				</div>				
+			</div>
+  			<label for="comment">Comentario</label>
+  				{{textarea value=comentarioValor class="form-control" placeholder="Comentario" rows="5" id="comment"}}
+		</div>
+	{{/if}}
+	{{#if errorMessage}}
+		<br>
+		  <div class="alert alert-danger">
+		  	<a class="close" data-dismiss="alert" href="#">x</a>
+		  	<p>
+		       <strong>Operación Inválida : </strong> <code>{{errorMessage}}</code>
+		  	</p>
+		        
+		  </div>
+	{{/if}}
+	
+
+	
+
+	<div>
+		<hr>
+		{{#if isValid}}
+  			{{#if huboErrorAlGrabar}}
+				{{#modal-bs title="Hubo Error al Generar la Oferta" ok="enteradoHuboErrorAlGrabar" close="enteradoHuboErrorAlGrabar"}}
+					No pudo generarse la oferta y la asignación.  
+					<br>
+					<div class="text-danger">
+						{{errorAlGrabar}}	
+					</div>
+				{{/modal-bs}}
+			{{/if}}
+			<div class="btn btn-info" {{action "grabar"}}>Grabar</div>
+		
+		{{else}}
+			<button class="btn btn-danger" {{action 'revisarErrores'}}>Revisar</button>
+			{{#if muestroErrores}}
+			
+				{{#modal-bs title="Errores antes de poder grabar" close="enteradoInspeccionarErrores"}}
+   						<ul>
+   							{{#each erroresHabidos.content as |err|}}
+   							<li>{{if err.campo err.campo err.variable}}&nbsp;-&nbsp;{{err.mensaje}}</li>
+   							{{/each}}
+   						</ul>
+  				{{/modal-bs}}
+			{{/if}} 
+		{{/if}}
+	</div>
+	{{#if seGrabo}}
+				{{#modal-bs title="Descuento Generado" ok="okGraboConExito" close="okGraboConExito"}}
+					Descuento para el inmueble {{inmueble}} con el codigo:  
+					<br>
+					<div class="h3 text-success">
+						{{codigoDescuento}}	
+					</div>
+				{{/modal-bs}}
+			{{/if}}
+
+	
+</form>
