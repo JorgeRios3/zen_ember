@@ -65,6 +65,9 @@ let miPrecio = Ember.Object.extend({
 export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   session: service(),
   ajax: service(),
+  codigoDescuento: '',
+  observaCodigoDescuento: false,
+  valorDescuento: '',
   queryParams: ['origenCliente', 'cliente', 'afiliacion', 'prospecto'],
   conteoSuma: '',
   etapasofertas: '',
@@ -165,6 +168,34 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   socket: computed('socketService', 'socketU', {
     get() {
       return get(this, 'socketService').socketFor(config.WSOCKETS_URL);
+    }
+  }),
+  observaDescuento: observer('codigoDescuento', function() {
+    let cuenta = '';
+    let inmueble = '';
+    let descuento = '';
+    let codigo = get(this, 'codigoDescuento');
+    if (get(this, 'codigoDescuento').length === 8) {
+      this.store.findRecord('autorizaciondescuento', codigo).then((data)=> {
+        info(get(data, 'inmueble'));
+        info(get(this, 'inmueble'));
+        inmueble = get(data, 'inmueble');
+        cuenta = get(data, 'cuenta');
+        descuento = get(data, 'descuento');
+        if (inmueble  === parseInt(get(this, 'inmueble')) && cuenta === 0 && get(data, 'vigente') === true) {
+          set(this, 'observaCodigoDescuento', true);
+          info('entro en el true');
+          set(this, 'valorDescuento', descuento);
+        } else {
+          set(this, 'observaCodigoDescuento', false);
+          set(this, 'valorDescuento', '');
+        }
+      }, (error)=> {
+        info('se fue error en promesa de codigodescuento no existe');
+      });
+    } else {
+      set(this, 'observaCodigoDescuento', false);
+      set(this, 'valorDescuento', '');
     }
   }),
   init() {
@@ -800,7 +831,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           referencia: get(this, 'referencia'),
           tipocuenta: get(this, 'tipoCuenta'),
           prerecibo: cambiar(get(this, 'prerecibo')),
-          prereciboadicional: cambiar(get(this, 'prereciboadicional'))
+          prereciboadicional: cambiar(get(this, 'prereciboadicional')),
+          autorizacion: get(this, 'observaCodigoDescuento') === true ? get(this, 'codigoDescuento') : ''
         }
       );
 

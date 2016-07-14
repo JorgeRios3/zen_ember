@@ -39,6 +39,7 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       return;
     }
     controller.setProperties({
+      observaCodigoDescuento: false,
       processingGrabar: false,
       selectedEtapa: null,
       selectedPrecio: null,

@@ -73,6 +73,7 @@ Router.map(function() {
   this.route('revinculacion');
   this.route('arcadiainmuebles');
   this.route('autorizaciondescuento');
+  this.route('consultadescuentos');
 });
 
 export default Router;

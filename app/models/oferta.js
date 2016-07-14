@@ -18,5 +18,6 @@ export default DS.Model.extend({
   referencia: DS.attr("number"),
   tipocuenta: DS.attr("string"),
   prerecibo: DS.attr("number", {default: 0}),
-  prereciboadicional: DS.attr("number", {default: 0})
+  prereciboadicional: DS.attr("number", {default: 0}),
+  autorizacion: DS.attr('string', {default: ''})
 });
