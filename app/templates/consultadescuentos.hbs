@@ -1,0 +1,68 @@
+<br><br>
+<div class="text text-info h2">Consulta Descuentos</div>
+<br>
+<div class="form-group">
+		<label class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+						{{#x-option value='0'}}Elija Etapa{{/x-option}}
+						{{#each etapas as |item|}}
+							{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+<div class="checkbox">
+	<label>{{input type="checkbox" name="todos" checked=todos }}Todos los usuarios</label>
+</div>
+<div class="checkbox">
+	<label>{{input type="checkbox" name="concuenta" checked=concuenta }}Consumido</label>
+</div>
+<div class="btn btn-info" {{action 'pedir'}}>Buscar</div>
+<br><br>
+<div id="no-more-tables">
+<table class="table table-bordered table-striped table-condensed cf">
+	<thead>
+		<tr>
+			<th>Autorizacion</th>
+			<th>inmueble</th>
+			<th>Descuento</th>
+			<th>Cuenta</th>
+			<th>Vigente</th>
+			<th>Usuario</th>  
+		</tr>
+	</thead>
+	<tbody>
+	{{#each listaCodigos as |r|}}
+	<tr>
+		<td data-title="Autorizacion">
+			<a href="" {{ action 'procesaAutorizacion' r}}>{{r.autorizacion}}</a> 
+	    </td>
+		<td data-title="inmueble">
+			{{r.inmueble}}
+		</td>
+		<td data-title="Descuento">
+			{{r.descuento}}
+		</td>
+		<td data-title="Cuenta">
+			{{r.cuenta}}
+		</td>
+		<td data-title="Vigente">
+			{{r.vigente}}
+		</td>
+		<td data-title="Usuario">
+			{{r.usuarionombre}}
+		</td>
+	</tr>
+	{{/each}}
+	</tbody>
+</table>
+</div>
+<br>
+{{#if comentario}}
+	<label for="comment">Comentario</label>
+  	{{textarea value=comentario class="form-control" disabled='true' rows="5" id="comment"}}
+{{/if}}
+
