@@ -29,9 +29,14 @@ let Impresora = Ember.Object.extend({
   online: false,
   copies: 0,
   chosen: false,
-  elegible: function() {
+  elegible: computed('copies', 'online', {
+    get() {
+      return this.get('copies') && this.get('online');
+    }
+  })
+  /*elegible: function() {
     return this.get('copies') && this.get('online');
-  }.property('copies', 'online')
+  }.property('copies', 'online')*/
 });
 
 let ErrorValidacion = Ember.Object.extend({
@@ -73,6 +78,12 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   // manejo de error al grabar
   huboErrorAlGrabar: false,
   muestroErrores: false,
+  hayEtapa: computed('selectedEtapa', {
+    get() {
+      info(get(this, 'selectedEtapa'));
+      return get(this, 'selectedEtapa') !== null ? true : false; 
+    }
+  }),
   abonos: computed('documentosSelec.content.@each.abononum', {
     get() {
       let suma = 0;
