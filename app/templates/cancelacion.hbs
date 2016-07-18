@@ -18,7 +18,9 @@
 			<div class="col-xs-8 col-md-5">
 				{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idclientenombre" class="text-uppercase" }}
 			</div>
+			{{#if hayEtapa}}
 			<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+			{{/if}}
 		</div>
 	</div>
 	{{#if cuantos}}
