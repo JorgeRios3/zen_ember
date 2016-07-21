@@ -22,8 +22,14 @@ export default Ember.Controller.extend(FormatterMixin,
       return get(this, 'comodin.cuenta');
     }
   }),
+  tipos: [{id:8, nombre: 'Documento de Ajuste de Precio'}, {id:13, nombre:'Documento Excedente de Credito'}],
+  formaGeneraDocumento: false,
+  huboErrorAlGrabar: false,
+  errorAlGrabar: '',
+  CantidadDocumento: '',
   ci: controller('index'),
   totalVencido: 0,
+  selectedTipo: '',
   etapaBreve: '',
   ofertaCliente: '',
   loteBreve: '',
@@ -67,6 +73,9 @@ export default Ember.Controller.extend(FormatterMixin,
   showCuenta: '',
   errorMessage: '',
   hayReciboElegido: false,
+  observaTipo: observer('selectedTipo', function() {
+    info('viendo tipo', get(this, 'selectedTipo'));
+  }),
   derechosArcadia: computed('ci.perfil', {
     get() {
       let permiso = false;
@@ -169,7 +178,15 @@ export default Ember.Controller.extend(FormatterMixin,
       showData: false
     });
   }),
-
+  observaCantidadYTipo: computed('CantidadDocumento', 'selectedTipo', {
+    get() {
+      if (get(this, 'CantidadDocumento') !== '' && get(this, 'selectedTipo') !== ''){
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }),
   observaIsArcadia: observer('isArcadia', function() {
     setProperties(this, {
       nombre: '',
@@ -261,6 +278,26 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
 
   actions: {
+    guardarDocumento() {
+      let cantidad = get(this, 'CantidadDocumento');
+      let cuenta = get(this, 'cuenta');
+      let tipo = get(this, 'selectedTipo');
+      let record = this.store.createRecord('documentocuenta', {
+        cantidad,
+        cuenta,
+        tipo
+      });
+      record.save().then(()=> {
+        info('se grabo');
+        this.transitionToRoute('index');
+
+      },(error)=> {
+        info('no se grabo');
+      });
+    },
+    levantaFormaDocumento() {
+      this.toggleProperty('formaGeneraDocumento');
+    },
     copiaCuenta() {
       let cuenta = get(this, 'comodin.cuenta');
       set(this, 'cuentaBuscar', cuenta);

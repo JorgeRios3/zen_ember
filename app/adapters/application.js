@@ -42,3 +42,4 @@ inflector.irregular('transicionprospecto', 'transicionprospectos');
 inflector.irregular('inmueblearcadia', 'inmueblearcadias');
 inflector.irregular('autorizaciondescuento', 'autorizaciondescuentos');
 inflector.irregular('etapaenautorizacion', 'etapaenautorizacions');
+inflector.irregular('documentocuenta', 'documentocuentas');

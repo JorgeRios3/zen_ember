@@ -286,5 +286,46 @@
 	{{#if hayReciboElegido}}
 		<div class="btn btn-warning" {{action 'saldarRecibo'}}>Saldar Recibo</div>
 	{{/if}}
+	{{#if features}}
+		<div class="btn btn-info" {{action 'levantaFormaDocumento'}}>Generar Documento a la Cuenta</div>
+		{{#if formaGeneraDocumento}}
+			<div class="form-group">
+				<label for="idnumerosexteriores" class="control-label">Etapa</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
+						{{#x-option value=''}}Elija Documento{{/x-option}}
+							{{#each tipos as |item|}}
+								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="CantidadDocumento" class="control-label">Cantidad</label>
+				<div class="row">
+					<div class="col-xs-8 col-md-5">
+						{{input type="text" value=CantidadDocumento class="form-control" placeholder="Cantidad" id="CantidadDocumento" type="number"}}
+					</div>		
+				</div>
+			</div>
+			<div class="row">
+				{{#if observaCantidadYTipo}}
+					<div class="btn btn-success" {{action 'guardarDocumento'}}>Guardar</div>
+				{{/if}}
+				<div class="btn btn-warning" {{action 'levantaFormaDocumento'}}>Cancelar</div>
+			</div>
+		{{/if}}
+	{{/if}}
 
 {{/if}}
+{{#if huboErrorAlGrabar}}
+  			{{#modal-bs title="Hubo Error al Generarse el documento" ok="enteradoHuboErrorAlGrabar" close="enteradoHuboErrorAlGrabar"}}
+   					No pudo grabarse el Documento. {{errorAlGrabar}} 
+   				<br>
+   				<div class="text-danger">	
+   				</div>
+  			{{/modal-bs}}
+
+		{{/if}}
