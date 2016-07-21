@@ -17,10 +17,16 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     ctrlr.notifyPropertyChange('isArcadia');
   },
   beforeModel2() {
+    info('valor de featues ',get(this, 'features'));
     // this._super(...arguments);
     let controller = this.controllerFor(this.routeName);
     controller.setProperties({
+      features: get(this, 'features'),
       selectedEtapa: '',
+      selectedNombre: '',
+      selectedTipo: '',
+      formaGeneraDocumento: false,
+      CantidadDocumento: '',
       nombre: '',
       cuantos: '',
       maximo: Ember.computed.lt('cuantos', 101),
@@ -54,6 +60,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     store.unloadAll('documentoscliente');
     store.unloadAll('movimientosdocumento');
     store.unloadAll('clientescuantosconcuentanosaldada');
+    store.unloadAll('clientesconcuentanosaldada');
   },
   actions: {
     error(error) {
