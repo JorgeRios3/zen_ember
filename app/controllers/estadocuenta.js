@@ -24,6 +24,8 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
   tipos: [{id:8, nombre: 'Documento de Ajuste de Precio'}, {id:13, nombre:'Documento Excedente de Credito'}],
   formaGeneraDocumento: false,
+  telefonoCasa: '',
+  telefonoTrabajo: '',
   huboErrorAlGrabar: false,
   errorAlGrabar: '',
   CantidadDocumento: '',
@@ -147,6 +149,8 @@ export default Ember.Controller.extend(FormatterMixin,
         .then((data)=> {
           data.forEach((item)=> {
             if (get(item, 'id') && get(item, 'nombre')) {
+              set(this, 'telefonoCasa', get(item, 'telefonocasa'));
+              set(this, 'telefonoTrabajo', get(item, 'telefonotrabajo'));
               set(this, 'mostrarNombreClienteAlert', true);
               set(this, 'showName', get(item, 'nombre'));
               set(this, 'showCuenta', get(item, 'id'));
