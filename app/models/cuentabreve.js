@@ -5,6 +5,7 @@ export default DS.Model.extend({
   manzana: DS.attr('string'),
   lote: DS.attr('string'),
   inmueble: DS.attr('string'),
-  etapa: DS.attr('string')
-  
+  etapa: DS.attr('string'),
+  telefonocasa: DS.attr('string'),
+  telefonotrabajo: DS.attr('string')
 });
