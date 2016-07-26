@@ -74,6 +74,7 @@ Router.map(function() {
   this.route('arcadiainmuebles');
   this.route('autorizaciondescuento');
   this.route('consultadescuentos');
+  this.route('comisionestadocuenta');
 });
 
 export default Router;

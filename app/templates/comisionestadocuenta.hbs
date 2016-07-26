@@ -1,0 +1,112 @@
+<br><br>
+<div class="h3 text text-info ">Comisiones Asesores</div>
+{{#if gtevdor.nombregerente}}
+			<div class="row">
+				<div class="col-xs-9 col-md-6">
+					<p class="bg-primary">Gerente : {{gtevdor.nombregerente}}</p>
+				</div>
+			</div>
+			<br/>
+		{{else}}
+			<div class="form-group">
+				<label class="control-label">Gerente de Ventas {{#if cuantosvendedores}}({{cuantosvendedores}}){{/if}}</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedGerente action=(action  (mut selectedGerente)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Gerente{{/x-option}}
+  							{{#each apGerentesventas as |item|}}
+  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+		{{#if gtevdor.nombrevendedor}}
+			<div class="row">
+				<div class="col-xs-9 col-md-6">
+					<p class="bg-primary">Vendedor : {{gtevdor.nombrevendedor}}</p>
+				</div>
+			</div>
+		{{else}}
+	
+			<div class="form-group">
+				<label class="control-label">Vendedor</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedVendedor action=(action  (mut selectedVendedor)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Vendedor{{/x-option}}
+  							{{#each misvendedores as |item|}}
+  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+{{#if muestraDocumentos}}
+<div class="h4 text text-info">Lista de Documentos</div>
+<div id="no-more-tables">
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Documento</th>
+			<th>Inmueble</th>
+			<th>Cuenta</th>
+			<th>Etapa</th>
+			<th>Saldo</th>
+			<th>Cargo</th>
+			<th>Abono</th>
+			<th>Precio Neto</th>
+			<th>Fecha</th>
+			
+		</tr>
+		</thead>
+		<tbody>
+		{{#each listaDocumentosComision as |row i|}}
+			<tr>
+				<td data-title="Documento"><span class="text-right"><a href="" {{ action 'selectedDocumento' row }}>{{row.id}}</a></span></td>
+				<td data-title="Inmueble">{{row.inmueble}}</td>
+				<td data-title="Cuenta">{{row.cuenta}}</td>
+				<td data-title="Etapa" class="text-right"><span class="text-right">{{row.etapa}}</span></td>
+				<td data-title="Saldo" class="text-right">{{row.saldo}}</td>
+				<td data-title="Cargo" class="text-right">{{row.cargo}}</td>
+				<td data-title="Abono" class="text-right">{{row.abono}}</td>
+				<td data-title="Precio Neto" class="text-right">{{row.precioneto}}</td>
+				<td data-title="Fecha" class="text-right">{{row.fechareconocimiento}}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</div>
+{{/if}}
+{{#if listaMovimientosComision}}
+<br>
+<div class="h4 text text-info">Movimientos del Documento {{labelDocumento}}</div>
+<div id="no-more-tables">
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Movimiento</th>
+			<th>Cargo/abono</th>
+			<th>Importe</th>
+			<th>Tipo</th>
+			<th>Fecha</th>
+			
+		</tr>
+		</thead>
+		<tbody>
+		{{#each listaMovimientosComision as |row i|}}
+			<tr>
+				<td data-title="Movimiento" class="text-right"><span class="text-right">{{row.id}}</span></td>
+				<td data-title="Cargo/abono" class="text-right">{{row.cargoabono}}</td>
+				<td data-title="Importe" class="text-right">{{row.importe}}</td>
+				<td data-title="Tipo" class="text-right">{{row.tipo}}</td>
+				<td data-title="Fecha" class="text-right">{{row.fechareconocimiento}}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</div>
+<div class="btn btn-warning" {{action "cerrarMovimientos"}}>Cerrar Movimientos</div>
+{{/if}}
