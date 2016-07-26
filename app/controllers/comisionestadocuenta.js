@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import FormatterMixin from '../mixins/formatter';
 
 const {
   get,
@@ -8,10 +9,11 @@ const {
   isEmpty,
   Logger: { info },
   inject: { service },
-  setProperties
+  setProperties,
+  getProperties
 } = Ember;
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(FormatterMixin, {
   listaDocumentosComision: null,
   listaMovimientosComision: null,
   muestraDocumentos: true,
@@ -19,16 +21,43 @@ export default Ember.Controller.extend({
   session: service(),
   selectedGerente: null,
   selectedVendedor: null,
+  totalSaldo: 0,
+  totalCargo: 0,
+  totalAbono: 0,
   observaSelectedVendedor: observer('selectedVendedor', function() {
     if (get(this, 'selectedVendedor') !== null) {
       let lista = Ember.A();
+      let totalSaldo = 0;
+      let totalCargo = 0; 
+      let totalAbono = 0;
       this.store.unloadAll('documentocomision');
       this.store.query('documentocomision', {vendedor: get(this, 'selectedVendedor')})
       .then((data)=> {
         data.forEach((item)=> {
-          lista.pushObject(item);
+          let etapa = get(item, 'etapa');
+          let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapa}`);
+           let etapaNombre = get(etapaObjecto, 'nombre');
+           let { id, inmueble, cuenta, etapa2, saldo, cargo, abono, precioneto, fechareconocimiento } = getProperties(item, 'id inmueble cuenta etapa saldo cargo abono precioneto fechareconocimiento'.w());
+           totalSaldo=+saldo;
+           totalCargo=+cargo;
+           totalAbono=+abono;
+          lista.pushObject({
+          	etapaNombre,
+          	id,
+          	inmueble, 
+          	cuenta, 
+          	etapa2, 
+          	saldo, 
+          	cargo, 
+          	abono, 
+          	precioneto, 
+          	fechareconocimiento
+          });
         });
         set(this, 'listaDocumentosComision', lista);
+        set(this, 'totalSaldo', totalSaldo);
+        set(this, 'totalCargo', totalCargo);
+        set(this, 'totalAbono', totalAbono);
       });
     }
   }),
@@ -50,7 +79,22 @@ export default Ember.Controller.extend({
           this.store.query('documentocomision', { vendedor: idVendedorCatalogo})
           .then((data)=> {
             data.forEach((item)=> {
-              lista.pushObject(item);
+              let etapa = get(item, 'etapa');
+              let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapa}`);
+              let etapaNombre = get(etapaObjecto, 'nombre');
+              let { id, inmueble, cuenta, etapa2, saldo, cargo, abono, precioneto, fechareconocimiento } = getProperties(item, 'id inmueble cuenta etapa saldo cargo abono precioneto fechareconocimiento'.w());
+              lista.pushObject({
+          	    etapaNombre,
+          	    id,
+          	    inmueble, 
+          	    cuenta, 
+          	    etapa2, 
+          	    saldo, 
+          	    cargo, 
+          	    abono, 
+          	    precioneto, 
+          	    fechareconocimiento
+              });
             });
             set(this, 'listaDocumentosComision', lista);
           });

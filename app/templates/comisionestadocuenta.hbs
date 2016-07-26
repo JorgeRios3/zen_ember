@@ -44,6 +44,7 @@
 				</div>
 			</div>
 		{{/if}}
+		<div>Saldo {{totalSaldo}} Cargo {{totalCargo}} Abono {{totalAbono}}</div>
 {{#if muestraDocumentos}}
 <div class="h4 text text-info">Lista de Documentos</div>
 <div id="no-more-tables">
@@ -68,7 +69,7 @@
 				<td data-title="Documento"><span class="text-right"><a href="" {{ action 'selectedDocumento' row }}>{{row.id}}</a></span></td>
 				<td data-title="Inmueble">{{row.inmueble}}</td>
 				<td data-title="Cuenta">{{row.cuenta}}</td>
-				<td data-title="Etapa" class="text-right"><span class="text-right">{{row.etapa}}</span></td>
+				<td data-title="Etapa">{{row.etapaNombre}}</td>
 				<td data-title="Saldo" class="text-right">{{row.saldo}}</td>
 				<td data-title="Cargo" class="text-right">{{row.cargo}}</td>
 				<td data-title="Abono" class="text-right">{{row.abono}}</td>

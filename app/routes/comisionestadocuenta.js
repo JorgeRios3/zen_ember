@@ -11,9 +11,13 @@ const {
 } = Ember;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
-RouteAuthMixin ,{
+RouteAuthMixin , {
   setupController(ctrlr, model) {
-    let { gtevdor, gerentesventa: apGerentesventas, vendedor: apVendedors, gerentecomision } = model;
+  	let listaEtapas = Ember.A();
+    let { gtevdor, gerentesventa: apGerentesventas, vendedor: apVendedors, gerentecomision, etapasLista } = model;
+    etapasLista.forEach((item)=> {
+    	listaEtapas.pushObject(item);
+    });
     let gerente = get(gtevdor, 'idgerente');
     let vendedor = get(gtevdor, 'idvendedor');
     if (gerente !== 0 && vendedor !== 0) {
@@ -24,7 +28,8 @@ RouteAuthMixin ,{
       gtevdor,
       apGerentesventas,
       apVendedors,
-      gerentecomision
+      gerentecomision,
+      listaEtapas
     });
   },
   beforeModel2() {
@@ -37,7 +42,7 @@ RouteAuthMixin ,{
       selectedVendedor: null,
       listaDocumentosComision: null,
       listaMovimientosComision: null,
-      muestraDocumentos: true,
+      muestraDocumentos: true
     });
   },
   model() {
@@ -47,7 +52,8 @@ RouteAuthMixin ,{
       gtevdor: store.findRecord('gtevdor', 1),
       gerentesventa: store.findAll('gerentesventa', reload),
       vendedor: store.findAll('vendedor', reload),
-      gerentecomision: store.findAll('gerentecomision')
+      gerentecomision: store.findAll('gerentecomision'),
+      etapasLista: store.findAll('etapastramite')
     });
   },
   actions: {
