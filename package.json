@@ -57,7 +57,7 @@
     "ember-validations": "2.0.0-alpha.4",
     "ember-websockets": "3.0.0",
     "emberx-select": "2.0.2",
-    "liquid-fire": "git://github.com/ef4/liquid-fire.git#2635c6ff0f1c59263cff525116ff4bcab1cc4baf",
+    "liquid-fire": "git://github.com/ember-animation/liquid-fire.git#99ff40bae06248444ada56d79d8b84e2df1d722c",
     "loader.js": "^4.0.9",
     "moment": "2.11.2",
     "moment-timezone": "0.5.1"
