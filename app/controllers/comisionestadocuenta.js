@@ -38,26 +38,26 @@ export default Ember.Controller.extend(FormatterMixin, {
           let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapa}`);
            let etapaNombre = get(etapaObjecto, 'nombre');
            let { id, inmueble, cuenta, etapa2, saldo, cargo, abono, precioneto, fechareconocimiento } = getProperties(item, 'id inmueble cuenta etapa saldo cargo abono precioneto fechareconocimiento'.w());
-           totalSaldo=+saldo;
-           totalCargo=+cargo;
-           totalAbono=+abono;
+           totalSaldo+=get(item,'saldo');
+           totalCargo+=get(item, 'cargo');
+           totalAbono+=get(item, 'abono');
           lista.pushObject({
           	etapaNombre,
           	id,
           	inmueble, 
           	cuenta, 
           	etapa2, 
-          	saldo, 
-          	cargo, 
-          	abono, 
+          	saldo: this.formatter(get(item,'saldo')),
+          	cargo: this.formatter(get(item, 'cargo')),
+          	abono: this.formatter(get(item, 'abono')),
           	precioneto, 
           	fechareconocimiento
           });
         });
         set(this, 'listaDocumentosComision', lista);
-        set(this, 'totalSaldo', totalSaldo);
-        set(this, 'totalCargo', totalCargo);
-        set(this, 'totalAbono', totalAbono);
+        set(this, 'totalSaldo', this.formatter(totalSaldo));
+        set(this, 'totalCargo', this.formatter(totalCargo));
+        set(this, 'totalAbono', this.formatter(totalAbono));
       });
     }
   }),
@@ -65,6 +65,9 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  let idVendedorCatalogo = null;
   	  let lista = Ember.A();
   	  let nombre = '';
+  	  let totalSaldo = 0;
+      let totalCargo = 0; 
+      let totalAbono = 0;
       let que = get(this, 'gtevdor');
       if (get(que, 'idvendedor') !== 0 && get(que, 'idgerente') !== 0) {
       	info('pidiendo vendedorcomision');
@@ -80,23 +83,29 @@ export default Ember.Controller.extend(FormatterMixin, {
           .then((data)=> {
             data.forEach((item)=> {
               let etapa = get(item, 'etapa');
-              let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapa}`);
-              let etapaNombre = get(etapaObjecto, 'nombre');
-              let { id, inmueble, cuenta, etapa2, saldo, cargo, abono, precioneto, fechareconocimiento } = getProperties(item, 'id inmueble cuenta etapa saldo cargo abono precioneto fechareconocimiento'.w());
-              lista.pushObject({
-          	    etapaNombre,
-          	    id,
-          	    inmueble, 
-          	    cuenta, 
-          	    etapa2, 
-          	    saldo, 
-          	    cargo, 
-          	    abono, 
-          	    precioneto, 
-          	    fechareconocimiento
-              });
-            });
-            set(this, 'listaDocumentosComision', lista);
+          let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapa}`);
+           let etapaNombre = get(etapaObjecto, 'nombre');
+           let { id, inmueble, cuenta, etapa2, saldo, cargo, abono, precioneto, fechareconocimiento } = getProperties(item, 'id inmueble cuenta etapa saldo cargo abono precioneto fechareconocimiento'.w());
+           totalSaldo+=get(item,'saldo');
+           totalCargo+=get(item, 'cargo');
+           totalAbono+=get(item, 'abono');
+          lista.pushObject({
+          	etapaNombre,
+          	id,
+          	inmueble, 
+          	cuenta, 
+          	etapa2, 
+          	saldo: this.formatter(get(item,'saldo')),
+          	cargo: this.formatter(get(item, 'cargo')),
+          	abono: this.formatter(get(item, 'abono')),
+          	precioneto, 
+          	fechareconocimiento
+          });
+        });
+        set(this, 'listaDocumentosComision', lista);
+        set(this, 'totalSaldo', this.formatter(totalSaldo));
+        set(this, 'totalCargo', this.formatter(totalCargo));
+        set(this, 'totalAbono', this.formatter(totalAbono));
           });
         });
       } else {
