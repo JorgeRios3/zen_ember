@@ -13,6 +13,10 @@ const {
   getProperties
 } = Ember;
 
+let documentoSelect = Ember.Object.extend({
+  idDoc: '',
+  pagoimporte: ''
+});
 
 export default Ember.Controller.extend(FormatterMixin, {
   listaDocumentosComision: null,
@@ -41,7 +45,10 @@ export default Ember.Controller.extend(FormatterMixin, {
   tipoPago: '',
   referenciaPago: '',
   recordPago: null,
-  ListaDocumentosPagar: Ember.ArrayProxy.create({ content: [] }),
+  init() {
+    this._super(...arguments);
+    set(this, 'ListaDocumentosPagar', Ember.ArrayProxy.create({ content: [] }));
+  },
   obsevarEtapaFiltroSelected: observer('etapaFiltroSelected', function() {
   	if (get(this, 'listaDocumentosAux') == null) {
   	  set(this, 'listaDocumentosAux', get(this, 'listaDocumentosComision'));
@@ -52,7 +59,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   	}
   	if (get(this, 'etapaFiltroSelected') === 'todas') {
   	  set(this, 'listaDocumentosComision', get(this, 'listaDocumentosAux'));
-  	  get(this, 'listaDocumentosComision').setEach('seleccionado', false);
+  	  // get(this, 'listaDocumentosComision').setEach('seleccionado', false);
   	  set(this, 'totalesEtapa', false);
   	  return;
   	}
@@ -74,7 +81,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     })
     set(this, 'listaDocumentosComision', lista);
-    get(this, 'listaDocumentosComision').setEach('seleccionado', false);
+    // get(this, 'listaDocumentosComision').setEach('seleccionado', false);
     set(this, 'totalSaldoEtapa', this.formatter(totalSaldoEtapa));
     set(this, 'totalCargoEtapa', this.formatter(totalCargoEtapa));
     set(this, 'totalAbonoEtapa', this.formatter(totalAbonoEtapa));
@@ -146,7 +153,6 @@ export default Ember.Controller.extend(FormatterMixin, {
       let totalAbono = 0;
       let que = get(this, 'gtevdor');
       if (get(que, 'idvendedor') !== 0 && get(que, 'idgerente') !== 0) {
-      	info('pidiendo vendedorcomision');
         this.store.query('vendedorcomision', { gerente: get(que, 'idgerente') })
         .then((data)=> {
           data.forEach((item)=> {
@@ -238,11 +244,12 @@ export default Ember.Controller.extend(FormatterMixin, {
   	ok() {
   	  let pago = get(this, 'recordPago');
   	  let documento = get(this, 'documentoAPagar')
+  	  info('valor de documento', documento);
   	  if (parseFloat(get(this, 'aPagar')) > get(documento, 'saldoNumber')) {
   	  	set(this, 'errorModal', 'El importe no puede ser mayor al importe de la comision a pagar');
   	  	return;
   	  }
-  	  if(parseFloat(get(this, 'aPagar')) < 0 || isEmpty(get(this, 'aPagar'))) {
+  	  if(parseFloat(get(this, 'aPagar')) <= 0 || isEmpty(get(this, 'aPagar'))) {
   	  	info('valor id doc', get(documento, 'id'));
   	    set(this, 'errorModal', 'Debe de haber una cantidad para abonar a la comision');
   	    return;
@@ -251,17 +258,32 @@ export default Ember.Controller.extend(FormatterMixin, {
   	    set(this, 'errorModal', 'El importe a pagar no puede ser mayor al saldo del recibo');
   	    return;
   	  } else {
-  	  	info('se guardo');
-  	  	let resto = parseFloat(get(pago, 'pagoimporte')) - parseFloat(get(this, 'aPagar'));
-  	  	set(pago, 'pagoimporte', this.roundValue(resto));
-  	  	set(get(this, 'documentoAPagar'), 'seleccionado', true);
-  	  	set(this, 'mostrarFormaPagar', false);
-  	  	set(this, 'muestraDocumentos', true);
-  	  	get(this, 'ListaDocumentosPagar').pushObject({
-  	  	  id: parseInt(get(documento, 'id')),
-  	  	  pagoimporte: get(this, 'aPagar')
+  	  	let record = this.store.createRecord('movimientocomision', {
+  	  	  pago: get(pago, 'id'),
+  	  	  documento: get(documento, 'id'),
+  	  	  importe: get(this, 'aPagar')
   	  	});
-  	  	info(get(this, 'ListaDocumentosPagar'));
+  	  	record.save().then(()=> {
+  	  	  info('se guardo');
+  	  	  let resto = parseFloat(get(pago, 'pagoimporte')) - parseFloat(get(this, 'aPagar'));
+  	  	  let restoDocumento = parseFloat(get('documentoAPagar', 'saldo')) - parseFloat(get(this, 'aPagar'))
+  	  	  set(pago, 'pagoimporte', this.roundValue(resto));
+  	  	  set(get(this, 'documentoAPagar'), 'seleccionado', true);
+  	  	  set(get(this, 'documentoAPagar'), 'saldo', resto <= 0 ? '0' : this.formatter(restoDocumento));
+  	  	  // aqui es contra el saldo del propio documento - a pagar
+  	  	  set(get(this, 'documentoAPagar'), 'saldoNumber', this.roundValue(restoDocumento));
+  	  	  //creo que este esta de mas set(get(this, 'documentoAPagar'), 'saldo', this.roundValue(restoDocumento));
+  	  	  set(this, 'mostrarFormaPagar', false);
+  	  	  set(this, 'muestraDocumentos', true);
+  	  	  get(this, 'ListaDocumentosPagar').pushObject(documentoSelect.create({
+  	  	    id: parseInt(get(documento, 'id')),
+  	  	    pagoimporte: get(this, 'aPagar'),
+  	  	    movimiento: get(record, 'id')
+  	  	   }));
+
+  	  	},(error)=> {
+  	  	  info('no se guardo el movmiento');
+  	  	})
   	  }
   	  
   	},
@@ -272,7 +294,6 @@ export default Ember.Controller.extend(FormatterMixin, {
   	},
   	agregaDocumento(documento) {
   	  let pago = get(this, 'recordPago');
-  	  info('cantidad importe', parseFloat(get(pago, 'pagoimporte')));
   	  if (parseFloat(get(pago, 'pagoimporte')) > get(documento, 'saldoNumber')) {
   	    set(this, 'aPagar', parseFloat(get(documento, 'saldoNumber')));
   	  } else {
@@ -283,14 +304,20 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  set(this, 'mostrarFormaPagar', true);
   	},
   	quitaDocumento(documento) {
+  	  this.store.unloadAll('movimientocomision');
+  	  let pago = get(this, 'recordPago');
   	  let idDocumento = get(documento, 'id');
   	  info('valor a quitar', idDocumento);
-  	  //aqui estoy en findby para encontrarlo sacar el valor del documento luego ponerselo al documento pago para porder borrarlo del array 
-  	  let documentoABorrar = get(this, 'ListaDocumentosPagar').findBy('id', `${idDocumento}`);
-  	  info('a borrar ',documentoABorrar);
-  	  get(this, 'ListaDocumentosPagar').removeObject(get(documento, 'documento'));
-  	  info('lo borro');
-  	  set(documento, 'seleccionado', false);
+  	  let documentoABorrar = get(this, 'ListaDocumentosPagar').findBy('id', parseInt(get(documento, 'id')));
+  	  let idDocumentoABorrar = get(documentoABorrar, 'movimiento');
+  	  info('movimiento a borraer',idDocumentoABorrar);
+  	  let borrar = this.store.find('movimientocomision', idDocumentoABorrar).then((dato)=> {
+  	  	 dato.deleteRecord();
+         info(dato.get('isDeleted')); // => true
+         dato.save(); // => DEL
+  	  },(error)=> {
+  	  	info('error');
+  	  });
   	},
     selectedDocumento(documento) {
       set(this, 'labelDocumento', get(documento, 'id'));
