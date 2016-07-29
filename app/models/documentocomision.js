@@ -1,5 +1,11 @@
 import DS from 'ember-data';
 
+const {
+  computed,
+  get,
+  set
+} = Ember;
+
 export default DS.Model.extend({
   inmueble: DS.attr('number'),
   cuenta: DS.attr('number'),
@@ -11,6 +17,9 @@ export default DS.Model.extend({
   precioneto: DS.attr('number'),
   nombrecliente: DS.attr('string'),
   cliente: DS.attr('number'),
-  fechareconocimiento: DS.attr('string')
+  fechareconocimiento: DS.attr('string'),
+  lote: DS.attr('string', { default: '' }),
+  manzana: DS.attr('string', { default: '' }),
+  tieneSaldo: computed.gt('saldo', 0)
 
 });
