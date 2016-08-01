@@ -266,12 +266,19 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  	record.save().then(()=> {
   	  	  info('se guardo');
   	  	  let resto = parseFloat(get(pago, 'pagoimporte')) - parseFloat(get(this, 'aPagar'));
-  	  	  let restoDocumento = parseFloat(get('documentoAPagar', 'saldo')) - parseFloat(get(this, 'aPagar'))
   	  	  set(pago, 'pagoimporte', this.roundValue(resto));
+
+  	  	  let saldoDocumento = parseFloat(get(documento, 'saldoNumber')) - parseFloat(get(this, 'aPagar'));
+  	  	  saldoDocumento = this.roundValue(saldoDocumento);
+  	  	  set(get(this, 'documentoAPagar'), 'saldo', saldoDocumento <= 0 ? '0' : this.formatter(saldoDocumento));
+  	  	  set(get(this, 'documentoAPagar'), 'saldoNumber', saldoDocumento);
+
+  	  	  let abonoDocumento = parseFloat(get(documento, 'abono')) + parseFloat(get(this, 'aPagar'));
+  	  	  abonoDocumento = this.roundValue(abonoDocumento);
+  	  	  set(documento, 'abono', this.formatter(abonoDocumento));
+  	  	  set(documento, 'abonoNumber', abonoDocumento);
   	  	  set(get(this, 'documentoAPagar'), 'seleccionado', true);
-  	  	  set(get(this, 'documentoAPagar'), 'saldo', resto <= 0 ? '0' : this.formatter(restoDocumento));
   	  	  // aqui es contra el saldo del propio documento - a pagar
-  	  	  set(get(this, 'documentoAPagar'), 'saldoNumber', this.roundValue(restoDocumento));
   	  	  //creo que este esta de mas set(get(this, 'documentoAPagar'), 'saldo', this.roundValue(restoDocumento));
   	  	  set(this, 'mostrarFormaPagar', false);
   	  	  set(this, 'muestraDocumentos', true);
@@ -315,6 +322,21 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  	 dato.deleteRecord();
          info(dato.get('isDeleted')); // => true
          dato.save(); // => DEL
+         let resto = parseFloat(get(pago, 'pagoimporte')) + parseFloat(get(documentoABorrar, 'pagoimporte'));
+         set(pago, 'pagoimporte', this.roundValue(resto));
+
+         let saldoDocumento = parseFloat(get(documento, 'saldo')) + parseFloat(get(documentoABorrar, 'pagoimporte'));
+         saldoDocumento = this.roundValue(saldoDocumento)
+         set(documento, 'saldo',saldoDocumento <= 0 ? '0' : this.formatter(saldoDocumento));
+         set(documento, 'saldoNumber', saldoDocumento);
+
+         let restaAbono = parseFloat(get(documento, 'abono')) - parseFloat(get(documentoABorrar, 'pagoimporte'));
+         restaAbono = this.roundValue(restaAbono);
+         set(documento, 'abonoNumber', restaAbono);
+         set(documento, 'abono', restaAbono <= 0 ? '0' : this.formatter(restaAbono))
+         set(documento, 'seleccionado', false);
+         //let restoDocumento = parseFloat(get('documentoAPagar', 'saldo')) - parseFloat(get(this, 'aPagar'))
+
   	  },(error)=> {
   	  	info('error');
   	  });
