@@ -5,5 +5,6 @@ export default DS.Model.extend({
   esinterno: DS.attr('boolean'),
   gerente: DS.attr('number'),
   vendedor: DS.attr('number'),
-  esgerente: DS.attr('boolean')
+  esgerente: DS.attr('boolean'),
+  saldo: DS.attr('number')
 });

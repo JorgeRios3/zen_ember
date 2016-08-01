@@ -44,12 +44,76 @@
 				</div>
 			</div>
 		{{/if}}
+		<div class="form-group">
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=etapaFiltroSelected action=(action  (mut etapaFiltroSelected)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Etapa{{/x-option}}
+  							{{#each etapasDocumentos as |item|}}
+  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{#if totalesEtapa}}
+			<div class="h5 text text-info">Saldo de Etapa Saldo: ${{totalSaldoEtapa}} Cargo: ${{totalCargoEtapa}} Abono: ${{totalAbonoEtapa}} </div>
+		{{else}}
+			<div class="h5 text text-info">Saldo: ${{totalSaldo}}    Cargo: ${{totalCargo}}    Abono: ${{totalAbono}}</div>
+		{{/if}}
 {{#if muestraDocumentos}}
-<div class="h4 text text-info">Lista de Documentos</div>
-<div id="no-more-tables">
+	<br><br>
+	{{#if listaDocumentosComision.length}}
+		{{#unless mostrarFormaRecibo}}
+		<div class="btn btn-info"  {{action "mostrarForma"}}>Generar Recibo</div>
+		{{else}}
+		<div class="form-group">
+		<label for="idcantidadimporte" class="control-label">Cantidad Importe</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=cantidadImporte class="form-control" placeholder="Precio" id="idcantidadimporte"}}
+			</div>
+		</div>
+	</div>
+		<div class="form-group">
+		<label for="idcantidadimpuesto" class="control-label">Cantidad Impuesto</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=cantidadImpuesto class="form-control" placeholder="Precio" id="idcantidadimpuesto"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idtipopago" class="control-label">Tipo de Pago</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=tipoPago class="form-control" placeholder="Descripcion" id="idtipopago"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idreferencia" class="control-label">Referencia de Pago</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=referenciaPago class="form-control" placeholder="Referencia" id="idreferencia"}}
+			</div>
+		</div>
+	</div>
+		<div class="row">
+			<div class="btn btn-success" {{action "generarRecibo"}}>Generar</div>
+			<div class="btn btn-warning" {{action "mostrarForma"}}>Cancelar</div>
+		</div>
+		{{/unless}}
+	{{/if}}
+	{{#if recordPago}}
+		<div class="h3 text text-success">Recibo #{{recordPago.id}}</div>
+	{{/if}}
+	<div class="h4 text text-info">Comisiones</div>
+	<div id="no-more-tables">
 	<table class="table table-bordered table-striped table-condensed cf">
 		<thead>
 		<tr>
+			<th>Seleccionar</th>
 			<th>Documento</th>
 			<th>Inmueble</th>
 			<th>Cuenta</th>
@@ -64,11 +128,23 @@
 		</thead>
 		<tbody>
 		{{#each listaDocumentosComision as |row i|}}
-			<tr>
+			<tr>{{#if row.tieneSaldo}}
+						{{#if row.seleccionado}}
+							<td data-title="Seleccionar"><div class="btn btn-danger" {{action "quitaDocumento" row}}>Quitar</div></td>
+						{{else}}
+							{{#if recordPago}}
+								<td data-title="Seleccionar"><div class="btn btn-info" {{action "agregaDocumento" row}}>Pagar</div></td>
+								{{else}}
+								<td data-title="Seleccionar"><div></div></td>
+							{{/if}}
+						{{/if}}
+				{{else}}
+					<td data-title="Seleccionar"></td>
+				{{/if}}
 				<td data-title="Documento"><span class="text-right"><a href="" {{ action 'selectedDocumento' row }}>{{row.id}}</a></span></td>
 				<td data-title="Inmueble">{{row.inmueble}}</td>
 				<td data-title="Cuenta">{{row.cuenta}}</td>
-				<td data-title="Etapa" class="text-right"><span class="text-right">{{row.etapa}}</span></td>
+				<td data-title="Etapa">{{row.etapaNombre}}</td>
 				<td data-title="Saldo" class="text-right">{{row.saldo}}</td>
 				<td data-title="Cargo" class="text-right">{{row.cargo}}</td>
 				<td data-title="Abono" class="text-right">{{row.abono}}</td>
@@ -77,8 +153,8 @@
 			</tr>
 		{{/each}}
 		</tbody>
-	</table>
-</div>
+		</table>
+	</div>
 {{/if}}
 {{#if listaMovimientosComision}}
 <br>
@@ -91,6 +167,9 @@
 			<th>Cargo/abono</th>
 			<th>Importe</th>
 			<th>Tipo</th>
+			<th>Pago Tipo</th>
+			<th>Pago Refernecia</th>
+			<th>Pago Importe</th>
 			<th>Fecha</th>
 			
 		</tr>
@@ -102,6 +181,9 @@
 				<td data-title="Cargo/abono" class="text-right">{{row.cargoabono}}</td>
 				<td data-title="Importe" class="text-right">{{row.importe}}</td>
 				<td data-title="Tipo" class="text-right">{{row.tipo}}</td>
+				<td data-title="Pago Tipo" class="text-right">{{row.pagotipo}}</td>
+				<td data-title="Pago Referencia" class="text-right">{{row.pagoreferencia}}</td>
+				<td data-title="pago Importe" class="text-right">{{row.pagoimporte}}</td>
 				<td data-title="Fecha" class="text-right">{{row.fechareconocimiento}}</td>
 			</tr>
 		{{/each}}
@@ -109,4 +191,26 @@
 	</table>
 </div>
 <div class="btn btn-warning" {{action "cerrarMovimientos"}}>Cerrar Movimientos</div>
+{{/if}}
+{{#if mostrarFormaPagar}}
+	<div class="jumbotron">
+		<div class="h4">Comision {{documentoAPagar.id}}</div>
+		<div class="h5 text text-info">Saldo de la comision ${{documentoAPagar.saldo}} </div>
+		<div class="h5">saldo del recibo {{recordPago.pagoimporte}}</div>
+  		{{#if errorModal}}
+  			<div class="h5 text text-danger">{{errorModal}}</div>
+  		{{/if}}
+  		<div class="form-group">
+		<label for="cantidadPago" class="control-label">Cantidad a Pagar</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=aPagar class="form-control" placeholder="Precio" id="cantidadPago"}}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="btn btn-success" {{action "ok"}}>Pagar</div>
+		<div class="btn btn-warning" {{action "CancelarFormaPagar"}}>Cancelar</div>
+	</div>
+</div>
 {{/if}}
