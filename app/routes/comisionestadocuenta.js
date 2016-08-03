@@ -18,6 +18,9 @@ RouteAuthMixin , {
     etapasLista.forEach((item)=> {
     	listaEtapas.pushObject(item);
     });
+    let features = get(this, 'features');
+    // features = { editable: false };
+    set(ctrlr, 'features', features );
     let gerente = get(gtevdor, 'idgerente');
     let vendedor = get(gtevdor, 'idvendedor');
     if (gerente !== 0 && vendedor !== 0) {
@@ -42,7 +45,16 @@ RouteAuthMixin , {
       selectedVendedor: null,
       listaDocumentosComision: null,
       listaMovimientosComision: null,
-      muestraDocumentos: true
+      muestraDocumentos: true,
+      recordPago: null,
+      mostrarModal: false,
+      totalSaldo: 0,
+      totalCargo: 0,
+      totalAbono: 0,
+      totalSaldoEtapa: 0,
+      totalCargoEtapa: 0,
+      totalAbonoEtapa: 0,
+      showComisiones: false
     });
   },
   model() {
@@ -57,6 +69,20 @@ RouteAuthMixin , {
     });
   },
   actions: {
+  	willTransition: function(transition) {
+  	  try {
+  	  let controller = this.controllerFor(this.routeName);
+  	  let pago = get(controller, 'recordPago');
+  	  let saldo = get(pago, 'pagoimporte');
+        if (parseFloat(saldo) > 0) {
+      	  info(' no puedes salir de la ruta por que hay saldo pendiente', saldo);
+      	  set(controller, 'mostrarModal', true);
+          transition.abort();
+        }
+      } catch(e) {
+        info('saliendo por catch no hay record');
+      }
+    },
     error(error) {
       info('error en ruta prospecto', error);
     }

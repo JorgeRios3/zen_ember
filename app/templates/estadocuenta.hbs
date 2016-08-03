@@ -93,7 +93,7 @@
     	{{/if}}
 
     </dl>
-	
+	{{#unless features.solo_consulta}}
 	{{#if conPagares}}
 		<div class="form-group">
 			<label class="control-label">Saldo Pagares</label>
@@ -288,11 +288,11 @@
 	{{#if hayReciboElegido}}
 		<div class="btn btn-warning" {{action 'saldarRecibo'}}>Saldar Recibo</div>
 	{{/if}}
-	{{#if features}}
+	{{#if features.documentocuenta}}
 		<div class="btn btn-info" {{action 'levantaFormaDocumento'}}>Generar Documento a la Cuenta</div>
 		{{#if formaGeneraDocumento}}
 			<div class="form-group">
-				<label for="idnumerosexteriores" class="control-label">Etapa</label>
+				<label for="idnumerosexteriores" class="control-label">Tipo</label>
 				<div class="row">
 					<div class="col-md-5">
 						{{#x-select value=selectedTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
@@ -320,7 +320,7 @@
 			</div>
 		{{/if}}
 	{{/if}}
-
+	{{/unless}}
 {{/if}}
 {{#if huboErrorAlGrabar}}
   			{{#modal-bs title="Hubo Error al Generarse el documento" ok="enteradoHuboErrorAlGrabar" close="enteradoHuboErrorAlGrabar"}}

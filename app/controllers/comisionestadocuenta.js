@@ -45,41 +45,43 @@ export default Ember.Controller.extend(FormatterMixin, {
   tipoPago: '',
   referenciaPago: '',
   recordPago: null,
+  mostrarModal: false,
+  showComisiones: false,
+  comisionesLista: null,
   init() {
     this._super(...arguments);
     set(this, 'ListaDocumentosPagar', Ember.ArrayProxy.create({ content: [] }));
   },
   obsevarEtapaFiltroSelected: observer('etapaFiltroSelected', function() {
-  	if (get(this, 'listaDocumentosAux') == null) {
-  	  set(this, 'listaDocumentosAux', get(this, 'listaDocumentosComision'));
-  	}
-  	if (get(this, 'etapaFiltroSelected') === 0) {
-  	  set(this, 'totalesEtapa', false);
-  	  return;
-  	}
-  	if (get(this, 'etapaFiltroSelected') === 'todas') {
-  	  set(this, 'listaDocumentosComision', get(this, 'listaDocumentosAux'));
-  	  // get(this, 'listaDocumentosComision').setEach('seleccionado', false);
-  	  set(this, 'totalesEtapa', false);
-  	  return;
-  	}
-  	let listaFiltro = Ember.A();
-  	set(this, 'totalesEtapa', true);
-  	let totalSaldoEtapa = 0;
-  	let totalCargoEtapa = 0;
-  	let totalAbonoEtapa = 0;
+    if (get(this, 'listaDocumentosAux') == null) {
+      set(this, 'listaDocumentosAux', get(this, 'listaDocumentosComision'));
+    }
+    if (get(this, 'etapaFiltroSelected') === 0) {
+      set(this, 'totalesEtapa', false);
+      return;
+    }
+    if (get(this, 'etapaFiltroSelected') === 'todas') {
+      set(this, 'listaDocumentosComision', get(this, 'listaDocumentosAux'));
+      set(this, 'totalesEtapa', false);
+      return;
+    }
+    let listaFiltro = Ember.A();
+    set(this, 'totalesEtapa', true);
+    let totalSaldoEtapa = 0;
+    let totalCargoEtapa = 0;
+    let totalAbonoEtapa = 0;
     let etapa = get(this, 'etapaFiltroSelected');
     let listaDocumentos = get(this, 'listaDocumentosAux');
     let lista = listaDocumentos.filter((item)=> {
       if (parseInt(etapa) === get(item, 'etapa')) {
-      	totalSaldoEtapa += get(item, 'saldoNumber');
-      	totalCargoEtapa += get(item, 'cargoNumber');
-      	totalAbonoEtapa += get(item, 'abonoNumber');
+        totalSaldoEtapa += get(item, 'saldoNumber');
+        totalCargoEtapa += get(item, 'cargoNumber');
+        totalAbonoEtapa += get(item, 'abonoNumber');
         return true;
       } else {
         return false;
       }
-    })
+    });
     set(this, 'listaDocumentosComision', lista);
     // get(this, 'listaDocumentosComision').setEach('seleccionado', false);
     set(this, 'totalSaldoEtapa', this.formatter(totalSaldoEtapa));
@@ -87,59 +89,65 @@ export default Ember.Controller.extend(FormatterMixin, {
     set(this, 'totalAbonoEtapa', this.formatter(totalAbonoEtapa));
   }),
   roundValue(value) {
-    return (Math.round(value*100)/100).toFixed(2)
+    return (Math.round(value * 100) / 100).toFixed(2);
+  },
+  documentosVendedor(vendedor) {
+    set(this, 'listaDocumentosAux', null);
+    set(this, 'etapaFiltroSelected', 0);
+    set(this, 'muestraDocumentos', true);
+    let lista = Ember.A();
+    let etapasLista = Ember.A();
+    let setEtapas = new Set([]);
+    let totalSaldo = 0;
+    let totalCargo = 0;
+    let totalAbono = 0;
+    this.store.unloadAll('documentocomision');
+    this.store.query('documentocomision', { vendedor })
+    .then((data)=> {
+      data.forEach((item)=> {
+        let etapaFind = get(item, 'etapa');
+        let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapaFind}`);
+        if (!setEtapas.has(etapaFind)) {
+          setEtapas.add(etapaFind);
+          etapasLista.pushObject(etapaObjecto);
+        }
+        let etapaNombre = get(etapaObjecto, 'nombre');
+        let { id, inmueble, cuenta, etapa, saldo, cargo, abono, precioneto, fechareconocimiento, tieneSaldo, manzana, lote } = getProperties(item, 'id inmueble cuenta etapa saldo cargo abono precioneto fechareconocimiento tieneSaldo manzana lote'.w());
+        totalSaldo += get(item, 'saldo');
+        totalCargo += get(item, 'cargo');
+        totalAbono += get(item, 'abono');
+        lista.pushObject({
+          etapaNombre,
+          id,
+          inmueble,
+          cuenta,
+          etapa,
+          saldo: this.formatter(get(item, 'saldo')),
+          cargo: this.formatter(get(item, 'cargo')),
+          abono: this.formatter(get(item, 'abono')),
+          saldoNumber: get(item, 'saldo'),
+          cargoNumber: get(item, 'cargo'),
+          abonoNumber: get(item, 'abono'),
+          precioneto: this.formatter(precioneto),
+          fechareconocimiento,
+          tieneSaldo,
+          manzana,
+          lote,
+          seleccionado: false
+        });
+      });
+      set(this, 'listaDocumentosComision', lista);
+      set(this, 'totalSaldo', this.formatter(totalSaldo));
+      set(this, 'totalCargo', this.formatter(totalCargo));
+      set(this, 'totalAbono', this.formatter(totalAbono));
+      etapasLista.pushObject({ id: 'todas', nombre: 'Todas' });
+      set(this, 'etapasDocumentos', etapasLista);
+    });
   },
   observaSelectedVendedor: observer('selectedVendedor', function() {
     if (get(this, 'selectedVendedor') !== null) {
-      set(this, 'listaDocumentosAux', null);
-      set(this, 'etapaFiltroSelected', 0);
-      set(this, 'muestraDocumentos', true);
-      let lista = Ember.A();
-      let etapasLista = Ember.A();
-      let setEtapas = new Set([]);
-      let totalSaldo = 0;
-      let totalCargo = 0; 
-      let totalAbono = 0;
       this.store.unloadAll('documentocomision');
-      this.store.query('documentocomision', {vendedor: get(this, 'selectedVendedor')})
-      .then((data)=> {
-        data.forEach((item)=> {
-          let etapaFind = get(item, 'etapa');
-          let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapaFind}`);
-          if (!setEtapas.has(etapaFind)) {
-            setEtapas.add(etapaFind);
-            etapasLista.pushObject(etapaObjecto);
-          }
-           let etapaNombre = get(etapaObjecto, 'nombre');
-           let { id, inmueble, cuenta, etapa, saldo, cargo, abono, precioneto, fechareconocimiento, tieneSaldo} = getProperties(item, 'id inmueble cuenta etapa saldo cargo abono precioneto fechareconocimiento tieneSaldo'.w());
-           totalSaldo += get(item,'saldo');
-           totalCargo += get(item, 'cargo');
-           totalAbono += get(item, 'abono');
-          lista.pushObject({
-          	etapaNombre,
-          	id,
-          	inmueble,
-          	cuenta,
-          	etapa,
-          	saldo: this.formatter(get(item,'saldo')),
-          	cargo: this.formatter(get(item, 'cargo')),
-          	abono: this.formatter(get(item, 'abono')),
-          	saldoNumber: get(item,'saldo'),
-          	cargoNumber: get(item, 'cargo'),
-          	abonoNumber: get(item, 'abono'),
-          	precioneto, 
-          	fechareconocimiento,
-          	tieneSaldo,
-          	seleccionado: false
-          });
-        });
-        set(this, 'listaDocumentosComision', lista);
-        set(this, 'totalSaldo', this.formatter(totalSaldo));
-        set(this, 'totalCargo', this.formatter(totalCargo));
-        set(this, 'totalAbono', this.formatter(totalAbono));
-        etapasLista.pushObject({ id: 'todas', nombre: 'Todas'});
-        set(this, 'etapasDocumentos', etapasLista);
-      });
+      this.documentosVendedor(get(this, 'selectedVendedor'));
     }
   }),
   nombrevendedor: observer('gtevdor', function() {
@@ -208,12 +216,67 @@ export default Ember.Controller.extend(FormatterMixin, {
   misvendedores: computed('selectedGerente', {
     get() {
       if (get(this, 'selectedGerente') !== null) {
+      	set(this, 'listaDocumentosComision', null);
+      	set(this, 'totalSaldo', this.formatter(0));
+        set(this, 'totalCargo', this.formatter(0));
+        set(this, 'totalAbono', this.formatter(0));
         info('paso por selectedGerente cuando entro por vendedor puesto');
         return this.store.query('vendedorcomision', {gerente: get(this, 'selectedGerente')});
       }
     }
   }),
   actions: {
+  	cerrarComisiones() {
+  	  set(this, 'showComisiones', false);
+  	},
+  	mostrarComisiones() {
+  	  let lista = Ember.A();
+  	  let pago = get(this, 'recordPago');
+  	  let pagoId = get(pago, 'id');
+  	  info('pidiendo comisiones del pago', pagoId);
+  	  set(this, 'showComisiones', true);
+  	  this.store.query('pagocomisiondetalle', { pago: pagoId })
+  	  .then((data)=> {
+  	  	data.forEach((item)=> {
+  	  	  let etapaFind = get(item, 'etapa');
+          let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapaFind}`);
+          let etapaNombre = get(etapaObjecto, 'nombre');
+  	  	  let { id, documento, inmueble, cuenta, manzana, lote, importe }  = getProperties(item, 'id documento inmueble cuenta manzana lote importe'.w());
+  	  	  lista.pushObject({
+  	  	    id,
+  	  	    documento,
+  	  	    inmueble,
+  	  	    cuenta,
+  	  	    etapaNombre,
+  	  	    manzana,
+  	  	    lote,
+  	  	    importe: this.formatter(importe)
+  	  	  });
+  	  	});
+  	  	info('entro')
+  	  	set(this, 'comisionesLista', lista);
+  	  }, (error)=> {
+  	  	info('fallo');
+  	  });
+  	},
+  	ok() {
+  	  set(this, 'mostrarModal', false);
+  	  info('cerro modal');
+  	},
+  	borrarRecibo(recibo) {
+  	  set(this, 'listaDocumentosComision', 	null);
+  	  this.store.unloadAll('pagocomision');
+  	  let borrar = this.store.find('pagocomision', recibo).then((dato)=> {
+  	    dato.deleteRecord();
+        info(dato.get('isDeleted pagocomision')); // => true
+        dato.save(); // => DEL
+        set(this, 'recordPago', null);
+        this.store.unloadAll('movimientocomision');
+        this.notifyPropertyChange('selectedVendedor');
+        let vendedor = get(this, 'selectedVendedor');
+        this.documentosVendedor(vendedor);
+      });
+  	},
   	generarRecibo() {
   	  let pagoimporte = get(this, 'cantidadImporte');
   	  let pagoimpuesto = get(this, 'cantidadImpuesto');
@@ -241,13 +304,13 @@ export default Ember.Controller.extend(FormatterMixin, {
   	mostrarForma() {
   	  this.toggleProperty('mostrarFormaRecibo');
   	},
-  	ok() {
+  	pagarDocumento() {
   	  let pago = get(this, 'recordPago');
   	  let documento = get(this, 'documentoAPagar')
   	  info('valor de documento', documento);
   	  if (parseFloat(get(this, 'aPagar')) > get(documento, 'saldoNumber')) {
   	  	set(this, 'errorModal', 'El importe no puede ser mayor al importe de la comision a pagar');
-  	  	return;
+  	  	return; 
   	  }
   	  if(parseFloat(get(this, 'aPagar')) <= 0 || isEmpty(get(this, 'aPagar'))) {
   	  	info('valor id doc', get(documento, 'id'));
@@ -325,8 +388,8 @@ export default Ember.Controller.extend(FormatterMixin, {
          let resto = parseFloat(get(pago, 'pagoimporte')) + parseFloat(get(documentoABorrar, 'pagoimporte'));
          set(pago, 'pagoimporte', this.roundValue(resto));
 
-         let saldoDocumento = parseFloat(get(documento, 'saldo')) + parseFloat(get(documentoABorrar, 'pagoimporte'));
-         saldoDocumento = this.roundValue(saldoDocumento)
+         let saldoDocumento = parseFloat(get(documento, 'saldoNumber')) + parseFloat(get(documentoABorrar, 'pagoimporte'));
+         saldoDocumento = this.roundValue(saldoDocumento);
          set(documento, 'saldo',saldoDocumento <= 0 ? '0' : this.formatter(saldoDocumento));
          set(documento, 'saldoNumber', saldoDocumento);
 
@@ -335,6 +398,7 @@ export default Ember.Controller.extend(FormatterMixin, {
          set(documento, 'abonoNumber', restaAbono);
          set(documento, 'abono', restaAbono <= 0 ? '0' : this.formatter(restaAbono))
          set(documento, 'seleccionado', false);
+         get(this, 'ListaDocumentosPagar').removeObject(documentoABorrar);
          //let restoDocumento = parseFloat(get('documentoAPagar', 'saldo')) - parseFloat(get(this, 'aPagar'))
 
   	  },(error)=> {
