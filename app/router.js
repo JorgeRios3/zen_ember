@@ -75,6 +75,7 @@ Router.map(function() {
   this.route('autorizaciondescuento');
   this.route('consultadescuentos');
   this.route('comisionestadocuenta');
+  this.route('pagoscomisiones');
 });
 
 export default Router;
