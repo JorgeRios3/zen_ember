@@ -65,7 +65,9 @@
 	<br><br>
 	{{#if listaDocumentosComision.length}}
 		{{#unless mostrarFormaRecibo}}
-		<div class="btn btn-info"  {{action "mostrarForma"}}>Generar Recibo</div>
+			{{#if features.generar_recibo}}
+				<div class="btn btn-info"  {{action "mostrarForma"}}>Generar Recibo</div>
+			{{/if}}
 		{{else}}
 		<div class="form-group">
 		<label for="idcantidadimporte" class="control-label">Cantidad Importe</label>
@@ -107,7 +109,52 @@
 	{{/if}}
 	{{#if recordPago}}
 		<div class="h3 text text-success">Recibo #{{recordPago.id}}</div>
+		<div class="btn btn-danger" {{action "borrarRecibo" recordPago.id}}>Borrar Recibo</div>
 	{{/if}}
+
+	{{#if recordPago.id}}
+		{{#unless showComisiones}}
+			<div class="btn btn-info" {{action "mostrarComisiones"}}>Mostar Comisiones</div>
+		{{else}}
+			<div class="btn btn-warning" {{action "cerrarComisiones"}}>Cerrar Comisiones</div>
+			<div>Comisiones Pagadas con recibo actual</div>
+			<div id="no-more-tables">
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Movimiento</th>
+			<th>Documento</th>
+			<th>Inmueble</th>
+			<th>Cuenta</th>
+			<th>Etapa</th>
+			<th>Manzana</th>
+			<th>Lote</th>
+			<th>Importe</th>
+			
+		</tr>
+		</thead>
+		<tbody>
+		{{#each comisionesLista as |row i|}}
+			<tr>
+				<td data-title="Movimiento"><span class="text-right">{{row.id}}</span></td>
+				<td data-title="Documento">{{row.documento}}</td>
+				<td data-title="Inmueble">{{row.inmueble}}</td>
+				<td data-title="Cuenta">{{row.cuenta}}</td>
+				<td data-title="Etapa">{{row.etapaNombre}}</td>
+				<td data-title="Manzana">{{row.manzana}}</td>
+				<td data-title="Lote">{{row.lote}}</td>
+				<td data-title="Importe" class="text-right">{{row.importe}}</td>
+				
+			</tr>
+		{{/each}}
+		</tbody>
+		</table>
+	</div>
+
+		{{/unless}}
+	{{/if}}
+
+	{{#unless showComisiones}}
 	<div class="h4 text text-info">Comisiones</div>
 	<div id="no-more-tables">
 	<table class="table table-bordered table-striped table-condensed cf">
@@ -118,6 +165,8 @@
 			<th>Inmueble</th>
 			<th>Cuenta</th>
 			<th>Etapa</th>
+			<th>Manzana</th>
+			<th>Lote</th>
 			<th>Saldo</th>
 			<th>Cargo</th>
 			<th>Abono</th>
@@ -145,6 +194,8 @@
 				<td data-title="Inmueble">{{row.inmueble}}</td>
 				<td data-title="Cuenta">{{row.cuenta}}</td>
 				<td data-title="Etapa">{{row.etapaNombre}}</td>
+				<td data-title="Manzana">{{row.manzana}}</td>
+				<td data-title="Lote">{{row.lote}}</td>
 				<td data-title="Saldo" class="text-right">{{row.saldo}}</td>
 				<td data-title="Cargo" class="text-right">{{row.cargo}}</td>
 				<td data-title="Abono" class="text-right">{{row.abono}}</td>
@@ -155,6 +206,7 @@
 		</tbody>
 		</table>
 	</div>
+	{{/unless}}
 {{/if}}
 {{#if listaMovimientosComision}}
 <br>
@@ -192,6 +244,15 @@
 </div>
 <div class="btn btn-warning" {{action "cerrarMovimientos"}}>Cerrar Movimientos</div>
 {{/if}}
+
+{{#if mostrarModal}}
+	{{#modal-bs title="Operacion Incompleta"  ok="ok" close="ok"}}
+		<div>Para poder abandonar opciones comisiones, el recibo no debe de tener tener ningun saldo</div>
+		<div>Saldo del Recibo {{recordPago.pagoimporte}}.</div>
+		<div>O debe eliminar el recibo generado</div>
+	{{/modal-bs}}
+{{/if}}
+
 {{#if mostrarFormaPagar}}
 	<div class="jumbotron">
 		<div class="h4">Comision {{documentoAPagar.id}}</div>
@@ -209,7 +270,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="btn btn-success" {{action "ok"}}>Pagar</div>
+		<div class="btn btn-success" {{action "pagarDocumento"}}>Pagar</div>
 		<div class="btn btn-warning" {{action "CancelarFormaPagar"}}>Cancelar</div>
 	</div>
 </div>

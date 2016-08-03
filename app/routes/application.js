@@ -25,6 +25,13 @@ export default Ember.Route.extend(ApplicationRouteMixin,
       })
     });
   },
+  beforeModel() {
+    let controller = this.controllerFor(this.routeName);
+    controller.setProperties({
+      esRutaComisionEstadoCuenta: false
+    });
+  },
+
 
   invalidateSession(controller) {
     set(controller, 'expirationFlag', false);
@@ -50,6 +57,20 @@ export default Ember.Route.extend(ApplicationRouteMixin,
     }, 20000);
   },
   actions: {
+    didTransition: function() {
+      Ember.run.later('', ()=> {
+        let c = this.controllerFor(this.routeName);
+        info('valor de controller en didTransition', get(c, 'currentPath'));
+        info('valor de controller en didTransition', get(c, 'currentRouteName'));
+        if (get(c, 'currentRouteName') === 'comisionestadocuenta') {
+          info('entro en el if del didTransition')
+          set(c, 'esRutaComisionEstadoCuenta', true);
+        } else {
+          info('se fue por el else de didTransition')
+          set(c, 'esRutaComisionEstadoCuenta', false);
+        }
+      }, 1000);
+    },
     error(error) {
       info('error global', error);
       this.transitionTo('catchall', 'application-error');

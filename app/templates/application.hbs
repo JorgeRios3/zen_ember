@@ -1,23 +1,17 @@
-
-   <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-      <div class="container">
-
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="" {{action "navigate" "index"}}>Iclar</a>
-
-        </div>
-        
-        <div class="collapse navbar-collapse">
-
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="" {{ action "navigate" "index"}}>Inicio {{if isDev "(DEV)"}}</a></li>
-           
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="" {{action "navigate" "index"}}>Iclar</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="" {{ action "navigate" "index"}}>Inicio {{if isDev "DEV" ""}}</a></li>   
             <li>{{link-to "Versión" "showversion" }}</li>
             
             {{#if session.isAuthenticated}}
@@ -28,7 +22,11 @@
             {{/if}}
             <li><a href="" {{action "navigate" "index"}}>{{usuario}}</a></li>
             <li>{{link-to "Cambia" "changepassword"}}</li>
+              {{#if esRutaComisionEstadoCuenta}}
+              <li>nada</li>
+              {{else}}
               <li><a href="" {{ action 'invalidateSession' }}>Abandonar</a></li>
+              {{/if}}
               <li style="color:white"><a><span class="badge badge-info">{{secondsLeft}}</span></a></li>
           
           </ul>
