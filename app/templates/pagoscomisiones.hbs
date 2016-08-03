@@ -1,0 +1,58 @@
+<div class="h3 text text-info">Pagos Comisiones</div>
+<div class="form-group">
+	<label for="idpago" class="control-label">Numero de Pago</label>
+	<div class="row">
+		<div class="col-xs-8 col-md-5">
+			{{input type="text" value=pago class="form-control" placeholder="Numero de pago" id="idpago"}}
+		</div>
+	</div>
+</div>
+<div class="btn btn-info" {{action "buscarPago"}}>Buscar </div>
+
+{{#if pagoComision}}
+	<dl class="dl-horizontal">
+    	<dt>ID</dt><dd>{{pagoComision.id}}</dd>
+    	<dt>Fecha Reconocimiento</dt><dd>{{pagoComision.fechareconocimiento}}</dd>
+    	<dt>Pago Importe</dt><dd>$ {{pagoComision.pagoimporte}}</dd>
+    	<dt>Pago Impuesto</dt><dd>$ {{pagoComision.pagoimpuesto}}</dd>
+    	<dt>Pago Referencia</dt><dd>{{pagoComision.pagoreferencia}}</dd>
+    	<dt>Tipo de Pago</dt><dd>{{pagoComision.pagotipo}}</dd>
+	 </dl>
+{{/if}}
+
+{{#if comisionesLista}}
+	<div id="no-more-tables">
+		<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Movimiento</th>
+			<th>Documento</th>
+			<th>Inmueble</th>
+			<th>Cuenta</th>
+			<th>Etapa</th>
+			<th>Manzana</th>
+			<th>Lote</th>
+			<th>Importe</th>
+			<th>Nombre Vendedor</th>
+			<th>Es Gerente</th>	
+		</tr>
+		</thead>
+		<tbody>
+		{{#each comisionesLista as |row i|}}
+			<tr>
+				<td data-title="Movimiento"><span class="text-right">{{row.id}}</span></td>
+				<td data-title="Documento">{{row.documento}}</td>
+				<td data-title="Inmueble">{{row.inmueble}}</td>
+				<td data-title="Cuenta">{{row.cuenta}}</td>
+				<td data-title="Etapa">{{row.etapaNombre}}</td>
+				<td data-title="Manzana">{{row.manzana}}</td>
+				<td data-title="Lote">{{row.lote}}</td>
+				<td data-title="Importe" class="text-right">{{row.importe}}</td>
+				<td data-title="Nombre Vendedor">{{row.nombrevendedor}}</td>
+				<td data-title="Es Gerente">{{if row.esgerente 'si' 'no'}}</td>	
+			</tr>
+		{{/each}}
+		</tbody>
+		</table>
+	</div>
+{{/if}}

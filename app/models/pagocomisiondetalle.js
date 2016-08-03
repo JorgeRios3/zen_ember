@@ -19,5 +19,7 @@ export default DS.Model.extend({
   lote: DS.attr('string'),
   cliente: DS.attr('string'),
   nombrecliente: DS.attr('string'),
-  fechacomision: DS.attr('string')
+  fechacomision: DS.attr('string'),
+  esgerente: DS.attr('boolean'),
+  nombrevendedor: DS.attr('string')
 });

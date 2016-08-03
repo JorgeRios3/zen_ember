@@ -75,6 +75,7 @@ export default Ember.Controller.extend(FormatterMixin,
   showCuenta: '',
   errorMessage: '',
   hayReciboElegido: false,
+  imss: '',
   observaTipo: observer('selectedTipo', function() {
     info('viendo tipo', get(this, 'selectedTipo'));
   }),
@@ -156,6 +157,7 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'showCuenta', get(item, 'id'));
               set(this, 'etapaBreve', get(item, 'etapa'));
               set(this, 'loteBreve', get(item, 'lote'));
+              set(this, 'imss', get(item, 'imss'));
               if (isArcadia) {
                 info('en arcadia lote', get(item, 'lote'));
                 info('en arcadia lote', get(item, 'manzana'));

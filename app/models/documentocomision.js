@@ -20,6 +20,7 @@ export default DS.Model.extend({
   fechareconocimiento: DS.attr('string'),
   lote: DS.attr('string', { default: '' }),
   manzana: DS.attr('string', { default: '' }),
-  tieneSaldo: computed.gt('saldo', 0)
+  tieneSaldo: computed.gt('saldo', 0),
+  cuentavendedor: DS.attr('string', { default: 0 })
 
 });
