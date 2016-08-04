@@ -1,9 +1,9 @@
 <div class="h3 text text-info">Pagos Comisiones</div>
 <div class="form-group">
-	<label for="idpago" class="control-label">Numero de Pago</label>
+	<label for="idpago" class="control-label">Número de Pago</label>
 	<div class="row">
 		<div class="col-xs-8 col-md-5">
-			{{input type="text" value=pago class="form-control" placeholder="Numero de pago" id="idpago"}}
+			{{input type="text" value=pago class="form-control" placeholder="Número de pago" id="idpago"}}
 		</div>
 	</div>
 </div>
@@ -13,11 +13,31 @@
 	<dl class="dl-horizontal">
     	<dt>ID</dt><dd>{{pagoComision.id}}</dd>
     	<dt>Fecha Reconocimiento</dt><dd>{{pagoComision.fechareconocimiento}}</dd>
-    	<dt>Pago Importe</dt><dd>$ {{pagoComision.pagoimporte}}</dd>
-    	<dt>Pago Impuesto</dt><dd>$ {{pagoComision.pagoimpuesto}}</dd>
-    	<dt>Pago Referencia</dt><dd>{{pagoComision.pagoreferencia}}</dd>
+    	<dt>Importe</dt><dd>$ {{pagoImporte}}</dd>
+    	<dt>Impuesto</dt><dd>$ {{pagoImpuesto}}</dd>
+    	<dt>Referencia</dt><dd>{{pagoComision.pagoreferencia}}</dd>
     	<dt>Tipo de Pago</dt><dd>{{pagoComision.pagotipo}}</dd>
+    	<dt>Solicitud de Cheque</dt><dd>{{pagoComision.solicitudcheque}}</dd>
+    	<dt>Estatus solicitud</dt><dd>{{pagoComision.estatussolicitud}}</dd>
+    	{{#if pagoComision.solicitudcheque }}
+    	<dt>Beneficiario</dt><dd>{{solicitudCheque.beneficiario}}</dd>
+    	<dt>Fecha Captura</dt><dd>{{solicitudCheque.fechacaptura}}</dd>
+    	<dt>Fecha Programada</dt><dd>{{solicitudCheque.fechaprogramada}}</dd>
+    	<dt>Concepto</dt><dd>{{solicitudCheque.concepto}}</dd>
+    	<dt>Cantidad</dt><dd>{{solicitudCheque.cantidad}}</dd>
+    	{{/if}}
 	 </dl>
+	 	<div class="form-group">
+			<label for="idsolicitud" class="control-label">Solicitud</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=nuevaSolicitud class="form-control" placeholder="Número de solicitud" id="idsolicitud"}}
+				</div>
+			</div>
+		</div>
+		{{#if nuevaSolicitud}}
+			<div class="btn btn-info" {{action "editarSolicitud" nuevaSolicitud}}>Actualizar </div>
+		{{/if}}
 {{/if}}
 
 {{#if comisionesLista}}
