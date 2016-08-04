@@ -13,7 +13,25 @@ export default Ember.Controller.extend(FormatterMixin, {
   pago: '',
   pagoComision: null,
   comisionesLista:null,
+  pagoImporte: null,
+  pagoImpuesto: null,
+  solicitudCheque: null,
+  nuevaSolicitud: null,
+  editable: false,
   actions: {
+  	editarSolicitud(solicitud) {
+      info('solicitud es', solicitud);
+      set(this, 'nuevaSolicitud', null);
+      let r = get(this, 'pagoComision');
+      info('el id de pagoComision es', get(r,'id'));
+      set(r, 'solicitudcheque', solicitud);
+      info('todo va bien');
+      r.save()
+      .then((data)=> {
+      	info('actualizado');
+      	this.buscarPago();
+      });
+  	},
     buscarPago() {
 
       let pago = get(this, 'pago');
@@ -22,6 +40,18 @@ export default Ember.Controller.extend(FormatterMixin, {
       this.store.find('pagocomision', pago)
       .then((data)=> {
         set(this, 'pagoComision', data);
+
+        set(this, 'pagoImporte', this.formatter(get(data, 'pagoimporte')));
+        set(this, 'pagoImpuesto', this.formatter(get(data, 'pagoimpuesto')));
+        let solicitud = get(data, 'solicitudcheque');
+        if (solicitud !== 0) {
+        	this.store.find('solicitudcheque', solicitud)
+        	.then((soli)=> {
+        		set(this, 'solicitudCheque', soli);
+        	});
+        } else {
+        	set(this,'solicitudCheque', null);
+        }
         return this.store.query('pagocomisiondetalle', { pago })
   	      .then((data)=> {
   	  	    data.forEach((item)=> {
@@ -50,7 +80,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         info('si lo eoncontro', data);
       }, (error)=> {
       	info('error no lo encontro');
-      })
+      });
     }
   }
 });
