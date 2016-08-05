@@ -18,18 +18,20 @@ export default Ember.Controller.extend(FormatterMixin, {
   solicitudCheque: null,
   nuevaSolicitud: null,
   editable: false,
+  nombreVendedor: '',
+  esGerente: false,
   actions: {
+  	toggleEditable() {
+  	  this.toggleProperty('editable');
+  	},
   	editarSolicitud(solicitud) {
-      info('solicitud es', solicitud);
       set(this, 'nuevaSolicitud', null);
       let r = get(this, 'pagoComision');
-      info('el id de pagoComision es', get(r,'id'));
       set(r, 'solicitudcheque', solicitud);
-      info('todo va bien');
       r.save()
       .then((data)=> {
-      	info('actualizado');
-      	this.buscarPago();
+      	this.toggleProperty('editable');
+      	this.send('buscarPago');
       });
   	},
     buscarPago() {
@@ -37,6 +39,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       let pago = get(this, 'pago');
       // this.store.find('pagocomision', recibo)
       let lista = Ember.A();
+      //this.store.unloadAll('pagocomision');
       this.store.find('pagocomision', pago)
       .then((data)=> {
         set(this, 'pagoComision', data);
@@ -55,11 +58,12 @@ export default Ember.Controller.extend(FormatterMixin, {
         return this.store.query('pagocomisiondetalle', { pago })
   	      .then((data)=> {
   	  	    data.forEach((item)=> {
-  	  	      info('entrando en la segunda promesa');
   	  	      let etapaFind = get(item, 'etapa');
               let etapaObjecto = get(this, 'listaEtapas').findBy('id', `${etapaFind}`);
               let etapaNombre = get(etapaObjecto, 'nombre');
   	  	      let { id, documento, inmueble, cuenta, manzana, lote, importe, nombrevendedor, esgerente }  = getProperties(item, 'id documento inmueble cuenta manzana lote importe nombrevendedor esgerente'.w());
+  	  	      set(this, 'nombreVendedor', nombrevendedor);
+  	  	      set(this, 'esGerente', esgerente);
   	  	      lista.pushObject({
   	  	        id,
   	  	        documento,
@@ -73,11 +77,9 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  	        esgerente
   	  	      });
   	  	    });
-  	  	    info('entro valor de lista', lista);
   	  		set(this, 'comisionesLista', lista);
   	  	});
 
-        info('si lo eoncontro', data);
       }, (error)=> {
       	info('error no lo encontro');
       });
