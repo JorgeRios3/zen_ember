@@ -252,6 +252,13 @@
 		<div>O debe eliminar el recibo generado</div>
 	{{/modal-bs}}
 {{/if}}
+{{#if modalLimiteComosiones}}
+{{#modal-bs title="Maximo de Comisiones"  ok="ok" close="ok"}}
+		<div>Se alcanzo el maximo de comisiones que se pueden pagar por recibo</div>
+		<div class="text text-warning">Numero permitido de comisiones por recibo {{limiteComisiones}}</div>
+		<div class="text text-info">Puede Cancelar este recibo y generar uno nuevo, para que coincidan las cantidades de las comisiones con la del recibo.</div>
+	{{/modal-bs}}
+{{/if}}
 
 {{#if mostrarFormaPagar}}
 	<div class="jumbotron">
