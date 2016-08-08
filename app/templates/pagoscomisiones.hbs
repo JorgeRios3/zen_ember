@@ -30,6 +30,11 @@
     	<dt>Cantidad</dt><dd>{{solicitudCheque.cantidad}}</dd>
     	{{/if}}
 	 </dl>
+	 {{#unless cantidadesIguales}}
+	 	<div class="alert alert-danger">
+  			<strong>Advertencia!</strong> la suma de importe mas impuesto no coinciden con la cantidad de la sollicitud
+		</div>
+	 {{/unless}}
        {{#if editable}}	 
 	 	  <div class="form-group">
 			<label for="idsolicitud" class="control-label">Solicitud</label>
@@ -78,4 +83,10 @@
 		</tbody>
 		</table>
 	</div>
+{{/if}}
+{{#if levantaModal}}
+	{{#modal-bs title="Error Pago" ok="cerrarModal" close="cerrarModal"}}
+   				<br><div class="text text-danger">El pago no existe</div>
+   				<br>
+  			{{/modal-bs}}
 {{/if}}

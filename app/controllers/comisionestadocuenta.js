@@ -48,6 +48,8 @@ export default Ember.Controller.extend(FormatterMixin, {
   mostrarModal: false,
   showComisiones: false,
   comisionesLista: null,
+  limiteComisiones: 30,
+  modalLimiteComosiones: false,
   init() {
     this._super(...arguments);
     set(this, 'ListaDocumentosPagar', Ember.ArrayProxy.create({ content: [] }));
@@ -261,6 +263,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   	},
   	ok() {
   	  set(this, 'mostrarModal', false);
+      set(this, 'modalLimiteComosiones', false);
   	  info('cerro modal');
   	},
   	borrarRecibo(recibo) {
@@ -305,6 +308,11 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  this.toggleProperty('mostrarFormaRecibo');
   	},
   	pagarDocumento() {
+      info('length de array ',get(this, 'ListaDocumentosPagar.length'));
+      if (get(this, 'ListaDocumentosPagar.length')+1 > get(this, 'limiteComisiones')) {
+        set(this, 'modalLimiteComosiones', true);
+        return;
+      } else {
   	  let pago = get(this, 'recordPago');
   	  let documento = get(this, 'documentoAPagar')
   	  info('valor de documento', documento);
@@ -355,7 +363,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  	  info('no se guardo el movmiento');
   	  	})
   	  }
-  	  
+  	}
   	},
   	CancelarFormaPagar() {
   	  set(this, 'muestraDocumentos', true);

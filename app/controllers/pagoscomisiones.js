@@ -11,6 +11,7 @@ const {
 
 export default Ember.Controller.extend(FormatterMixin, {
   pago: '',
+  levantaModal: false,
   pagoComision: null,
   comisionesLista:null,
   pagoImporte: null,
@@ -20,7 +21,29 @@ export default Ember.Controller.extend(FormatterMixin, {
   editable: false,
   nombreVendedor: '',
   esGerente: false,
+  cantidadesIguales: true,
+  cantidadesIgualesObserver: observer('solicitudCheque', function() {
+    let solicitud = get(this, 'solicitudCheque');
+    let cantidad = get(solicitud, 'cantidad').replace(",","");
+    cantidad = parseFloat(cantidad);
+    let pagoImporte = get(this, 'pagoImporte').replace(",", "");
+    let pagoImpuesto = get(this, 'pagoImpuesto').replace(",","");
+    let suma = parseFloat(pagoImporte) + parseFloat(pagoImpuesto);
+    info('valor de suma', suma);
+    info('valor de cantidad', cantidad);
+    if (suma === cantidad) {
+      info('se fgue por el true');
+      set(this, 'cantidadesIguales', true);
+    }else {
+      info('se fue por el false');
+      set(this, 'cantidadesIguales', false);
+    }
+    
+  }),
   actions: {
+  	cerrarModal() {
+  	  set(this, 'levantaModal', false);
+  	},
   	toggleEditable() {
   	  this.toggleProperty('editable');
   	},
@@ -81,6 +104,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  	});
 
       }, (error)=> {
+      	set(this, 'levantaModal', true);
       	info('error no lo encontro');
       });
     }
