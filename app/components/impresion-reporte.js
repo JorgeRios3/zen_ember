@@ -31,6 +31,7 @@ export default Ember.Component.extend({
   sinParametro: false,
   botonHabilitado: true,
   onlyEmail: false,
+  muestraInput: true,
   excel: false,
   getExcel: false,
   hayCorreo: computed('emailaddress', {

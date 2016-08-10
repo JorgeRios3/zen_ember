@@ -5,5 +5,6 @@ export default Ember.Service.extend({
 	socketURL: 'ws://localhost:8099',
 	afiliacion: '',
 	prospecto: '',
-	cuenta: ''
+	cuenta: '',
+	pago: ''
 });

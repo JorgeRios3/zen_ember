@@ -8,5 +8,4 @@ export default Model.extend({
   fechareconocimiento: DS.attr('string'),
   solicitudcheque: DS.attr('number'),
   estatussolicitud: DS.attr('string')
-
 });

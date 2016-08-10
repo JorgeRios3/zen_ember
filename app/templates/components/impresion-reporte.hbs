@@ -2,15 +2,16 @@
 			{{#unless sinParametro}}
 				{{#if onlyEmail}}
 				{{else}}
+				{{#if muestraInput}}
 					<div class="form-group">
-		
-				<label for="parametro1" class="control-label">{{labelParametro1}}</label>	
-				<div class="row">
-					<div class="col-xs-6 col-md-3">
-						{{input type="text" value=valorParametro1 class="form-control" placeholder=placeholderParametro1 maxlength="11" id="parametro1"}}
-					</div>	
-				</div>
-			</div>
+						<label for="parametro1" class="control-label">{{labelParametro1}}</label>	
+						<div class="row">
+						<div class="col-xs-6 col-md-3">
+							{{input type="text" value=valorParametro1 class="form-control" placeholder=placeholderParametro1 maxlength="11" id="parametro1"}}
+						</div>	
+						</div>
+					</div>
+				{{/if}}
 				{{/if}}
 			{{/unless}}
 			{{#if esVisible}}
