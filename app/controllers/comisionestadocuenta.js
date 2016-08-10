@@ -19,6 +19,7 @@ let documentoSelect = Ember.Object.extend({
 });
 
 export default Ember.Controller.extend(FormatterMixin, {
+  comodin: service(),
   listaDocumentosComision: null,
   listaMovimientosComision: null,
   muestraDocumentos: true,
@@ -50,10 +51,25 @@ export default Ember.Controller.extend(FormatterMixin, {
   comisionesLista: null,
   limiteComisiones: 30,
   modalLimiteComosiones: false,
+  mostrarBotonReporte: false,
   init() {
     this._super(...arguments);
     set(this, 'ListaDocumentosPagar', Ember.ArrayProxy.create({ content: [] }));
   },
+  observaRecordPago: observer('recordPago.pagoimporte', function() {
+    try {
+      let pago = get(this, 'recordPago');
+      info('esta entrando en oserba record pago vale', get(pago, 'pagoimporte'));
+      if (parseFloat(get(pago, 'pagoimporte')) === 0) {
+        set(this, 'mostrarBotonReporte', true);
+      } else {
+        set(this, 'mostrarBotonReporte', false);
+      }
+    } catch(e) {
+      set(this, 'mostrarBotonReporte', false);
+      info('saliendo por catch no hay pago importe');
+    }
+  }),
   obsevarEtapaFiltroSelected: observer('etapaFiltroSelected', function() {
     if (get(this, 'listaDocumentosAux') == null) {
       set(this, 'listaDocumentosAux', get(this, 'listaDocumentosComision'));
@@ -228,6 +244,18 @@ export default Ember.Controller.extend(FormatterMixin, {
     }
   }),
   actions: {
+    irASolicitudDePago(pago) {
+      let comodin = get(this, 'comodin');
+      set(comodin, 'pago', pago);
+      this.transitionToRoute('pagoscomisiones');
+    },
+    togglePrinterComponent() {
+      let that = this;
+      Ember.run.later('', function() {
+        that.transitionToRoute('index');
+      },1000)
+      set(this, 'mostrarBotonReporte', false);
+    },
   	cerrarComisiones() {
   	  set(this, 'showComisiones', false);
   	},

@@ -1,4 +1,5 @@
 <div class="h3 text text-info">Pagos de Comisiones</div>
+{{#if features.permiso_busqueda}}
 <div class="form-group">
 	<label for="idpago" class="control-label">Número de Pago</label>
 	<div class="row">
@@ -7,8 +8,12 @@
 		</div>
 	</div>
 </div>
-<div class="btn btn-info" {{action "buscarPago"}}>Buscar </div>
-
+{{else}}
+<div class="label">No. de pago {{pago}}</div>
+{{/if}}
+{{#if features.permiso_busqueda}}
+	<div class="btn btn-info" {{action "buscarPago"}}>Buscar </div>
+{{/if}}
 {{#if pagoComision}}
 	<dl class="dl-horizontal">
     	<dt>ID</dt><dd>{{pagoComision.id}}</dd>
@@ -20,7 +25,10 @@
     	<dt>Tipo de Pago</dt><dd>{{pagoComision.pagotipo}}</dd>
     	<dt>Solicitud de Cheque</dt>
     	<dd>{{pagoComision.solicitudcheque}}
-    		<a href="" {{action 'toggleEditable'}}><span class="glyphicon glyphicon-edit"></span></a></dd>
+    		{{#if features.permiso_busqueda}}
+    			<a href="" {{action 'toggleEditable'}}><span class="glyphicon glyphicon-edit"></span></a>
+    		{{/if}}
+    	</dd>
     	<dt>Estatus solicitud</dt><dd>{{pagoComision.estatussolicitud}}</dd>
     	{{#if pagoComision.solicitudcheque }}
     	<dt>Beneficiario</dt><dd>{{solicitudCheque.beneficiario}}</dd>
@@ -50,6 +58,9 @@
 		{{/if}}
 {{/if}}
 
+{{#if mostrarImprimirReporte}}
+{{/if}}
+
 {{#if comisionesLista}}
 	<div id="no-more-tables">
 		<table class="table table-bordered table-striped table-condensed cf">
@@ -62,6 +73,7 @@
 			<th>Etapa</th>
 			<th>Manzana</th>
 			<th>Lote</th>
+			<th>Cliente</th>
 			<th>Importe</th>
 			
 		</tr>
@@ -76,6 +88,7 @@
 				<td data-title="Etapa">{{row.etapaNombre}}</td>
 				<td data-title="Manzana">{{row.manzana}}</td>
 				<td data-title="Lote">{{row.lote}}</td>
+				<td data-title="Cliente">{{row.nombrecliente}}</td>
 				<td data-title="Importe" class="text-right">{{row.importe}}</td>
 				
 			</tr>

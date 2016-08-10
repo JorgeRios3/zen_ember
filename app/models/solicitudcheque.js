@@ -9,6 +9,6 @@ export default DS.Model.extend({
   beneficiario: DS.attr('string'),
   concepto: DS.attr('string'),
   observaciones: DS.attr('string'),
-  cantidad: DS.attr('money')
+  cantidad: DS.attr('number')
   
 });

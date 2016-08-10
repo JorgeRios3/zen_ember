@@ -19,7 +19,6 @@ RouteAuthMixin , {
     	listaEtapas.pushObject(item);
     });
     let features = get(this, 'features');
-    // features = { editable: false };
     set(ctrlr, 'features', features );
     let gerente = get(gtevdor, 'idgerente');
     let vendedor = get(gtevdor, 'idvendedor');
@@ -42,7 +41,6 @@ RouteAuthMixin , {
       nombre: '',
       cuantosvendedores: 0,
       selectedGerente: null,
-      selectedVendedor: null,
       listaDocumentosComision: null,
       listaMovimientosComision: null,
       muestraDocumentos: true,
@@ -54,12 +52,14 @@ RouteAuthMixin , {
       totalSaldoEtapa: 0,
       totalCargoEtapa: 0,
       totalAbonoEtapa: 0,
-      showComisiones: false
+      showComisiones: false,
+      mostrarBotonReporte: false,
     });
   },
   model() {
     let { store } = this;
     let reload = { reload: true };
+    this.store.unloadAll('gtevdor');
     return hash({
       gtevdor: store.findRecord('gtevdor', 1),
       gerentesventa: store.findAll('gerentesventa', reload),
@@ -70,8 +70,8 @@ RouteAuthMixin , {
   },
   actions: {
   	willTransition: function(transition) {
+      let controller = this.controllerFor(this.routeName);
   	  try {
-  	  let controller = this.controllerFor(this.routeName);
   	  let pago = get(controller, 'recordPago');
   	  let saldo = get(pago, 'pagoimporte');
         if (parseFloat(saldo) > 0) {
@@ -81,9 +81,11 @@ RouteAuthMixin , {
         }
       } catch(e) {
         info('saliendo por catch no hay record');
+        set(controller, 'selectedVendedor', null);
       }
     },
     error(error) {
+      set(controller, 'selectedVendedor', null);
       info('error en ruta prospecto', error);
     }
   }
