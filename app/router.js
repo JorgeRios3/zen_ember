@@ -77,6 +77,7 @@ Router.map(function() {
   this.route('comisionestadocuenta');
   this.route('pagoscomisiones');
   this.route('comisionesporvendedor');
+  this.route('comisioncompartida');
 });
 
 export default Router;
