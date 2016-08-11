@@ -1,0 +1,52 @@
+<br><br>
+<div class="h3 text text-info">Pagos Vendedor</div>
+{{#if gtevdor.nombregerente}}
+			<div class="row">
+				<div class="col-xs-9 col-md-6">
+					<p class="bg-primary">Gerente : {{gtevdor.nombregerente}}</p>
+				</div>
+			</div>
+			<br/>
+		{{else}}
+			<div class="form-group">
+				<label class="control-label">Gerente de Ventas {{#if cuantosvendedores}}({{cuantosvendedores}}){{/if}}</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedGerente action=(action  (mut selectedGerente)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Gerente{{/x-option}}
+  							{{#each apGerentesventas as |item|}}
+  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+		{{#if gtevdor.nombrevendedor}}
+			<div class="row">
+				<div class="col-xs-9 col-md-6">
+					<p class="bg-primary">Vendedor : {{gtevdor.nombrevendedor}}</p>
+				</div>
+			</div>
+		{{else}}
+	
+			<div class="form-group">
+				<label class="control-label">Vendedor</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedVendedor action=(action  (mut selectedVendedor)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Vendedor{{/x-option}}
+  							{{#each misvendedores as |item|}}
+  								{{#x-option value=item.vendedor}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+
+		{{#bsz-table titleCols=titleCols}}
+  			{{#each listaPagosComision as | record |}}
+    			{{bsz-row record=record titleCols=titleCols alignments=alignments}}
+  			{{/each}}
+		{{/bsz-table}}
