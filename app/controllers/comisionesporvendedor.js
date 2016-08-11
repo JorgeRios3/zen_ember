@@ -21,6 +21,10 @@ export default Ember.Controller.extend(FormatterMixin, {
   titleCols: 'id solicitudcheque estatussolicitud pagoimporte pagoimpuesto pagoreferencia pagotipo fechareconocimiento'.w(),
   alignments: ['left', 'left', 'left', 'right', 'right', 'left', 'left', 'left'],
   esVendedor: observer('auxselectedVendedor', function() {
+  	info('valor de auxselectedVendedor', get(this, 'auxselectedVendedor'));
+  	if(isEmpty(get(this, 'auxselectedVendedor'))) {
+  	  return; 
+  	} else {
   	let lista = Ember.A();
     info('si entro en auxselectedVendedor');
     let vendedor = get(this, 'auxselectedVendedor');
@@ -43,6 +47,7 @@ export default Ember.Controller.extend(FormatterMixin, {
     },(error)=> {
       info('fallo');
     });
+   }
   }),
   misvendedores: computed('selectedGerente', {
     get() {
