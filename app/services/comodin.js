@@ -6,5 +6,6 @@ export default Ember.Service.extend({
 	afiliacion: '',
 	prospecto: '',
 	cuenta: '',
-	pago: ''
+	pago: '',
+	vendedorEstadoCuentaAndPagos: ''
 });

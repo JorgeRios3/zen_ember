@@ -7,12 +7,15 @@ const {
 	set,
 	RSVP: { hash },
 	Logger: { info },
-	computed
+	computed,
+  inject: { service }
 } = Ember;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
+  comodin: service(),
   setupController(ctrlr, model) {
+    let comodin = get(this, 'comodin');
     let listaEtapas = Ember.A();
     let { gtevdor, gerentesventa: apGerentesventas, vendedor: apVendedors, gerentecomision, etapasLista } = model;
     etapasLista.forEach((item)=> {
@@ -25,6 +28,14 @@ RouteAuthMixin , {
     if (gerente !== 0 && vendedor !== 0) {
       set(ctrlr, 'selectedGerente', gerente);
       set(ctrlr, 'auxselectedVendedor', vendedor);
+    }
+    if (get(comodin, 'vendedorEstadoCuentaAndPagos')) {
+      let vendedorGerente = get(comodin, 'vendedorEstadoCuentaAndPagos');
+      set(ctrlr, 'selectedGerente', get(vendedorGerente, 'gerente'));
+      Ember.run.later('', ()=> {
+        set(ctrlr, 'selectedVendedor', get(vendedorGerente, 'vendedor'));
+      }, 2000);
+      // set(ctrlr, 'vienedePagoComisiones', get(comodin, 'vendedorEstadoCuentaAndPagos'));
     }
     ctrlr.setProperties({
       gtevdor,
@@ -72,8 +83,13 @@ RouteAuthMixin , {
   },
   actions: {
     willTransition(transition) {
+      let comodin = get(this, 'comodin');
+      let adonde = transition.targetName;
       let controller = this.controllerFor(this.routeName);
       try {
+        if (!adonde.includes('pagoscomisiones')) {
+          set(comodin, 'vendedorEstadoCuentaAndPagos', '');
+        }
         let pago = get(controller, 'recordPago');
         let saldo = get(pago, 'pagoimporte');
         if (parseFloat(saldo) > 0) {
@@ -82,11 +98,15 @@ RouteAuthMixin , {
           transition.abort();
         }
       } catch(e) {
+        // set(comodin, 'vendedorEstadoCuentaAndPagos', '');
         info('saliendo por catch no hay record');
         set(controller, 'selectedVendedor', null);
       }
     },
     error(error) {
+      let controller = this.controllerFor(this.routeName);
+      let comodin = get(this, 'comodin');
+      set(comodin, 'vendedorEstadoCuentaAndPagos', '');
       set(controller, 'selectedVendedor', null);
       info('error en ruta prospecto', error);
     }

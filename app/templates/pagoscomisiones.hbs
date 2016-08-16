@@ -14,6 +14,9 @@
 {{#if features.permiso_busqueda}}
 	<div class="btn btn-info" {{action "buscarPago"}}>Buscar </div>
 {{/if}}
+{{#if botonRegresaEstadoCuenta}}
+	<div class="btn btn-warning" {{action "regresaComisionEstadoCuenta"}}>Regresar a Estado de Cuenta</div>
+{{/if}}
 {{#if pagoComision}}
 	<dl class="dl-horizontal">
     	<dt>ID</dt><dd>{{pagoComision.id}}</dd>
