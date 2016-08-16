@@ -63,6 +63,14 @@ export default Ember.Controller.extend(FormatterMixin, {
     this._super(...arguments);
     set(this, 'ListaDocumentosPagar', Ember.ArrayProxy.create({ content: [] }));
   },
+  observaVieneDePagos: computed('vienedePagoComisiones', {
+    get() {
+      if(!isEmpty('vienedePagoComisiones')) {
+
+      }
+    }
+
+  }),
   observaRecordPago: observer('recordPago.pagoimporte', function() {
     try {
       let pago = get(this, 'recordPago');
@@ -197,6 +205,7 @@ export default Ember.Controller.extend(FormatterMixin, {
           if (get(que, 'idvendedor') === get(item, 'vendedor')) {
             info(get(item, 'id'));
             idVendedorCatalogo = get(item, 'id');
+            set(this, 'selectedVendedor', idVendedorCatalogo);
           }
         });
         this.store.query('documentocomision', { vendedor: idVendedorCatalogo })
@@ -314,8 +323,20 @@ export default Ember.Controller.extend(FormatterMixin, {
       this.toggleProperty('mostrarComisionManual');
     },
     irASolicitudDePago(pago) {
+      let que = get(this, 'gtevdor');
+      let vendedor = '';
+      let gerente = '';
+      if (get(que, 'idvendedor') !== 0 && get(que, 'idgerente') !== 0) {
+        gerente = get(this, 'selectedGerente');
+        vendedor = get(this, 'selectedVendedor');
+      } else {
+        gerente = get(this, 'selectedGerente');
+        vendedor = get(this, 'selectedVendedor');
+      }
+      let objetovendedorGerente = { gerente, vendedor };
       let comodin = get(this, 'comodin');
       set(comodin, 'pago', pago);
+      set(comodin, 'vendedorEstadoCuentaAndPagos', objetovendedorGerente);
       this.transitionToRoute('pagoscomisiones');
     },
     togglePrinterComponent() {
