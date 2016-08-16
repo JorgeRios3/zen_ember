@@ -1,0 +1,119 @@
+<div class="h3 text text-info">Compartir Comisiones</div>
+<div class="form-group">
+	<label for="idinmueble" class="control-label">inmueble</label>
+	<div class="row">
+		<div class="col-xs-8 col-md-5">
+			{{input type="text" value=inmueble class="form-control" placeholder="Buscar Inmueble" id="idinmueble"}}
+		</div>
+	</div>
+</div>
+{{#if inmueble}}
+<div class="btn btn-info" {{action "buscarInmueble"}}>Buscar</div>
+{{/if}}
+
+{{#if recordInmueble}}
+	 <dl class="dl-horizontal">
+	 	<dt>Inmueble</dt><dd>{{recordInmueble.id}}</dd>
+    	<dt>Domicilio</dt><dd>{{recordInmueble.domicilio}}</dd>
+    	<dt>Lote</dt><dd>{{recordInmueble.lote}}</dd>
+    	<dt>manzana</dt><dd>{{recordInmueble.manzana}}</dd>
+    	<dt>Etapa</dt><dd>{{recordInmueble.etapa}}</dd>
+    	<dt>Desarrollo</dt><dd>{{recordInmueble.desarrollo}}</dd>
+    </dl>
+{{/if}}
+
+{{#if forma}}
+<div class="form-group">
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedGerente action=(action  (mut selectedGerente)) class="form-control form-control-inline"}}
+					{{#x-option value='0'}}Elija Gerente{{/x-option}}
+					{{#each apGerentesventas as |item|}}
+						{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+				{{/each}}
+			{{/x-select}}
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="control-label">Vendedor</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedVendedor action=(action  (mut selectedVendedor)) class="form-control form-control-inline"}}
+					{{#x-option value='0'}}Elija Vendedor{{/x-option}}
+					{{#each misvendedores as |item|}}
+						{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+				{{/each}}
+			{{/x-select}}
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label for="idporcentaje" class="control-label">Porcentaje</label>
+	<div class="row">
+		<div class="col-xs-8 col-md-5">
+			{{input type="number" value=porcentaje class="form-control" placeholder="Porcentaje" id="idporcentaje"}}
+		</div>
+	</div>
+</div>
+<div class="row">
+	{{#if observaBotonGrabar}}
+		<div class="btn btn-success" {{action "guardarComision"}}>Guardar Comision</div>
+	{{/if}}
+	{{#if errorGrabar}}
+		<div class="alert alert-danger">
+  			<strong>No se puede dar mas de una comision al mismo vendedor por inmueble</strong> 
+		</div>
+	{{/if}}
+ 	<div class="btn btn-warning" {{action "levantaFormaComision"}}>Cancelar</div>
+</div>
+{{else}}
+	{{#if editable}}
+	<div class="btn btn-info" {{action "levantaFormaComision"}}>Generar Comision</div>
+	{{/if}}
+{{/if}}
+
+{{#if listaComisionesInmueble}}
+	<div class="h5 text text-info"><br><br>la suma de los porcentajes es {{porcentajeTotalInmueble}}</div>
+	<div class="h4 text text-info">Lista de Porcentajes Comisiones</div>
+	<div id="no-more-tables">
+		<table  class="table table-bordered table-striped table-condensed cf">	
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>Inmueble</th>
+					<th>Porcentaje %</th>
+					<th>Vendedor</th>
+					<th>Nombre %</th>
+					<th>Fecha</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each listaComisionesInmueble as |r|}}
+					<tr><td data-title="id"><a href="" {{action "eliminarComision" r.id}}>{{r.id}} <span class="glyphicon glyphicon-remove"></span></a></td>
+						<td data-title="Inmueble">{{r.inmueble}}</td>
+						<td data-title="Porcentaje %">{{r.porcentaje}}</td>
+						<td data-title="Vendedor">{{r.vendedor}}</td>
+						<td data-title="Nombre">{{r.nombre}}</td>
+						<td data-title="Fecha">{{r.fecha}}</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+{{/if}}
+
+{{#if inmuebleNoEditable}}
+	<div class="alert alert-danger">
+  		<strong>No se puede editar comisiones de este inmueble</strong> 
+	</div>
+{{/if}}
+
+{{#if error}}
+<br><br>
+<div class="alert alert-danger">
+  <strong>{{error}}</strong> 
+</div>
+{{/if}}

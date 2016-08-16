@@ -21,6 +21,7 @@ export default DS.Model.extend({
   lote: DS.attr('string', { default: '' }),
   manzana: DS.attr('string', { default: '' }),
   tieneSaldo: computed.gt('saldo', 0),
-  cuentavendedor: DS.attr('string', { default: 0 })
+  cuentavendedor: DS.attr('string', { default: 0 }),
+  porcentajecompartido: DS.attr('number')
 
 });

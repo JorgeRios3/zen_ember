@@ -37,7 +37,7 @@
 						{{#x-select value=selectedVendedor action=(action  (mut selectedVendedor)) class="form-control form-control-inline"}}
   							{{#x-option value='0'}}Elija Vendedor{{/x-option}}
   							{{#each misvendedores as |item|}}
-  								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+  								{{#x-option value=item}}{{item.nombre}}{{/x-option}}
 							{{/each}}
 						{{/x-select}}
 					</div>
@@ -66,7 +66,54 @@
 	{{#if listaDocumentosComision.length}}
 		{{#unless mostrarFormaRecibo}}
 			{{#if features.generar_recibo}}
-				<div class="btn btn-info"  {{action "mostrarForma"}}>Generar Recibo</div>
+				{{#unless mostrarComisionManual}}
+				<div class="row">
+					<div class="btn btn-info"  {{action "mostrarForma"}}>Generar Recibo</div>
+					<div class="btn btn-success" {{action "mostrarFormarComisionManual"}}>Agregar Comision Manual</div>
+					{{#if comisionManualExito}}
+						<div class="alert alert-success">
+  							<strong>Comision generada correctamente!</strong>
+						</div>
+					{{/if}}
+				</div>
+				{{else}}
+					<div class="form-group">
+						<label for="idInmuebleComision" class="control-label">Inmueble</label>
+					<div class="row">
+						<div class="col-xs-8 col-md-5">
+						{{input type="text" value=inmuebleComision class="form-control" placeholder="Inmueble" id="idInmuebleComision"}}
+						</div>
+					</div>
+					</div>
+					{{#if inmuebleVendido}}
+						{{#if inmuebleVendido.vendido}}
+							<dl class="dl-horizontal">
+								<dt>Inmueble</dt><dd>{{inmuebleVendido.id}}</dd>
+		 						<dt>Etapa</dt><dd>{{inmuebleVendido.nombreetapa}}</dd>
+						    	<dt>Manzana</dt><dd>{{inmuebleVendido.manzana}}</dd>
+						    	<dt>Lote</dt><dd>{{inmuebleVendido.lote}}</dd>
+						    	<dt>Cuenta</dt><dd>{{inmuebleVendido.cuenta}}</dd>
+						    	<dt>Oferta</dt><dd>{{inmuebleVendido.oferta}}</dd>
+						    	<dt>Vendedor</dt><dd>{{inmuebleVendido.nombrevendedor}}</dd>
+					    	</dl>
+							<div class="form-group">
+								<label for="importeComisionNueva" class="control-label">Importe</label>
+								<div class="row">
+								<div class="col-xs-8 col-md-5">
+									{{input type="number" value=importeComisionNueva class="form-control" placeholder="Importe" id="importeComisionNueva"}}
+								</div>
+								</div>
+							</div>
+						{{else}}
+							<div class="h2 text text-warning">Este inmueble no esta vendido, no se puede agregar una comision</div>
+						{{/if}}
+					{{/if}}
+					{{#if importeComisionComputed}}
+					<div class="btn btn-success" {{action "guardarComisionNueva"}}>Guardar Comision</div>
+					{{/if}}
+					<div class="btn btn-info" {{action "buscarInmuebleComision"}}>Buscar Inmueble</div>
+					<div class="btn btn-warning" {{action "mostrarFormarComisionManual"}}>Cancelar</div>
+				{{/unless}}
 			{{/if}}
 		{{else}}
 		<div class="form-group">
@@ -135,7 +182,6 @@
 			<th>Manzana</th>
 			<th>Lote</th>
 			<th>Importe</th>
-			
 		</tr>
 		</thead>
 		<tbody>
@@ -149,7 +195,6 @@
 				<td data-title="Manzana">{{row.manzana}}</td>
 				<td data-title="Lote">{{row.lote}}</td>
 				<td data-title="Importe" class="text-right">{{row.importe}}</td>
-				
 			</tr>
 		{{/each}}
 		</tbody>
@@ -177,7 +222,7 @@
 			<th>Abono</th>
 			<th>Precio Neto</th>
 			<th>Fecha</th>
-			
+			<th>% Comp</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -195,7 +240,20 @@
 				{{else}}
 					<td data-title="Seleccionar"></td>
 				{{/if}}
-				<td data-title="Documento"><span class="text-right"><a href="" {{ action 'selectedDocumento' row }}>{{row.id}}</a></span></td>
+				{{#if row.eliminarDocumentoManual}}
+					<td data-title="Documento">
+						<span class="text-right">
+						<a href="" {{ action 'selectedDocumento' row }}>{{row.id}}</a>
+						</span>
+						<a href="" class="text text-danger" {{action "borrarDocumentoManual" row.id}}><span class="glyphicon glyphicon-remove">Borrar</span></a>
+					</td>
+				{{else}}
+					<td data-title="Documento">
+						<span class="text-right">
+						<a href="" {{ action 'selectedDocumento' row }}>{{row.id}}</a>
+						</span>
+					</td>
+				{{/if}}
 				<td data-title="Inmueble">{{row.inmueble}}</td>
 				<td data-title="Cuenta">{{row.cuenta}}</td>
 				<td data-title="Etapa">{{row.etapaNombre}}</td>
@@ -206,6 +264,7 @@
 				<td data-title="Abono" class="text-right">{{row.abono}}</td>
 				<td data-title="Precio Neto" class="text-right">{{row.precioneto}}</td>
 				<td data-title="Fecha" class="text-right">{{row.fechareconocimiento}}</td>
+				<td data-title="% Comp" class="text-right">{{#unless venedorEsGerente}}{{row.porcentajecompartido}}{{/unless}}</td>
 			</tr>
 		{{/each}}
 		</tbody>

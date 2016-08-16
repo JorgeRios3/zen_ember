@@ -13,13 +13,13 @@ const {
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
   setupController(ctrlr, model) {
-  	let listaEtapas = Ember.A();
+    let listaEtapas = Ember.A();
     let { gtevdor, gerentesventa: apGerentesventas, vendedor: apVendedors, gerentecomision, etapasLista } = model;
     etapasLista.forEach((item)=> {
-    	listaEtapas.pushObject(item);
+      listaEtapas.pushObject(item);
     });
     let features = get(this, 'features');
-    set(ctrlr, 'features', features );
+    set(ctrlr, 'features', features);
     let gerente = get(gtevdor, 'idgerente');
     let vendedor = get(gtevdor, 'idvendedor');
     if (gerente !== 0 && vendedor !== 0) {
@@ -54,6 +54,8 @@ RouteAuthMixin , {
       totalAbonoEtapa: 0,
       showComisiones: false,
       mostrarBotonReporte: false,
+      mostrarFormaRecibo: false,
+      mostrarComisionManual: false
     });
   },
   model() {
@@ -69,14 +71,14 @@ RouteAuthMixin , {
     });
   },
   actions: {
-  	willTransition: function(transition) {
+    willTransition(transition) {
       let controller = this.controllerFor(this.routeName);
-  	  try {
-  	  let pago = get(controller, 'recordPago');
-  	  let saldo = get(pago, 'pagoimporte');
+      try {
+        let pago = get(controller, 'recordPago');
+        let saldo = get(pago, 'pagoimporte');
         if (parseFloat(saldo) > 0) {
-      	  info(' no puedes salir de la ruta por que hay saldo pendiente', saldo);
-      	  set(controller, 'mostrarModal', true);
+          info(' no puedes salir de la ruta por que hay saldo pendiente', saldo);
+          set(controller, 'mostrarModal', true);
           transition.abort();
         }
       } catch(e) {
