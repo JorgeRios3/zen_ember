@@ -52,7 +52,7 @@ RouteAuthMixin, FormatterMixin,  {
       nombreVendedor: '',
       esGerente: false,
       cantidadesIguales: true,
-      mostrarImprimirReporte: false,
+      mostrarImprimirReporte: false, 
       numeroSolicitud: null,
       pagoComodin: null
     });
