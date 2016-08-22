@@ -60,7 +60,13 @@
 </div>
 <div class="row">
 	{{#if observaBotonGrabar}}
+		{{#if validarPorcentaje}}
 		<div class="btn btn-success" {{action "guardarComision"}}>Guardar Comision</div>
+		{{else}}
+			<div class="alert alert-danger">
+  				<strong>Las suma de las comisiones no puede ser mayor al 100 %</strong> 
+			</div>
+		{{/if}}
 	{{/if}}
 	{{#if errorGrabar}}
 		<div class="alert alert-danger">
@@ -86,7 +92,7 @@
 					<th>Inmueble</th>
 					<th>Porcentaje %</th>
 					<th>Vendedor</th>
-					<th>Nombre %</th>
+					<th>Nombre Vendedor</th>
 					<th>Fecha</th>
 				</tr>
 			</thead>
@@ -109,6 +115,13 @@
 	<div class="alert alert-danger">
   		<strong>No se puede editar comisiones de este inmueble</strong> 
 	</div>
+{{/if}}
+
+{{#if levantaModal}}
+	{{#modal-bs title="Error Comision" ok="cerrarModal" close="cerrarModal"}}
+		<br><div class="text text-danger">La comisiones del inmueble no pueden rebasar el 100%</div>
+		<br>
+	{{/modal-bs}}
 {{/if}}
 
 {{#if error}}
