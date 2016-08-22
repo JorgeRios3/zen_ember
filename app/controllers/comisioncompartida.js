@@ -29,6 +29,8 @@ export default Ember.Controller.extend({
   puedoGrabar: false,
   errorGrabar: false,
   porcentajeTotalInmueble: '',
+  levantaModal: false,
+  validarPorcentaje: computed.lt('porcentajeTotalInmueble', 101),
   inmuebleNoEditable: computed('editable', {
     get() {
       if (get(this, 'editable') === false) {
@@ -106,6 +108,9 @@ export default Ember.Controller.extend({
     });
   },
   actions: {
+    cerrarModal() {
+      set(this, 'levantaModal', false);
+    },
     eliminarComision(comisionid) {
       this.store.unloadAll('comisioncompartida');
       this.store.find('comisioncompartida', comisionid)
@@ -119,7 +124,14 @@ export default Ember.Controller.extend({
     guardarComision() {
       let inmueble = get(get(this, 'recordInmueble'), 'id');
       let vendedor = get(this, 'selectedVendedor');
-      let porcentaje = get(this, 'porcentaje');
+      let porcentaje = parseFloat(get(this, 'porcentaje'));
+      let totalporcentaje = parseFloat(get(this, 'porcentajeTotalInmueble'));
+      let sumaporcentaje = totalporcentaje + porcentaje;
+      info('valor de comisiones', sumaporcentaje);
+      if (sumaporcentaje > 100) {
+        set(this, 'levantaModal', true);
+        return;
+      } else {
       let record = this.store.createRecord('comisioncompartida', {
         inmueble,
         vendedor,
@@ -132,6 +144,7 @@ export default Ember.Controller.extend({
       }, (error)=> {
         info('trono');
       });
+     }
     },
     levantaFormaComision() {
       set(this, 'porcentaje', '');

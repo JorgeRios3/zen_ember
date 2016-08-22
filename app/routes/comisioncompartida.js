@@ -27,7 +27,11 @@ RouteAuthMixin , {
       selectedGerente: null,
       selectedVendedor: null,
       listaComisionesInmueble: null,
-      inmueble: ''
+      inmueble: '',
+      recordInmueble: null,
+      forma: false,
+      porcentaje: '',
+      editable: null
     });
   },
   model() {
