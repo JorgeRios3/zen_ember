@@ -46,13 +46,13 @@ RouteAuthMixin, FormatterMixin,  {
       comisionesLista: null,
       pagoImporte: null,
       pagoImpuesto: null,
-      solicitudCheque: null,
+      solicitudCheque: null, 
       nuevaSolicitud: null,
       editable: false,
       nombreVendedor: '',
       esGerente: false,
       cantidadesIguales: true,
-      mostrarImprimirReporte: false, 
+      mostrarImprimirReporte: false,   
       numeroSolicitud: null,
       pagoComodin: null
     });

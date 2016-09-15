@@ -15,7 +15,8 @@ const {
   getOwner
 } = Ember;
 
-let iclarLocation = [20.6765878,-103.3684634];
+let iclarLocation = [20.6762743, -103.3686327];
+let iclarLocation2 = [20.692211, -103.3627561];
 
 function deg2rad(degrees) {
   return degrees * Math.PI / 180;
@@ -150,6 +151,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     info('valor de distancia es', distancia);
     let isInIclar = distance(currentLocation[0], currentLocation[1], iclarLocation[0], iclarLocation[1]) <= radioIclar;
     info('isInIclar vale', isInIclar);
+    if (!isInIclar) {
+      isInIclar = distance(currentLocation[0], currentLocation[1], iclarLocation2[0], iclarLocation2[1]) <= radioIclar;
+      info('iclarlocation2 isInIclar vale', isInIclar);
+    }
     this.controllerFor('index').setProperties({
       isInIclar
     });
