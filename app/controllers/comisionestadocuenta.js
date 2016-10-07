@@ -265,6 +265,9 @@ export default Ember.Controller.extend(FormatterMixin, {
     }
   }),
   actions: {
+    prueba() {
+      info('se fue por aqui');
+    },
     borrarDocumentoManual(comision) {
       let vendedor = get(get(this, 'selectedVendedor'), 'id');
       this.store.unloadAll('documentocomision');
