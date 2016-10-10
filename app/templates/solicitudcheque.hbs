@@ -198,7 +198,7 @@
 	{{else}}
 		{{#if selectedEmpresaEdicion}}
 			<div class="form-group">
-    			<label for="idnumerosexteriores" class="control-label">Estatus mames</label>
+    			<label for="idnumerosexteriores" class="control-label">Estatus</label>
 				<div class="row">
 				<div class="col-md-5">
 					{{#x-select value=selectedEstatus action=(action  (mut selectedEstatus)) class="form-control form-control-inline"}}
@@ -237,6 +237,24 @@
 				</div>
 			</div>
 		</div>
+		{{/if}}
+		{{#if devolucionFlag}}
+			<div class="row">
+				<div class="checkbox col-xs-10 col-md-3">
+				<label>
+					{{input type="checkbox" name="candadoPrecio" checked=isCliente }}Devolucion
+				</label>
+				</div>
+			</div>
+		{{/if}}
+		{{#if comisionesFlag}}
+			<div class="row">
+				<div class="checkbox col-xs-10 col-md-3">
+				<label>
+					{{input type="checkbox" name="ComisionSolicitud" checked=IsComisionSolicitud }}Solicitud Comision
+				</label>
+				</div>
+			</div>
 		{{/if}}
 
 		{{#unless nuevoProvedorForma}}
@@ -286,22 +304,6 @@
 				</div>
 			{{/if}}
 		{{/if}}
-			<div class="row">
-				<div class="checkbox col-xs-10 col-md-3">
-				<label>
-					{{input type="checkbox" name="candadoPrecio" checked=isCliente }}Devolucion
-				</label>
-				</div>
-			</div>
-			{{#if comisionesFlag}}
-				<div class="row">
-				<div class="checkbox col-xs-10 col-md-3">
-				<label>
-					{{input type="checkbox" name="ComisionSolicitud" checked=IsComisionSolicitud }}Solicitud Comision Asesor
-				</label>
-				</div>
-			</div>
-			{{/if}}
 
 			{{#if levantaFormaSolicitud}}
 				<div class="form-group">

@@ -428,9 +428,12 @@ export default Ember.Controller.extend(FormatterMixin, {
       });
     }
   }),
-  observaEsoecificaciones: observer('selectedEspecificaciones', function() {
+  observaEspecificaciones: observer('selectedEspecificaciones', function() {
     if (!isEmpty(get(this, 'selectedEspecificaciones'))) {
       let r = get(this, 'beneficiarioBancoCuenta');
+      if (!isEmpty(get(this, 'recordProvedor'))) {
+        r = get(this, 'recordProvedor');
+      }
       try {
         if (get(this, 'selectedEspecificaciones').includes('N') == true) {
           info('se va por cheque');
@@ -739,14 +742,14 @@ export default Ember.Controller.extend(FormatterMixin, {
           let nombrePartida = '';
           let partidaBuscar = '';
           llaves.forEach((k)=> {
-            if (!isEmpty(get(item, k))) {
+            info('valor de las llaves', get(item, k));
+            info('checando' ,!isEmpty(get(item, k)));
+            if (parseInt(get(item, k)) !== -1) {
               partidaBuscar = get(item, k);
             }
           });
-          info('aqui trono');
-          this.store.find('partidaegreso', 21)
+          this.store.find('partidaegreso', partidaBuscar)
           .then((item3)=> {
-            info('aqui trono');
             nombrePartida = get(item3, 'descripcion');
             objeto.nombrePartida = nombrePartida;
             objeto.partidaID = partidaBuscar;
@@ -883,11 +886,11 @@ export default Ember.Controller.extend(FormatterMixin, {
         // partida.total = get(this, 'totalPartida');
         partidaObjeto.centrocostoid = parseInt(get(this, 'selectedCentroCosto'));
         partidaObjeto.partida = parseInt(get(this, 'selectedPartidaEgreso.id'));
-        partidaObjeto.subpartida1 = isEmpty(get(this, 'selectedsubPartida1.id')) !== true ? parseInt(get(this, 'selectedsubPartida1.id')) : '';
-        partidaObjeto.subpartida2 = isEmpty(get(this, 'selectedsubPartida2.id')) !== true ? parseInt(get(this, 'selectedsubPartida2.id')) : '';
-        partidaObjeto.subpartida3 = isEmpty(get(this, 'selectedsubPartida3.id')) !== true ? parseInt(get(this, 'selectedsubPartida3.id')) : '';
-        partidaObjeto.subpartida4 = isEmpty(get(this, 'selectedsubPartida4.id')) !== true ? parseInt(get(this, 'selectedsubPartida4.id')) : '';
-        partidaObjeto.subpartida5 = isEmpty(get(this, 'selectedsubPartida5.id')) !== true ? parseInt(get(this, 'selectedsubPartida5.id')) : '';
+        partidaObjeto.subpartida1 = isEmpty(get(this, 'selectedsubPartida1.id')) !== true ? parseInt(get(this, 'selectedsubPartida1.id')) : -1;
+        partidaObjeto.subpartida2 = isEmpty(get(this, 'selectedsubPartida2.id')) !== true ? parseInt(get(this, 'selectedsubPartida2.id')) : -1;
+        partidaObjeto.subpartida3 = isEmpty(get(this, 'selectedsubPartida3.id')) !== true ? parseInt(get(this, 'selectedsubPartida3.id')) : -1;
+        partidaObjeto.subpartida4 = isEmpty(get(this, 'selectedsubPartida4.id')) !== true ? parseInt(get(this, 'selectedsubPartida4.id')) : -1;
+        partidaObjeto.subpartida5 = isEmpty(get(this, 'selectedsubPartida5.id')) !== true ? parseInt(get(this, 'selectedsubPartida5.id')) : -1;
         partidaObjeto.cantidad = parseFloat(get(this, 'totalPartida'));
         get(this, 'listaPartidasEgresoGrabar').pushObject(partidaObjeto);
         info('valor del objeto agregado', partidaObjeto);

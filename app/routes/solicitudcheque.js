@@ -18,6 +18,7 @@ RouteAuthMixin , {
     let estatusFinanzas = get(this, 'features.estatusfinanzas');
     info('valor de finanzas', estatusFinanzas);
     let comisionesSolicitud = get(this, 'features.comisiones_solicitud');
+    let devolucion = get(this, 'features.devolucion');
     let estatusLista = [{ 'id': 1, 'label': 'Todo', 'estatus': 'H' }, 
     { 'id': 2, 'label': 'Solicitud', 'estatus': 'S' },
     { 'id': 3, 'label': 'Revisado', 'estatus': 'R' },
@@ -34,6 +35,7 @@ RouteAuthMixin , {
     let c = this.controllerFor(this.routeName);
     c.setProperties({
       estatusLista,
+      devolucionFlag: devolucion,
       contaFlag: estatusContabilidad,
       finanzasFlag: estatusFinanzas,
       comisionesFlag: comisionesSolicitud,
