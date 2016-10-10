@@ -1,0 +1,31 @@
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+  idreferenciamovto: DS.attr('number'),
+  fechacaptura: DS.attr('string'),
+  tipoprogramacion: DS.attr('String'),
+  fechaprogramada: DS.attr('string'),
+  empresaid: DS.attr('number'),
+  idbeneficiario: DS.attr('number'),
+  devolucion: DS.attr('string'),
+  concepto: DS.attr('string'),
+  cantidad: DS.attr('number'),
+  anexo: DS.attr('string'),
+  anexoadicional: DS.attr('string'),
+  especificaciones: DS.attr('string'),
+  idbancoorigen: DS.attr('number'),
+  numerochequeorigen: DS.attr('string'),
+  bancodestino: DS.attr('string'),
+  sucursaldestino: DS.attr('string'),
+  plazadestino: DS.attr('string'),
+  clavebancariadestino: DS.attr('string'),
+  observaciones: DS.attr('string'),
+  estatus: DS.attr('string'),
+  usuariosolicitante: DS.attr('string'),
+  idfondeo: DS.attr('number'),
+  cantidadcheque: DS.attr('number'),
+  idreferenciaotros: DS.attr('number'),
+  pagoestimacion: DS.attr('boolean'),
+  blogguid: DS.attr('string'),
+  documento: DS.attr('number', {default: 0}) //esto es el update de tabla documento si es cliente y hay codigodocumento todavia no llegamos a esa parte
+});

@@ -1,0 +1,905 @@
+<br><br>
+<div class="h3 text text-info">Solicitudes de Cheques</div>
+<br>
+{{#unless desenlaSolicitud}}
+	{{#unless formaSolicitud}}
+
+	<div class="form-group">
+		<label for="solic" class="control-label">Solicitud</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=solicitudBuscar class="form-control" placeholder="Solcitud" id="solic"}}
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="idnumerosexteriores" class="control-label">Estatus</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedEstatus action=(action  (mut selectedEstatus)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Elija Estatus{{/x-option}}
+				{{#each estatusLista as |item|}}
+					{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+			<div class="checkbox col-xs-10 col-md-3">
+				<label>
+					{{input type="checkbox" name="candadoPrecio" checked=soloCliente }}Solo Clientes
+				</label>
+				</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idnumerosexteriores" class="control-label">Empresa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedEmpresa action=(action  (mut selectedEmpresa)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Elija Empresa{{/x-option}}
+				{{#each empresasLista as |item|}}
+					{{#x-option value=item.id}}{{item.razonsocial}}{{/x-option}}
+			{{/each}}
+		{{/x-select}}
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="idnumerosexteriores" class="control-label">Operacion</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedOperacion action=(action  (mut selectedOperacion)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Elija Operacion{{/x-option}}
+				{{#each operacionLista as |item|}}
+					{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<div class="form-inline">
+
+		<div class="h5 text text-info">Fechas Captura</div>
+		<div class="form-group">
+			<label for="datewidget" class="control-label">Fecha Inicial</label>
+			<div>
+	        	{{bs-datetimepicker id='fecha1' date=nullFechaCapturaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCapturaInicial))}}
+	    	</div>
+		</div>
+		<div class="form-group">
+			<label for="datewidget" class="control-label">Fecha Final</label>
+			<div >
+	        	{{bs-datetimepicker id='fecha2' date=nullFechaCapturaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCapturaFinal))}}
+	    	</div>
+	    </div>
+	</div>
+	<div class="form-inline">
+		<div class="h5 text text-info">Fechas Programada</div>
+		<div class="form-group">
+			<label for="datewidget" class="control-label">Fecha Inicial</label>
+			<div>
+	        	{{bs-datetimepicker id='fecha3' date=nullFechaProgramadaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaProgramadaInicial))}}
+	    	</div>
+		</div>
+		<div class="form-group">
+			<label for="datewidget" class="control-label">Fecha Final</label>
+			<div>
+	        	{{bs-datetimepicker id='fecha4' date=nullFechaProgramadaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaProgramadaFinal))}}
+	    	</div>
+		</div>
+	</div>
+	<br>
+		{{#if media.isMobile}}
+	  		<div class="form-group">
+				<label for="beneid" class="control-label">Beneficiario</label>
+				<div>
+					{{input type="text" value=bene class="form-control" placeholder="escribe el nombre completo o parte" id="beneid"}}
+				</div>
+			</div>
+			{{#if hayBene}}
+				<div class="btn btn-info" {{action "buscarBeneficiarioMobile"}}>Buscar Beneficiario</div>
+			{{/if}}
+			{{#if listaBeneficiarios}}
+				<div class="form-group">
+				<label>Elija Beneficiario</label>
+				<div class="row">	
+					<div class="col-md-8">
+						{{ember-selectize
+						content=listaBeneficiarios
+						optionValuePath="content.id"
+						optionLabelPath="content.nombre"
+						placeholder="Escribe el nombre completo o parte del beneficiario"
+						filter=beneficiarioFiltro
+						value=selectedBeneficiario}}
+					</div>
+				</div>
+			</div>
+			{{/if}}
+
+	  	{{else}}
+			<div class="form-group">
+				<label>Elija Beneficiario</label>
+				<div class="row">	
+					<div class="col-md-8">
+						{{ember-selectize
+						content=listaBeneficiarios
+						optionValuePath="content.id"
+						optionLabelPath="content.nombre"
+						placeholder="Escribe el nombre completo o parte del beneficiario"
+						filter=beneficiarioFiltro
+						value=selectedBeneficiario}}
+					</div>
+				</div>
+			</div>
+		{{/if}}
+	<div class="form-inline">
+		<br>
+		<div class="btn btn-success" {{action "buscarSolicitudes"}}>Buscar Solicitudes</div>
+		{{#if media.isMobile}}
+		<br><br>
+		{{/if}}
+		<div class="btn btn-warning" {{action "limpiarFiltros"}}>Limpiar Filtros</div>
+	</div>
+	<br>
+	<div class="btn btn-info" {{action "toggleFormaSolicitud"}}>Agregar</div>
+	{{#if showNavigation}}
+		<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
+		{{#if hayPagPrevias}}
+			<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
+		{{/if}}
+		{{#if hayPagSiguientes}}
+			<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+		{{/if}}
+	{{/if}}
+	<div id="no-more-tables">
+		<br>
+			<table class="table table-bordered table-striped table-condensed cf">
+			<thead>
+			<tr>
+				<th>Id</th>
+				<th>Solicitud</th>
+				<th>Fecha Captura</th>
+				<th>Fecha Programada</th>
+				<th>Cheque</th>
+				<th>Cantidad</th>
+				<th>Beneficiario</th>
+				<th>Empresa</th>
+				<th>Estatus</th>
+				<th>Solicitante</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each solicitudesLista as |row i|}}
+				<tr>
+					<td data-title="Id">{{i}}</td>
+					<td data-title="Solicitud"><a href="" {{action "levantaDesenlceSolicitud" row.id row.nombreReal}}>{{row.id}}</a></td>
+					<td data-title="Fecha Captura">{{row.fechacaptura}}</td>
+					<td data-title="Fecha Programada">{{row.fechaprogramada}}</td>
+					<td data-title="Cheque">{{row.numerochequeorigen}}</td>
+					<td data-title="Cantidad">{{row.cantidad}}</td>
+					<td data-title="Beneficiario">{{#if row.esCliente}}Cliente: {{/if}} {{row.nombreReal}} </td>
+					<td data-title="Empresa">{{row.razonsocial}}</td>
+					<td data-title="Estatus">{{row.estatus}}</td>
+					<td data-title="Solicitante">{{row.usuariosolicitante}}</td>
+					
+				</tr>
+			{{/each}}
+			</tbody>
+			</table>
+		</div>
+		{{#if showComponent}}
+			{{impresion-reporte store=store reporte="solicitudcheque" parametro1="solicitudcheque" valorParametro1="55116" excel=false sinParametro=false submit=(action 'togglePrinterComponent') cancel=(action 'togglePrinterComponent') }}
+		{{else}}
+			<div class="row">
+					<div class="btn btn-info" {{action "togglePrinterComponent"}}>Imprimir Solicitud</div>
+			</div>
+		{{/if}}
+	{{else}}
+		{{#if selectedEmpresaEdicion}}
+			<div class="form-group">
+    			<label for="idnumerosexteriores" class="control-label">Estatus mames</label>
+				<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=selectedEstatus action=(action  (mut selectedEstatus)) class="form-control form-control-inline"}}
+						{{#x-option value=''}}Elija Estatus{{/x-option}}
+						{{#each listaEstatusSiguiente as |item|}}
+							{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+				</div>
+			</div>
+		{{else}}
+		<div class="h4">Nueva Solcitud</div>
+		{{/if}}
+		<div class="form-group">
+			<label>Tipo Programacion</label>
+			<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selecteProgramacion action=(action  (mut selectProgramacion)) class="form-control form-control-inline"}}
+					{{#x-option value='N'}}Normal {{/x-option}}
+					{{#each tipoProgramacionLista as |item|}}
+						{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+			</div>
+		</div>
+		{{#if tipoProgramacionBandera}}
+		<div class="h4 text text-info">Fecha Programacion {{fechaprogramada}}</div>
+		{{else}}
+			<div class="form-group">
+			<label for="datewidget" class="control-label">Programacion</label>
+			<div class="row">
+				<div class="col-xs-10 col-md-3">
+					{{bs-datetimepicker date=nullFechaProgramadaSolicitud showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaProgramadaSolicitud))}}
+				</div>
+			</div>
+		</div>
+		{{/if}}
+
+		{{#unless nuevoProvedorForma}}
+			{{#if media.isMobile}}
+	  			<div class="form-group">
+					<label for="beneid" class="control-label">Beneficiario</label>
+					<div>
+						{{input type="text" value=bene class="form-control" placeholder="escribe el nombre completo o parte" id="beneid"}}
+					</div>
+				</div>
+				{{#if hayBene}}
+					<div class="btn btn-info" {{action "buscarBeneficiarioMobile"}}>Buscar Beneficiario</div>
+				{{/if}}
+				{{#if listaBeneficiarios}}
+					<div class="form-group">
+					<label>Elija Beneficiario</label>
+					<div class="row">	
+						<div class="col-md-8">
+							{{ember-selectize
+							content=listaBeneficiarios
+							optionValuePath="content.id"
+							optionLabelPath="content.nombre"
+							placeholder="Escribe el nombre completo o parte del beneficiario"
+							filter=beneficiarioFiltro
+							value=selectedBeneficiario}}
+						</div>
+					</div>
+				</div>
+				{{/if}}
+	  		{{else}}
+	  		{{#if recordProvedor}}
+	  			<div>Provedor <div class="h4 text text-success">Id: {{recordProvedor.id}} Nombre: {{recordProvedor.nombre}}</div></div>
+	  		{{else}}
+				<div class="form-group">
+					<label>Elija Beneficiario</label>
+					<div class="row">	
+						<div class="col-md-8">
+							{{ember-selectize
+							content=listaBeneficiarios
+							optionValuePath="content.id"
+							optionLabelPath="content.nombre"
+							placeholder="Escribe el nombre completo o parte del beneficiario"
+							filter=beneficiarioFiltro
+							value=selectedBeneficiario}}
+						</div>
+					</div>
+				</div>
+			{{/if}}
+		{{/if}}
+			<div class="row">
+				<div class="checkbox col-xs-10 col-md-3">
+				<label>
+					{{input type="checkbox" name="candadoPrecio" checked=isCliente }}Devolucion
+				</label>
+				</div>
+			</div>
+			{{#if comisionesFlag}}
+				<div class="row">
+				<div class="checkbox col-xs-10 col-md-3">
+				<label>
+					{{input type="checkbox" name="ComisionSolicitud" checked=IsComisionSolicitud }}Solicitud Comision Asesor
+				</label>
+				</div>
+			</div>
+			{{/if}}
+
+			{{#if levantaFormaSolicitud}}
+				<div class="form-group">
+					<label for="concepto" class="control-label">Concepto</label>
+					<div>
+						{{input type="text" value=concepto class="form-control" placeholder="Concepto" maxlength=100 id="concepto"}}
+					</div>
+	    		</div>
+	    		<div class="form-group">
+	    			<label for="idnumerosexteriores" class="control-label">Anexo</label>
+					<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedAnexo action=(action  (mut selectedAnexo)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Elija Concepto{{/x-option}}
+							{{#each anexoLista as |item|}}
+								{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+						{{/each}}
+						{{/x-select}}
+					</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="detalleAenxo" class="control-label">Detalle Anexo</label>
+					<div>
+						{{input type="text" value=detalleAnexo class="form-control" placeholder="Detalle anexo" maxlength=50 id="detalleAenxo"}}
+					</div>
+	    		</div>
+	    		<div class="form-group">
+					<label for="observaciones" class="control-label">Observaciones</label>
+					<div>
+						{{input type="text" value=observaciones class="form-control" placeholder="Observaciones" id="observaciones"}}
+					</div>
+	    		</div>
+	    		{{#if selectedEmpresaEdicion}}
+	    			<div class="form-group">
+	    				<label>Empresa</label>
+	    				<div>
+	    					{{selectedEmpresaEdicion.id}} {{selectedEmpresaEdicion.razonsocial}}
+	    				</div>
+	    			</div>
+	    		{{else}}
+	    		<div class="form-group">
+					<label for="idnumerosexteriores" class="control-label">Empresa</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedEmpresa action=(action  (mut selectedEmpresa)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Elija Empresa{{/x-option}}
+							{{#each empresasLista as |item|}}
+								{{#x-option value=item.id}}{{item.razonsocial}}{{/x-option}}
+						{{/each}}
+					{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{/if}}
+				<hr>
+				{{#unless media.isMobile}}
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+							<label for="idespecificaciones" class="control-label">Especificaciones</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedEspecificaciones action=(action  (mut selectedEspecificaciones)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja Tipo{{/x-option}}
+										{{#each especificacionesLista as |item|}}
+											{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+							<label for="idbancoOrigen" class="control-label">Banco Origen</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedBancoOrigen action=(action  (mut selectedBancoOrigen)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja Banco{{/x-option}}
+										{{#each bancoOrigenLista as |item|}}
+											{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="idbancodestinosoli" class="control-label">Banco Destino</label>
+								<div>
+									{{input type="text" value=bancoDestinoSolicitud class="form-control" placeholder="Banco Destino" maxlength=50 id="idbancodestinosoli"}}
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="idplaza" class="control-label">Plaza</label>
+								<div>
+									{{input type="text" value=plazaSolicitud class="form-control" placeholder="Plaza" maxlength=50 id="idplaza"}}
+								</div>
+							</div>
+							<div id ="jumbo" class="jumbotron">
+								<div id="no-more-tables">
+									<table class="table table-bordered table-striped table-condensed cf">
+									<thead>
+									<tr>
+										<th>id</th>
+										<th>Partida</th>
+										<th>Total</th>
+									</tr>
+									</thead>
+									<tbody>
+										{{#each listaPartidasEgresoGrabar as |r|}}
+										<tr>
+											<td data-title="id">
+												<a href="">
+													<div class="text text-danger glyphicon glyphicon-remove" {{action "borrarPartida" r.partida}}></div>
+												</a>
+											</td>
+											<td data-title="Partida">{{r.nombrePartida}}</td>
+											<td data-title="Total">{{r.cantidad}}</td>
+										</tr>
+										{{/each}}
+									</tbody>
+									</table>
+								</div>
+								<div class="text-right h5">Total {{totalValorPartidasformated}}</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="checkbox">
+								<label>
+								{{input type="checkbox" name="PagoEstimacion" checked=PagoEstimacion }}Pago Estimación
+								</label>
+							</div>
+							<div class="form-group">
+								<label for="idchequesoli" class="control-label">No. Cheque</label>
+								<div>
+									{{input type="text" value=chequeSolicitud class="form-control" placeholder="Cheque" maxlength=50 id="idchequesoli"}}
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="idsucursalsoli" class="control-label">Sucursal</label>
+								<div>
+									{{input type="text" value=sucursalSolicitud class="form-control" placeholder="Plaza" maxlength=50 id="idsucursalsoli"}}
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="idclavesoli" class="control-label">Clave/Cuenta</label>
+								<div>
+									{{input type="text" value=claveCuentaSolicitud class="form-control" placeholder="Clave o Cuenta" maxlength=50 id="idclavesoli"}}
+								</div>
+							</div>
+							<div class="form-group">
+							<label for="idbancoOrigen" class="control-label">Centro de Costo</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedCentroCosto action=(action  (mut selectedCentroCosto)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja Centro Costo{{/x-option}}
+										{{#each centroCostoLista as |item|}}
+											{{#x-option value=item.id}}{{item.descripcion}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							{{#if partidaEgresosLista}}
+							<div class="form-group">
+							<label for="idpartida" class="control-label">Partida</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedPartidaEgreso action=(action  (mut selectedPartidaEgreso)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja Partida{{/x-option}}
+										{{#each partidaEgresosLista as |item|}}
+											{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							{{/if}}
+							{{#if subpartida1Lista}}
+							<div class="form-group">
+							<label for="idsubpartida1" class="control-label">SubPartida 1</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedsubPartida1 action=(action  (mut selectedsubPartida1)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+										{{#each subpartida1Lista as |item|}}
+											{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							{{/if}}
+							{{#if subpartida2Lista}}
+							<div class="form-group">
+							<label for="idsubpartida2" class="control-label">SubPartida 2</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedsubPartida2 action=(action  (mut selectedsubPartida2)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+										{{#each subpartida2Lista as |item|}}
+											{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							{{/if}}
+							{{#if subpartida3Lista}}
+							<div class="form-group">
+							<label for="idsubpartida3" class="control-label">SubPartida 3</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedsubPartida3 action=(action  (mut selectedsubPartida3)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+										{{#each subpartida3Lista as |item|}}
+											{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							{{/if}}
+							{{#if subpartida4Lista}}
+							<div class="form-group">
+							<label for="idsubpartida4" class="control-label">SubPartida 4</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedsubPartida4 action=(action  (mut selectedsubPartida4)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+										{{#each subpartida4Lista as |item|}}
+											{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							{{/if}}
+							{{#if subpartida5Lista}}
+							<div class="form-group">
+							<label for="idsubpartida5" class="control-label">SubPartida 5</label>
+								<div class="row">
+									<div class="col-md-5">
+										{{#x-select value=selectedsubPartida5 action=(action  (mut selectedsubPartida5)) class="form-control form-control-inline"}}
+										{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+										{{#each subpartida5Lista as |item|}}
+											{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+										{{/each}}
+										{{/x-select}}
+									</div>
+								</div>
+							</div>
+							{{/if}}
+							{{#if banderaUltimaPartidaSeleccionada}}
+								<div class="text text-success">Partida {{valorPartidaEgreso.partida}} {{valorPartidaEgreso.nombrePartida}} <div class="glyphicon glyphicon-ok"></div></div>
+								<div class="form-group">
+									<label for="totalPartida" class="control-label">Total</label>
+									<div>
+										{{input type="number" value=totalPartida class="form-control" placeholder="Total" id="totalPartida"}}
+									</div>
+		    					</div>
+		    					{{#if comisionesFlag}}
+									<div class="btn btn-info" {{action "totalComisiones"}}>Total de Comisiones</div>
+								{{/if}}
+							{{/if}}
+							{{#if BanderaAceptarPagoPartida}}
+								<div class="btn btn-info" {{action "guardarPartida"}}>Guardar Partida</div>
+							{{/if}}
+						</div>
+
+					</div>
+				{{else}}
+					<div class="row">
+
+						<div class="form-group">
+						<label for="idespecificaciones" class="control-label">Especificaciones</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedEspecificaciones action=(action  (mut selectedEspecificaciones)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja Tipo{{/x-option}}
+									{{#each especificacionesLista as |item|}}
+										{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+						<label for="idbancoOrigen" class="control-label">Banco Origen</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedBancoOrigen action=(action  (mut selectedBancoOrigen)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja Banco{{/x-option}}
+									{{#each bancoOrigenLista as |item|}}
+										{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="idbancodestinosoli" class="control-label">Banco Destino</label>
+							<div>
+								{{input type="text" value=bancoDestinoSolicitud class="form-control" placeholder="Banco Destino" id="idbancodestinosoli"}}
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="idplaza" class="control-label">Plaza</label>
+							<div>
+								{{input type="text" value=plazaSolicitud class="form-control" placeholder="Plaza" id="idplaza"}}
+							</div>
+						</div>
+						<div class="checkbox">
+							<label>
+							{{input type="checkbox" name="PagoEstimacion" checked=PagoEstimacion }}Pago Estimación
+							</label>
+						</div>
+						<div class="form-group">
+							<label for="idsucursalsoli" class="control-label">sucursal</label>
+							<div>
+								{{input type="text" value=sucursalSolicitud class="form-control" placeholder="Plaza" id="idsucursalsoli"}}
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="idclavesoli" class="control-label">Clave/Cuenta</label>
+							<div>
+								{{input type="text" value=claveCuentaSolicitud class="form-control" placeholder="Clave o Cuenta" id="idclavesoli"}}
+							</div>
+						</div>
+						<div class="form-group">
+						<label for="idbancoOrigen" class="control-label">Centro de Costo</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedCentroCosto action=(action  (mut selectedCentroCosto)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja Centro Costo{{/x-option}}
+									{{#each centroCostoLista as |item|}}
+										{{#x-option value=item.id}}{{item.descripcion}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						{{#if partidaEgresosLista}}
+						<div class="form-group">
+						<label for="idpartida" class="control-label">Partida</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedPartidaEgreso action=(action  (mut selectedPartidaEgreso)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja Partida{{/x-option}}
+									{{#each partidaEgresosLista as |item|}}
+										{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						{{/if}}
+						{{#if subpartida1Lista}}
+						<div class="form-group">
+						<label for="idsubpartida1" class="control-label">SubPartida 1</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedsubPartida1 action=(action  (mut selectedsubPartida1)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+									{{#each subpartida1Lista as |item|}}
+										{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						{{/if}}
+						{{#if subpartida2Lista}}
+						<div class="form-group">
+						<label for="idsubpartida2" class="control-label">SubPartida 2</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedsubPartida2 action=(action  (mut selectedsubPartida2)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+									{{#each subpartida2Lista as |item|}}
+										{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						{{/if}}
+						{{#if subpartida3Lista}}
+						<div class="form-group">
+						<label for="idsubpartida3" class="control-label">SubPartida 3</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedsubPartida3 action=(action  (mut selectedsubPartida3)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+									{{#each subpartida3Lista as |item|}}
+										{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						{{/if}}
+						{{#if subpartida4Lista}}
+						<div class="form-group">
+						<label for="idsubpartida4" class="control-label">SubPartida 4</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedsubPartida4 action=(action  (mut selectedsubPartida4)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+									{{#each subpartida4Lista as |item|}}
+										{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						{{/if}}
+						{{#if subpartida5Lista}}
+						<div class="form-group">
+						<label for="idsubpartida5" class="control-label">SubPartida 5</label>
+							<div class="row">
+								<div class="col-md-5">
+									{{#x-select value=selectedsubPartida5 action=(action  (mut selectedsubPartida5)) class="form-control form-control-inline"}}
+									{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+									{{#each subpartida5Lista as |item|}}
+										{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+									{{/each}}
+									{{/x-select}}
+								</div>
+							</div>
+						</div>
+						{{/if}}
+						{{#if banderaUltimaPartidaSeleccionada}}
+							<div class="text text-success">Partida {{valorPartidaEgreso.partida}} {{valorPartidaEgreso.nombrePartida}} <div class="glyphicon glyphicon-ok"></div></div>
+							<div class="form-group">
+								<label for="totalPartida" class="control-label">Total</label>
+								<div>
+									{{input type="number" value=totalPartida class="form-control" placeholder="Total" id="totalPartida"}}
+								</div>
+	    					</div>
+						{{/if}}
+						<div id ="jumbo" class="jumbotron">
+							<div id="no-more-tables">
+								<table class="table table-bordered table-striped table-condensed cf">
+								<thead>
+								<tr>
+									<th>id</th>
+									<th>Partida</th>
+									<th>Total</th>
+								</tr>
+								</thead>
+								<tbody>
+									{{#each listaPartidasEgresoGrabar as |r|}}
+									<tr>
+										<td data-title="id">
+											<a href="">
+												<div class="text text-danger glyphicon glyphicon-remove" {{action "borrarPartida" r.partida}}></div>
+											</a>
+										</td>
+										<td data-title="Partida">{{r.nombrePartida}}</td>
+										<td data-title="Total">{{r.cantidad}}</td>
+									</tr>
+									{{/each}}
+								</tbody>
+								</table>
+							</div>
+							<div class="text-right h5">Total {{totalValorPartidasformated}}</div>
+						</div>
+						{{#if BanderaAceptarPagoPartida}}
+							<div class="btn btn-info" {{action "guardarPartida"}}>Guardar Partida</div>
+						{{/if}}
+				</div>
+				{{/unless}}
+			{{/if}}
+			{{#unless isCliente}}
+				{{#unless selectedBeneficiario}}
+					<div class="btn btn-info" {{action "toggleNuevoProvedor"}}>Nuevo Beneficiario</div>
+				{{/unless}}
+			{{/unless}}
+		{{else}}
+		<div class="form-group">
+			<label for="newbeneficiario" class="control-label">Nombre Beneficiario</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=beneficiarioNuevo class="form-control" placeholder="Nombre Beneficiario" id="newbeneficiario"}}
+				</div>		
+			</div>
+		</div>
+		<div class="form-inline">
+			<div class="h5 text text-success">Datos Transferencia</div>
+			<div class="form-group">
+				<label for="bancoid" class="control-label">Banco</label>
+				<div>
+					{{input type="text" value=banco class="form-control" placeholder="Banco" id="bancoid"}}
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="plazaid" class="control-label">Plaza</label>
+				<div>
+					{{input type="text" value=plaza class="form-control" placeholder="Plaza" id="plazaid"}}
+				</div>
+	    	</div>
+		</div>
+		<div class="form-inline">
+			<div class="form-group">
+				<label for="sucursalid" class="control-label">Sucursal</label>
+				<div>
+					{{input type="text" value=sucursal class="form-control" placeholder="Sucursal" id="sucursalid"}}
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="clavecuentaid" class="control-label">Clave/Cuenta</label>
+				<div>
+					{{input type="text" value=clavecuenta class="form-control" placeholder="Clave/cuenta" id="clavecuentaid"}}
+				</div>
+	    	</div>
+		</div>
+
+		<div class="form-inline">
+			<div class="h5 text text-warning">Datos Cheque</div>
+			<div class="form-group">
+				<label for="bancoidcheque" class="control-label">Banco</label>
+				<div>
+					{{input type="text" value=bancocheque class="form-control" placeholder="Banco" id="bancoidchque"}}
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="plazaidcheque" class="control-label">Plaza</label>
+				<div>
+					{{input type="text" value=plazacheque class="form-control" placeholder="Plaza" id="plazaidcheque"}}
+				</div>
+	    	</div>
+		</div>
+		<div class="form-inline">
+			<div class="form-group">
+				<label for="sucursalidcheque" class="control-label">Sucursal</label>
+				<div>
+					{{input type="text" value=sucursalcheque class="form-control" placeholder="Sucursal" id="sucursalidcheque"}}
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="clavecuentaidcheque" class="control-label">Clave/Cuenta</label>
+				<div>
+					{{input type="text" value=clavecuentacheque class="form-control" placeholder="Clave/cuenta" id="clavecuentaidcheque"}}
+				</div>
+	    	</div>
+		</div>
+		<br>
+			<div class="btn btn-info" {{action "grabarBeneficiario"}}>Grabar Beneficiario</div>
+			<div class="btn btn-warning" {{action "toggleNuevoProvedor"}}>Cancelar</div>
+		{{/unless}}
+		{{#if quierover}}
+			{{#if selectedEmpresaEdicion}}
+				<div class="btn btn-success" {{action "guardarEditarSolicitud"}}>Guardar Solicitud E</div>
+			{{else}}
+				<div class="btn btn-success" {{action "guardarSolicitud"}}>Guardar Solicitud</div>
+			{{/if}}
+		{{/if}}
+		<div class="btn btn-danger" {{action "toggleFormaSolicitud"}}>Cancelar Solicitud</div>
+	{{/unless}}
+{{/unless}}
+{{#if errorModal}}
+  {{#modal-bs title=errorTitle ok="okCerrarModal" close="okCerrarModal"}}
+   {{errorMsg}}
+  {{/modal-bs}}
+{{/if}}
+{{#if desenlaSolicitud}}
+<div class="jumbotron">
+<div class="h4 text text-info">{{titleDesenlaceSolicitud}}</div>
+<div class="h5 text text-info">Beneficiario: {{solicitudDesenlace.nombre}}</div>
+<div>Escoge la opcion deseada para la solicitud seleecionada</div>
+<br>
+<div class="row">
+	<div class="btn btn-success">Imprimir</div>
+	<div class="btn btn-info" {{action "editarSolicitud" solicitudDesenlace}}>Editar</div>
+	<div class="btn btn-default" {{action "toggleFormaClonar"}}>Clonar</div>
+	<div class="btn btn-warning" {{action "cerrarDesenlaceSolicitud"}}>Cancelar</div>
+</div>
+{{#if banderaClonar}}
+	<br>
+	<div class="form-group">
+		<label for="clonarsolicitud" class="control-label">Motivo</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=motivoClonarSolicitud class="form-control" placeholder="Motivo" id="clonarsolicitud"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="numeroclonaciones" class="control-label">Numero de Clonaciones</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="number" value=numeroClonaciones class="form-control" placeholder="copias" id="numeroclonaciones"}}
+			</div>
+		</div>
+	</div>
+	{{#if computedBotonAceptarClonar}}
+		<div class="btn btn-success" {{action "clonarSolicitud"}}>Clonar Solicitud</div>
+	{{/if}}
+{{/if}}
+</div>
+{{/if}}
