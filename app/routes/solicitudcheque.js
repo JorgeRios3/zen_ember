@@ -12,14 +12,14 @@ const {
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
   beforeModel2() {
-    info('valor de featues  donde quiero',get(this, 'features.estatuscontabilidad'));
+    info('valor de featues  donde quiero', get(this, 'features.estatuscontabilidad'));
     let estatusContabilidad = get(this, 'features.estatuscontabilidad');
     info('vslor dr la variable contabilidad', estatusContabilidad);
     let estatusFinanzas = get(this, 'features.estatusfinanzas');
     info('valor de finanzas', estatusFinanzas);
     let comisionesSolicitud = get(this, 'features.comisiones_solicitud');
     let devolucion = get(this, 'features.devolucion');
-    let estatusLista = [{ 'id': 1, 'label': 'Todo', 'estatus': 'H' }, 
+    let estatusLista = [{ 'id': 1, 'label': 'Todo', 'estatus': 'H' },
     { 'id': 2, 'label': 'Solicitud', 'estatus': 'S' },
     { 'id': 3, 'label': 'Revisado', 'estatus': 'R' },
     { 'id': 4, 'label': 'Autorizado', 'estatus': 'A' },
@@ -52,7 +52,7 @@ RouteAuthMixin , {
       formaSolicitud: false,
       nuevoProvedorForma: false,
       beneficiarioNuevo: '',
-      beneficiarioFiltro:'',
+      beneficiarioFiltro: '',
       selectedBeneficiario: '',
       isCliente: false,
       bene: '',
@@ -81,7 +81,7 @@ RouteAuthMixin , {
     });
   },
   setupController(ctrlr, model) {
-    let { empresas, gxsolicitudcheque, fechacaptura, fechaprogramada } = model
+    let { empresas, gxsolicitudcheque, fechacaptura, fechaprogramada } = model;
     let cuantos = (get(gxsolicitudcheque, 'meta.cuantos'));
     if (cuantos >= 20) {
       set(ctrlr, 'showNavigation', true);
@@ -97,18 +97,18 @@ RouteAuthMixin , {
     fechacaptura.forEach((item)=> {
       fechaCaptura = get(item, 'fecha');
     });
-    //info('valor de fecha es ', fecha);
+    // info('valor de fecha es ', fecha);
     set(ctrlr, 'empresasLista', empresas);
     set(ctrlr, 'solicitudesLista', gxsolicitudcheque);
     set(ctrlr, 'fechaprogramada', fechaProgramada);
     set(ctrlr, 'fechacaptura', fechaCaptura);
   },
   model() {
-    return hash({ 
+    return hash({
       empresas: this.store.findAll('empresasolicitud'),
-      gxsolicitudcheque: this.store.query('gxsolicitudcheque', { estatus: 2}),
+      gxsolicitudcheque: this.store.query('gxsolicitudcheque', { estatus: 2 }),
       fechacaptura: this.store.findAll('gxfechacaptura'),
       fechaprogramada: this.store.findAll('gxfechaprogramada')
-  	})
+    });
   }
 });

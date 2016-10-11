@@ -3,65 +3,61 @@
 <br>
 {{#unless desenlaSolicitud}}
 	{{#unless formaSolicitud}}
-
-	<div class="form-group">
-		<label for="solic" class="control-label">Solicitud</label>
-		<div class="row">
-			<div class="col-xs-8 col-md-5">
-				{{input type="text" value=solicitudBuscar class="form-control" placeholder="Solcitud" id="solic"}}
-			</div>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label for="idnumerosexteriores" class="control-label">Estatus</label>
-		<div class="row">
-			<div class="col-md-5">
-				{{#x-select value=selectedEstatus action=(action  (mut selectedEstatus)) class="form-control form-control-inline"}}
-				{{#x-option value=''}}Elija Estatus{{/x-option}}
-				{{#each estatusLista as |item|}}
-					{{#x-option value=item.id}}{{item.label}}{{/x-option}}
-				{{/each}}
-				{{/x-select}}
-			</div>
-			<div class="checkbox col-xs-10 col-md-3">
-				<label>
-					{{input type="checkbox" name="candadoPrecio" checked=soloCliente }}Solo Clientes
-				</label>
-				</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="idnumerosexteriores" class="control-label">Empresa</label>
-		<div class="row">
-			<div class="col-md-5">
-				{{#x-select value=selectedEmpresa action=(action  (mut selectedEmpresa)) class="form-control form-control-inline"}}
-				{{#x-option value=''}}Elija Empresa{{/x-option}}
-				{{#each empresasLista as |item|}}
-					{{#x-option value=item.id}}{{item.razonsocial}}{{/x-option}}
-			{{/each}}
-		{{/x-select}}
-			</div>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label for="idnumerosexteriores" class="control-label">Operacion</label>
-		<div class="row">
-			<div class="col-md-5">
-				{{#x-select value=selectedOperacion action=(action  (mut selectedOperacion)) class="form-control form-control-inline"}}
-				{{#x-option value=''}}Elija Operacion{{/x-option}}
-				{{#each operacionLista as |item|}}
-					{{#x-option value=item.id}}{{item.label}}{{/x-option}}
-				{{/each}}
-				{{/x-select}}
-			</div>
-		</div>
-	</div>
-	<div class="form-inline">
-
-		<div class="h5 text text-info">Fechas Captura</div>
 		<div class="form-group">
+			<label for="solic" class="control-label">Solicitud</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+				{{input type="text" value=solicitudBuscar class="form-control" placeholder="Solcitud" id="solic"}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="idnumerosexteriores" class="control-label">Estatus</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=selectedEstatus action=(action  (mut selectedEstatus)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Estatus{{/x-option}}
+					{{#each estatusLista as |item|}}
+						{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+				<div class="checkbox col-xs-10 col-md-3">
+					<label>
+					{{input type="checkbox" name="candadoPrecio" checked=soloCliente }}Solo Clientes
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="idnumerosexteriores" class="control-label">Empresa</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=selectedEmpresa action=(action  (mut selectedEmpresa)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Empresa{{/x-option}}
+					{{#each empresasLista as |item|}}
+						{{#x-option value=item.id}}{{item.razonsocial}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="idnumerosexteriores" class="control-label">Operacion</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=selectedOperacion action=(action  (mut selectedOperacion)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Operacion{{/x-option}}
+					{{#each operacionLista as |item|}}
+						{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+		<div class="form-inline">
+			<div class="h5 text text-info">Fechas Captura</div>
+			<div class="form-group">
 			<label for="datewidget" class="control-label">Fecha Inicial</label>
 			<div>
 	        	{{bs-datetimepicker id='fecha1' date=nullFechaCapturaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCapturaInicial))}}
@@ -71,9 +67,9 @@
 			<label for="datewidget" class="control-label">Fecha Final</label>
 			<div >
 	        	{{bs-datetimepicker id='fecha2' date=nullFechaCapturaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCapturaFinal))}}
+	    		</div>
 	    	</div>
-	    </div>
-	</div>
+		</div>
 	<div class="form-inline">
 		<div class="h5 text text-info">Fechas Programada</div>
 		<div class="form-group">
@@ -177,10 +173,10 @@
 					<td data-title="Fecha Captura">{{row.fechacaptura}}</td>
 					<td data-title="Fecha Programada">{{row.fechaprogramada}}</td>
 					<td data-title="Cheque">{{row.numerochequeorigen}}</td>
-					<td data-title="Cantidad">{{row.cantidad}}</td>
+					<td data-title="Cantidad" class="text-right">{{row.cantidadComas}}</td>
 					<td data-title="Beneficiario">{{#if row.esCliente}}Cliente: {{/if}} {{row.nombreReal}} </td>
 					<td data-title="Empresa">{{row.razonsocial}}</td>
-					<td data-title="Estatus">{{row.estatus}}</td>
+					<td data-title="Estatus">{{row.estatusdescripcion}}</td>
 					<td data-title="Solicitante">{{row.usuariosolicitante}}</td>
 					
 				</tr>
@@ -188,13 +184,6 @@
 			</tbody>
 			</table>
 		</div>
-		{{#if showComponent}}
-			{{impresion-reporte store=store reporte="solicitudcheque" parametro1="solicitudcheque" valorParametro1="55116" excel=false sinParametro=false submit=(action 'togglePrinterComponent') cancel=(action 'togglePrinterComponent') }}
-		{{else}}
-			<div class="row">
-					<div class="btn btn-info" {{action "togglePrinterComponent"}}>Imprimir Solicitud</div>
-			</div>
-		{{/if}}
 	{{else}}
 		{{#if selectedEmpresaEdicion}}
 			<div class="form-group">
@@ -340,7 +329,7 @@
 	    		{{#if selectedEmpresaEdicion}}
 	    			<div class="form-group">
 	    				<label>Empresa</label>
-	    				<div>
+	    				<div class="h5 text text-success">
 	    					{{selectedEmpresaEdicion.id}} {{selectedEmpresaEdicion.razonsocial}}
 	    				</div>
 	    			</div>
@@ -565,7 +554,9 @@
 									</div>
 		    					</div>
 		    					{{#if comisionesFlag}}
-									<div class="btn btn-info" {{action "totalComisiones"}}>Total de Comisiones</div>
+		    						{{#unless IsComisionSolicitud}}
+										<div class="btn btn-success" {{action "totalComisiones"}}>Total de Comisiones</div>
+									{{/unless}}
 								{{/if}}
 							{{/if}}
 							{{#if BanderaAceptarPagoPartida}}
@@ -856,7 +847,7 @@
 		{{/unless}}
 		{{#if quierover}}
 			{{#if selectedEmpresaEdicion}}
-				<div class="btn btn-success" {{action "guardarEditarSolicitud"}}>Guardar Solicitud E</div>
+				<div class="btn btn-success" {{action "guardarEditarSolicitud"}}>Guardar Solicitud</div>
 			{{else}}
 				<div class="btn btn-success" {{action "guardarSolicitud"}}>Guardar Solicitud</div>
 			{{/if}}
@@ -876,10 +867,14 @@
 <div>Escoge la opcion deseada para la solicitud seleecionada</div>
 <br>
 <div class="row">
-	<div class="btn btn-success">Imprimir</div>
-	<div class="btn btn-info" {{action "editarSolicitud" solicitudDesenlace}}>Editar</div>
-	<div class="btn btn-default" {{action "toggleFormaClonar"}}>Clonar</div>
-	<div class="btn btn-warning" {{action "cerrarDesenlaceSolicitud"}}>Cancelar</div>
+	{{#if showComponent}}
+			{{impresion-reporte store=store reporte="solicitudcheque" parametro1="solicitudcheque" valorParametro1=solicitudDesenlace.solicitud excel=false sinParametro=false submit=(action 'togglePrinterComponent') cancel=(action 'togglePrinterComponent') }}
+	{{else}}		
+		<div class="btn btn-success" {{action "togglePrinterComponent"}}>Imprimir Solicitud</div>
+		<div class="btn btn-info" {{action "editarSolicitud" solicitudDesenlace}}>Editar</div>
+		<div class="btn btn-default" {{action "toggleFormaClonar"}}>Clonar</div>
+		<div class="btn btn-warning" {{action "cerrarDesenlaceSolicitud"}}>Cancelar</div>
+	{{/if}}
 </div>
 {{#if banderaClonar}}
 	<br>

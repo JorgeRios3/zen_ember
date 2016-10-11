@@ -336,10 +336,6 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     }
   }),
-  /*observaFiltros: observer('selectedEstatus', 'selectedEmpresa', 'selectedOperacion', function() {
-  	set(this, 'requestedPage', '');
-  	this.send('pedir');
-  }),*/
   tipoProgramacionBandera: computed('selecteProgramacion', {
     get() {
       if (get(this, 'selecteProgramacion') == 'N') {
@@ -431,9 +427,11 @@ export default Ember.Controller.extend(FormatterMixin, {
   observaEspecificaciones: observer('selectedEspecificaciones', function() {
     if (!isEmpty(get(this, 'selectedEspecificaciones'))) {
       let r = get(this, 'beneficiarioBancoCuenta');
-      if (!isEmpty(get(this, 'recordProvedor'))) {
+      if (!isEmpty(get(this, 'recordProvedor')) && isEmpty(get(this, 'beneficiarioBancoCuenta'))) {
         r = get(this, 'recordProvedor');
       }
+
+      // aqui va la cosa
       try {
         if (get(this, 'selectedEspecificaciones').includes('N') == true) {
           info('se va por cheque');
@@ -480,7 +478,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   }),
   actions: {
     totalComisiones() {
-      this.store.find('totalsolicitudcomisionable',1)
+      this.store.find('totalsolicitudcomisionable', 1)
       .then((data)=> {
         set(this, 'totalPartida', get(data, 'total'));
       });
@@ -612,7 +610,6 @@ export default Ember.Controller.extend(FormatterMixin, {
       }, (error)=> {
         info('trono clonacion');
       });
-
     },
     toggleFormaClonar() {
       this.toggleProperty('banderaClonar');
@@ -633,13 +630,13 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'motivoClonarSolciitud', '');
       set(this, 'numeroClonaciones', '');
       // set(this,'recordSolicitudMaestro', '');
-      this.store.unloadAll('gxsolicitudcheque');
+      /*this.store.unloadAll('gxsolicitudcheque');
       this.store.query('gxsolicitudcheque', { estatus: 2 })
       .then((data)=> {
         set(this, 'solicitudesLista', data);
       }, (error)=> {
         info('trono recargar gxsolicitudcheque en clonar');
-      });
+      });*/
     },
     editarSolicitud(solicitudObjeto) {
       let solicitud = get(solicitudObjeto, 'solicitud');
@@ -657,14 +654,14 @@ export default Ember.Controller.extend(FormatterMixin, {
           info('entro en finanzas');
           set(this, 'listaEstatusPerfil', [
             { 'id': 2, 'label': 'Solicitud', 'estatus': 'S' },
-            { 'id': 3, 'label': 'Revisado', 'estatus': 'R' }, 
+            { 'id': 3, 'label': 'Revisado', 'estatus': 'R' },
             { 'id': 4, 'label': 'Autorizado', 'estatus': 'A' },
-            { 'id': 5, 'label': 'Elaborado', 'estatus': 'E' }, 
+            { 'id': 5, 'label': 'Elaborado', 'estatus': 'E' },
             { 'id': 6, 'label': 'Fondeado', 'estatus': 'F' },
             { 'id': 7, 'label': 'Cobrado', 'estatus': 'B' },
             { 'id': 8, 'label': 'Retenido', 'estatus': 'T' }]);
         }
-        if(get(this, 'contaFlag') === false && get(this, 'finanzasFlag') === false ) {
+        if (get(this, 'contaFlag') === false && get(this, 'finanzasFlag') === false) {
           set(this, 'listaEstatusPerfil', [{ 'id': 2, 'label': 'Solicitud', 'estatus': 'S' }]);
         }
         let estatus = get(item, 'estatus');
@@ -672,7 +669,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         let lista = Ember.A();
         get(this, 'listaEstatusPerfil').forEach((item, i)=> {
           if (estatusEncontrado) {
-            lista.pushObject(item)
+            lista.pushObject(item);
             estatusEncontrado = false;
           }
           if (estatus === get(item, 'estatus')) {
@@ -680,19 +677,11 @@ export default Ember.Controller.extend(FormatterMixin, {
           }
         });
         if (estatus === 'C') {
-            lista.pushObject({ 'id': 2, 'label': 'Solicitud', 'estatus': 'S' });
+          lista.pushObject({ 'id': 2, 'label': 'Solicitud', 'estatus': 'S' });
         }
         lista.pushObject({ 'id': 9, 'label': 'Cancelado', 'estatus': 'C' });
         set(this, 'listaEstatusSiguiente', lista);
         info('valor de lista terminando ciclo', lista);
-
-        /*info('valor de lista estatuspperfil',listaEstatusPerfil );
-
-        let estatusValor = get(this, 'estatusLista').findBy('estatus', estatus);
-        info('intentando', listaEstatusPerfil.indexOf(estatusValor));
-        info('valor del item de estatus a al hora de editar', estatusValor.id);
-        set(this, 'selectedEstatus', estatusValor.id);*/
-        // selectedEstatus tengo que pornerlo
         let nombre = get(this, 'solicitudDesenlace.nombre');
         let provedor = { 'id': get(item, 'idbeneficiario'), nombre };
         set(this, 'recordProvedor', provedor);
@@ -743,7 +732,7 @@ export default Ember.Controller.extend(FormatterMixin, {
           let partidaBuscar = '';
           llaves.forEach((k)=> {
             info('valor de las llaves', get(item, k));
-            info('checando' ,!isEmpty(get(item, k)));
+            info('checando', !isEmpty(get(item, k)));
             if (parseInt(get(item, k)) !== -1) {
               partidaBuscar = get(item, k);
             }
@@ -988,9 +977,24 @@ export default Ember.Controller.extend(FormatterMixin, {
       .then((data)=> {
         let cuantos = get(data, 'meta.cuantos');
         cuantos > 20 ? set(this, 'showNavigation', true) : set(this, 'showNavigation', false);
+        if (cuantos <= 0) {
+          info('no hubo resultados');
+          set(this, 'errorModal', true);
+          set(this, 'errorTitle', 'No Se Encontraron Resultados');
+          set(this, 'errorMsg', 'No se encontraron resultados con los filtros dados');
+          return;
+        }
+        if (cuantos > 1000) {
+          info('cuantos fue mayor a 1000');
+          set(this, 'errorModal', true);
+          set(this, 'errorTitle', 'Busqueda Muy Extensa');
+          set(this, 'errorMsg', 'El resultado de la busqueda es mayor de 1000 registros filtre mas su busqueda o utilice un rango de fechas menos amplio');
+          return;
+        }
         delete objeto.cuantos;
         this.store.query('gxsolicitudcheque', objeto)
         .then((data)=> {
+          // data.forEach((item)=> {})
           set(this, 'solicitudesLista', data);
           set(this, 'resultPage', get(data, 'meta.page'));
           set(this, 'resultPages', get(data, 'meta.pages'));
@@ -1051,13 +1055,13 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'selectedEmpresaEdicion', '');
       info('agregar solicitud boton');
       // set(this, 'toggleFormaSolicitud', '');
-      this.store.unloadAll('gxsolicitudcheque');
+      /* this.store.unloadAll('gxsolicitudcheque');
       this.store.query('gxsolicitudcheque', { estatus: 2 })
       .then((data)=> {
         set(this, 'solicitudesLista', data);
       }, (error)=> {
         info('trono gxsolicitudcheque en toggleFormaSolicitud');
-      });
+      });*/
     },
     buscarBeneficiarioMobile() {
       let beneficiario = get(this, 'bene');

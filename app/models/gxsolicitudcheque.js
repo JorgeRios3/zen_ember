@@ -1,11 +1,12 @@
 import DS from 'ember-data';
 import Ember from 'ember';
+import FormatterMixin from '../mixins/formatter';
 const {
   computed,
   get
 } = Ember;
 
-export default DS.Model.extend({
+export default DS.Model.extend(FormatterMixin,{
   fechacaptura: DS.attr('string'),
   fechaprogramada : DS.attr('string'),
   numerochequeorigen: DS.attr('number'),
@@ -13,6 +14,7 @@ export default DS.Model.extend({
   nombrebeneficiario: DS.attr('string'),
   razonsocial: DS.attr('string'),
   estatus: DS.attr('string'),
+  estatusdescripcion: DS.attr('string'),
   usuariosolicitante: DS.attr('string'),
   nombrecliente: DS.attr('string'),
   devolucion: DS.attr('string'),
@@ -26,4 +28,9 @@ export default DS.Model.extend({
       return get(this, 'devolucion') === 'S';
     }
   }),
+  cantidadComas: computed('cantidad', {
+    get() {
+      return this.formatter(get(this, 'cantidad'));
+    }
+  })
 });
