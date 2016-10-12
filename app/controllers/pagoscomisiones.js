@@ -25,7 +25,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   nombreVendedor: '',
   esGerente: false,
   cantidadesIguales: true,
-  mostrarImprimirReporte: false,
+  mostrarImprimirReporte: false, 
   numeroSolicitud: null,
   pagoComodin: null,
   TieneValor: observer('pagoComodin', function() {

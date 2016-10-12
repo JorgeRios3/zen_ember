@@ -14,7 +14,7 @@ module.exports = function(defaults) {
 		'theme': 'bootstrap3'
 	},
 	fingerprint: {
-		prepend: 'https://s3.amazonaws.com/streams.grupoiclar.com/zeniclar/'
+		prepend: 'https://s3.amazonaws.com/streams.grupoiclar.com/'
 	}
     // Add options here
   });

@@ -158,6 +158,12 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'etapaBreve', get(item, 'etapa'));
               set(this, 'loteBreve', get(item, 'lote'));
               set(this, 'imss', get(item, 'imss'));
+              set(this, 'domicilioCliente', get(item, 'domicilio'));
+              set(this, 'coloniaCliente', get(item, 'colonia'));
+              set(this, 'ciudadCliente', get(item, 'ciudad'));
+              set(this, 'estadoCliente', get(item, 'estado'));
+              set(this, 'cpCliente', get(item, 'cp'));
+              set(this, 'rfcCliente', get(item, 'rfc'));
               if (isArcadia) {
                 info('en arcadia lote', get(item, 'lote'));
                 info('en arcadia lote', get(item, 'manzana'));

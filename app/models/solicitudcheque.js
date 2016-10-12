@@ -10,5 +10,4 @@ export default DS.Model.extend({
   concepto: DS.attr('string'),
   observaciones: DS.attr('string'),
   cantidad: DS.attr('number')
-  
 });

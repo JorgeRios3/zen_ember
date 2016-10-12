@@ -44,3 +44,6 @@ inflector.irregular('autorizaciondescuento', 'autorizaciondescuentos');
 inflector.irregular('etapaenautorizacion', 'etapaenautorizacions');
 inflector.irregular('documentocuenta', 'documentocuentas');
 inflector.irregular('etapacomisioncompartida', 'etapacomisioncompartidas');
+inflector.irregular('empresasolicitud', 'empresasolicituds');
+inflector.irregular('gxsolicitudchequedetalle', 'gxsolicitudchequedetalles');
+inflector.irregular('gxsolicitudchequemaestroclon', 'gxsolicitudchequemaestroclons');
