@@ -1065,7 +1065,6 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'selectedsubPartida1', '');
       set(this, 'totalPartida', '');
       set(this, 'selectedProgramacion', 'N');
-      set(this, 'resultRowCountFormatted', '');
       // set(this, 'listaPartidasEgresoGrabar', Ember.A());
       set(this, 'totalValorPartidas', '');
       set(this, 'totalValorPartidasformated', '');
