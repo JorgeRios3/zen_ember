@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import FormatterMixin from '../mixins/formatter';
+import moment from 'moment';
 
 const {
   get,
@@ -34,7 +35,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   selectedOperacion: '',
   selectedBancoOrigen: '',
   selectedEspecificaciones: '',
-  selecteProgramacion: 'N',
+  selectedProgramacion: 'N',
   partidaEgresosLista: null,
   subpartida1Lista: null,
   subpartida2Lista: null,
@@ -336,9 +337,9 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     }
   }),
-  tipoProgramacionBandera: computed('selecteProgramacion', {
+  tipoProgramacionBandera: computed('selectedProgramacion', {
     get() {
-      if (get(this, 'selecteProgramacion') == 'N') {
+      if (get(this, 'selectedProgramacion') == 'N') {
         return true;
       } else {
         return false;
@@ -495,7 +496,7 @@ export default Ember.Controller.extend(FormatterMixin, {
 
       } else {
         let fCaptura = get(this, 'fechaProgramadaSolicitud');
-        fechaprogramada = !isEmpty(fCaptura) ? fCaptura.format('YYYY/MM/DD') : '';
+        fechaprogramada = moment(fCaptura).format('YYYY/MM/DD');
       }
       info('valor de fgevha programada antes de grabar', fechaprogramada);
       if (isEmpty(fechaprogramada)) {
@@ -530,7 +531,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         return;
       }
       let fechacaptura = get(this, 'fechacaptura');
-      let tipoprogramacion = get(this, 'selecteProgramacion');
+      let tipoprogramacion = get(this, 'selectedProgramacion');
       // fechaprogramada esta arriba ya lista
       // let empresaid = get(this, 'selectedEmpresa');
       // idbeneficiario esta arriba con validacion
@@ -582,6 +583,11 @@ export default Ember.Controller.extend(FormatterMixin, {
             set(this, 'formaSolicitud', false);
             // let r = get(this, 'recordSolicitudMaestro');
             set(this, 'recordSolicitudMaestro', '');
+            this.store.unloadAll('gxsolicitudcheque');
+            this.store.query('gxsolicitudcheque', { estatus: 2 })
+            .then((data)=> {
+              set(this, 'solicitudesLista', data);
+            });
           }, (error)=> {
             info('error grabar partida al actualizar maestro');
           });
@@ -665,8 +671,13 @@ export default Ember.Controller.extend(FormatterMixin, {
           set(this, 'listaEstatusPerfil', [{ 'id': 2, 'label': 'Solicitud', 'estatus': 'S' }]);
         }
         let estatus = get(item, 'estatus');
+        let objetoEstatus = get(this, 'estatusLista').findBy('estatus', estatus);
+        let idEstatus = get(objetoEstatus, ('id'));
+        info('valor de objetoEstatus', objetoEstatus, idEstatus);
         let estatusEncontrado = false;
         let lista = Ember.A();
+        lista.pushObject(objetoEstatus);
+        set(this, 'selectedEstatus', idEstatus);
         get(this, 'listaEstatusPerfil').forEach((item, i)=> {
           if (estatusEncontrado) {
             lista.pushObject(item);
@@ -679,12 +690,15 @@ export default Ember.Controller.extend(FormatterMixin, {
         if (estatus === 'C') {
           lista.pushObject({ 'id': 2, 'label': 'Solicitud', 'estatus': 'S' });
         }
-        lista.pushObject({ 'id': 9, 'label': 'Cancelado', 'estatus': 'C' });
+        if (estatus !== 'C') {
+          lista.pushObject({ 'id': 9, 'label': 'Cancelado', 'estatus': 'C' });
+        }
         set(this, 'listaEstatusSiguiente', lista);
         info('valor de lista terminando ciclo', lista);
         let nombre = get(this, 'solicitudDesenlace.nombre');
         let provedor = { 'id': get(item, 'idbeneficiario'), nombre };
         set(this, 'recordProvedor', provedor);
+        set(this, 'selectedProgramacion', get(item, 'tipoprogramacion')); 
         set(this, 'fechaProgramadaSolicitud', get(item, 'fechaprogramada'));
         // set(this, 'totalValorPartidas', get(item, 'cantidad'));
         set(this, 'concepto', get(item, 'concepto'));
@@ -792,7 +806,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         return;
       }
       let fechacaptura = get(this, 'fechacaptura');
-      let tipoprogramacion = get(this, 'selecteProgramacion');
+      let tipoprogramacion = get(this, 'selectedProgramacion');
       // fechaprogramada esta arriba ya lista
       let empresaid = get(this, 'selectedEmpresa');
       // idbeneficiario esta arriba con validacion
@@ -1049,6 +1063,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'subpartida1Lista', null);
       set(this, 'selectedsubPartida1', '');
       set(this, 'totalPartida', '');
+      set(this, 'selectedProgramacion', 'N');
       // set(this, 'listaPartidasEgresoGrabar', Ember.A());
       set(this, 'totalValorPartidas', '');
       set(this, 'totalValorPartidasformated', '');

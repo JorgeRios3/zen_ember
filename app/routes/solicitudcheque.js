@@ -42,7 +42,7 @@ RouteAuthMixin , {
       selectedEmpresa: '',
       selectedEstatus: '',
       selectedOperacion: '',
-      selecteProgramacion: 'N',
+      selectedProgramacion: 'N',
       solicitudesLista: null,
       showNavigation: false,
       resultRowCountFormatted: '',

@@ -206,7 +206,7 @@
 			<label>Tipo Programacion</label>
 			<div class="row">
 			<div class="col-md-5">
-				{{#x-select value=selecteProgramacion action=(action  (mut selectProgramacion)) class="form-control form-control-inline"}}
+				{{#x-select value=selectedProgramacion action=(action  (mut selectProgramacion)) class="form-control form-control-inline"}}
 					{{#x-option value='N'}}Normal {{/x-option}}
 					{{#each tipoProgramacionLista as |item|}}
 						{{#x-option value=item.id}}{{item.label}}{{/x-option}}
@@ -222,7 +222,7 @@
 			<label for="datewidget" class="control-label">Programacion</label>
 			<div class="row">
 				<div class="col-xs-10 col-md-3">
-					{{bs-datetimepicker date=nullFechaProgramadaSolicitud showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaProgramadaSolicitud))}}
+					{{bs-datetimepicker date=fechaProgramadaSolicitud showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaProgramadaSolicitud))}}
 				</div>
 			</div>
 		</div>
