@@ -1005,6 +1005,7 @@ export default Ember.Controller.extend(FormatterMixin, {
           set(this, 'errorMsg', 'El resultado de la busqueda es mayor de 1000 registros filtre mas su busqueda o utilice un rango de fechas menos amplio');
           return;
         }
+        set(this, 'resultRowCountFormatted', cuantos);
         delete objeto.cuantos;
         this.store.query('gxsolicitudcheque', objeto)
         .then((data)=> {
@@ -1064,6 +1065,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'selectedsubPartida1', '');
       set(this, 'totalPartida', '');
       set(this, 'selectedProgramacion', 'N');
+      set(this, 'resultRowCountFormatted', '');
       // set(this, 'listaPartidasEgresoGrabar', Ember.A());
       set(this, 'totalValorPartidas', '');
       set(this, 'totalValorPartidasformated', '');
