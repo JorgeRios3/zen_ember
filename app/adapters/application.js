@@ -47,3 +47,4 @@ inflector.irregular('etapacomisioncompartida', 'etapacomisioncompartidas');
 inflector.irregular('empresasolicitud', 'empresasolicituds');
 inflector.irregular('gxsolicitudchequedetalle', 'gxsolicitudchequedetalles');
 inflector.irregular('gxsolicitudchequemaestroclon', 'gxsolicitudchequemaestroclons');
+inflector.irregular('inmueblesconcuenta', 'inmueblesconcuentas');
