@@ -41,6 +41,14 @@ export default Ember.Controller.extend(FormatterMixin,
   abonos: 0,
   selectedNombre: '',
   selectedEtapa: null,
+  selectedManzana: '',
+  inmuebleSelected: '',
+  inmueblesconcuenta: Ember.A(),
+  inmueblesSortingDesc: ['inmueble:asc'],
+  numerosExteriores: null,
+  numerosInteriores: null,
+  numeroExteriorSelected: '',
+  numeroInteriorSelected: '',
   selectedDoc: null,
   cuantos: '',
   catalogoNombres: null,
@@ -288,6 +296,64 @@ export default Ember.Controller.extend(FormatterMixin,
     set(this, 'cliente', get(cual, 'cliente'));
     set(this, 'showData', true);
   }),
+  
+  observaManzana: observer('selectedManzana', function() {
+    info('esta aqui en selected manzana');
+      //set(this, 'prueba', computed.sort('inmueblesconcuenta'), 'inmueblesSortingDesc');
+      let isDepartamento = get(this, 'isDepartamento');
+      if (get(this, 'isDepartamento')) {
+        let mySet = new Set([]);
+        set(this, 'numerosExteriores', mySet);
+      }
+      // let listaInmuebles = get(this, 'inmueblesManzanaFiltro');
+      let listaInmuebles = get(this, 'inmueblesconcuenta').sortBy('inmueble').filter((item)=> {
+        let lote = get(item, 'lote');
+        info('en el filter de selectedManzana', get(item, 'manzana') === get(this, 'selectedManzana'));
+        if (get(this, 'selectedManzana') === get(item, 'manzana')) {
+          if (isDepartamento) {
+            get(this, 'numerosExteriores').add(lote.substring(0, 2));
+          }
+          return true;
+        } else {
+          return false;
+        }
+      });
+      set(this, 'inmueblesManzana', listaInmuebles);
+  }),
+  observaNumeroExteriorSelected: observer('numeroExteriorSelected', function() {    
+    let exterior = get(this, 'numeroExteriorSelected');
+    let inmuebles =  get(this, 'inmueblesManzana');
+    let lista = Ember.A();
+    inmuebles.forEach((item)=> {
+      let exteriorInmueble = get(item, 'lote').substring(0, 2);
+      info('valor de exterior', exterior, exteriorInmueble, exteriorInmueble === exterior);
+      if (exterior === exteriorInmueble) {
+        info('coincidio exterior');
+        let { cuenta, etapa, id, inmueble, lote, manzana } = getProperties(item, 'cuenta etapa id inmueble lote manzana'.w());
+        let depa = lote.substring(2, 5);
+        lista.pushObject({
+          cuenta, etapa, id, inmueble, lote, manzana, depa
+        });
+      } else {
+        info('no coincidio exterior');
+      }
+    });
+    set(this, 'numerosInteriores', lista);
+  }),
+  observaInteriorSelected: observer('numeroInteriorSelected', function() {
+    info('entro en observainteior', get(this, 'numeroInteriorSelected'));
+    set(this, 'cuentaBuscar', get(this, 'numeroInteriorSelected.cuenta'));
+    Ember.run.later('',()=> {
+      this.send('buscarConCuenta');
+    }, 2000);
+  }),
+  observaInmuebleSelected: observer('inmuebleSelected', function() {
+    info('viendo valor de inmueble selected', get(this, 'inmuebleSelected.cuenta'));
+    set(this, 'cuentaBuscar', get(this, 'inmuebleSelected.cuenta'));
+    Ember.run.later('',()=> {
+      this.send('buscarConCuenta');
+    }, 2000);
+  }),
 
   actions: {
     guardarDocumento() {
@@ -410,11 +476,38 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'movimientosdocumento', this.store.query('movimientosdocumento', { documento: idDocumento, company }));
     },
     selectedEtapa(item) {
-      set(this, 'selectedEtapa', item.id);
+      let etapa = item.id
+      let company = get(this, 'isArcadia');
+      let objeto = {};
+      objeto.etapa = etapa;
+      if (company === true) {
+        objeto.company = true;
+      }
+      set(this, 'selectedEtapa', etapa);
       set(this, 'catalogoNombres', null);
       set(this, 'cuantos', 0);
       this.store.unloadAll('clientesconcuentanosaldada');
       set(this, 'nombre', '');
+      set(this, 'isDepartamento', get(item, 'departamento'));
+      this.store.query('inmueblesconcuenta', objeto)
+      .then((data)=> {
+        info('si llego inmueblesconcuenta');
+        set(this, 'inmueblesconcuenta', data);
+        let manzana = '';
+        let  manzanasEtapa = Ember.A();
+        data.forEach((item)=> {
+          if(get(item, 'manzana') !==  manzana) {
+            manzana = get(item, 'manzana');
+            // info('entro en filter');
+            manzanasEtapa.addObject({ id: manzana, label: manzana });
+          } else {
+            //info('no entro en filter');
+          }
+        });
+        set(this, 'manzanasEtapaLista', manzanasEtapa);
+      }, (error)=> {
+        info('trono inmueblesconcuenta')
+      });
     },
     buscar() {
       // info('entro en buscar desde llmada externa');

@@ -42,6 +42,67 @@
 		</div>
 	</div>
 {{/if}}
+
+{{#if manzanasEtapaLista.length}}
+	<div class="form-group">
+			<label for="manzanasEtapaLista" class="control-label">Manzana</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=selectedManzana action=(action  (mut selectedManzana)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Manzana{{/x-option}}
+					{{#each manzanasEtapaLista as |item|}}
+						{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+{{/if}}
+{{#if isDepartamento}}
+		<div class="form-group">
+			<label for="numerosExteriores" class="control-label">Numero Exterior</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=numeroExteriorSelected action=(action  (mut numeroExteriorSelected)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Exterior{{/x-option}}
+					{{#each numerosExteriores as |item|}}
+						{{#x-option value=item}}{{item}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="numerosInteriores" class="control-label">Numero Interior</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=numeroInteriorSelected action=(action  (mut numeroInteriorSelected)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Exterior{{/x-option}}
+					{{#each numerosInteriores as |item|}}
+						{{#x-option value=item}}{{item.depa}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+
+{{else}}
+	<div class="form-group">
+		<label for="inmueble" class="control-label">Inmueble</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=inmuebleSelected action=(action  (mut inmuebleSelected)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Elija Inmueble{{/x-option}}
+				{{#each inmueblesManzana as |item|}}
+					{{#x-option value=item}}{{item.lote}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+{{/if}}
+
+
 <div class="form-group">
 	<label for="idclientenombre" class="control-label">Nombre</label>
 	<div class="row">
