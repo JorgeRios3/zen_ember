@@ -79,7 +79,8 @@ RouteAuthMixin , {
       recordSolicitudMaestro: '',
       IsComisionSolicitud: false,
       beneficiarioBancoCuenta: '',
-      recordProvedor: ''
+      recordProvedor: '',
+      modalModificarCantidad: false
     });
   },
   setupController(ctrlr, model) {
