@@ -428,6 +428,8 @@ export default Ember.Controller.extend(FormatterMixin, {
   observaEspecificaciones: observer('selectedEspecificaciones', function() {
     if (!isEmpty(get(this, 'selectedEspecificaciones'))) {
       let r = get(this, 'beneficiarioBancoCuenta');
+      info('valor de beneficiario', get(this, 'beneficiarioBancoCuenta'));
+      info('valor de record', get(this, 'recordProvedor'));
       if (!isEmpty(get(this, 'recordProvedor')) && isEmpty(get(this, 'beneficiarioBancoCuenta'))) {
         r = get(this, 'recordProvedor');
       }
@@ -1069,6 +1071,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'totalValorPartidas', '');
       set(this, 'totalValorPartidasformated', '');
       set(this, 'selectedEmpresaEdicion', '');
+      set(this, 'beneficiarioBancoCuenta', '');
       info('agregar solicitud boton');
       // set(this, 'toggleFormaSolicitud', '');
       /* this.store.unloadAll('gxsolicitudcheque');
