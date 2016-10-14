@@ -934,6 +934,11 @@ export default Ember.Controller.extend(FormatterMixin, {
       info('entrando en modificar cantidad',record);
       set(this, 'partidaEditarRecord', record);
     },
+    cerrarModalCantidad() {
+      info('cerrar modalcantidad bien');
+      set(this, 'partidaEditarRecord', '');
+      set(this, 'modalModificarCantidad', false);
+    },
     grabarCantidad() {
       info('grabo la cantidad');
       let record = get(this, 'partidaEditarRecord');

@@ -872,9 +872,9 @@
 {{/if}}
 
 {{#if modalModificarCantidad}}
-  {{#modal-bs title="modificando Cantidad de la partida" ok="grabarCantidad" close="okCerrarModal"}}
-  	<div>partida {{partidaEditarRecord.nombrePartida}}</div>
-  	{{input type="number" value=valorEditarCantidad class="form-control" placeholder="Motivo" id="clonarsolicitud"}}
+  {{#modal-bs title="modificando Cantidad de la partida" ok="grabarCantidad" close="cerrarModalCantidad"}}
+  	<div class="h5 text text-info">{{partidaEditarRecord.nombrePartida}}</div>
+  	{{input type="number" value=valorEditarCantidad class="form-control" placeholder="Cantidad" id="clonarsolicitud"}}
   {{/modal-bs}}
 {{/if}}
 
