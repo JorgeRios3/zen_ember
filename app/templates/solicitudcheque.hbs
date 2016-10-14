@@ -185,6 +185,7 @@
 			</table>
 		</div>
 	{{else}}
+	{{!este es el else de formasolicitud aqui empeiza la edicion y creacion de una solicitud}}
 		{{#if selectedEmpresaEdicion}}
 			<div class="form-group">
     			<label for="idnumerosexteriores" class="control-label">Estatus</label>
@@ -409,7 +410,11 @@
 												</a>
 											</td>
 											<td data-title="Partida">{{r.nombrePartida}}</td>
-											<td data-title="Total">{{r.cantidad}}</td>
+											{{#if estatusSolicitudFlag}}
+												<td data-title="Total"><a href="" {{action "modificarCantidad" r}}>{{r.cantidadComas}}<span class="glyphicon glyphicon-pencil"></span></a></td>
+											{{else}}
+												<td data-title="Total">{{r.cantidadComas}}</td>
+											{{/if}}
 										</tr>
 										{{/each}}
 									</tbody>
@@ -443,7 +448,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-							<label for="idbancoOrigen" class="control-label">Centro de Costo</label>
+							<label for="idbCentroCosto" class="control-label">Centro de Costo</label>
 								<div class="row">
 									<div class="col-md-5">
 										{{#x-select value=selectedCentroCosto action=(action  (mut selectedCentroCosto)) class="form-control form-control-inline"}}
@@ -624,7 +629,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-						<label for="idbancoOrigen" class="control-label">Centro de Costo</label>
+						<label for="idbCentroCosto" class="control-label">Centro de Costo</label>
 							<div class="row">
 								<div class="col-md-5">
 									{{#x-select value=selectedCentroCosto action=(action  (mut selectedCentroCosto)) class="form-control form-control-inline"}}
@@ -754,7 +759,11 @@
 											</a>
 										</td>
 										<td data-title="Partida">{{r.nombrePartida}}</td>
-										<td data-title="Total">{{r.cantidad}}</td>
+										{{#if estatusSolicitudFlag}}
+											<td data-title="Total"><a href="" {{action "modificarCantidad" r}}>{{r.cantidadComas}}<span class="glyphicon glyphicon-pencil"></span></a></td>
+										{{else}}
+											<td data-title="Total">{{r.cantidadComas}}</td>
+										{{/if}}
 									</tr>
 									{{/each}}
 								</tbody>
@@ -855,11 +864,20 @@
 		<div class="btn btn-danger" {{action "toggleFormaSolicitud"}}>Cancelar Solicitud</div>
 	{{/unless}}
 {{/unless}}
+
 {{#if errorModal}}
   {{#modal-bs title=errorTitle ok="okCerrarModal" close="okCerrarModal"}}
    {{errorMsg}}
   {{/modal-bs}}
 {{/if}}
+
+{{#if modalModificarCantidad}}
+  {{#modal-bs title="modificando Cantidad de la partida" ok="grabarCantidad" close="okCerrarModal"}}
+  	<div>partida {{partidaEditarRecord.nombrePartida}}</div>
+  	{{input type="number" value=valorEditarCantidad class="form-control" placeholder="Motivo" id="clonarsolicitud"}}
+  {{/modal-bs}}
+{{/if}}
+
 {{#if desenlaSolicitud}}
 <div class="jumbotron">
 <div class="h4 text text-info">{{titleDesenlaceSolicitud}}</div>

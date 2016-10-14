@@ -49,7 +49,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   selectedsubPartida4: '',
   selectedsubPartida5: '',
   valorPartidaEgreso: '',
-  listaPartidasEgresoGrabar: Ember.A(),
+  // listaPartidasEgresoGrabar: Ember.A(),
   totalValorPartidas: '',
   totalValorPartidasformated: '',
   banderaUltimaPartidaSeleccionada: false,
@@ -89,9 +89,14 @@ export default Ember.Controller.extend(FormatterMixin, {
   banderaClonar: false,
   recordSolicitudMaestro: '',
   IsComisionSolicitud: false,
+  init() {
+    this._super(...arguments);
+    set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }))
+    info('viendo en le init el que quiero', get(this, 'listaPartidasEgresoGrabar'));
+  },
   observaSelectedEmpresa: observer('selectedEmpresa', function() {
     if (get(this, 'listaPartidasEgresoGrabar.length') > 0) {
-      set(this, 'listaPartidasEgresoGrabar', Ember.A());
+      set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: []}));
       // if (isEmpty(get(this, 'selectedEmpresaEdicion')) === true) {
       // set(this, 'listaPartidasEgresoGrabar', Ember.A());
       // }
@@ -479,6 +484,10 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     }
   }),
+   remaining: computed('listaPartidasEgresoGrabar.@each.cantidad', function() {
+    return info('entro el el computed');
+  }),
+
   actions: {
     totalComisiones() {
       this.store.find('totalsolicitudcomisionable', 1)
@@ -543,7 +552,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       // anexo esta validado
       let anexoadicional = get(this, 'detalleAnexo');
       let especificaciones = get(this, 'selectedEspecificaciones');
-      let idbancoorigen  = get(this, 'selectedBancoOrigen');
+      let idbancoorigen  = get(this, 'selectedBancoOrigen') === '' ? -1 : get(this, 'selectedBancoOrigen');
       let numerochequeorigen = get(this, 'chequeSolicitud');
       let bancodestino = get(this, 'bancoDestinoSolicitud');
       let sucursaldestino = get(this, 'sucursalSolicitud');
@@ -649,6 +658,7 @@ export default Ember.Controller.extend(FormatterMixin, {
     editarSolicitud(solicitudObjeto) {
       let solicitud = get(solicitudObjeto, 'solicitud');
       // info('valor de solicitud', solicitudObjeto);
+      let idbancoorigen = '';
       this.store.find('gxsolicitudchequemaestro', solicitud)
       .then((item)=> {
         set(this, 'recordSolicitudMaestro', item);
@@ -680,6 +690,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         let lista = Ember.A();
         lista.pushObject(objetoEstatus);
         set(this, 'selectedEstatus', idEstatus);
+        set(this, 'estatusSolicitudFlag', estatus === 'S' ? true : false);
         get(this, 'listaEstatusPerfil').forEach((item, i)=> {
           if (estatusEncontrado) {
             lista.pushObject(item);
@@ -714,7 +725,14 @@ export default Ember.Controller.extend(FormatterMixin, {
           }
         });
         set(this, 'selectedEspecificaciones', get(item, 'especificaciones'));
-        set(this, 'selectedBancoOrigen', get(this, 'idbancoorigen'));
+        //necesitamos un runlater auqi para cargar el banco origen desde maaestros
+        //set(this, 'selectedBancoOrigen', get(item, 'idbancoorigen'));
+        idbancoorigen = get(item, 'idbancoorigen');
+        info('valor idbancoorigen', idbancoorigen);
+        //let bancoSolicitud = get(this, 'bancoOrigenLista').findBy('id', )
+
+
+
         set(this, 'bancoDestinoSolicitud', get(item, 'bancodestino'));
         set(this, 'plazaSolicitud', get(item, 'plazadestino'));
         set(this, 'PagoEstimacion', get(item, 'pagoestimacion'));
@@ -725,13 +743,14 @@ export default Ember.Controller.extend(FormatterMixin, {
         set(this, 'desenlaSolicitud', false);
         return this.store.query('gxsolicitudchequedetalle', { solicitud });
       }).then((partidasRes)=> {
-        let lista = Ember.A();
+        let lista = Ember.ArrayProxy.create({ content: []});
         let total = 0;
         partidasRes.forEach((item)=> {
           let objeto = {};
           delete item.id;
           delete item.idcheque;
           objeto.cantidad = get(item, 'cantidad');
+          objeto.cantidadComas = this.formatter(get(item, 'cantidad'));
           total += parseFloat(get(item, 'cantidad'));
           objeto.centrocostoid = get(item, 'centrocostoid');
           let { partida, subpartida1,
@@ -762,7 +781,9 @@ export default Ember.Controller.extend(FormatterMixin, {
           }, (error3)=> {
           });
         });
+        set(this, 'selectedBancoOrigen', `${idbancoorigen}`);
         set(this, 'listaPartidasEgresoGrabar', lista);
+        info('viendo la que quiero ', get(this, 'listaPartidasEgresoGrabar'));
         set(this, 'totalValorPartidasformated', this.formatter(total));
         set(this, 'totalValorPartidas', total);
       });
@@ -818,7 +839,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       // anexo esta validado
       let anexoadicional = get(this, 'detalleAnexo');
       let especificaciones = get(this, 'selectedEspecificaciones');
-      let idbancoorigen  = get(this, 'selectedBancoOrigen');
+      let idbancoorigen  = get(this, 'selectedBancoOrigen') === '' ? -1 : get(this, 'selectedBancoOrigen');
       let numerochequeorigen = get(this, 'chequeSolicitud');
       let bancodestino = get(this, 'bancoDestinoSolicitud');
       let sucursaldestino = get(this, 'sucursalSolicitud');
@@ -896,7 +917,8 @@ export default Ember.Controller.extend(FormatterMixin, {
         partidaObjeto.subpartida3 = isEmpty(get(this, 'selectedsubPartida3.id')) !== true ? parseInt(get(this, 'selectedsubPartida3.id')) : -1;
         partidaObjeto.subpartida4 = isEmpty(get(this, 'selectedsubPartida4.id')) !== true ? parseInt(get(this, 'selectedsubPartida4.id')) : -1;
         partidaObjeto.subpartida5 = isEmpty(get(this, 'selectedsubPartida5.id')) !== true ? parseInt(get(this, 'selectedsubPartida5.id')) : -1;
-        partidaObjeto.cantidad = parseFloat(get(this, 'totalPartida'));
+        partidaObjeto.cantidad = get(this, 'totalPartida');
+        partidaObjeto.cantidadComas = this.formatter(get(this, 'totalPartida'));
         get(this, 'listaPartidasEgresoGrabar').pushObject(partidaObjeto);
         info('valor del objeto agregado', partidaObjeto);
         info('entrando en guardarPartida', get(this, 'listaPartidasEgresoGrabar'));
@@ -907,6 +929,22 @@ export default Ember.Controller.extend(FormatterMixin, {
         set(this, 'totalPartida', '');
       }
     },
+    modificarCantidad(record) {
+      set(this, 'modalModificarCantidad', true);
+      info('entrando en modificar cantidad',record);
+      set(this, 'partidaEditarRecord', record);
+    },
+    grabarCantidad() {
+      info('grabo la cantidad');
+      let record = get(this, 'partidaEditarRecord');
+      set(record, 'cantidad', get(this, 'valorEditarCantidad'));
+      set(record, 'cantidadComas', this.formatter(get(this, 'valorEditarCantidad')));
+      set(this, 'modalModificarCantidad', false);
+      let total = totalValorDePartidas(get(this, 'listaPartidasEgresoGrabar'));
+      set(this, 'totalValorPartidas', total);
+      set(this, 'totalValorPartidasformated', this.formatter(total));
+    },
+
     buscarSolicitudes() {
       this.send('pedir');
     },
@@ -1047,6 +1085,7 @@ export default Ember.Controller.extend(FormatterMixin, {
     toggleFormaSolicitud() {
       this.toggleProperty('formaSolicitud');
       set(this, 'nuevoProvedorForma', false);
+      set(this, 'estatusSolicitudFlag', true);
       set(this, 'concepto', '');
       set(this, 'detalleAnexo', '');
       set(this, 'observaciones', '');
