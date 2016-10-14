@@ -77,7 +77,9 @@ RouteAuthMixin , {
       selectedEmpresaEdicion: '',
       banderaClonar: false,
       recordSolicitudMaestro: '',
-      IsComisionSolicitud: false
+      IsComisionSolicitud: false,
+      beneficiarioBancoCuenta: '',
+      recordProvedor: ''
     });
   },
   setupController(ctrlr, model) {
