@@ -154,15 +154,15 @@
 			<thead>
 			<tr>
 				<th>Id</th>
-				<th>Solicitud</th>
-				<th>Fecha Captura</th>
-				<th>Fecha Programada</th>
-				<th>Cheque</th>
-				<th>Cantidad</th>
-				<th>Beneficiario</th>
-				<th>Empresa</th>
-				<th>Estatus</th>
-				<th>Solicitante</th>
+				<th><a href="" {{action "pedirSort" "solicitud"}}>Solicitud</a></th>
+				<th><a href="" {{action "pedirSort" "fechaCaptura"}}>Fecha Captura</a></th>
+				<th><a href="" {{action "pedirSort" "fechaProgramada"}}>Fecha Programada</a></th>
+				<th><a href="" {{action "pedirSort" "cheque"}}>Cheque</a></th>
+				<th><a href="" {{action "pedirSort" "cantidad"}}>Cantidad</a></th>
+				<th><a href="" {{action "pedirSort" "beneficiario"}}>Beneficiario</a></th>
+				<th><a href="" {{action "pedirSort" "empresa"}}>Empresa</a></th>
+				<th><a href="" {{action "pedirSort" "estatus"}}>Estatus</a></th>
+				<th><a href="" {{action "pedirSort" "solicitante"}}>Solicitante</a></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -174,7 +174,7 @@
 					<td data-title="Fecha Programada">{{row.fechaprogramada}}</td>
 					<td data-title="Cheque">{{row.numerochequeorigen}}</td>
 					<td data-title="Cantidad" class="text-right">{{row.cantidadComas}}</td>
-					<td data-title="Beneficiario">{{#if row.esCliente}}Cliente: {{/if}} {{row.nombreReal}} </td>
+					<td data-title="Beneficiario">{{row.nombredefinitivo}} </td>
 					<td data-title="Empresa">{{row.razonsocial}}</td>
 					<td data-title="Estatus">{{row.estatusdescripcion}}</td>
 					<td data-title="Solicitante">{{row.usuariosolicitante}}</td>

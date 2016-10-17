@@ -89,6 +89,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   banderaClonar: false,
   recordSolicitudMaestro: '',
   IsComisionSolicitud: false,
+  sort: '',
   init() {
     this._super(...arguments);
     set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }))
@@ -1010,6 +1011,10 @@ export default Ember.Controller.extend(FormatterMixin, {
       if (estatus) {
         objeto.estatus = estatus;
       }
+      if (get(this, 'sort') !== '') {
+        objeto.sort = get(this, 'sort');
+        set(this, 'sort', '');
+      }
       if (operacion !== '' && operacion !== 'ninguna') {
         if (operacion === 'multicheque') {
           objeto.multicheque = 1;
@@ -1152,6 +1157,11 @@ export default Ember.Controller.extend(FormatterMixin, {
         info('trorno');
       });
       info('boton grabar grabarBeneficiario');
+    },
+    pedirSort(sort) {
+      set(this, 'sort', sort);
+      info('viendo valor de sort en pedirsort', sort);
+      this.send('pedir');
     }
   }
 });

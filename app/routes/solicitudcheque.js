@@ -80,7 +80,8 @@ RouteAuthMixin , {
       IsComisionSolicitud: false,
       beneficiarioBancoCuenta: '',
       recordProvedor: '',
-      modalModificarCantidad: false
+      modalModificarCantidad: false,
+      sort: ''
     });
   },
   setupController(ctrlr, model) {

@@ -18,6 +18,7 @@ export default DS.Model.extend(FormatterMixin,{
   usuariosolicitante: DS.attr('string'),
   nombrecliente: DS.attr('string'),
   devolucion: DS.attr('string'),
+  nombredefinitivo: DS.attr('string'),
   nombreReal: computed('devolucion', {
     get() {
       return get(this, 'devolucion') === 'S' ? get(this, 'nombrecliente') : get(this, 'nombrebeneficiario');
