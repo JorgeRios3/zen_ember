@@ -20,6 +20,17 @@ let documentoSelect = Ember.Object.extend({
 
 export default Ember.Controller.extend(FormatterMixin, {
   comodin: service(),
+  estatusLista: [{ 'id': 1, 'label': 'Todo', 'estatus': 'H' },
+    { 'id': 2, 'label': 'Solicitud', 'estatus': 'S' },
+    { 'id': 3, 'label': 'Revisado', 'estatus': 'R' },
+    { 'id': 4, 'label': 'Autorizado', 'estatus': 'A' },
+    { 'id': 5, 'label': 'Elaborado', 'estatus': 'E' },
+    { 'id': 6, 'label': 'Fondeado', 'estatus': 'F' },
+    { 'id': 7, 'label': 'Cobrado', 'estatus': 'B' },
+    { 'id': 8, 'label': 'Retenido', 'estatus': 'T' },
+    { 'id': 9, 'label': 'Cancelado', 'estatus': 'C' },
+    { 'id': 10, 'label': 'Comisionable', 'estatus': 'Y' },
+    { 'id': 11, 'label': 'Comisionado', 'estatus': 'Z' }],
   listaDocumentosComision: null,
   listaMovimientosComision: null,
   muestraDocumentos: true,
@@ -80,9 +91,9 @@ export default Ember.Controller.extend(FormatterMixin, {
       } else {
         set(this, 'mostrarBotonReporte', false);
       }
-    } catch(e) {
+    } catch(err) {
       set(this, 'mostrarBotonReporte', false);
-      info('saliendo por catch no hay pago importe');
+      info('saliendo por catch no hay pago importe', err.message);
     }
   }),
   obsevarEtapaFiltroSelected: observer('etapaFiltroSelected', function() {
@@ -347,6 +358,10 @@ export default Ember.Controller.extend(FormatterMixin, {
       Ember.run.later('', ()=> {
         that.transitionToRoute('index');
       }, 1000);
+      set(this, 'mostrarBotonReporte', false);
+    },
+    closeComponent() {
+      info('cerro el componente');
       set(this, 'mostrarBotonReporte', false);
     },
     cerrarComisiones() {

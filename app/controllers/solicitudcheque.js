@@ -1037,6 +1037,13 @@ export default Ember.Controller.extend(FormatterMixin, {
         info(' si lo encontro valor de objeto token', objetoCache);
         objeto.cache_token = objetoCache.cache_token;
       }
+      if (get(this, 'relacionadas') === true  && !isEmpty(get(this, 'solicitudBuscar'))) {
+        info('si entro donde quiero para pedir solicitudes realcionadas');
+        objeto = {};
+        objeto.solicitud = get(this, 'solicitudBuscar');
+        objeto.relacionadas = true;
+        objeto.cuantos = 1;
+      }
       this.store.query('gxsolicitudcheque', objeto)
       .then((data)=> {
         let cuantos = get(data, 'meta.cuantos');

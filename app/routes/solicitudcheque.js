@@ -81,7 +81,8 @@ RouteAuthMixin , {
       beneficiarioBancoCuenta: '',
       recordProvedor: '',
       modalModificarCantidad: false,
-      sort: ''
+      sort: '',
+      relacionadas: false
     });
   },
   setupController(ctrlr, model) {
