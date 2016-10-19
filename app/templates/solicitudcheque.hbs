@@ -11,6 +11,17 @@
 				</div>
 			</div>
 		</div>
+		{{#if solicitudBuscar}}
+		{{#if comisionesFlag}}
+		<div class="row">
+			<div class="checkbox col-xs-10 col-md-3">
+					<label>
+					{{input type="checkbox" name="Relacionadas" checked=relacionadas }}Ver solicitudes relacionadas
+					</label>
+			</div>
+		</div>
+		{{/if}}
+		{{/if}}
 		<div class="form-group">
 			<label for="idnumerosexteriores" class="control-label">Estatus</label>
 			<div class="row">
@@ -26,6 +37,7 @@
 					<label>
 					{{input type="checkbox" name="candadoPrecio" checked=soloCliente }}Solo Clientes
 					</label>
+
 				</div>
 			</div>
 		</div>
@@ -138,7 +150,7 @@
 		<div class="btn btn-warning" {{action "limpiarFiltros"}}>Limpiar Filtros</div>
 	</div>
 	<br>
-	<div class="btn btn-info" {{action "toggleFormaSolicitud"}}>Agregar</div>
+	<div class="btn btn-info" {{action "toggleFormaSolicitud"}}>Agregar Solicitud</div>
 	{{#if showNavigation}}
 		<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
 		{{#if hayPagPrevias}}

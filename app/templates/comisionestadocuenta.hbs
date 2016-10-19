@@ -68,8 +68,10 @@
 			{{#if features.generar_recibo}}
 				{{#unless mostrarComisionManual}}
 				<div class="row">
+					{{#unless recordPago.id}}
 					<div class="btn btn-info"  {{action "mostrarForma"}}>Generar Recibo</div>
 					<div class="btn btn-success" {{action "mostrarFormarComisionManual"}}>Agregar Comision Manual</div>
+					{{/unless}}
 					{{#if comisionManualExito}}
 						<div class="alert alert-success">
   							<strong>Comision generada correctamente!</strong>
@@ -165,7 +167,7 @@
 			<div class="btn btn-info" {{action "mostrarComisiones"}}>Mostar Comisiones</div>
 			{{#if mostrarBotonReporte}}
 			<br><br>
-				{{impresion-reporte store=store reporte="pagocomision" parametro1="pago" valorParametro1=recordPago.id excel=false sinParametro=false muestraInput=false submit=(action 'togglePrinterComponent') cancel=(action 'togglePrinterComponent') }}
+				{{impresion-reporte store=store reporte="pagocomision" parametro1="pago" valorParametro1=recordPago.id excel=false sinParametro=false muestraInput=false submit=(action 'togglePrinterComponent') cancel=(action 'closeComponent') }}
 			{{/if}}
 		{{else}}
 			<div class="btn btn-warning" {{action "cerrarComisiones"}}>Cerrar Comisiones</div>
