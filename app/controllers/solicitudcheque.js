@@ -624,7 +624,7 @@ export default Ember.Controller.extend(FormatterMixin, {
           info('entro en lo que queria que es nuevo');
           let ra = this.store.createRecord('gxegresosotro', {descripcion: get(this, 'computedValueFiltroConceptoAndSelectedConcepto.concepto') })
           ra.save().then((d)=> {
-            valores.idreferenciaotros = get(d, 'id');
+            r.idreferenciaotros = get(d, 'id');
             r.save().then((data)=> {
               let idcheque = get(data, 'id');
               let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
@@ -655,6 +655,7 @@ export default Ember.Controller.extend(FormatterMixin, {
             });
           });
         } else {
+          r.idreferenciaotros = get(this, 'computedValueFiltroConceptoAndSelectedConcepto.tipo');
           r.save().then((data)=> {
             let idcheque = get(data, 'id');
             let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
