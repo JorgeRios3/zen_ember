@@ -151,6 +151,9 @@
 	</div>
 	<br>
 	<div class="btn btn-info" {{action "toggleFormaSolicitud"}}>Agregar Solicitud</div>
+	{{#if otrosEgresosFlag}}
+	<div class="btn btn-primary" {{action "toggleFormaOtrosEgresos"}}>Agregar solicitud otros egresos</div>
+	{{/if}}
 	{{#if showNavigation}}
 		<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
 		{{#if hayPagPrevias}}
@@ -213,7 +216,7 @@
 				</div>
 			</div>
 		{{else}}
-		<div class="h4">Nueva Solcitud</div>
+		<div class="h4 text text-success">Nueva Solcitud {{#if solicitudOtrosEgresosBandera}} Otros Egresos {{/if}}</div>
 		{{/if}}
 		<div class="form-group">
 			<label>Tipo Programacion</label>
@@ -253,7 +256,7 @@
 			<div class="row">
 				<div class="checkbox col-xs-10 col-md-3">
 				<label>
-					{{input type="checkbox" name="ComisionSolicitud" checked=IsComisionSolicitud }}Solicitud Comision
+					{{input type="checkbox" name="ComisionSolicitud" checked=IsComisionSolicitud}}Solicitud Comision
 				</label>
 				</div>
 			</div>
@@ -308,18 +311,40 @@
 		{{/if}}
 
 			{{#if levantaFormaSolicitud}}
-				<div class="form-group">
-					<label for="concepto" class="control-label">Concepto</label>
-					<div>
-						{{input type="text" value=concepto class="form-control" placeholder="Concepto" maxlength=100 id="concepto"}}
-					</div>
-	    		</div>
+					{{#if solicitudOtrosEgresosBandera}}
+						<div class="form-group">
+							<label>Elija Concepto</label>
+							<div class="row">	
+								<div class="col-md-8">
+									{{ember-selectize
+									content=conceptoOtrosEgresosLista
+									optionValuePath="content.id"
+									optionLabelPath="content.descripcion"
+									placeholder="Escribe el nombre completo o parte del beneficiario"
+									filter=conceptoFiltro
+									value=selectedConcepto}}
+								</div>
+							</div>
+						</div>
+						<div class="h5">valor de concepto: -- {{computedValueFiltroConceptoAndSelectedConcepto.tipo}} --
+							{{computedValueFiltroConceptoAndSelectedConcepto.concepto}}
+						</div>
+					{{else}}
+						<div class="form-group">
+							<label for="concepto" class="control-label">Concepto</label>
+							<div>
+								{{input type="text" value=concepto class="form-control" placeholder="Concepto" maxlength=100 id="concepto"}}
+							</div>
+			    		</div>
+	    		
+
+		    		{{/if}}
 	    		<div class="form-group">
 	    			<label for="idnumerosexteriores" class="control-label">Anexo</label>
 					<div class="row">
 					<div class="col-md-5">
 						{{#x-select value=selectedAnexo action=(action  (mut selectedAnexo)) class="form-control form-control-inline"}}
-							{{#x-option value=''}}Elija Concepto{{/x-option}}
+							{{#x-option value=''}}Elija Anexo{{/x-option}}
 							{{#each anexoLista as |item|}}
 								{{#x-option value=item.id}}{{item.label}}{{/x-option}}
 						{{/each}}
@@ -336,7 +361,7 @@
 	    		<div class="form-group">
 					<label for="observaciones" class="control-label">Observaciones</label>
 					<div>
-						{{input type="text" value=observaciones class="form-control" placeholder="Observaciones" id="observaciones"}}
+						{{input type="text" value=observaciones class="form-control" placeholder="Observaciones"  maxlength=100 id="observaciones"}}
 					</div>
 	    		</div>
 	    		{{#if selectedEmpresaEdicion}}

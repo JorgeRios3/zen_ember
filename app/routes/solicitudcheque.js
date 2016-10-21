@@ -19,6 +19,8 @@ RouteAuthMixin , {
     info('valor de finanzas', estatusFinanzas);
     let comisionesSolicitud = get(this, 'features.comisiones_solicitud');
     let devolucion = get(this, 'features.devolucion');
+    let otrosEgresos = get(this, 'features.otrosegresos');
+    info('valor de otros egresos', otrosEgresos);
     let estatusLista = [{ 'id': 1, 'label': 'Todo', 'estatus': 'H' },
     { 'id': 2, 'label': 'Solicitud', 'estatus': 'S' },
     { 'id': 3, 'label': 'Revisado', 'estatus': 'R' },
@@ -32,6 +34,11 @@ RouteAuthMixin , {
       estatusLista.pushObject({ 'id': 10, 'label': 'Comisionable', 'estatus': 'Y' });
       estatusLista.pushObject({ 'id': 11, 'label': 'Comisionado', 'estatus': 'Z' });
     }
+    if (otrosEgresos) {
+      estatusLista.pushObject({ 'id': 12, 'label': 'Otro No Aplicado', 'estatus': 'O' });
+      estatusLista.pushObject({ 'id': 13, 'label': 'Otro Aplicado', 'estatus': 'P' });
+      estatusLista.pushObject({ 'id': 14, 'label': 'Otro Cancelado', 'estatus': 'N' });
+    }
     let c = this.controllerFor(this.routeName);
     c.setProperties({
       estatusLista,
@@ -39,6 +46,7 @@ RouteAuthMixin , {
       contaFlag: estatusContabilidad,
       finanzasFlag: estatusFinanzas,
       comisionesFlag: comisionesSolicitud,
+      otrosEgresosFlag: otrosEgresos,
       selectedEmpresa: '',
       selectedEstatus: '',
       selectedOperacion: '',
@@ -82,7 +90,8 @@ RouteAuthMixin , {
       recordProvedor: '',
       modalModificarCantidad: false,
       sort: '',
-      relacionadas: false
+      relacionadas: false,
+      solicitudOtrosEgresosBandera: false
     });
   },
   setupController(ctrlr, model) {

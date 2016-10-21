@@ -23,7 +23,7 @@ function totalValorDePartidas(listaPartidas) {
 };
 export default Ember.Controller.extend(FormatterMixin, {
   operacionLista: [{ id: 'multicheque', label: 'Multicheque' }, { id: 'fondeo', label: 'Fondeo' }, { id: 'ninguna', label: 'Ninguna' }],
-  anexoLista: [{ 'id': 'F', 'label': 'Facutra' },{ 'id': 'C', 'label': 'Copia de la factura' },
+  anexoLista: [{ 'id': 'F', 'label': 'Factura' },{ 'id': 'C', 'label': 'Copia de la factura' },
   { 'id': 'P', 'label': 'presupuesto' },{ 'id': 'A', 'label': 'Autorizaciòn' }],
   especificacionesLista: [{ 'id': 'N', 'label': 'Cheque' }, { 'id': 'E', 'label': 'Cheque Certificado' },
   { 'id': 'A', 'label': 'Cheque de Caja' }, { 'id': 'D', 'label': 'Cotizar Tipo de Cambio DLLS' },
@@ -89,15 +89,18 @@ export default Ember.Controller.extend(FormatterMixin, {
   banderaClonar: false,
   recordSolicitudMaestro: '',
   IsComisionSolicitud: false,
+  solicitudOtrosEgresosBandera: false,
   sort: '',
+  conceptoOtrosEgresosLista: Ember.A(),
+  selectedConcepto: '',
   init() {
     this._super(...arguments);
-    set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }))
+    set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
     info('viendo en le init el que quiero', get(this, 'listaPartidasEgresoGrabar'));
   },
   observaSelectedEmpresa: observer('selectedEmpresa', function() {
     if (get(this, 'listaPartidasEgresoGrabar.length') > 0) {
-      set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: []}));
+      set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
       // if (isEmpty(get(this, 'selectedEmpresaEdicion')) === true) {
       // set(this, 'listaPartidasEgresoGrabar', Ember.A());
       // }
@@ -431,6 +434,16 @@ export default Ember.Controller.extend(FormatterMixin, {
       });
     }
   }),
+  computedValueFiltroConceptoAndSelectedConcepto: computed('conceptoFiltro', 'selectedConcepto', {
+    get() {
+      let valor = get(this, 'conceptoFiltro');
+      if (!isEmpty(get(this, 'selectedConcepto'))) {
+        return { tipo: 'ingresado', concepto: get(this, 'selectedConcepto') };
+      } else {
+        return { tipo: 'nuevo', concepto: get(this, 'conceptoFiltro') };
+      }
+    }
+  }),
   observaEspecificaciones: observer('selectedEspecificaciones', function() {
     if (!isEmpty(get(this, 'selectedEspecificaciones'))) {
       let r = get(this, 'beneficiarioBancoCuenta');
@@ -485,11 +498,22 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     }
   }),
-   remaining: computed('listaPartidasEgresoGrabar.@each.cantidad', function() {
+  remaining: computed('listaPartidasEgresoGrabar.@each.cantidad', function() {
     return info('entro el el computed');
   }),
 
   actions: {
+    toggleFormaOtrosEgresos() {
+      this.send('toggleFormaSolicitud');
+      set(this, 'solicitudOtrosEgresosBandera', true);
+      this.store.findAll('gxegresosotro').then((data)=> {
+        info('si llego');
+        set(this, 'conceptoOtrosEgresosLista', data);
+      }, (error)=> {
+        info('no llego');
+      });
+
+    },
     totalComisiones() {
       this.store.find('totalsolicitudcomisionable', 1)
       .then((data)=> {
@@ -517,31 +541,42 @@ export default Ember.Controller.extend(FormatterMixin, {
         set(this, 'errorMsg', 'La solicitud debe tener fecha de programacion');
         return;
       }
-      /*let idbeneficiario = get(this, 'selectedBeneficiario');
-      let recordProvedor = get(this, 'recordProvedor');
-      if (isEmpty(idbeneficiario) && isEmpty(recordProvedor)) {
-        set(this, 'errorModal', true);
-        set(this, 'errorTitle', 'No hay Beneficiario');
-        set(this, 'errorMsg', 'La solicitud debe tener un beneficiario');
-        return;
-      }
-      if (recordProvedor) {
-        idbeneficiario = get(this, 'recordProvedor.id');
-      }*/
       let concepto = get(this, 'concepto');
+      if (get(this, 'solicitudOtrosEgresosBandera')) {
+        concepto = get(this, 'computedValueFiltroConceptoAndSelectedConcepto');
+      } else {
+        if (isEmpty(concepto)) {
+          set(this, 'errorModal', true);
+          set(this, 'errorTitle', 'No hay Concepto');
+          set(this, 'errorMsg', 'La solicitud debe tener concepto');
+          return;
+        }
+      }
+      /*let concepto = get(this, 'concepto');
       if (isEmpty(concepto)) {
         set(this, 'errorModal', true);
         set(this, 'errorTitle', 'No hay Concepto');
         set(this, 'errorMsg', 'La solicitud debe tener concepto');
         return;
-      }
+      }*/
       let anexo = get(this, 'selectedAnexo');
+      if (get(this, 'solicitudOtrosEgresosBandera')) {
+       anexo = 'O';
+      } else {
+        if (isEmpty(anexo)) {
+          set(this, 'errorModal', true);
+          set(this, 'errorTitle', 'Anexo');
+          set(this, 'errorMsg', 'Debe de seleccionar algun tipo de anexo');
+          return;
+        }
+      }
+      /*let anexo = get(this, 'selectedAnexo');
       if (isEmpty(anexo)) {
         set(this, 'errorModal', true);
         set(this, 'errorTitle', 'Anexo');
         set(this, 'errorMsg', 'Debe de seleccionar algun tipo de anexo');
         return;
-      }
+      }*/
       let fechacaptura = get(this, 'fechacaptura');
       let tipoprogramacion = get(this, 'selectedProgramacion');
       // fechaprogramada esta arriba ya lista
@@ -569,16 +604,97 @@ export default Ember.Controller.extend(FormatterMixin, {
       let idfondeo = 0;
       let cantidadcheque = 0;
       info('se asignan valores a variables');
-      r.setProperties({
-        fechacaptura, tipoprogramacion, fechaprogramada,
-        // empresaid,
-        // idbeneficiario,
-        devolucion, concepto, cantidad, anexo, anexoadicional, especificaciones,
-        idbancoorigen, numerochequeorigen, bancodestino, sucursaldestino, plazadestino,
-        clavebancariadestino, observaciones, estatus,
-        // usuariosolicitante,
-        idfondeo, cantidadcheque, pagoestimacion
-      });
+      if (get(this, 'solicitudOtrosEgresosBandera')) {
+        r.setProperties({
+          fechacaptura, 
+          //tipoprogramacion, 
+          fechaprogramada,
+          // empresaid,
+          // idbeneficiario,
+          //devolucion, 
+          concepto: 'OTRO EGRESO', cantidad, anexo: 'O', anexoadicional, especificaciones: 'O',
+          idbancoorigen, 
+          //numerochequeorigen, 
+          bancodestino, sucursaldestino, plazadestino,
+          clavebancariadestino, observaciones, estatus,
+          // usuariosolicitante,
+          idfondeo, cantidadcheque, pagoestimacion
+        });
+        if (get(this, 'computedValueFiltroConceptoAndSelectedConcepto.tipo') === 'nuevo') {
+          info('entro en lo que queria que es nuevo');
+          let ra = this.store.createRecord('gxegresosotro', {descripcion: get(this, 'computedValueFiltroConceptoAndSelectedConcepto.concepto') })
+          ra.save().then((d)=> {
+            r.idreferenciaotros = get(d, 'id');
+            r.save().then((data)=> {
+              let idcheque = get(data, 'id');
+              let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
+              partidasGuardar.forEach((item, i)=> {
+                let { centrocostoid, partida, subpartida1,
+                subpartida2, subpartida3, subpartida4,
+                subpartida5, cantidad } = getProperties(item, 'centrocostoid partida subpartida1 subpartida2 subpartida3 subpartida4 subpartida5 cantidad'.w());
+                let record2 = this.store.createRecord('gxsolicitudchequedetalle', {
+                  idcheque, centrocostoid, partida, subpartida1, subpartida2, subpartida3, subpartida4, subpartida5, cantidad
+                });
+                record2.save().then(()=> {
+                  info('se grabo partida', i);
+                  this.send('toggleFormaSolicitud');
+                  set(this, 'formaSolicitud', false);
+                  // let r = get(this, 'recordSolicitudMaestro');
+                  set(this, 'recordSolicitudMaestro', '');
+                  this.store.unloadAll('gxsolicitudcheque');
+                  this.store.query('gxsolicitudcheque', { estatus: 2 })
+                  .then((data)=> {
+                    set(this, 'solicitudesLista', data);
+                  });
+                }, (error)=> {
+                  info('error grabar partida al actualizar maestro');
+                });
+              });
+              }, (error)=> {
+                info('trono el actulizar el maestro');
+            });
+          });
+        } else {
+          r.idreferenciaotros = get(this, 'computedValueFiltroConceptoAndSelectedConcepto.tipo');
+          r.save().then((data)=> {
+            let idcheque = get(data, 'id');
+            let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
+            partidasGuardar.forEach((item, i)=> {
+              let { centrocostoid, partida, subpartida1,
+              subpartida2, subpartida3, subpartida4,
+              subpartida5, cantidad } = getProperties(item, 'centrocostoid partida subpartida1 subpartida2 subpartida3 subpartida4 subpartida5 cantidad'.w());
+              let record2 = this.store.createRecord('gxsolicitudchequedetalle', {
+                idcheque, centrocostoid, partida, subpartida1, subpartida2, subpartida3, subpartida4, subpartida5, cantidad
+              });
+              record2.save().then(()=> {
+                info('se grabo partida', i);
+                this.send('toggleFormaSolicitud');
+                set(this, 'formaSolicitud', false);
+                // let r = get(this, 'recordSolicitudMaestro');
+                set(this, 'recordSolicitudMaestro', '');
+                this.store.unloadAll('gxsolicitudcheque');
+                this.store.query('gxsolicitudcheque', { estatus: 2 })
+                .then((data)=> {
+                  set(this, 'solicitudesLista', data);
+                 });
+              }, (error)=> {
+                info('error grabar partida al actualizar maestro');
+              });
+            });
+            }, (error)=> {
+              info('trono el actulizar el maestro');
+          });
+        }
+      } else {
+        r.setProperties({
+          fechacaptura, tipoprogramacion, fechaprogramada,
+          // empresaid,
+          // idbeneficiario,
+          devolucion, concepto, cantidad, anexo, anexoadicional, especificaciones,
+          idbancoorigen, numerochequeorigen, bancodestino, sucursaldestino, plazadestino,
+          clavebancariadestino, observaciones, estatus, idfondeo, cantidadcheque, pagoestimacion
+          // usuariosolicitante,
+        });
       r.save().then((data)=> {
         let idcheque = get(data, 'id');
         let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
@@ -607,6 +723,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       }, (error)=> {
         info('trono el actulizar el maestro');
       });
+     }
     },
     clonarSolicitud() {
       let solicitudbase = get(this, 'solicitudDesenlace.solicitud');
@@ -710,9 +827,34 @@ export default Ember.Controller.extend(FormatterMixin, {
         set(this, 'listaEstatusSiguiente', lista);
         info('valor de lista terminando ciclo', lista);
         let nombre = get(this, 'solicitudDesenlace.nombre');
+        if (estatus === 'O') {
+          let lista = Ember.A();
+          lista.pushObject({ 'id': 12, 'label': 'Otros No Aplicado', 'estatus': 'O' });
+          lista.pushObject({ 'id': 13, 'label': 'Otro Aplicado', 'estatus': 'P' });
+          lista.pushObject({ 'id': 9, 'label': 'Otro Cancelado', 'estatus': 'N' });
+          set(this, 'listaEstatusSiguiente', lista);
+          set(this, 'selectedEstatus', 12);
+          set(this, 'solicitudOtrosEgresosBandera', true);
+          this.store.findAll('gxegresosotro').then((data)=> {
+            info('si llego');
+            set(this, 'conceptoOtrosEgresosLista', data);
+            let idreferenciaotros = get(this, 'recordSolicitudMaestro.idreferenciaotros');
+            let buscar = get(this, 'conceptoOtrosEgresosLista').findBy('id', `${idreferenciaotros}`);
+            info('valor de idreferneciaotros',buscar);
+            set(this, 'selectedConcepto', buscar.id);
+          }, (error)=> {
+            info('no llego');
+          });
+        }
+        if(estatus === 'P' || estatus ==='B') {
+          let lista = Ember.A();
+
+          set(this, 'listaEstatusSiguiente', lista);
+        }
+
         let provedor = { 'id': get(item, 'idbeneficiario'), nombre };
         set(this, 'recordProvedor', provedor);
-        set(this, 'selectedProgramacion', get(item, 'tipoprogramacion')); 
+        set(this, 'selectedProgramacion', get(item, 'tipoprogramacion'));
         set(this, 'fechaProgramadaSolicitud', get(item, 'fechaprogramada'));
         // set(this, 'totalValorPartidas', get(item, 'cantidad'));
         set(this, 'concepto', get(item, 'concepto'));
@@ -726,11 +868,11 @@ export default Ember.Controller.extend(FormatterMixin, {
           }
         });
         set(this, 'selectedEspecificaciones', get(item, 'especificaciones'));
-        //necesitamos un runlater auqi para cargar el banco origen desde maaestros
-        //set(this, 'selectedBancoOrigen', get(item, 'idbancoorigen'));
+        // necesitamos un runlater auqi para cargar el banco origen desde maaestros
+        // set(this, 'selectedBancoOrigen', get(item, 'idbancoorigen'));
         idbancoorigen = get(item, 'idbancoorigen');
         info('valor idbancoorigen', idbancoorigen);
-        //let bancoSolicitud = get(this, 'bancoOrigenLista').findBy('id', )
+        // let bancoSolicitud = get(this, 'bancoOrigenLista').findBy('id', )
 
 
 
@@ -744,7 +886,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         set(this, 'desenlaSolicitud', false);
         return this.store.query('gxsolicitudchequedetalle', { solicitud });
       }).then((partidasRes)=> {
-        let lista = Ember.ArrayProxy.create({ content: []});
+        let lista = Ember.ArrayProxy.create({ content: [] });
         let total = 0;
         partidasRes.forEach((item)=> {
           let objeto = {};
@@ -790,6 +932,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       });
     },
     guardarSolicitud() {
+      let solicitudOtrosEgresosBandera = get(this, 'solicitudOtrosEgresosBandera');
       let fechaprogramada = '';
       if (get(this, 'tipoProgramacionBandera') == true) {
         fechaprogramada = get(this, 'fechaprogramada');
@@ -815,19 +958,28 @@ export default Ember.Controller.extend(FormatterMixin, {
       if (recordProvedor) {
         idbeneficiario = get(this, 'recordProvedor.id');
       }
+      // let conceptoOtrosEgresos = get(this, 'computedValueFiltroConceptoAndSelectedConcepto');
       let concepto = get(this, 'concepto');
-      if (isEmpty(concepto)) {
-        set(this, 'errorModal', true);
-        set(this, 'errorTitle', 'No hay Concepto');
-        set(this, 'errorMsg', 'La solicitud debe tener concepto');
-        return;
+      if (get(this, 'solicitudOtrosEgresosBandera')) {
+        concepto = get(this, 'computedValueFiltroConceptoAndSelectedConcepto');
+      } else {
+        if (isEmpty(concepto)) {
+          set(this, 'errorModal', true);
+          set(this, 'errorTitle', 'No hay Concepto');
+          set(this, 'errorMsg', 'La solicitud debe tener concepto');
+          return;
+        }
       }
       let anexo = get(this, 'selectedAnexo');
-      if (isEmpty(anexo)) {
-        set(this, 'errorModal', true);
-        set(this, 'errorTitle', 'Anexo');
-        set(this, 'errorMsg', 'Debe de seleccionar algun tipo de anexo');
-        return;
+      if (get(this, 'solicitudOtrosEgresosBandera')) {
+       anexo = 'O';
+      } else {
+        if (isEmpty(anexo)) {
+          set(this, 'errorModal', true);
+          set(this, 'errorTitle', 'Anexo');
+          set(this, 'errorMsg', 'Debe de seleccionar algun tipo de anexo');
+          return;
+        }
       }
       let fechacaptura = get(this, 'fechacaptura');
       let tipoprogramacion = get(this, 'selectedProgramacion');
@@ -855,15 +1007,89 @@ export default Ember.Controller.extend(FormatterMixin, {
       let usuariosolicitante = '';
       let idfondeo = 0;
       let cantidadcheque = 0;
+      let idreferenciaotros = '';
+      let valores = {};
       info('se asignan valores a variables');
-      let record = this.store.createRecord('gxsolicitudchequemaestro', {
-        fechacaptura, tipoprogramacion, fechaprogramada, empresaid, idbeneficiario,
-        devolucion, concepto, cantidad, anexo, anexoadicional, especificaciones,
-        idbancoorigen, numerochequeorigen, bancodestino, sucursaldestino, plazadestino,
-        clavebancariadestino, observaciones, estatus, usuariosolicitante,
-        idfondeo, cantidadcheque, pagoestimacion
-      });
-      record.save().then((data)=> {
+      if (get(this, 'solicitudOtrosEgresosBandera')) {
+        valores = {
+          fechacaptura, tipoprogramacion, fechaprogramada, empresaid, idbeneficiario,
+          concepto:"OTRO EGRESO",
+          cantidad,
+          anexo: 'O',
+          anexoadicional: '',
+          especificaciones: 'O', idbancoorigen, numerochequeorigen:'', bancodestino: '',
+          sucursaldestino: '', plazadestino: '', clavebancariadestino: '', observaciones,
+          estatus: 'O',
+          usuariosolicitante,
+          idfondeo, cantidadcheque,
+          idreferenciaotros,
+          pagoestimacion };
+          if (get(this, 'computedValueFiltroConceptoAndSelectedConcepto.tipo') === 'nuevo') {
+            info('entro en lo que queria que es nuevo');
+            let ra = this.store.createRecord('gxegresosotro', {descripcion: get(this, 'computedValueFiltroConceptoAndSelectedConcepto.concepto') })
+            ra.save().then((d)=> {
+              valores.idreferenciaotros = get(d, 'id');
+              let record = this.store.createRecord('gxsolicitudchequemaestro', valores);
+              record.save().then((data)=> {
+                info('si se grabo Maestro');
+                let idcheque = get(data, 'id');
+                let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
+                partidasGuardar.forEach((item, i)=> {
+                  let { centrocostoid, partida, subpartida1,
+                  subpartida2, subpartida3, subpartida4,
+                  subpartida5, cantidad } = getProperties(item, 'centrocostoid partida subpartida1 subpartida2 subpartida3 subpartida4 subpartida5 cantidad'.w());
+                  let record2 = this.store.createRecord('gxsolicitudchequedetalle', {
+                    idcheque, centrocostoid, partida, subpartida1, subpartida2, subpartida3, subpartida4, subpartida5, cantidad
+                  });
+                  record2.save().then(()=> {
+                    info('se grabo partida', i);
+                    this.send('toggleFormaSolicitud');
+                    set(this, 'formaSolicitud', false);
+                  }, (error)=> {
+                    info('error grabar partida');
+                  });
+                });
+              }, (error)=> {
+                info('no se grabo');
+              });
+            });
+          } else {
+            valores.idreferenciaotros = get(this, 'selectedConcepto');
+            info('el concepto ya exite');
+            let record = this.store.createRecord('gxsolicitudchequemaestro', valores);
+            record.save().then((data)=> {
+              info('si se grabo Maestro');
+              let idcheque = get(data, 'id');
+              let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
+              partidasGuardar.forEach((item, i)=> {
+                let { centrocostoid, partida, subpartida1,
+                  subpartida2, subpartida3, subpartida4,
+                  subpartida5, cantidad } = getProperties(item, 'centrocostoid partida subpartida1 subpartida2 subpartida3 subpartida4 subpartida5 cantidad'.w());
+                let record2 = this.store.createRecord('gxsolicitudchequedetalle', {
+                  idcheque, centrocostoid, partida, subpartida1, subpartida2, subpartida3, subpartida4, subpartida5, cantidad
+                });
+                record2.save().then(()=> {
+                  info('se grabo partida', i);
+                  this.send('toggleFormaSolicitud');
+                  set(this, 'formaSolicitud', false);
+                }, (error)=> {
+                  info('error grabar partida');
+                });
+              });
+            }, (error)=> {
+              info('no se grabo');
+            });
+          }
+        } else {
+        valores = {
+          fechacaptura, tipoprogramacion, fechaprogramada, empresaid, idbeneficiario,
+          devolucion, concepto, cantidad, anexo, anexoadicional, especificaciones,
+          idbancoorigen, numerochequeorigen, bancodestino, sucursaldestino, plazadestino,
+          clavebancariadestino, observaciones, estatus, usuariosolicitante,
+          idfondeo, cantidadcheque, pagoestimacion
+        };
+        let record = this.store.createRecord('gxsolicitudchequemaestro', valores);
+        record.save().then((data)=> {
         info('si se grabo Maestro');
         let idcheque = get(data, 'id');
         let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
@@ -882,9 +1108,10 @@ export default Ember.Controller.extend(FormatterMixin, {
             info('error grabar partida');
           });
         });
-      }, (error)=> {
-        info('no se grabo');
-      });
+        }, (error)=> {
+          info('no se grabo');
+        });
+      }
     },
     okCerrarModal() {
       info('cerrando el modal');
@@ -1101,6 +1328,7 @@ export default Ember.Controller.extend(FormatterMixin, {
     },
     toggleFormaSolicitud() {
       this.toggleProperty('formaSolicitud');
+      set(this, 'solicitudOtrosEgresosBandera', false);
       set(this, 'nuevoProvedorForma', false);
       set(this, 'estatusSolicitudFlag', true);
       set(this, 'concepto', '');
