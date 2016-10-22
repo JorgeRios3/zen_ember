@@ -893,7 +893,12 @@
 		{{/unless}}
 		{{#if quierover}}
 			{{#if selectedEmpresaEdicion}}
+				{{#if estatusElaboradoACancelado}}
+					<div class="btn btn-warning" {{action "CambiarEstatusACandelado"}}>Cambiar estatus a Cancelado</div>
+				{{/if}}
+				{{#unless disabledEditarSolicitudFlag}}
 				<div class="btn btn-success" {{action "guardarEditarSolicitud"}}>Guardar Solicitud</div>
+				{{/unless}}
 			{{else}}
 				<div class="btn btn-success" {{action "guardarSolicitud"}}>Guardar Solicitud</div>
 			{{/if}}

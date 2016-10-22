@@ -48,3 +48,4 @@ inflector.irregular('empresasolicitud', 'empresasolicituds');
 inflector.irregular('gxsolicitudchequedetalle', 'gxsolicitudchequedetalles');
 inflector.irregular('gxsolicitudchequemaestroclon', 'gxsolicitudchequemaestroclons');
 inflector.irregular('inmueblesconcuenta', 'inmueblesconcuentas');
+inflector.irregular('blogentry', 'blogentries');
