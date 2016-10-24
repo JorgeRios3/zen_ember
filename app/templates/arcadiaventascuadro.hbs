@@ -7,8 +7,103 @@
 	<div class="btn btn-info" {{action "pedir"}}>Mostrar Datos</div>
 {{/if}}
 
-{{#bsz-table titleCols=titleCols}}
-  {{#each ventascuadro as | record |}}
-    {{bsz-row record=record titleCols=titleCols alignments=alignments}}
-  {{/each}}
-{{/bsz-table}}
+{{!#bsz-table titleCols=titleCols}}
+  {{!#each ventascuadro as | record |}}
+    {{!bsz-row record=record titleCols=titleCols alignments=alignments}}
+  {{!/each}}
+{{!/bsz-table}}
+<div id="no-more-tables">
+	<table class="table table-bordered table-striped table-condensed cf">
+	<thead>
+	<tr>
+		<th>Mes</th>
+		<th>2000</th>
+		<th>2001</th>
+		<th>2002</th>
+		<th>2003</th>
+		<th>2004</th>
+		<th>2005</th>
+		<th>2006</th>
+		<th>2007</th>
+		<th>2008</th>
+		<th>2009</th>
+		<th>2010</th>
+		<th>2011</th>
+		<th>2012</th>
+		<th>2013</th>
+		<th>2014</th>
+		<th>2015</th>
+		<th>2016</th>
+	</tr>
+	</thead>
+	<tbody>
+		{{#each ventascuadro as | r i|}}
+		<tr> {{#unless r.total}}
+			<td data-title="Mes">{{r.mes}}</td>
+			<td data-title="2000" class="text-right"><a href="" {{action "detalleMesLotes" 2000 r.mes}}>{{r.a2000}}</a></td>
+			<td data-title="2001" class="text-right"><a href="" {{action "detalleMesLotes" 2001 r.mes}}>{{r.a2001}}</a></td>
+			<td data-title="2002" class="text-right"><a href="" {{action "detalleMesLotes" 2002 r.mes}}>{{r.a2002}}</a></td>
+			<td data-title="2003" class="text-right"><a href="" {{action "detalleMesLotes" 2003 r.mes}}>{{r.a2003}}</a></td>
+			<td data-title="2004" class="text-right"><a href="" {{action "detalleMesLotes" 2004 r.mes}}>{{r.a2004}}</a></td>
+			<td data-title="2005" class="text-right"><a href="" {{action "detalleMesLotes" 2005 r.mes}}>{{r.a2005}}</a></td>
+			<td data-title="2006" class="text-right"><a href="" {{action "detalleMesLotes" 2006 r.mes}}>{{r.a2006}}</a></td>
+			<td data-title="2007" class="text-right"><a href="" {{action "detalleMesLotes" 2007 r.mes}}>{{r.a2007}}</a></td>
+			<td data-title="2008" class="text-right"><a href="" {{action "detalleMesLotes" 2008 r.mes}}>{{r.a2008}}</a></td>
+			<td data-title="2009" class="text-right"><a href="" {{action "detalleMesLotes" 2009 r.mes}}>{{r.a2009}}</a></td>
+			<td data-title="2010" class="text-right"><a href="" {{action "detalleMesLotes" 2010 r.mes}}>{{r.a2010}}</a></td>
+			<td data-title="2011" class="text-right"><a href="" {{action "detalleMesLotes" 2011 r.mes}}>{{r.a2011}}</a></td>
+			<td data-title="2012" class="text-right"><a href="" {{action "detalleMesLotes" 2012 r.mes}}>{{r.a2012}}</a></td>
+			<td data-title="2013" class="text-right"><a href="" {{action "detalleMesLotes" 2013 r.mes}}>{{r.a2013}}</a></td>
+			<td data-title="2014" class="text-right"><a href="" {{action "detalleMesLotes" 2014 r.mes}}>{{r.a2014}}</a></td>
+			<td data-title="2015" class="text-right"><a href="" {{action "detalleMesLotes" 2015 r.mes}}>{{r.a2015}}</a></td>
+			<td data-title="2016" class="text-right"><a href="" {{action "detalleMesLotes" 2016 r.mes}}>{{r.a2016}}</a></td>
+			{{else}}
+			<td data-title="Mes">{{r.mes}}</td>
+			<td data-title="2000" class="text-right">{{r.a2000}}</td>
+			<td data-title="2001" class="text-right">{{r.a2001}}</td>
+			<td data-title="2002" class="text-right">{{r.a2002}}</td>
+			<td data-title="2003" class="text-right">{{r.a2003}}</td>
+			<td data-title="2004" class="text-right">{{r.a2004}}</td>
+			<td data-title="2005" class="text-right">{{r.a2005}}</td>
+			<td data-title="2006" class="text-right">{{r.a2006}}</td>
+			<td data-title="2007" class="text-right">{{r.a2007}}</td>
+			<td data-title="2008" class="text-right">{{r.a2008}}</td>
+			<td data-title="2009" class="text-right">{{r.a2009}}</td>
+			<td data-title="2010" class="text-right">{{r.a2010}}</td>
+			<td data-title="2011" class="text-right">{{r.a2011}}</td>
+			<td data-title="2012" class="text-right">{{r.a2012}}</td>
+			<td data-title="2013" class="text-right">{{r.a2013}}</td>
+			<td data-title="2014" class="text-right">{{r.a2014}}</td>
+			<td data-title="2015" class="text-right">{{r.a2015}}</td>
+			<td data-title="2016" class="text-right">{{r.a2016}}</td>
+			{{/unless}}
+		</tr>
+		{{/each}}
+	</tbody>
+	</table>
+</div>
+ {{#if terrenosDetalle.length}}
+	<div id="no-more-tables">
+	<table class="table table-bordered table-striped table-condensed cf">
+	<thead>
+	<tr>
+		
+		<th>Etapa</th>
+		<th>Manzana</th>
+		<th>Lote</th>
+		<th>Fecha</th>
+	</tr>
+	</thead>
+	<tbody>
+		{{#each terrenosDetalle as |i|}}
+		<tr>
+			<td data-title="Etapa">{{i.etapa}}</td>
+			<td data-title="Manzana">{{i.manzana}}</td>
+			<td data-title="Lote">{{i.lote}}</td>
+			<td data-title="Fecha">{{i.fecha}}</td>
+		</tr>
+		{{/each}}
+	</tbody>
+	</table>
+</div>
+{{/if}}
