@@ -93,6 +93,8 @@ export default Ember.Controller.extend(FormatterMixin, {
   sort: '',
   conceptoOtrosEgresosLista: Ember.A(),
   selectedConcepto: '',
+  blogsDetalleLista: null,
+  BlogModal: false,
   init() {
     this._super(...arguments);
     set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
@@ -787,17 +789,81 @@ export default Ember.Controller.extend(FormatterMixin, {
         info('trono recargar gxsolicitudcheque en clonar');
       });*/
     },
-    CambiarEstatusACandelado() {
+    CambiarEstatusACancelado() {
       // aqui tengo que ver si es de otros egresos o de cheques
-      this.store.query('blogentry', {model: 'solicitud_cheque', pk: 55130})
-      .then((data)=> {
-        info('si llego');
-      }, (error)=> {
-        info('no llego');
-      });
-      //let r = get(this, 'recordSolicitudMaestro');
-      //set(r, 'estatus', 'C');
+      let r = get(this, 'recordSolicitudMaestro');
+      let estatus = get(r, 'estatus');
+      if (estatus === 'O') {
+       set(r, 'estatus', 'N');
+       r.save().then((data)=> {
+        info('si se grabo otros egresos');
+        let idcheque = get(data, 'id');
+        let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
+                partidasGuardar.forEach((item, i)=> {
+                  let { centrocostoid, partida, subpartida1,
+                  subpartida2, subpartida3, subpartida4,
+                  subpartida5, cantidad } = getProperties(item, 'centrocostoid partida subpartida1 subpartida2 subpartida3 subpartida4 subpartida5 cantidad'.w());
+                  let record2 = this.store.createRecord('gxsolicitudchequedetalle', {
+                    idcheque, centrocostoid, partida, subpartida1, subpartida2, subpartida3, subpartida4, subpartida5, cantidad
+                  });
+                  record2.save().then(()=> {
+                    info('se grabo partida', i);
+                    this.send('toggleFormaSolicitud');
+                    set(this, 'formaSolicitud', false);
+                    set(this, 'estatusElaboradoACancelado', false);
+                  }, (error)=> {
+                    info('error grabar partida');
+                  });
+                });
+       },(error)=> {
+        info('error en cambiar estatus a cancelado otros egresos');
+       });
+      } else {
+        set(r, 'estatus', 'C');
+        r.save().then((data)=> {
+          let idcheque = get(data, 'id');
+          info('si se grabo');
+          let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
+                partidasGuardar.forEach((item, i)=> {
+                  let { centrocostoid, partida, subpartida1,
+                  subpartida2, subpartida3, subpartida4,
+                  subpartida5, cantidad } = getProperties(item, 'centrocostoid partida subpartida1 subpartida2 subpartida3 subpartida4 subpartida5 cantidad'.w());
+                  let record2 = this.store.createRecord('gxsolicitudchequedetalle', {
+                    idcheque, centrocostoid, partida, subpartida1, subpartida2, subpartida3, subpartida4, subpartida5, cantidad
+                  });
+                  record2.save().then(()=> {
+                    info('se grabo partida', i);
+                    this.send('toggleFormaSolicitud');
+                    set(this, 'formaSolicitud', false);
+                    set(this, 'estatusElaboradoACancelado', false);
+                  }, (error)=> {
+                    info('error grabar partida');
+                  });
+                });
+        },(error)=> {
+          info('error en cambiar estatus a cancelado');
+        });
+      }
 
+    },
+    detalleBlog(solicitud, estatus) {
+      info('detalle del blog', solicitud, estatus);
+      // estatus va a funcionar cuando necesite en blogs otros egresos
+      let lista = Ember.A();
+      this.store.query('blogentry', {model: 'solicitud_cheque', pk: solicitud})
+      .then((data)=> {
+        data.forEach((item)=> {
+          lista.pushObject(getProperties(item, 'usuario estatus content fecha'.w()));
+        });
+        set(this, 'blogsDetalleLista', lista);
+        set(this, 'blogtitle', `Blog de solicitud ${solicitud}`);
+        set(this, 'BlogModal', true);
+      },(error)=> {
+        info('trono blogentry');
+      });
+    },
+    cerrarBlogModal() {
+      set(this, 'BlogModal', false);
     },
     editarSolicitud(solicitudObjeto) {
       let solicitud = get(solicitudObjeto, 'solicitud');
@@ -847,7 +913,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         if (estatus === 'C') {
           lista.pushObject({ 'id': 2, 'label': 'Solicitud', 'estatus': 'S' });
         }
-        if (estatus !== 'C') {
+        if (estatus !== 'C' && estatus !== 'N') {
           lista.pushObject({ 'id': 9, 'label': 'Cancelado', 'estatus': 'C' });
         }
         if (estatus === 'E') {
@@ -1221,7 +1287,8 @@ export default Ember.Controller.extend(FormatterMixin, {
         selectedEmpresa: '',
         listaBeneficiarios: null,
         selectedBeneficiario: '',
-        beneficiarioFiltro: ''
+        beneficiarioFiltro: '',
+        solicitudBuscar: ''
       });
       '#fecha1 #fecha2 #fecha3 #fecha4'.w().forEach((item)=> {
         $(item).data('DateTimePicker').date(null);

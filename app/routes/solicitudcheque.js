@@ -91,7 +91,9 @@ RouteAuthMixin , {
       modalModificarCantidad: false,
       sort: '',
       relacionadas: false,
-      solicitudOtrosEgresosBandera: false
+      solicitudOtrosEgresosBandera: false,
+      blogsDetalleLista: null,
+      BlogModal: false
     });
   },
   setupController(ctrlr, model) {
