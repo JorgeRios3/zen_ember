@@ -34,7 +34,7 @@ export default Ember.Controller.extend({
         data.forEach((item)=> {
           info('entor en el ofr ewach')
           lista.pushObject(getProperties(item, 'etapa manzana lote fecha'.w()));
-        })
+        });
         info('valor de la lista')
         set(this, 'terrenosDetalle', lista);
       }, (error)=> {

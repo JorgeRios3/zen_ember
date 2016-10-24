@@ -184,7 +184,10 @@
 			{{#each solicitudesLista as |row i|}}
 				<tr>
 					<td data-title="Id">{{i}}</td>
-					<td data-title="Solicitud"><a href="" {{action "levantaDesenlceSolicitud" row.id row.nombreReal}}>{{row.id}}</a></td>
+					<td data-title="Solicitud">
+						<a href="" {{action "levantaDesenlceSolicitud" row.id row.nombreReal}}>{{row.id}}</a>
+						<br> <a href="" {{action "detalleBlog" row.id row.estatus}}><span class="glyphicon glyphicon-tasks"></span></a>
+					</td>
 					<td data-title="Fecha Captura">{{row.fechacaptura}}</td>
 					<td data-title="Fecha Programada">{{row.fechaprogramada}}</td>
 					<td data-title="Cheque">{{row.numerochequeorigen}}</td>
@@ -894,7 +897,7 @@
 		{{#if quierover}}
 			{{#if selectedEmpresaEdicion}}
 				{{#if estatusElaboradoACancelado}}
-					<div class="btn btn-warning" {{action "CambiarEstatusACandelado"}}>Cambiar estatus a Cancelado</div>
+					<div class="btn btn-warning" {{action "CambiarEstatusACancelado"}}>Cambiar estatus a Cancelado</div>
 				{{/if}}
 				{{#unless disabledEditarSolicitudFlag}}
 				<div class="btn btn-success" {{action "guardarEditarSolicitud"}}>Guardar Solicitud</div>
@@ -959,4 +962,32 @@
 	{{/if}}
 {{/if}}
 </div>
+{{/if}}
+
+{{#if BlogModal}}
+  {{#modal-bs title=blogtitle ok="cerrarBlogModal" close="cerrarBlogModal"}}
+  	<div id="no-more-tables">
+		<br>
+			<table class="table table-bordered table-striped table-condensed cf">
+			<thead>
+			<tr>
+				<th>Usuario</th>
+				<th>Estatus</th>
+				<th>Contenido</th>
+				<th>Fecha</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each blogsDetalleLista as |row|}}
+				<tr>
+					<td data-title="Usuario">{{row.usuario}}</td>
+					<td data-title="Estatus">{{row.estatus}}</td>
+					<td data-title="Contenido">{{row.content}}</td>
+					<td data-title="Fecha">{{row.fecha}}</td>
+				</tr>
+			{{/each}}
+			</tbody>
+			</table>
+		</div>
+  {{/modal-bs}}
 {{/if}}
