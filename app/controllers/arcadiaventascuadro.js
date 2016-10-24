@@ -12,6 +12,9 @@ const {
 export default Ember.Controller.extend({
   enganche: false,
   mostrarBoton: false,
+  totalFlag: false,
+  terrenosDetalle: null,
+  meses:' Ene Feb Mar Abr May Jun Jul Ago Sep Oct Nov Dic'.w(),
 
   cambioEnganche: observer('enganche', function() {
     info('cambio enganche', get(this, 'enganche'));
@@ -19,6 +22,25 @@ export default Ember.Controller.extend({
     this.send('pedir');
   }),
   actions: {
+    detalleMesLotes(y, m) {
+      info('valor de mes y año', y, m);
+      let year = y;
+      let month = get(this, 'meses').indexOf(m);
+      this.store.unloadAll('terrenovendidoarcadia');
+      set(this, 'terrenosDetalle', null);
+      let lista = Ember.A();
+      this.store.query('terrenovendidoarcadia', { year, month })
+      .then((data)=> {
+        data.forEach((item)=> {
+          info('entor en el ofr ewach')
+          lista.pushObject(getProperties(item, 'etapa manzana lote fecha'.w()));
+        })
+        info('valor de la lista')
+        set(this, 'terrenosDetalle', lista);
+      }, (error)=> {
+        info('trono terrenovendidoarcadia');
+      });
+    },
     pedir() {
       let enganche = '';
       if (get(this, 'enganche') === true) {
@@ -37,7 +59,14 @@ export default Ember.Controller.extend({
           alignments.push('right');
         }
         data.forEach((item)=> {
-          ventascuadro.pushObject(getProperties(item, llaves));
+          if(get(item, 'mes') === 'Total') {
+            info('valor de total');
+            let objeto = getProperties(item, llaves);
+            objeto.total = true
+            ventascuadro.pushObject(objeto);
+          } else {
+            ventascuadro.pushObject(getProperties(item, llaves));
+          }
         });
         setProperties(this, {
           titleCols,

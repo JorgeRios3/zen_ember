@@ -501,7 +501,20 @@ export default Ember.Controller.extend(FormatterMixin, {
   remaining: computed('listaPartidasEgresoGrabar.@each.cantidad', function() {
     return info('entro el el computed');
   }),
-
+  estatusElaboradoACancelado:computed ('selectedEstatus', {
+    get() {
+      if(get(this, 'recordSolicitudMaestro.estatus') === 'E' && get(this, 'selectedEstatus') === 9) {
+        info('aqui paso', get(this, 'recordSolicitudMaestro.estatus'), get(this, 'selectedEstatus'));
+        return true;
+      }
+      if(get(this, 'recordSolicitudMaestro.estatus') === 'O' && get(this, 'selectedEstatus') === 14){
+        return true;
+      } else {
+        info('aqui jaja', get(this, 'recordSolicitudMaestro.estatus'), get(this, 'selectedEstatus'));
+        return false;
+      }
+    }
+  }),
   actions: {
     toggleFormaOtrosEgresos() {
       this.send('toggleFormaSolicitud');
@@ -524,6 +537,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       this.toggleProperty('showComponent');
     },
     guardarEditarSolicitud() {
+      // checar las solicitudes otros egresos por que puede ser que el estatus no cambie por medio del la solixirud esixion
       info('entro en guardar editar solicitud');
       let r = get(this, 'recordSolicitudMaestro');
       let fechaprogramada = '';
@@ -773,6 +787,18 @@ export default Ember.Controller.extend(FormatterMixin, {
         info('trono recargar gxsolicitudcheque en clonar');
       });*/
     },
+    CambiarEstatusACandelado() {
+      // aqui tengo que ver si es de otros egresos o de cheques
+      this.store.query('blogentry', {model: 'solicitud_cheque', pk: 55130})
+      .then((data)=> {
+        info('si llego');
+      }, (error)=> {
+        info('no llego');
+      });
+      //let r = get(this, 'recordSolicitudMaestro');
+      //set(r, 'estatus', 'C');
+
+    },
     editarSolicitud(solicitudObjeto) {
       let solicitud = get(solicitudObjeto, 'solicitud');
       // info('valor de solicitud', solicitudObjeto);
@@ -824,14 +850,21 @@ export default Ember.Controller.extend(FormatterMixin, {
         if (estatus !== 'C') {
           lista.pushObject({ 'id': 9, 'label': 'Cancelado', 'estatus': 'C' });
         }
+        if (estatus === 'E') {
+          lista = Ember.A();
+          lista.pushObject({ 'id': 5, 'label': 'Elaborado', 'estatus': 'E' });
+          lista.pushObject({ 'id': 9, 'label': 'Cancelado', 'estatus': 'C' });
+          set(this, 'disabledEditarSolicitudFlag', true);
+          set(this, 'selectedEstatus', 5);
+        }
         set(this, 'listaEstatusSiguiente', lista);
         info('valor de lista terminando ciclo', lista);
         let nombre = get(this, 'solicitudDesenlace.nombre');
         if (estatus === 'O') {
+          set(this, 'disabledEditarSolicitudFlag', true);
           let lista = Ember.A();
           lista.pushObject({ 'id': 12, 'label': 'Otros No Aplicado', 'estatus': 'O' });
-          lista.pushObject({ 'id': 13, 'label': 'Otro Aplicado', 'estatus': 'P' });
-          lista.pushObject({ 'id': 9, 'label': 'Otro Cancelado', 'estatus': 'N' });
+          lista.pushObject({ 'id': 14, 'label': 'Otro Cancelado', 'estatus': 'N' });
           set(this, 'listaEstatusSiguiente', lista);
           set(this, 'selectedEstatus', 12);
           set(this, 'solicitudOtrosEgresosBandera', true);
@@ -1329,6 +1362,7 @@ export default Ember.Controller.extend(FormatterMixin, {
     toggleFormaSolicitud() {
       this.toggleProperty('formaSolicitud');
       set(this, 'solicitudOtrosEgresosBandera', false);
+      set(this, 'disabledEditarSolicitudFlag', false);
       set(this, 'nuevoProvedorForma', false);
       set(this, 'estatusSolicitudFlag', true);
       set(this, 'concepto', '');
