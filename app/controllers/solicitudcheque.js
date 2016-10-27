@@ -658,6 +658,9 @@ export default Ember.Controller.extend(FormatterMixin, {
                   // let r = get(this, 'recordSolicitudMaestro');
                   set(this, 'recordSolicitudMaestro', '');
                   this.store.unloadAll('gxsolicitudcheque');
+                  // aqui
+                  set(this, 'listaRequests', Ember.A());
+                  this.store.unloadAll('gxsolicitudcheque');
                   this.store.query('gxsolicitudcheque', { estatus: 2 })
                   .then((data)=> {
                     set(this, 'solicitudesLista', data);
@@ -688,6 +691,9 @@ export default Ember.Controller.extend(FormatterMixin, {
                 set(this, 'formaSolicitud', false);
                 // let r = get(this, 'recordSolicitudMaestro');
                 set(this, 'recordSolicitudMaestro', '');
+                this.store.unloadAll('gxsolicitudcheque');
+                // aqui
+                set(this, 'listaRequests', Ember.A());
                 this.store.unloadAll('gxsolicitudcheque');
                 this.store.query('gxsolicitudcheque', { estatus: 2 })
                 .then((data)=> {
@@ -727,6 +733,8 @@ export default Ember.Controller.extend(FormatterMixin, {
             set(this, 'formaSolicitud', false);
             // let r = get(this, 'recordSolicitudMaestro');
             set(this, 'recordSolicitudMaestro', '');
+            this.store.unloadAll('gxsolicitudcheque');
+            set(this, 'listaRequests', Ember.A());
             this.store.unloadAll('gxsolicitudcheque');
             this.store.query('gxsolicitudcheque', { estatus: 2 })
             .then((data)=> {
