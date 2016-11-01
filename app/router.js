@@ -80,6 +80,7 @@ Router.map(function() {
   this.route('comisioncompartida');
   this.route('distribucioncomision');
   this.route('solicitudcheque');
+  this.route('solicitudesfondeo');
 });
 
 export default Router;

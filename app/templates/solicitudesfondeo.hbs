@@ -1,0 +1,183 @@
+<br><br>
+<div class="h3 text text-info">Solcitudes Fondeo</div>
+<div class="form-group">
+	<label for="EmpresasLista" class="control-label">Empresa</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEmpresa action=(action  (mut selectedEmpresa)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Elija Empresa{{/x-option}}
+			{{#each empresasLista as |item|}}
+				{{#x-option value=item.id}}{{item.razonsocial}}{{/x-option}}
+			{{/each}}
+			{{/x-select}}
+		</div>
+	</div>
+</div>
+{{#if isEstatusElaborado}}
+	<div class="text-right" style=" position:fixed; right:50%; top:20%">
+  		<div  class="jumbotron">
+  			<div class="h5">Hay {{solicitudesSeleccionadas}} solicitudes seleccionadas</div>
+			<div class="bg-{{if cantidadfondear.colorPositivo 'primary' 'danger'}}">Cantidad a Fondear: {{cantidadfondear.cantidad}}</div>
+			<div class="bg-{{if saldobanco.colorPositivo 'primary' 'danger'}}"> Saldo banco: {{saldobanco.cantidad}}</div>
+			<div class="bg-{{if saldoinicialdisponible.colorPositivo 'primary' 'danger'}}">Saldo inicial disponible: {{saldoinicialdisponible.cantidad}}</div>
+			<div class="bg-{{if saldofinaldisponible.colorPositivo 'primary' 'danger'}}">Saldo Final disponible: {{saldofinaldisponible.cantidad}}</div>
+			<div class="bg-{{if saldoinicialtransito.colorPositivo 'primary' 'danger'}}">Saldo inicial transito: {{saldoinicialtransito.cantidad}}</div>
+			<div class="bg-{{if saldofinaltransito.colorPositivo 'primary' 'danger'}}">Saldo final transito: {{saldofinaltransito.cantidad}}</div>
+  		</div>
+	</div>
+{{/if}}
+{{#if bancoOrigenLista}}
+	<div class="form-group">
+	<label for="idbancoOrigen" class="control-label">Banco Origen</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedBancoOrigen action=(action  (mut selectedBancoOrigen)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Escoja Banco{{/x-option}}
+				{{#each bancoOrigenLista as |item|}}
+					{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="EmpresasLista" class="control-label">Estatus</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=5 action=(action  (mut selectedEstatus)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Elija Tipo{{/x-option}}
+				{{#each listaEstatus as |item|}}
+					{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+{{/if}}
+
+{{#if showNavigation}}
+	<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
+	{{#if hayPagPrevias}}
+		<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
+	{{/if}}
+	{{#if hayPagSiguientes}}
+		<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+	{{/if}}
+{{/if}}
+{{#if listaSolicitudFirmarFondear}}
+	<br><br>
+	<div class="h5 text text-info">Solicitudes Seleccionadas</div>
+	<div id="no-more-tables">
+	<br>
+		<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Solicitud</th>
+			<th>Cantidad</th>
+			<th>Beneficiario</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each listaSolicitudFirmarFondear as |row i|}}
+			<tr>
+				<td data-title="Solicitud">{{row.id}}</td>
+				<td data-title="Cantidad" class="text-right">{{row.cantidadComas}}</td>
+				<td data-title="Beneficiario">{{row.nombredefinitivo}} </td>
+			</tr>
+		{{/each}}
+		</tbody>
+		</table>
+	</div>
+	{{#if tablaFirmantesFlag}}
+		<br><br>
+		<div class="h5 text text-info">Firmas Solicitudes</div>
+		<div id="no-more-tables">
+		<br>
+			<table class="table table-bordered table-striped table-condensed cf">
+			<thead>
+			<tr>
+				<th><span class="glyphicon glyphicon-check"></span></th>
+				<th>Nombre</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each listaFirmantes as |row i|}}
+				<tr>
+					{{#if row.select}}
+						<td data-title="Id"><div class="btn btn-warning" {{action "quitarFirmante" row}} >Quitar</div></td>
+					{{else}}
+						<td data-title="Id"><div class="btn btn-info" {{action "seleccionarFirmante" row}}>Seleccionar</div></td>
+					{{/if}}
+					<td data-title="Beneficiario">{{row.nombre}} </td>
+				</tr>
+			{{/each}}
+			</tbody>
+			</table>
+		</div>
+		<br>
+		{{#if revisarFirmas}}
+			<div class="btn btn-success" {{action "firmarSolicitudes"}}>Firmar</div>
+		{{/if}}
+		<div class="btn btn-warning" {{action "cerrarFirmantes"}}>Cancelar Firma</div>
+	{{else}}
+		{{#if isEstatusElaborado}}
+			<div class="btn btn-info" {{action "MostrarFirmantes"}}>Seleccionar Firmas</div>
+		{{else}}
+			
+			<div class="btn btn-info" {{action "aplicarFondeo"}}>Aplicar</div>
+		{{/if}}
+	{{/if}}
+
+{{/if}}
+{{#if solicitudesLista}}
+	<div id="no-more-tables">
+	<br>
+		<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th><span class="glyphicon glyphicon-check"></span></th>
+			<th><a href="" {{action "pedirSort" "solicitud"}}>Solicitud</a></th>
+			<th><a href="" {{action "pedirSort" "fechaCaptura"}}>Fecha Captura</a></th>
+			<th><a href="" {{action "pedirSort" "fechaProgramada"}}>Fecha Programada</a></th>
+			<th><a href="" {{action "pedirSort" "cheque"}}>Cheque</a></th>
+			<th><a href="" {{action "pedirSort" "cantidad"}}>Cantidad</a></th>
+			<th><a href="" {{action "pedirSort" "beneficiario"}}>Beneficiario</a></th>
+			<th><a href="" {{action "pedirSort" "empresa"}}>Empresa</a></th>
+			<th><a href="" {{action "pedirSort" "estatus"}}>Estatus</a></th>
+			<th><a href="" {{action "pedirSort" "solicitante"}}>Solicitante</a></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each solicitudesLista as |row i|}}
+			<tr>
+				{{#if row.select}}
+				<td data-title="Id"><div class="btn btn-warning" {{action "quitarSolicitud" row}}>Quitar</div></td>
+				{{else}}
+				<td data-title="Id"><div class="btn btn-info" {{action "agregarSolicitud" row}}>Agregar</div></td>
+				{{/if}}
+				<td data-title="Solicitud">{{row.id}}</td>
+				<td data-title="Fecha Captura">{{row.fechacaptura}}</td>
+				<td data-title="Fecha Programada">{{row.fechaprogramada}}</td>
+				<td data-title="Cheque">{{row.numerochequeorigen}}</td>
+				<td data-title="Cantidad" class="text-right">{{row.cantidadComas}}</td>
+				<td data-title="Beneficiario">{{row.nombredefinitivo}} </td>
+				<td data-title="Empresa">{{row.razonsocial}}</td>
+				<td data-title="Estatus">{{row.estatusdescripcion}}</td>
+				<td data-title="Solicitante">{{row.usuariosolicitante}}</td>
+				
+			</tr>
+		{{/each}}
+		</tbody>
+		</table>
+	</div>
+{{/if}}
+{{#if errorModal}}
+  {{#modal-bs title=errorTitle ok="okCerrarModal" close="okCerrarModal"}}
+   {{errorMsg}}
+  {{/modal-bs}}
+{{/if}}
+{{#if saveSuccess}}
+	{{#modal-bs title='Exito' ok="okCerrarModal" close="okCerrarModal"}}
+   <div class="text text-success">Se actualizaron correctamente las solicitudes</div>
+  {{/modal-bs}}
+{{/if}}

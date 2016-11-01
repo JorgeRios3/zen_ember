@@ -100,6 +100,9 @@ export default Ember.Controller.extend(FormatterMixin, {
     set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
     info('viendo en le init el que quiero', get(this, 'listaPartidasEgresoGrabar'));
   },
+  observaSelectedEstatus: observer('selectedEstatus', function() {
+    set(this, 'requestedPage', '');
+  }),
   observaSelectedEmpresa: observer('selectedEmpresa', function() {
     if (get(this, 'listaPartidasEgresoGrabar.length') > 0) {
       set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
@@ -653,19 +656,22 @@ export default Ember.Controller.extend(FormatterMixin, {
                 });
                 record2.save().then(()=> {
                   info('se grabo partida', i);
-                  this.send('toggleFormaSolicitud');
+                }, (error)=> {
+                  info('error grabar partida al actualizar maestro');
+                });
+              });
+              this.send('toggleFormaSolicitud');
                   set(this, 'formaSolicitud', false);
                   // let r = get(this, 'recordSolicitudMaestro');
                   set(this, 'recordSolicitudMaestro', '');
+                  this.store.unloadAll('gxsolicitudcheque');
+                  // aqui
+                  set(this, 'listaRequests', Ember.A());
                   this.store.unloadAll('gxsolicitudcheque');
                   this.store.query('gxsolicitudcheque', { estatus: 2 })
                   .then((data)=> {
                     set(this, 'solicitudesLista', data);
                   });
-                }, (error)=> {
-                  info('error grabar partida al actualizar maestro');
-                });
-              });
               }, (error)=> {
                 info('trono el actulizar el maestro');
             });
@@ -684,18 +690,20 @@ export default Ember.Controller.extend(FormatterMixin, {
               });
               record2.save().then(()=> {
                 info('se grabo partida', i);
-                this.send('toggleFormaSolicitud');
-                set(this, 'formaSolicitud', false);
-                // let r = get(this, 'recordSolicitudMaestro');
-                set(this, 'recordSolicitudMaestro', '');
-                this.store.unloadAll('gxsolicitudcheque');
-                this.store.query('gxsolicitudcheque', { estatus: 2 })
-                .then((data)=> {
-                  set(this, 'solicitudesLista', data);
-                 });
               }, (error)=> {
                 info('error grabar partida al actualizar maestro');
               });
+            });
+            this.send('toggleFormaSolicitud');
+            set(this, 'formaSolicitud', false);
+            // let r = get(this, 'recordSolicitudMaestro');
+            set(this, 'recordSolicitudMaestro', '');
+            this.store.unloadAll('gxsolicitudcheque');
+            set(this, 'listaRequests', Ember.A());
+            this.store.unloadAll('gxsolicitudcheque');
+            this.store.query('gxsolicitudcheque', { estatus: 2 })
+            .then((data)=> {
+              set(this, 'solicitudesLista', data);
             });
             }, (error)=> {
               info('trono el actulizar el maestro');
@@ -723,19 +731,21 @@ export default Ember.Controller.extend(FormatterMixin, {
           });
           record2.save().then(()=> {
             info('se grabo partida', i);
-            this.send('toggleFormaSolicitud');
+          }, (error)=> {
+            info('error grabar partida al actualizar maestro');
+          });
+        });
+        this.send('toggleFormaSolicitud');
             set(this, 'formaSolicitud', false);
             // let r = get(this, 'recordSolicitudMaestro');
             set(this, 'recordSolicitudMaestro', '');
+            this.store.unloadAll('gxsolicitudcheque');
+            set(this, 'listaRequests', Ember.A());
             this.store.unloadAll('gxsolicitudcheque');
             this.store.query('gxsolicitudcheque', { estatus: 2 })
             .then((data)=> {
               set(this, 'solicitudesLista', data);
             });
-          }, (error)=> {
-            info('error grabar partida al actualizar maestro');
-          });
-        });
       }, (error)=> {
         info('trono el actulizar el maestro');
       });
@@ -808,13 +818,16 @@ export default Ember.Controller.extend(FormatterMixin, {
                   });
                   record2.save().then(()=> {
                     info('se grabo partida', i);
-                    this.send('toggleFormaSolicitud');
-                    set(this, 'formaSolicitud', false);
-                    set(this, 'estatusElaboradoACancelado', false);
+                    // this.store.unloadAll('gxsolicitudcheque');
                   }, (error)=> {
                     info('error grabar partida');
                   });
                 });
+                this.send('toggleFormaSolicitud');
+                set(this, 'formaSolicitud', false);
+                // set(this, 'estatusElaboradoACancelado', false);
+                set(this, 'listaRequests', Ember.A());
+                this.send('pedir');
        },(error)=> {
         info('error en cambiar estatus a cancelado otros egresos');
        });
@@ -833,13 +846,16 @@ export default Ember.Controller.extend(FormatterMixin, {
                   });
                   record2.save().then(()=> {
                     info('se grabo partida', i);
-                    this.send('toggleFormaSolicitud');
-                    set(this, 'formaSolicitud', false);
-                    set(this, 'estatusElaboradoACancelado', false);
+                    // this.store.unloadAll('gxsolicitudcheque');
                   }, (error)=> {
                     info('error grabar partida');
                   });
                 });
+                this.send('toggleFormaSolicitud');
+                set(this, 'formaSolicitud', false);
+                // set(this, 'estatusElaboradoACancelado', false);
+                set(this, 'listaRequests', Ember.A());
+                this.send('pedir');
         },(error)=> {
           info('error en cambiar estatus a cancelado');
         });
@@ -866,6 +882,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'BlogModal', false);
     },
     editarSolicitud(solicitudObjeto) {
+      set(this, 'disabledEditarSolicitudFlag', false);
       let solicitud = get(solicitudObjeto, 'solicitud');
       // info('valor de solicitud', solicitudObjeto);
       let idbancoorigen = '';
@@ -1142,12 +1159,16 @@ export default Ember.Controller.extend(FormatterMixin, {
                   });
                   record2.save().then(()=> {
                     info('se grabo partida', i);
+                    set(this, 'listaRequests', Ember.A());
                     this.send('toggleFormaSolicitud');
                     set(this, 'formaSolicitud', false);
+                    //
+                    //
                   }, (error)=> {
                     info('error grabar partida');
                   });
                 });
+                this.send('pedir');
               }, (error)=> {
                 info('no se grabo');
               });
@@ -1207,6 +1228,7 @@ export default Ember.Controller.extend(FormatterMixin, {
             info('error grabar partida');
           });
         });
+        this.send('pedir');
         }, (error)=> {
           info('no se grabo');
         });
@@ -1457,15 +1479,8 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'totalValorPartidasformated', '');
       set(this, 'selectedEmpresaEdicion', '');
       set(this, 'beneficiarioBancoCuenta', '');
+      set(this, 'requestedPage', '');
       info('agregar solicitud boton');
-      // set(this, 'toggleFormaSolicitud', '');
-      /* this.store.unloadAll('gxsolicitudcheque');
-      this.store.query('gxsolicitudcheque', { estatus: 2 })
-      .then((data)=> {
-        set(this, 'solicitudesLista', data);
-      }, (error)=> {
-        info('trono gxsolicitudcheque en toggleFormaSolicitud');
-      });*/
     },
     buscarBeneficiarioMobile() {
       let beneficiario = get(this, 'bene');
