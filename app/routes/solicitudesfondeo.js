@@ -12,8 +12,27 @@ const {
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
   beforeModel2() {
-    // let c = this.controllerFor(this.routeName);
-    //c.setProperties({
+    let c = this.controllerFor(this.routeName);
+    c.setProperties({
+      selectedEmpresa: '',
+      selectedBancoOrigen: '',
+      cantidadfondear: '',
+      saldobanco: '',
+      saldofinaldisponible: '',
+      saldofinaltransito: '',
+      saldoinicialdisponible: '',
+      saldoinicialtransito: '',
+      selectedEstatus: 5,
+      resultPage: '',
+      requestedPage: '',
+      resultRowCountFormatted: '',
+      tablaFirmantesFlag: false,
+      bancoOrigenLista: '',
+      listaSolicitudFirmarFondear: '',
+      listaFirmantes: '',
+      solicitudesSeleccionadas: '',
+      solicitudesLista: ''
+    });
   },
   setupController(ctrl, model) {
     let { empresas } = model;

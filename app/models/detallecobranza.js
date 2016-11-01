@@ -24,7 +24,8 @@ export default DS.Model.extend({
   sumandocumentos: attr('money'),
   saldo: attr('money'),
   imss: attr('string'),
-  inmueble: attr('number')
+  inmueble: attr('number'),
+  numerocredito: attr('string')
   /*
   formatter(key) {
     let value = get(this, key);

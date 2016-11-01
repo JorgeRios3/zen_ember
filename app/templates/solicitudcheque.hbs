@@ -894,11 +894,11 @@
 			<div class="btn btn-info" {{action "grabarBeneficiario"}}>Grabar Beneficiario</div>
 			<div class="btn btn-warning" {{action "toggleNuevoProvedor"}}>Cancelar</div>
 		{{/unless}}
-		{{#if quierover}}
-			{{#if selectedEmpresaEdicion}}
-				{{#if estatusElaboradoACancelado}}
+		{{#if estatusElaboradoACancelado}}
 					<div class="btn btn-warning" {{action "CambiarEstatusACancelado"}}>Cambiar estatus a Cancelado</div>
 				{{/if}}
+		{{#if quierover}}
+			{{#if selectedEmpresaEdicion}}
 				{{#unless disabledEditarSolicitudFlag}}
 				<div class="btn btn-success" {{action "guardarEditarSolicitud"}}>Guardar Solicitud</div>
 				{{/unless}}

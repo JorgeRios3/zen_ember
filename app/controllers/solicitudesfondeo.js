@@ -28,9 +28,12 @@ export default Ember.Controller.extend(FormatterMixin, {
   resultPages: '',
   requestedPage: '',
   resultRowCountFormatted: '',
+  selectedEstatus: 5,
   listaRequests: Ember.A(),
   otraLista: null,
+  isEstatusElaborado: computed.equal('selectedEstatus', 5),
   tablaFirmantesFlag: false,
+  listaEstatus: [{ 'id': 5, 'label': 'Elaborado', 'estatus': 'E' }, { 'id': 12, 'label': 'Otro No Aplicado', 'estatus': 'O' }],
   init() {
     this._super(...arguments);
     set(this, 'listaSolicitudFirmarFondear', Ember.ArrayProxy.create({ content: [] }));
@@ -89,7 +92,21 @@ export default Ember.Controller.extend(FormatterMixin, {
     if (!isEmpty(get(this, 'selectedBancoOrigen'))) {
       set(this, 'tablaFirmantesFlag', false);
       this.notifyPropertyChange('elquesea');
+      let banco = get(this, 'selectedBancoOrigen');
+  	  let empresa = get(this, 'selectedEmpresa');
+      this.store.unloadAll('saldosfondeo');
+      this.store.query('saldosfondeo', { banco, empresa, solicitudes: '' })
+  	    .then((data)=> {
+  	      set(this, 'calculaSaldosBancosCall', data);
+  	    },(error)=> {
+  	    	info('torno');
+  	    });
       this.send('pedir');
+    }
+  }),
+  observaSelectedEstatus: observer('selectedEstatus', function() {
+    if (!isEmpty(get(this, 'selectedEstatus'))) {
+      this.notifyPropertyChange('selectedBancoOrigen');
     }
   }),
   revisarFirmas: computed('elquesea',{
@@ -103,9 +120,97 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  return regreso;
   	}
   }),
+  calculaSaldosBanco: observer('calculaSaldosBancosCall', function() {
+  	  let item = get(this, 'calculaSaldosBancosCall').get('firstObject');
+  	  let { cantidadfondear, saldobanco, saldofinaldisponible, 
+  	      	saldofinaltransito, saldoinicialdisponible, 
+  	      	saldoinicialtransito } = getProperties(item, `cantidadfondear saldobanco saldofinaldisponible
+  	      		saldofinaltransito saldoinicialdisponible saldoinicialtransito`.w());
+  	  setProperties(this, {
+  	    cantidadfondear: {'cantidad': this.formatter(cantidadfondear), 'colorPositivo': cantidadfondear >= 0 ? true : false }, 
+  	    saldobanco: { 'cantidad': this.formatter(saldobanco), 'colorPositivo': saldobanco >= 0 ? true : false },
+  	    saldofinaldisponible: { 'cantidad': this.formatter(saldofinaldisponible), 'colorPositivo': saldofinaldisponible >= 0 ? true : false },
+  	    saldofinaltransito: { 'cantidad': this.formatter(saldofinaltransito), 'colorPositivo': saldofinaltransito >= 0 ? true : false },
+  	    saldoinicialdisponible: {'cantidad': this.formatter(saldoinicialdisponible), 'colorPositivo': saldoinicialdisponible >= 0 ? true : false },
+  	    saldoinicialtransito: {'cantidad': this.formatter(saldoinicialtransito), 'colorPositivo': saldoinicialtransito >= 0 ? true : false }
+  	  });
+  }),
   actions: {
+  	limpiarCampos() {
+  	  this.setProperties({
+  	    selectedEmpresa: '',
+        selectedBancoOrigen: '',
+        cantidadfondear: '',
+        saldobanco: '',
+        saldofinaldisponible: '',
+        saldofinaltransito: '',
+        saldoinicialdisponible: '',
+        saldoinicialtransito: '',
+        selectedEstatus: 5,
+        resultPage: '',
+        requestedPage: '',
+        resultRowCountFormatted: '',
+        tablaFirmantesFlag: false,
+        bancoOrigenLista: '',
+        listaSolicitudFirmarFondear: '',
+        listaFirmantes: '',
+        solicitudesSeleccionadas: '',
+        solicitudesLista: ''
+      });
+  	},
+  	aplicarFondeo() {
+  	  info('aplicandofondeoOtro');
+  	  let empresa = get(this, 'selectedEmpresa');
+  	  let banco = get(this, 'selectedBancoOrigen');
+  	  let solicitudes = [];
+  	   get(this, 'listaSolicitudFirmarFondear').forEach((item)=> {
+  	    solicitudes.push(get(item, 'id'));
+  	  });
+  	  solicitudes = solicitudes.join();
+  	  let estatus = get(this, 'selectedEstatus') === 12 ? 'P': '';
+  	  let record = this.store.createRecord('solicitudfondeo', { banco, empresa, solicitudes, estatus, firmantes: ''});
+  	  record.save().then((data)=> {
+  	    info('llego');
+  	    set(this, 'saveSuccess', true);
+  	    set(this, 'tablaFirmantesFlag', false);
+        this.notifyPropertyChange('elquesea');
+  	    this.send('limpiarCampos');
+  	  },(error)=> {
+  	    info('trono');
+  	  });
+  	},
   	firmarSolicitudes() {
-  	  get(this, 'listaFirmantes')
+  	  let empresa = get(this, 'selectedEmpresa');
+  	  let banco = get(this, 'selectedBancoOrigen');
+  	  let solicitudes = [];
+  	  let firmantes = [];
+  	  let estatus = get(this, 'selectedEstatus') === 5 ? 'F': '';
+  	  get(this, 'listaSolicitudFirmarFondear').forEach((item)=> {
+  	    solicitudes.push(get(item, 'id'));
+  	  });
+  	  solicitudes = solicitudes.join();
+  	  get(this, 'listaFirmantes').forEach((f)=> {
+  	    if (get(f, 'select') === true) {
+  	      firmantes.push(get(f, 'id'));
+  	    }
+  	  });
+  	  firmantes = firmantes.join();
+  	  info('viendo valores para enviar a solicitudfondeo');
+  	  info(banco);
+  	  info(empresa);
+  	  info(solicitudes);
+  	  info(firmantes);
+  	  let record = this.store.createRecord('solicitudfondeo', { banco, empresa, solicitudes, firmantes, estatus});
+  	  record.save().then((data)=> {
+  	    info('llego');
+  	    //this.notifyPropertyChange('selectedBancoOrigen');
+  	    set(this, 'saveSuccess', true);
+  	    set(this, 'tablaFirmantesFlag', false);
+        this.notifyPropertyChange('elquesea');
+  	    this.send('limpiarCampos');
+  	  },(error)=> {
+  	    info('trono');
+  	  });
 
   	},
   	seleccionarFirmante(firmante) {
@@ -137,6 +242,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  })
   	},
   	agregarSolicitud(solicitud) {
+  	  // info('viendo si lo calculo bien',calculaSaldosBanco(122243.00, this));
   	  let lista = get(this, 'listaSolicitudFirmarFondear');
   	  let objeto = lista.findBy('id', get(solicitud, 'id'));
   	  if (!isEmpty(objeto)) {
@@ -144,12 +250,28 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  } else {
   	    set(solicitud, 'select', true);
   	    lista.pushObject(solicitud);
+  	    set(this, 'solicitudesSeleccionadas', get(lista, 'length'));
   	    let banco = get(this, 'selectedBancoOrigen');
-  	    let empresa = get(this, 'selectedEmpresa')
+  	    let empresa = get(this, 'selectedEmpresa');
   	    let solicitudes = listaComas(lista);
+  	    this.store.unloadAll('saldosfondeo');
   	    this.store.query('saldosfondeo', {banco, empresa, solicitudes})
   	    .then((data)=> {
-  	      info('si llego');
+  	      set(this, 'calculaSaldosBancosCall', data);
+  	      // let saldo = get(this, 'calculaSaldosBanco');
+  	      // let item = data.get('firstObject');
+  	      /*let { cantidadfondear, saldobanco, saldofinaldisponible, 
+  	      	saldofinaltransito, saldoinicialdisponible, 
+  	      	saldoinicialtransito } = getProperties(item, `cantidadfondear saldobanco saldofinaldisponible
+  	      		saldofinaltransito saldoinicialdisponible saldoinicialtransito`.w());
+  	      setProperties(this, {
+  	        cantidadfondear: {'cantidad': this.formatter(cantidadfondear), colorPositivo: cantidadfondear < 0 ? false : true}, 
+  	        saldobanco: this.formatter(saldobanco),
+  	        saldofinaldisponible: this.formatter(saldofinaldisponible),
+  	      	saldofinaltransito: this.formatter(saldofinaltransito),
+  	      	saldoinicialdisponible: this.formatter(saldoinicialdisponible),
+  	      	saldoinicialtransito: this.formatter(saldoinicialtransito)
+  	      });*/
   	    },(error)=> {
   	    	info('torno');
   	    });
@@ -159,7 +281,28 @@ export default Ember.Controller.extend(FormatterMixin, {
   	  let lista = get(this, 'listaSolicitudFirmarFondear');
   	  let objeto = lista.findBy('id', get(solicitud, 'id'));
   	  lista.removeObject(objeto);
+  	  set(this, 'solicitudesSeleccionadas', get(lista, 'length'));
   	  set(solicitud, 'select', false);
+  	  let banco = get(this, 'selectedBancoOrigen');
+  	  let empresa = get(this, 'selectedEmpresa')
+  	  let solicitudes = listaComas(lista);
+  	  this.store.unloadAll('saldosfondeo');
+  	  this.store.query('saldosfondeo', {banco, empresa, solicitudes})
+  	  .then((data)=> {
+  	  	set(this, 'calculaSaldosBancosCall', data);
+  	    /*let item = data.get('firstObject');
+  	      let { cantidadfondear, saldobanco, saldofinaldisponible, 
+  	      	saldofinaltransito, saldoinicialdisponible, 
+  	      	saldoinicialtransito } = getProperties(item, `cantidadfondear saldobanco saldofinaldisponible
+  	      		saldofinaltransito saldoinicialdisponible saldoinicialtransito`.w());
+  	      setProperties(this, {
+  	        cantidadfondear, saldobanco, saldofinaldisponible, 
+  	      	saldofinaltransito, saldoinicialdisponible, 
+  	      	saldoinicialtransito
+  	      });*/
+  	  },(error)=> {
+  	    info('torno');
+  	  });
   	},
   	pedirSort(sortColumn) {
   	  set(this, 'sort', sortColumn);
@@ -169,8 +312,8 @@ export default Ember.Controller.extend(FormatterMixin, {
       let listaRequests = get(this, 'listaRequests');
       this.store.unloadAll('gxsolicitudcheque');
       let objeto = {};
-      let estatus = 2
-      let banco = ''; //get(this, 'selectedBancoOrigen')
+      let estatus = get(this, 'selectedEstatus');
+      let banco = get(this, 'selectedBancoOrigen')
       let empresa = get(this, 'selectedEmpresa');
       // let operacion = get(this, 'selectedOperacion');
       let requestedPage = get(this, 'requestedPage');
@@ -280,6 +423,7 @@ export default Ember.Controller.extend(FormatterMixin, {
     okCerrarModal() {
       info('cerrando el modal');
       set(this, 'errorModal', false);
+      set(this, 'saveSuccess', false);
     }
   }
 });
