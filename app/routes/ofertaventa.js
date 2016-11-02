@@ -12,8 +12,12 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin,{
-
-
+  beforeModel(){
+    let controller = this.controllerFor('ofertaventa');
+    controller.setProperties({
+      catalogo:null
+    });
+  },
   	setupController(ctrl, model) {
 	    set(ctrl, 'etapas', model.etapas);
 	    set(ctrl, 'gerentes', model.gerentes);

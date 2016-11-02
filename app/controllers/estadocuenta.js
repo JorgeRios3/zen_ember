@@ -377,6 +377,7 @@ export default Ember.Controller.extend(FormatterMixin,
       this.toggleProperty('formaGeneraDocumento');
     },
     copiaCuenta() {
+      set(this, 'isArcadia', true);
       let cuenta = get(this, 'comodin.cuenta');
       set(this, 'cuentaBuscar', cuenta);
       set(this, 'comodin.cuenta', '');

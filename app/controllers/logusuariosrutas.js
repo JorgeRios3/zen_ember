@@ -10,12 +10,14 @@ const {
 export default Ember.Controller.extend({
   listaUsuarios: null,
   selectedUsuario: 0,
+  limite: '',
   listaTabla: null,
   titleCols: ['Usuario', 'Timestamp', 'Ruta', 'Intro'],
   observaSelectedusuario: observer('selectedUsuario', function() {
+    let limit = get(this, 'limite') !== '' ? get(this, 'limite') : 100;
     this.store.unloadAll('logusuarioruta');
     let lista = Ember.A();
-    this.store.query('logusuarioruta', { usuario: get(this, 'selectedUsuario') })
+    this.store.query('logusuarioruta', { usuario: get(this, 'selectedUsuario'), limit })
     .then((data)=> {
       data.forEach((item)=> {
         let record = {};

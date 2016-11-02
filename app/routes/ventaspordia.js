@@ -12,6 +12,9 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
+  beforeModel2() {
+
+  },
   desktopOrJumbo: computed('media.isJumbo', 'media.isDesktop', {
     get() {
       return get(this, 'media.isJumbo') || get(this, 'media.isDesktop');
