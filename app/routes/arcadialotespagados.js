@@ -25,7 +25,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
       totalEscriturados +=  escriturados;
       lista.pushObject({ etapa, pagados, noescriturados, escriturados });
     });
-    lista.pushObject({ etapa: 'Totales', pagados: totalPagados, noescriturados: totalNoEscriturados, escriturados: totalEscriturados });
+    // lista.pushObject({ etapa: 'Totales', pagados: totalPagados, noescriturados: totalNoEscriturados, escriturados: totalEscriturados });
+    set(lista.get('lastObject'), 'etapa', 'Totales');
     set(controller, 'datos', lista);
     info('termino');
   },
