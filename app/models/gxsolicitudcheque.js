@@ -33,5 +33,14 @@ export default DS.Model.extend(FormatterMixin,{
     get() {
       return this.formatter(get(this, 'cantidad'));
     }
+  }),
+  esCancelable: computed('estatus', {
+    get() {
+      if (get(this, 'estatus') === 'P' || get(this, 'estatus') === 'O') {
+        return true;
+      } else {
+        return false
+      }
+    }
   })
 });

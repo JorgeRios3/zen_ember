@@ -521,6 +521,17 @@ export default Ember.Controller.extend(FormatterMixin, {
     }
   }),
   actions: {
+    CancelarEgreso(id) {
+      set(this, 'CancelarModal', true);
+    },
+    CancelarAceptar() {
+      info('se cancelo');
+      set(this, 'CancelarModal', false);
+    },
+    cerrarCancelarModal() {
+      info('se cerro');
+      set(this, 'CancelarModal', false);
+    },
     toggleFormaOtrosEgresos() {
       this.send('toggleFormaSolicitud');
       set(this, 'solicitudOtrosEgresosBandera', true);
@@ -940,6 +951,18 @@ export default Ember.Controller.extend(FormatterMixin, {
           set(this, 'disabledEditarSolicitudFlag', true);
           set(this, 'selectedEstatus', 5);
         }
+        if (estatus === 'F') {
+          lista = Ember.A();
+          lista.pushObject({ 'id': 6, 'label': 'Fondeado', 'estatus': 'F' });
+          lista.pushObject({ 'id': 8, 'label': 'Retenido', 'estatus': 'T' });
+          set(this, 'selectedEstatus', 6);
+        }
+        if (estatus === 'P') {
+          lista = Ember.A();
+          lista.pushObject({ 'id': 13, 'label': 'Otro Aplicado', 'estatus': 'P' });
+          set(this, 'disabledEditarSolicitudFlag', true);
+          set(this, 'selectedEstatus', 13);
+        }
         set(this, 'listaEstatusSiguiente', lista);
         info('valor de lista terminando ciclo', lista);
         let nombre = get(this, 'solicitudDesenlace.nombre');
@@ -962,9 +985,11 @@ export default Ember.Controller.extend(FormatterMixin, {
             info('no llego');
           });
         }
-        if(estatus === 'P' || estatus ==='B') {
+        if(estatus ==='B') {
           let lista = Ember.A();
-
+          lista.pushObject({ 'id': 7, 'label': 'Cobrado', 'estatus': 'B' })
+          set(this, 'selectedEstatus', 7);
+          set(this, 'disabledEditarSolicitudFlag', true);
           set(this, 'listaEstatusSiguiente', lista);
         }
 

@@ -186,7 +186,10 @@
 					<td data-title="Id">{{i}}</td>
 					<td data-title="Solicitud">
 						<a href="" {{action "levantaDesenlceSolicitud" row.id row.nombreReal}}>{{row.id}}</a>
-						<br> <a href="" {{action "detalleBlog" row.id row.estatus}}><span class="glyphicon glyphicon-tasks"></span></a>
+						<br> <a href="" {{action "detalleBlog" row.id row.estatus}}><span class="text text-success glyphicon glyphicon-tasks"></span></a>
+						{{#if row.esCancelable}}
+						<br> <a href="" {{action "CancelarEgreso" row.id}}><span class="text text-warning glyphicon glyphicon-remove"></span></a>
+						{{/if}}
 					</td>
 					<td data-title="Fecha Captura">{{row.fechacaptura}}</td>
 					<td data-title="Fecha Programada">{{row.fechaprogramada}}</td>
@@ -906,7 +909,7 @@
 				<div class="btn btn-success" {{action "guardarSolicitud"}}>Guardar Solicitud</div>
 			{{/if}}
 		{{/if}}
-		<div class="btn btn-danger" {{action "toggleFormaSolicitud"}}>Cancelar Solicitud</div>
+		<div class="btn btn-danger" {{action "toggleFormaSolicitud"}}>Cancelar</div>
 	{{/unless}}
 {{/unless}}
 
@@ -989,5 +992,11 @@
 			</tbody>
 			</table>
 		</div>
+  {{/modal-bs}}
+{{/if}}
+
+{{#if CancelarModal}}
+	{{#modal-bs title='Cancelar Egreso' ok="CancelarAceptar" close="cerrarCancelarModal"}}
+  	<div class=" h6 text text-info">Se va a cancelar este egreso lo cual afectara los saldos de las partidas</div>
   {{/modal-bs}}
 {{/if}}
