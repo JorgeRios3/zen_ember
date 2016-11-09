@@ -81,6 +81,7 @@ Router.map(function() {
   this.route('distribucioncomision');
   this.route('solicitudcheque');
   this.route('solicitudesfondeo');
+  this.route('bancomovimiento');
 });
 
 export default Router;
