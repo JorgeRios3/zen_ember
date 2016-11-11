@@ -31,12 +31,15 @@ RouteAuthMixin , {
       formaMovimiento: false,
       //showBotonAgregar: false
       // forma
-      selectedTipoForma: 'C',
+      selectedTipoForma: 'A',
       fechaForma: '',
       selectedEstatusForma: 'F',
       cantidadForma: '',
       referenciaForma: '',
-      formaActionMovimiento: false
+      formaActionMovimiento: false,
+      formaClasificar: false,
+      movimientosForm: '',
+      selectedMovimientoForma: 'A'
     });
   },
   setupController(ctrl, model) {
