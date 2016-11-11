@@ -163,6 +163,9 @@
 			<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
 		{{/if}}
 	{{/if}}
+	{{#if cantidadTotal}}
+		<div class="text text-info h4">${{cantidadTotal}}</div>
+	{{/if}}
 	<div id="no-more-tables">
 		<br>
 			<table class="table table-bordered table-striped table-condensed cf">

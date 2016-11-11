@@ -1345,6 +1345,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       let listaRequests = get(this, 'listaRequests');
       this.store.unloadAll('gxsolicitudcheque');
       let objeto = {};
+      let cantidadTotal = 0;
       let beneficiario = get(this, 'selectedBeneficiario');
       let estatus = get(this, 'selectedEstatus');
       let empresa = get(this, 'selectedEmpresa');
@@ -1440,6 +1441,10 @@ export default Ember.Controller.extend(FormatterMixin, {
         delete objeto.cuantos;
         this.store.query('gxsolicitudcheque', objeto)
         .then((data)=> {
+          data.forEach((item)=> {
+            cantidadTotal += get(item, 'cantidad');
+          });
+          set(this, 'cantidadTotal', this.formatter(cantidadTotal));
           // data.forEach((item)=> {})
           set(this, 'solicitudesLista', data);
           set(this, 'resultPage', get(data, 'meta.page'));
