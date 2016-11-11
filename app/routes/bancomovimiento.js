@@ -12,8 +12,10 @@ const {
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
   beforeModel2() {
+    let clasificar = get(this, 'features.clasificar');
     let c = this.controllerFor(this.routeName);
     c.setProperties({
+      clasificar,
       resultPage: '',
       resultPages: '',
       requestedPage: '',

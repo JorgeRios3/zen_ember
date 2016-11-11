@@ -194,7 +194,9 @@
 		<div class="row">
 			<div class="btn btn-info" {{action "editRecord" movimientoRecord}}>Editar</div>
 			{{#if movimientoRecord.isAbono}}
-				<div class="btn btn-success"{{action "toggleClasificarForm"}}>Clasificar</div>
+				{{#if clasificar}}
+					<div class="btn btn-success"{{action "toggleClasificarForm"}}>Clasificar</div>
+				{{/if}}
 			{{/if}}
 			<div class="btn btn-danger" {{action "deleteRecord" movimientoRecord}}>Eliminar</div>
 			<div class="btn btn-warning" {{action "backRecord" movimientoRecord}}>Volver</div>
