@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import RouteAuthMixin from '../mixins/routeauth';
+import FormatterMixin from '../mixins/formatter';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 const {
 	get,
@@ -9,7 +10,7 @@ const {
 	RSVP: { hash },
 	Logger: { info }
 } = Ember;
-export default Ember.Route.extend(AuthenticatedRouteMixin,
+export default Ember.Route.extend(AuthenticatedRouteMixin, FormatterMixin,
 RouteAuthMixin , {
   beforeModel2() {
     info('valor de featues  donde quiero', get(this, 'features.estatuscontabilidad'));
@@ -118,6 +119,11 @@ RouteAuthMixin , {
     set(ctrlr, 'solicitudesLista', gxsolicitudcheque);
     set(ctrlr, 'fechaprogramada', fechaProgramada);
     set(ctrlr, 'fechacaptura', fechaCaptura);
+    let total = 0;
+    gxsolicitudcheque.forEach((item)=> {
+      total += get(item, 'cantidad');
+    });
+    set(ctrlr, 'cantidadTotal', this.formatter(total));
   },
   model() {
     return hash({
