@@ -122,7 +122,7 @@
 					<label for="movimientoListaForma" class="control-label">Tipo</label>
 					
 						<div>
-							{{#x-select value='C' action=(action  (mut selectedTipoForma)) class="form-control form-control-inline"}}
+							{{#x-select value=selectedTipoForma action=(action  (mut selectedTipoForma)) class="form-control form-control-inline"}}
 							{{#each listaTipoMovto as |item|}}
 								{{#x-option value=item.value}}{{item.label}}{{/x-option}}
 							{{/each}}
@@ -193,8 +193,198 @@
 		<div class="h4 text text-info">Opciones del movimiento {{movimientoRecord.id}}</div>
 		<div class="row">
 			<div class="btn btn-info" {{action "editRecord" movimientoRecord}}>Editar</div>
+			{{#if movimientoRecord.isAbono}}
+				<div class="btn btn-success"{{action "toggleClasificarForm"}}>Clasificar</div>
+			{{/if}}
 			<div class="btn btn-danger" {{action "deleteRecord" movimientoRecord}}>Eliminar</div>
 			<div class="btn btn-warning" {{action "backRecord" movimientoRecord}}>Volver</div>
+		</div>
+	</div>
+{{/if}}
+{{#if formaClasificar}}
+	<div class="row">
+		<div class="col col-md-6">
+			<div id ="jumbo" class="jumbotron">
+				<div id="no-more-tables">
+					<table class="table table-bordered table-striped table-condensed cf">
+					<thead>
+					<tr>
+						<th>id</th>
+						<th>Partida</th>
+						<th>Total</th>
+					</tr>
+					</thead>
+					<tbody>
+						{{#each listaPartidasEgresoGrabar as |r|}}
+						<tr>
+							<td data-title="id">
+								<a href="">
+									<div class="text text-danger glyphicon glyphicon-remove" {{action "borrarPartida" r.partida}}></div>
+								</a>
+							</td>
+							<td data-title="Partida">{{r.nombrePartida}}</td>
+							{{#if estatusSolicitudFlag}}
+								<td data-title="Total"><a href="" {{action "modificarCantidad" r}}>{{r.cantidadComas}}<span class="glyphicon glyphicon-pencil"></span></a></td>
+							{{else}}
+								<td data-title="Total">{{r.cantidadComas}}</td>
+							{{/if}}
+						</tr>
+						{{/each}}
+					</tbody>
+					</table>
+				</div>
+				<div class="text-right h5">Total {{totalValorPartidasformated}}</div>
+			</div>
+			<div class="row">
+				{{#if quierover}}
+					{{#if cantidadesIguales}}
+						<div class="btn btn-success" {{action "guardarClasificar"}}>Guardar Solicitud</div>
+					{{/if}}
+				{{/if}}
+				<div class="btn btn-warning" {{action "toggleClasificarForm"}}>Cancelar</div>
+			</div>
+		</div>
+		<div class="col col-md-6">
+			<div class="form-group">
+			<label for="moviform" class="control-label">Movimientos</label>
+			<div class="row">
+				<div class="col-md-5">
+				{{input type="text" value=movimientosForm class="form-control" placeholder="Movimientos" id="moviform"}}
+			</div>
+			</div>
+			</div>
+			<div class="form-group">
+				<label for="idbCentroCosto" class="control-label">Centro de Costo</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedCentroCosto action=(action  (mut selectedCentroCosto)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Escoja Centro Costo{{/x-option}}
+							{{#each centroCostoLista as |item|}}
+								{{#x-option value=item.id}}{{item.descripcion}}{{/x-option}}
+							{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{#if partidaEgresosLista}}
+				<div class="form-group">
+				<label for="idpartida" class="control-label">Partida</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedPartidaEgreso action=(action  (mut selectedPartidaEgreso)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Escoja Partida{{/x-option}}
+							{{#each partidaEgresosLista as |item|}}
+								{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+							{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{/if}}
+				{{#if subpartida1Lista}}
+				<div class="form-group">
+				<label for="idsubpartida1" class="control-label">SubPartida 1</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedsubPartida1 action=(action  (mut selectedsubPartida1)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+							{{#each subpartida1Lista as |item|}}
+								{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+							{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{/if}}
+				{{#if subpartida2Lista}}
+				<div class="form-group">
+				<label for="idsubpartida2" class="control-label">SubPartida 2</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedsubPartida2 action=(action  (mut selectedsubPartida2)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+							{{#each subpartida2Lista as |item|}}
+								{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+							{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{/if}}
+				{{#if subpartida3Lista}}
+				<div class="form-group">
+				<label for="idsubpartida3" class="control-label">SubPartida 3</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedsubPartida3 action=(action  (mut selectedsubPartida3)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+							{{#each subpartida3Lista as |item|}}
+								{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+							{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{/if}}
+				{{#if subpartida4Lista}}
+				<div class="form-group">
+				<label for="idsubpartida4" class="control-label">SubPartida 4</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedsubPartida4 action=(action  (mut selectedsubPartida4)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+							{{#each subpartida4Lista as |item|}}
+								{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+							{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{/if}}
+				{{#if subpartida5Lista}}
+				<div class="form-group">
+				<label for="idsubpartida5" class="control-label">SubPartida 5</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedsubPartida5 action=(action  (mut selectedsubPartida5)) class="form-control form-control-inline"}}
+							{{#x-option value=''}}Escoja SubPartida{{/x-option}}
+							{{#each subpartida5Lista as |item|}}
+								{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+							{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{/if}}
+				<div class="form-group">
+					<label for="movimientoForma" class="control-label">Movimiento</label>
+					<div class="row">
+						<div class="col-md-5">
+							{{#x-select value=selectedMovimientoForma action=(action  (mut selectedMovimientoForma)) class="form-control form-control-inline"}}
+							{{#each listaTipoMovto as |item|}}
+								{{#x-option value=item.value}}{{item.label}}{{/x-option}}
+							{{/each}}
+							{{/x-select}}
+						</div>
+					</div>
+				</div>
+				{{#if banderaUltimaPartidaSeleccionada}}
+					<div class="text text-success">Partida {{valorPartidaEgreso.partida}} {{valorPartidaEgreso.nombrePartida}} <div class="glyphicon glyphicon-ok"></div></div>
+					<div class="form-group">
+						<label for="totalPartida" class="control-label">Total</label>
+						<div>
+							{{input type="number" value=totalPartida class="form-control" placeholder="Total" id="totalPartida"}}
+						</div>
+					</div>
+					{{#if comisionesFlag}}
+						{{#unless IsComisionSolicitud}}
+							<div class="btn btn-success" {{action "totalComisiones"}}>Total de Comisiones</div>
+						{{/unless}}
+					{{/if}}
+				{{/if}}
+				{{#if BanderaAceptarPagoPartida}}
+					<div class="btn btn-info" {{action "guardarPartida"}}>Guardar Partida</div>
+				{{/if}}
 		</div>
 	</div>
 {{/if}}
@@ -231,7 +421,7 @@
 		<tr>
 			<td data-title="Id">
 				{{#unless row.isClasificadoEliminado}}
-						<a href="" {{action "traerRecord" row.id}}>{{row.id}}</a>
+					<a href="" {{action "traerRecord" row.id}}>{{row.id}}</a>
 				{{else}}
 					{{row.id}}
 				{{/unless}}

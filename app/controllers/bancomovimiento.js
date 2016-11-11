@@ -13,6 +13,20 @@ const {
   Logger: { info }
 } = Ember;
 
+function totalValorDePartidas(listaPartidas) {
+  let total = 0;
+  listaPartidas.forEach((item)=> {
+    info('es abnono o cntifsd', item.tipomovto);
+    if (item.tipomovto === 'A') {
+    total += parseFloat(item.cantidad);
+    }
+    else {
+      total -= parseFloat(item.cantidad);
+    }
+    info('entro  dando vueltas en totalValorPartidas', item.cantidad);
+  });
+  return total;
+};
 
 export default Ember.Controller.extend(FormatterMixin, {
   listaRequests: Ember.A(),
@@ -25,6 +39,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   selectedMovimiento: '',
   selectedClasificado: '',
   selectedEliminado: '',
+  selectedMovimientoForma: 'A',
   selectedEmpresa: '',
   nullFechaCapturaInicial: '',
   nullFechaCapturaFinal: '',
@@ -37,16 +52,27 @@ export default Ember.Controller.extend(FormatterMixin, {
   selecteEstatusForma: '',
   cantidadForma: '',
   referenciaForma: '',
+  init() {
+    this._super(...arguments);
+    set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
+    info('viendo en le init el que quiero', get(this, 'listaPartidasEgresoGrabar'));
+  },
 
   observaSelectedEmpresa: observer('selectedEmpresa', function() {
-  	//aqui va la nueva lista
-  	//set(this, 'showNavigation', false);
+    if (get(this, 'listaPartidasEgresoGrabar.length') > 0) {
+      set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
+    }
     if (!isEmpty(get(this, 'selectedEmpresa'))) {
       set(this, 'selectedBancoOrigen', '');
       let empresa = get(this, 'selectedEmpresa');
       this.store.query('bancoorigen', { empresa })
       .then((data)=> {
         set(this, 'bancoOrigenLista', data);
+        this.store.query('centrocosto', { empresa }).then((data2)=> {
+          set(this, 'centroCostoLista', data2);
+        }, (error2)=> {
+          info('trono error2');
+        });
         info('ya paso bacoorigen');
       }, (error)=> {
         info('trono bancoorigen');
@@ -66,6 +92,179 @@ export default Ember.Controller.extend(FormatterMixin, {
         info(' trono');;
       });
       //set(this, 'showBotonAgregar', true);
+    }
+  }),
+  observaSelectedCentroCosto: observer('selectedCentroCosto', function() {
+    // set(this, '')
+    set(this, 'selectedPartidaEgreso', '');
+    set(this, 'selectedsubPartida1', '');
+    set(this, 'selectedsubPartida2', '');
+    set(this, 'selectedsubPartida3', '');
+    set(this, 'selectedsubPartida4', '');
+    set(this, 'selectedsubPartida5', '');
+    set(this, 'subpartida1Lista', null);
+    set(this, 'subpartida2Lista', null);
+    set(this, 'subpartida3Lista', null);
+    set(this, 'subpartida4Lista', null);
+    set(this, 'subpartida5Lista', null);
+    set(this, 'partidaEgresosLista', null);
+    set(this, 'banderaUltimaPartidaSeleccionada', false);
+    set(this, 'valorPartidaEgreso', '');
+    let empresa = get(this, 'selectedEmpresa');
+    let centrocosto = get(this, 'selectedCentroCosto');
+    if (isEmpty(centrocosto)) {
+      info('entro en el isEmpty que quiero');
+      return;
+    }
+    this.store.query('partidaegreso', { empresa, centrocosto })
+    .then((data)=> {
+      set(this, 'partidaEgresosLista', data);
+      info('paso centro costo');
+    }, (error)=> {
+      info('error centro costo');
+    });
+    info('valor de centro costo', centrocosto);
+  }),
+  observaselectedPartidaEgreso: observer('selectedPartidaEgreso', function() {
+    let partida = get(get(this, 'selectedPartidaEgreso'), 'id');
+    let nombrePartida =  get(get(this, 'selectedPartidaEgreso'), 'descripcion');
+    let nivel = 1;
+    let empresa = get(this, 'selectedEmpresa');
+    let centrocosto = get(this, 'selectedCentroCosto');
+    if (isEmpty(partida)) {
+      info('entro en el isEmpty que quiero');
+      return;
+    }
+    set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    .then((data)=> {
+      set(this, 'subpartida1Lista', data);
+      if (get(data, 'length') === 0) {
+        set(this, 'banderaUltimaPartidaSeleccionada', true);
+      } else {
+        set(this, 'banderaUltimaPartidaSeleccionada', false);
+      }
+     /* info('paso observaselectedPartidaEgreso valor de length', get(data, 'length'));
+      if (get(data, 'length') >0) {
+        info('si hay lista');
+      }*/
+    }, (error)=> {
+      info('trono observaselectedPartidaEgreso');
+    });
+    info('en observapartida', partida);
+  }),
+  observaSelectedSubpartida1: observer('selectedsubPartida1', function() {
+    let partida = get(get(this, 'selectedsubPartida1'), 'id');
+    let nombrePartida =  get(get(this, 'selectedsubPartida1'), 'descripcion');
+    let nivel = 2;
+    let empresa = get(this, 'selectedEmpresa');
+    let centrocosto = get(this, 'selectedCentroCosto');
+    if (isEmpty(partida)) {
+      info('entro en el isEmpty que quiero');
+      return;
+    }
+    set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    .then((data)=> {
+      set(this, 'subpartida2Lista', data);
+      info('si paso observaSelectedSubpartida1');
+      if (get(data, 'length') === 0) {
+        set(this, 'banderaUltimaPartidaSeleccionada', true);
+      } else {
+        set(this, 'banderaUltimaPartidaSeleccionada', false);
+      }
+    }, (error)=> {
+      info('error observaSelectedSubpartida1');
+    });
+    info('entro selectedsubPartida1');
+  }),
+  observaSelectedSubpartida2: observer('selectedsubPartida2', function() {
+    let partida = get(get(this, 'selectedsubPartida2'), 'id');
+    let nombrePartida =  get(get(this, 'selectedsubPartida2'), 'descripcion');
+    let nivel = 3;
+    let empresa = get(this, 'selectedEmpresa');
+    let centrocosto = get(this, 'selectedCentroCosto');
+    if (isEmpty(partida)) {
+      info('entro en el isEmpty que quiero');
+      return;
+    }
+    set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    .then((data)=> {
+      set(this, 'subpartida3Lista', data);
+      info('si paso observaSelectedSubpartida2');
+      if (get(data, 'length') === 0) {
+        set(this, 'banderaUltimaPartidaSeleccionada', true);
+      } else {
+        set(this, 'banderaUltimaPartidaSeleccionada', false);
+      }
+    }, (error)=> {
+      info('error observaSelectedSubpartida2');
+    });
+    info('entro selectedsubPartida2');
+  }),
+  observaSelectedSubpartida3: observer('selectedsubPartida3', function() {
+    let partida = get(get(this, 'selectedsubPartida3'), 'id');
+    let nombrePartida =  get(get(this, 'selectedsubPartida3'), 'descripcion');
+    let nivel = 4;
+    let empresa = get(this, 'selectedEmpresa');
+    let centrocosto = get(this, 'selectedCentroCosto');
+    if (isEmpty(partida)) {
+      info('entro en el isEmpty que quiero');
+      return;
+    }
+    set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    .then((data)=> {
+      set(this, 'subpartida4Lista', data);
+      info('si paso observaSelectedSubpartida3');
+      if (get(data, 'length') === 0) {
+        set(this, 'banderaUltimaPartidaSeleccionada', true);
+      } else {
+        set(this, 'banderaUltimaPartidaSeleccionada', false);
+      }
+    }, (error)=> {
+      info('error observaSelectedSubpartida3');
+    });
+    info('entro selectedsubPartida1');
+  }),
+  observaSelectedSubpartida4: observer('selectedsubPartida4', function() {
+    let partida = get(get(this, 'selectedsubPartida4'), 'id');
+    let nombrePartida =  get(get(this, 'selectedsubPartida4'), 'descripcion');
+    let nivel = 5;
+    let empresa = get(this, 'selectedEmpresa');
+    let centrocosto = get(this, 'selectedCentroCosto');
+    if (isEmpty(partida)) {
+      info('entro en el isEmpty que quiero');
+      return;
+    }
+    set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    .then((data)=> {
+      set(this, 'subpartida5Lista', data);
+      info('si paso observaSelectedSubpartida4');
+      if (get(data, 'length') === 0) {
+        set(this, 'banderaUltimaPartidaSeleccionada', true);
+      } else {
+        set(this, 'banderaUltimaPartidaSeleccionada', false);
+      }
+    }, (error)=> {
+      info('error observaSelectedSubpartida4');
+    });
+    info('entro selectedsubPartida4');
+  }),
+  observaSelectedSubpartida4: observer('selectedsubPartida5', function() {
+    let partida = get(get(this, 'selectedsubPartida4'), 'id');
+    let nombrePartida =  get(get(this, 'selectedsubPartida5'), 'descripcion');
+    set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
+  }),
+  BanderaAceptarPagoPartida: computed('totalPartida', {
+    get() {
+      if (isEmpty(get(this, 'totalPartida'))) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }),
   showBotonAgregar: computed('selectedBancoOrigen', 'selectedEmpresa', {
@@ -110,7 +309,99 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     }
   }),
+  cantidadesIguales: computed('totalValorPartidas', {
+    get() {
+      if (get(this, 'movimientoRecord.cantidad') === get(this, 'totalValorPartidas')) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }),
+  quierover: computed.gt('listaPartidasEgresoGrabar.length', 0),
   actions: {
+    guardarClasificar() {
+      this.store.find('gxingresodetallereset', get(this, 'movimientoRecord.id'))
+      .then((data)=> {
+        info('si se hizo reset movimiento', get(this, 'movimientoRecord.id'));
+        let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
+        let idreferenciamovto = get(this, 'movimientoRecord.id')
+        let movimientos = !isEmpty(get(this, 'movimientosForm')) ? get(this, 'movimientosForm') : 0 ;
+        partidasGuardar.forEach((item, i)=> {
+          let { centrocostoid, partida, subpartida1,
+            subpartida2, subpartida3, subpartida4,
+            subpartida5, cantidad, tipomovto} = getProperties(item, `centrocostoid partida subpartida1 subpartida2 
+              subpartida3 subpartida4 subpartida5 cantidad tipomovto`.w());
+          let record2 = this.store.createRecord('gxingresodetalle', {
+            idreferenciamovto, centrocostoid, partida, subpartida1, subpartida2, subpartida3, subpartida4, subpartida5, cantidad, tipomovto, movimientos, idreferenciamovto
+          });
+          record2.save().then(()=> {
+            info('se grabo partida', i);
+            // this.send('toggleClasificarForm');
+          }, (error)=> {
+            info('error grabar partida');
+          });
+        });
+        this.send('pedir');
+        });
+    },
+    borrarPartida(id) {
+      info('queriendo borrar partida', id);
+      let objeto = get(this, 'listaPartidasEgresoGrabar').findBy('partida', id);
+      info('valor de objeto en quitar', objeto);
+      get(this, 'listaPartidasEgresoGrabar').removeObject(objeto);
+      let total = totalValorDePartidas(get(this, 'listaPartidasEgresoGrabar'));
+      set(this, 'totalValorPartidas', total);
+      set(this, 'totalValorPartidasformated', this.formatter(total));
+    },
+    guardarPartida() {
+      let partidaObjeto = get(this, 'valorPartidaEgreso');
+      let partidaId = get(partidaObjeto, 'partidaID');
+      let buscarDuplicado = get(this, 'listaPartidasEgresoGrabar').findBy('partidaID', partidaId);
+      if (!isEmpty(buscarDuplicado)) {
+        info('no existe va a brahar');
+        info('valor de buscarDuplicado', buscarDuplicado);
+        set(this, 'errorTitle', 'Partida Duplicada');
+        set(this, 'errorMsg', 'No se Puede Guardar 2 veces la misma partida en la misma solicitud');
+        set(this, 'errorModal', true);
+      } else {
+        // partida.total = get(this, 'totalPartida');
+        partidaObjeto.centrocostoid = parseInt(get(this, 'selectedCentroCosto'));
+        partidaObjeto.partida = parseInt(get(this, 'selectedPartidaEgreso.id'));
+        partidaObjeto.subpartida1 = isEmpty(get(this, 'selectedsubPartida1.id')) !== true ? parseInt(get(this, 'selectedsubPartida1.id')) : -1;
+        partidaObjeto.subpartida2 = isEmpty(get(this, 'selectedsubPartida2.id')) !== true ? parseInt(get(this, 'selectedsubPartida2.id')) : -1;
+        partidaObjeto.subpartida3 = isEmpty(get(this, 'selectedsubPartida3.id')) !== true ? parseInt(get(this, 'selectedsubPartida3.id')) : -1;
+        partidaObjeto.subpartida4 = isEmpty(get(this, 'selectedsubPartida4.id')) !== true ? parseInt(get(this, 'selectedsubPartida4.id')) : -1;
+        partidaObjeto.subpartida5 = isEmpty(get(this, 'selectedsubPartida5.id')) !== true ? parseInt(get(this, 'selectedsubPartida5.id')) : -1;
+        partidaObjeto.tipomovto = get(this, 'selectedMovimientoForma');
+        partidaObjeto.cantidad = get(this, 'totalPartida');
+        partidaObjeto.cantidadComas = this.formatter(get(this, 'totalPartida'));
+        get(this, 'listaPartidasEgresoGrabar').pushObject(partidaObjeto);
+        info('valor del objeto agregado', partidaObjeto);
+        set(this, 'selectedTipoForma', 'A');
+        info('entrando en guardarPartida', get(this, 'listaPartidasEgresoGrabar'));
+        let total = totalValorDePartidas(get(this, 'listaPartidasEgresoGrabar'));
+        set(this, 'totalValorPartidas', total);
+        set(this, 'totalValorPartidasformated', this.formatter(total));
+        set(this, 'selectedCentroCosto', '');
+        set(this, 'totalPartida', '');
+      }
+    },
+    grabarCantidad() {
+      info('grabo la cantidad');
+      let record = get(this, 'partidaEditarRecord');
+      set(record, 'cantidad', get(this, 'valorEditarCantidad'));
+      set(record, 'cantidadComas', this.formatter(get(this, 'valorEditarCantidad')));
+      set(this, 'modalModificarCantidad', false);
+      let total = totalValorDePartidas(get(this, 'listaPartidasEgresoGrabar'));
+      set(this, 'totalValorPartidas', total);
+      set(this, 'totalValorPartidasformated', this.formatter(total));
+    },
+    toggleClasificarForm() {
+      this.toggleProperty('formaClasificar');
+      set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
+      set(this, 'movimientosForm', '');
+    },
     editRecord(r) {
       set(this, 'formaActionMovimiento', false);
       set(this, 'formaMovimiento', true);
@@ -181,6 +472,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'selectedEstatusForma', 'F');
     },
     traerRecord(movimientoid) {
+      set(this, 'formaClasificar', false);
       this.store.find('gxbancomovimiento', movimientoid)
       .then((data)=> {
         set(this, 'movimientoRecord', data);

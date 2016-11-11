@@ -30,4 +30,13 @@ export default DS.Model.extend(FormatterMixin,{
   	  }
   	}
   }),
+  isAbono: computed('tipo', {
+    get() {
+      if (get(this, 'tipo') === 'A') {
+        return true;
+      } else {
+        return false
+      }
+    }
+  })
 });
