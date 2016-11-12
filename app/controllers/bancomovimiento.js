@@ -320,6 +320,42 @@ export default Ember.Controller.extend(FormatterMixin, {
   }),
   quierover: computed.gt('listaPartidasEgresoGrabar.length', 0),
   actions: {
+    coinciliarMovimiento() {
+      let solicitudes = []
+      let movimientobanco = get(get(this, 'movimientoRecord'), 'id');
+      get(this, 'listaSolicitudesFondear').forEach((item)=> {
+        if (get(item, 'seleccionado')) {
+          solicitudes.push(get(item, 'id'));
+        }
+      });
+      info('valor de a', solicitudes.join());
+      info('valor de banco', movimientobanco);
+    },
+    cancelarCoinciliarMovimiento() {
+      set(this, 'formaCoinciliar', false);
+    },
+    quitarSolicitud(r) {
+      set(r, 'seleccionado', false);
+    },
+    agregarSolicitud(r) {
+      set(r, 'seleccionado', true);
+    },
+    toggleCoinciliarForm() {
+      this.toggleProperty('formaCoinciliar');
+      info('en boton coinciliar');
+      let estatus = 6;
+      let empresa = get(this, 'selectedEmpresa');
+      let idbancoorigen = get(this, 'selectedBancoOrigen');
+      set(this, 'listaSolicitudesFondear', Ember.A());
+      this.store.query('gxsolicitudcheque', { empresa, estatus, idbancoorigen})
+      .then((data)=> {
+        data.setEach('seleccionado', false);
+        set(this, 'listaSolicitudesFondear', data);
+        info('si llego')
+      },(error)=> {
+        info('trono');
+      });
+    },
     guardarClasificar() {
       this.store.find('gxingresodetallereset', get(this, 'movimientoRecord.id'))
       .then((data)=> {
@@ -472,6 +508,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'selectedEstatusForma', 'F');
     },
     traerRecord(movimientoid) {
+      set(this, 'formaCoinciliar', false);
       set(this, 'formaClasificar', false);
       this.store.find('gxbancomovimiento', movimientoid)
       .then((data)=> {

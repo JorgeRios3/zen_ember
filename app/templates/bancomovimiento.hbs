@@ -197,11 +197,51 @@
 				{{#if clasificar}}
 					<div class="btn btn-success"{{action "toggleClasificarForm"}}>Clasificar</div>
 				{{/if}}
+				{{else}}
+					{{#if clasificar}}
+					<div class="btn btn-success"{{action "toggleCoinciliarForm"}}>Coinciliar</div>
+					{{/if}}
 			{{/if}}
 			<div class="btn btn-danger" {{action "deleteRecord" movimientoRecord}}>Eliminar</div>
 			<div class="btn btn-warning" {{action "backRecord" movimientoRecord}}>Volver</div>
 		</div>
 	</div>
+{{/if}}
+{{#if formaCoinciliar}}
+				<div id="no-more-tables">
+					<table class="table table-bordered table-striped table-condensed cf">
+					<thead>
+					<tr>
+						<th>Sel</th>
+						<th>id</th>
+						<th>Beneficiario</th>
+						<th>Cantidad</th>
+						<th>Estatus</th>
+					</tr>
+					</thead>
+					<tbody>
+						{{#each listaSolicitudesFondear as |r|}}
+						<tr>
+							<td data-title="Sel">
+							{{#if r.seleccionado}}
+								<div class="btn btn-warning" {{action "quitarSolicitud" r}}>Quitar</div>
+								{{else}}
+								<div class="btn btn-info" {{action "agregarSolicitud" r}}>Seleccionar</div>
+								{{/if}}
+							</td>
+							<td data-title="id">{{r.id}}</td>
+							<td data-title="Beneficiario">{{r.nombredefinitivo}}</td>
+							<td data-title="Cantidad">{{r.cantidad}}</td>
+							<td data-title="Fstatus">{{r.estatus}}</td>
+						</tr>
+						{{/each}}
+					</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<div class="btn btn-success" {{action "coinciliarMovimiento"}}>Conciliar</div>
+					<div class="btn btn-warning" {{action "cancelarCoinciliarMovimiento"}}>Cancelar</div>
+				</div>
 {{/if}}
 {{#if formaClasificar}}
 	<div class="row">
