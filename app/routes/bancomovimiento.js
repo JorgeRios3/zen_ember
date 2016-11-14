@@ -12,7 +12,7 @@ const {
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin , {
   beforeModel2() {
-    let clasificar = get(this, 'features.clasificar');
+    let clasificar = get(this, 'features.clasificarycoinciliar');
     let c = this.controllerFor(this.routeName);
     c.setProperties({
       clasificar,
@@ -41,7 +41,9 @@ RouteAuthMixin , {
       formaActionMovimiento: false,
       formaClasificar: false,
       movimientosForm: '',
-      selectedMovimientoForma: 'A'
+      formaCoinciliar: false,
+      selectedMovimientoForma: 'A',
+      botonCoinciliarFlag: false
     });
   },
   setupController(ctrl, model) {
