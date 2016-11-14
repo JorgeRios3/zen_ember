@@ -239,7 +239,9 @@
 					</table>
 				</div>
 				<div class="row">
+					{{#if botonCoinciliarFlag}}
 					<div class="btn btn-success" {{action "coinciliarMovimiento"}}>Conciliar</div>
+					{{/if}}
 					<div class="btn btn-warning" {{action "cancelarCoinciliarMovimiento"}}>Cancelar</div>
 				</div>
 {{/if}}
@@ -280,7 +282,7 @@
 			<div class="row">
 				{{#if quierover}}
 					{{#if cantidadesIguales}}
-						<div class="btn btn-success" {{action "guardarClasificar"}}>Guardar Solicitud</div>
+						<div class="btn btn-success" {{action "guardarClasificar"}}>Guardar Clasificacion</div>
 					{{/if}}
 				{{/if}}
 				<div class="btn btn-warning" {{action "toggleClasificarForm"}}>Cancelar</div>

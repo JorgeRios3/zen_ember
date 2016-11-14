@@ -901,6 +901,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       .then((item)=> {
         set(this, 'recordSolicitudMaestro', item);
         set(this, 'selectedBeneficiario', get(item, 'idbeneficiario'));
+        set(this, 'fechaprogramada', get(item, 'fechaprogramada'));
         if (get(this, 'contaFlag')) {
           set(this, 'listaEstatusPerfil', [{ 'id': 2, 'label': 'Solicitud', 'estatus': 'S' },
           { 'id': 3, 'label': 'Revisado', 'estatus': 'R' }, { 'id': 4, 'label': 'Autorizado', 'estatus': 'A' },
@@ -928,7 +929,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         let lista = Ember.A();
         lista.pushObject(objetoEstatus);
         set(this, 'selectedEstatus', idEstatus);
-        set(this, 'estatusSolicitudFlag', estatus === 'S' ? true : false);
+        set(this, 'estatusSolicitudFlag', 'SRA'.includes(estatus));
         get(this, 'listaEstatusPerfil').forEach((item, i)=> {
           if (estatusEncontrado) {
             lista.pushObject(item);

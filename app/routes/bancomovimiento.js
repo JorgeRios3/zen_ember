@@ -42,7 +42,8 @@ RouteAuthMixin , {
       formaClasificar: false,
       movimientosForm: '',
       formaCoinciliar: false,
-      selectedMovimientoForma: 'A'
+      selectedMovimientoForma: 'A',
+      botonCoinciliarFlag: false
     });
   },
   setupController(ctrl, model) {
