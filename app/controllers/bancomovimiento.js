@@ -18,9 +18,8 @@ function totalValorDePartidas(listaPartidas) {
   listaPartidas.forEach((item)=> {
     info('es abnono o cntifsd', item.tipomovto);
     if (item.tipomovto === 'A') {
-    total += parseFloat(item.cantidad);
-    }
-    else {
+      total += parseFloat(item.cantidad);
+    } else {
       total -= parseFloat(item.cantidad);
     }
     info('entro  dando vueltas en totalValorPartidas', item.cantidad);
@@ -34,12 +33,12 @@ export default Ember.Controller.extend(FormatterMixin, {
   resultPages: '',
   requestedPage: '',
   formaMovimiento: false,
-  //showBotonAgregar: false,
   selectedBancoOrigen: '',
   selectedMovimiento: '',
   selectedClasificado: '',
   selectedEliminado: '',
   selectedMovimientoForma: 'A',
+  selectedSolicitud: 1,
   selectedEmpresa: '',
   nullFechaCapturaInicial: '',
   nullFechaCapturaFinal: '',
@@ -47,6 +46,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   listaTipoMovto: [{ 'id': 1, 'label': 'Abono', 'value': 'A' }, { 'id': 2, 'label': 'Cargo', 'value': 'C' }],
   listaClasificado: [{ 'id': 1, 'label': 'Si', 'value': 'S' }, { 'id': 2, 'label': 'No', 'value': 'N' }],
   listaEliminado: [{ 'id': 1, 'label': 'Si', 'value': 'S' }, { 'id': 2, 'label': 'No', 'value': 'N' }],
+  listaSolicitud: [{ 'id': 1, 'label': 'Solicitud', 'value': 'F' }, { 'id': 2, 'label': 'Otro Egreso', 'value': 'P' }],
   selectedTipoForma: '',
   fechaForma: '',
   selecteEstatusForma: '',
@@ -80,7 +80,7 @@ export default Ember.Controller.extend(FormatterMixin, {
     }
   }),
   observaSelectedBancoOrigen: observer('selectedBancoOrigen', function() {
-  	//set(this, 'showBotonAgregar', false);
+    // set(this, 'showBotonAgregar', false);
     if (!isEmpty(get(this, 'selectedBancoOrigen'))) {
       this.store.query('gxbancosaldo', { banco: get(this, 'selectedBancoOrigen') })
       .then((data)=> {
@@ -88,10 +88,10 @@ export default Ember.Controller.extend(FormatterMixin, {
           info('data', get(item, 'saldo'));
           set(this, 'saldoBanco', get(item, 'saldo'));
         });
-      },(error)=> {
+      }, (error)=> {
         info(' trono');;
       });
-      //set(this, 'showBotonAgregar', true);
+      // set(this, 'showBotonAgregar', true);
     }
   }),
   observaSelectedCentroCosto: observer('selectedCentroCosto', function() {
@@ -272,7 +272,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       if (!isEmpty(get(this, 'selectedBancoOrigen')) && !isEmpty(get(this, 'selectedEmpresa'))) {
         return true;
       } else {
-      	return false;
+        return false;
       }
     }
   }),
@@ -318,14 +318,14 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     }
   }),
-  CantidadesIgualesCoinciliar: observer ('solicitudesSeleccionaFlag', function() {
+  CantidadesIgualesCoinciliar: observer('solicitudesSeleccionaFlag', function() {
     let total = 0;
     let movimientoCantidad = get(this, 'movimientoRecord.cantidad');
     get(this, 'listaSolicitudesFondear').forEach((item)=> {
       if (get(item, 'seleccionado')) {
         total += get(item, 'cantidad');
       }
-      if (parseFloat(total) === parseFloat(movimientoCantidad)){
+      if (parseFloat(total) === parseFloat(movimientoCantidad)) {
         set(this, 'botonCoinciliarFlag', true);
       } else {
         set(this, 'botonCoinciliarFlag', false);
@@ -337,7 +337,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   quierover: computed.gt('listaPartidasEgresoGrabar.length', 0),
   actions: {
     coinciliarMovimiento() {
-      let solicitudesLista = []
+      let solicitudesLista = [];
       let idreferenciamovto = get(get(this, 'movimientoRecord'), 'id');
       get(this, 'listaSolicitudesFondear').forEach((item)=> {
         if (get(item, 'seleccionado')) {
@@ -347,16 +347,17 @@ export default Ember.Controller.extend(FormatterMixin, {
       info('valor de a', solicitudesLista.join());
       info('idmovimiento', idreferenciamovto);
       let solicitudes = solicitudesLista.join();
-      let record = this.store.createRecord('gxconciliacion', { solicitudes, idreferenciamovto })
+      let record = this.store.createRecord('gxconciliacion', { solicitudes, idreferenciamovto });
       record.save()
       .then((data)=> {
         info('se coincilio bien el movimiento');
         set(this, 'formaCoinciliar', false);
         set(this, 'formaActionMovimiento', false);
+        set(this, 'listaRequests', Ember.A());
         this.send('pedir');
       }, (error)=> {
         info('no se coincilio bien el movimiento');
-      })
+      });
     },
     cancelarCoinciliarMovimiento() {
       set(this, 'formaCoinciliar', false);
@@ -373,16 +374,23 @@ export default Ember.Controller.extend(FormatterMixin, {
       this.toggleProperty('formaCoinciliar');
       set(this, 'botonCoinciliarFlag', false);
       info('en boton coinciliar');
-      let estatus = 6;
-      let empresa = get(this, 'selectedEmpresa');
-      let idbancoorigen = get(this, 'selectedBancoOrigen');
+      let objeto = {};
+      if (get(this, 'selectedSolicitud') === 'P') {
+        objeto.estatus = 13;
+        objeto.idreferenciamovto = 0;
+      } else {
+        objeto.estatus = 6;
+      }
+      objeto.empresa = get(this, 'selectedEmpresa');
+      objeto.idbancoorigen = get(this, 'selectedBancoOrigen');
       set(this, 'listaSolicitudesFondear', Ember.A());
-      this.store.query('gxsolicitudcheque', { empresa, estatus, idbancoorigen})
+      this.store.unloadAll('gxsolicitudcheque');
+      this.store.query('gxsolicitudcheque', objeto)
       .then((data)=> {
         data.setEach('seleccionado', false);
         set(this, 'listaSolicitudesFondear', data);
-        info('si llego')
-      },(error)=> {
+        info('si llego');
+      }, (error)=> {
         info('trono');
       });
     },
@@ -391,12 +399,12 @@ export default Ember.Controller.extend(FormatterMixin, {
       .then((data)=> {
         info('si se hizo reset movimiento', get(this, 'movimientoRecord.id'));
         let partidasGuardar = get(this, 'listaPartidasEgresoGrabar');
-        let idreferenciamovto = get(this, 'movimientoRecord.id')
-        let movimientos = !isEmpty(get(this, 'movimientosForm')) ? get(this, 'movimientosForm') : 0 ;
+        let idreferenciamovto = get(this, 'movimientoRecord.id');
+        let movimientos = !isEmpty(get(this, 'movimientosForm')) ? get(this, 'movimientosForm') : 0;
         partidasGuardar.forEach((item, i)=> {
           let { centrocostoid, partida, subpartida1,
             subpartida2, subpartida3, subpartida4,
-            subpartida5, cantidad, tipomovto} = getProperties(item, `centrocostoid partida subpartida1 subpartida2 
+            subpartida5, cantidad, tipomovto } = getProperties(item, `centrocostoid partida subpartida1 subpartida2
               subpartida3 subpartida4 subpartida5 cantidad tipomovto`.w());
           let record2 = this.store.createRecord('gxingresodetalle', {
             idreferenciamovto, centrocostoid, partida, subpartida1, subpartida2, subpartida3, subpartida4, subpartida5, cantidad, tipomovto, movimientos, idreferenciamovto
@@ -409,7 +417,7 @@ export default Ember.Controller.extend(FormatterMixin, {
           });
         });
         this.send('pedir');
-        });
+      });
     },
     borrarPartida(id) {
       info('queriendo borrar partida', id);
@@ -471,8 +479,6 @@ export default Ember.Controller.extend(FormatterMixin, {
     editRecord(r) {
       set(this, 'formaActionMovimiento', false);
       set(this, 'formaMovimiento', true);
-      //set(this, 'selectedEmpresa', get(r, 'empresa'));
-      //set(this, 'selectedBancoOrigen');
       set(this, 'nullFechaCapturaInicialForma', get(r, 'fecha'));
       set(this, 'fechaForma', get(r, 'fecha'));
       set(this, 'selectedTipoForma', get(r, 'tipo'));
@@ -484,11 +490,11 @@ export default Ember.Controller.extend(FormatterMixin, {
       let record = r;
       record.deleteRecord();
       record.save().then(()=> {
-      set(this, 'listaRequests', Ember.A());
-      this.send('pedir');
-      this.send('pedirSaldo', false);
-      set(this, 'formaActionMovimiento', false);
-      info('se borro registro');  
+        set(this, 'listaRequests', Ember.A());
+        this.send('pedir');
+        this.send('pedirSaldo', false);
+        set(this, 'formaActionMovimiento', false);
+        info('se borro registro');
       });
     },
     backRecord(r) {
@@ -509,7 +515,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       let cantidad = get(this, 'cantidadForma');
       let referencia = get(this, 'referenciaForma');
       let estatus = get(this, 'selectedEstatusForma');
-      let record = get(this, 'movimientoRecord')
+      let record = get(this, 'movimientoRecord');
       record.setProperties({
         empresa, banco, fecha, tipo, cantidad, referencia, estatus
       });
@@ -522,7 +528,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         info('ya lo actualizo');
       }, (error)=> {
         info('fallo actualizar');
-      })
+      });
       info('valores', empresa, banco, fecha, tipo, cantidad, referencia, estatus);
     },
     limpiarCamposForma() {
@@ -546,7 +552,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         set(this, 'formaActionMovimiento', true);
 
         set(this, 'formaMovimiento', false);
-      },(error)=> {
+      }, (error)=> {
         info('trono');
       });
     },
@@ -570,38 +576,38 @@ export default Ember.Controller.extend(FormatterMixin, {
         this.send('pedirSaldo', false);
         this.send('pedir');
         this.send('limpiarCamposForma');
-      },(error)=> {
+      }, (error)=> {
         info('error no se actualizo');
       });
     },
-  	toggleFormaMovimiento() {
-  	  this.toggleProperty('formaMovimiento');
+    toggleFormaMovimiento() {
+      this.toggleProperty('formaMovimiento');
       set(this, 'movimientoRecord', null);
       this.send('limpiarCamposForma');
       set(this, 'formaActionMovimiento', false);
-  	},
-  	pedirSaldo(r) {
+    },
+    pedirSaldo(r) {
       let objeto = {};
       objeto.banco = get(this, 'selectedBancoOrigen');
       if (r) {
         objeto.reconstruir = 1;
       }
-  	  this.store.query('gxbancosaldo',  objeto )
+      this.store.query('gxbancosaldo',  objeto)
   	  .then((data)=> {
-        data.forEach((item)=> {
-          info('data', get(item, 'saldo'));
-          set(this, 'saldoBanco', get(item, 'saldo'));
-        });
-  	  }, (error)=> {
-  	  	info('no llego');
-  	  });
-  	},
-  	pedir() {
-  	  let listaRequests = get(this, 'listaRequests');
+    data.forEach((item)=> {
+      info('data', get(item, 'saldo'));
+      set(this, 'saldoBanco', get(item, 'saldo'));
+    });
+  }, (error)=> {
+    info('no llego');
+  });
+    },
+    pedir() {
+      let listaRequests = get(this, 'listaRequests');
       this.store.unloadAll('gxbancomovimiento');
       this.store.unloadAll('gxsolicitudcheque');
       this.store.unloadAll('gxconciliacion');
-      //this.store.unloadAll('gxbancomovimiento');
+      // this.store.unloadAll('gxbancomovimiento');
       let objeto = {};
       let estatus = get(this, 'selectedEstatus');
       let empresa = get(this, 'selectedEmpresa');
@@ -624,7 +630,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         objeto.empresa = empresa;
       }
       if (banco) {
-        objeto.banco = banco
+        objeto.banco = banco;
       }
       if (estatus) {
         objeto.estatus = estatus;
@@ -633,10 +639,10 @@ export default Ember.Controller.extend(FormatterMixin, {
         objeto.page = get(this, 'requestedPage');
       }
       if (tipo) {
-      	objeto.tipo = tipo;
+        objeto.tipo = tipo;
       }
       if (clasificado) {
-      	objeto.clasificado = clasificado;
+        objeto.clasificado = clasificado;
       }
       if (eliminado) {
         objeto.eliminado = eliminado;
@@ -689,11 +695,10 @@ export default Ember.Controller.extend(FormatterMixin, {
       }, (error)=> {
         info('trono');
       });
-
-  	},
-  	buscarMovimientos() {
-  	  this.send('pedir');
-  	},
+    },
+    buscarMovimientos() {
+      this.send('pedir');
+    },
     mostrarPagPrevia() {
       let nextPage = parseInt(get(this, 'resultPage'));
       nextPage = nextPage - 1;

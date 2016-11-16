@@ -27,6 +27,18 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label for="SolicitudLista" class="control-label">Tipo de Solicitud</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedSolicitud action=(action  (mut selectedSolicitud)) class="form-control form-control-inline"}}
+				{{#each listaSolicitud as |item|}}
+					{{#x-option value=item.value}}{{item.label}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
 		<label for="EmpresasLista" class="control-label">Estatus</label>
 		<div class="row">
 			<div class="col-md-5">

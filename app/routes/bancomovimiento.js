@@ -31,7 +31,7 @@ RouteAuthMixin , {
       bancoOrigenLista: null,
       movimientosLista: null,
       formaMovimiento: false,
-      //showBotonAgregar: false
+      // showBotonAgregar: false
       // forma
       selectedTipoForma: 'A',
       fechaForma: '',
@@ -43,7 +43,8 @@ RouteAuthMixin , {
       movimientosForm: '',
       formaCoinciliar: false,
       selectedMovimientoForma: 'A',
-      botonCoinciliarFlag: false
+      botonCoinciliarFlag: false,
+      selectedSolicitud: 1,
     });
   },
   setupController(ctrl, model) {
@@ -51,9 +52,9 @@ RouteAuthMixin , {
     set(ctrl, 'empresasLista', empresas);
   },
   model() {
-  	return hash({
-  	  empresas: this.store.findAll('empresasolicitud')
-  	});
+    return hash({
+      empresas: this.store.findAll('empresasolicitud')
+    });
   }
 
 });

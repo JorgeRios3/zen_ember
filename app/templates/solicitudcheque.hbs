@@ -190,9 +190,6 @@
 					<td data-title="Solicitud">
 						<a href="" {{action "levantaDesenlceSolicitud" row.id row.nombreReal}}>{{row.id}}</a>
 						<br> <a href="" {{action "detalleBlog" row.id row.estatus}}><span class="text text-success glyphicon glyphicon-tasks"></span></a>
-						{{#if row.esCancelable}}
-						<br> <a href="" {{action "CancelarEgreso" row.id}}><span class="text text-warning glyphicon glyphicon-remove"></span></a>
-						{{/if}}
 					</td>
 					<td data-title="Fecha Captura">{{row.fechacaptura}}</td>
 					<td data-title="Fecha Programada">{{row.fechaprogramada}}</td>
