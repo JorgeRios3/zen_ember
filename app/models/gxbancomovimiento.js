@@ -5,7 +5,7 @@ const {
   get
 } = Ember;
 
-export default DS.Model.extend(FormatterMixin,{
+export default DS.Model.extend(FormatterMixin, {
   fecha: DS.attr('string'),
   nombrebanco: DS.attr('string'),
   cantidad: DS.attr('number'),
