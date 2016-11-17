@@ -221,7 +221,12 @@ export default Ember.Controller.extend(FormatterMixin,
       showName: '',
       showCuenta: '',
       showData: '',
-      cuantos: ''
+      cuantos: '',
+      manzanasEtapaLista: null,
+      numerosExteriores: null,
+      numerosInteriores: null,
+      inmueblesManzana: null,
+      isDepartamento: false
     });
     info('aqui ando en observacion');
     let isArcadia = get(this, 'isArcadia');
@@ -489,7 +494,11 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'cuantos', 0);
       this.store.unloadAll('clientesconcuentanosaldada');
       set(this, 'nombre', '');
-      set(this, 'isDepartamento', get(item, 'departamento'));
+      if (company !== true) {
+        set(this, 'isDepartamento', get(item, 'departamento'));
+      } else {
+        set(this, 'isDepartamento', false);
+      }
       this.store.query('inmueblesconcuenta', objeto)
       .then((data)=> {
         info('si llego inmueblesconcuenta');

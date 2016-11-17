@@ -88,7 +88,11 @@
 
 {{else}}
 	<div class="form-group">
-		<label for="inmueble" class="control-label">Inmueble</label>
+		{{#if isArcadia}}
+			<label for="inmueble" class="control-label">Lote</label>
+		{{else}}
+			<label for="inmueble" class="control-label">Inmueble</label>
+		{{/if}}
 		<div class="row">
 			<div class="col-md-5">
 				{{#x-select value=inmuebleSelected action=(action  (mut inmuebleSelected)) class="form-control form-control-inline"}}
