@@ -600,7 +600,7 @@ export default Ember.Controller.extend(FormatterMixin, {
           return;
         }
       }
-      let fechacaptura = get(this, 'fechacaptura');
+      let fechacaptura = get(r, 'fechacaptura');
       let tipoprogramacion = get(this, 'selectedProgramacion');
       let devolucion = get(this, 'isCliente') === true ? 'S' : 'N';
       let cantidad = get(this, 'totalValorPartidas');

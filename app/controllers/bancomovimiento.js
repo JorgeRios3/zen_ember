@@ -68,7 +68,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       this.store.query('bancoorigen', { empresa })
       .then((data)=> {
         set(this, 'bancoOrigenLista', data);
-        this.store.query('centrocosto', { empresa }).then((data2)=> {
+        this.store.query('centrocosto', { empresa, naturaleza: 1}).then((data2)=> {
           set(this, 'centroCostoLista', data2);
         }, (error2)=> {
           info('trono error2');
@@ -116,7 +116,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       info('entro en el isEmpty que quiero');
       return;
     }
-    this.store.query('partidaegreso', { empresa, centrocosto })
+    this.store.query('partidaegreso', { empresa, centrocosto, naturaleza: 1 })
     .then((data)=> {
       set(this, 'partidaEgresosLista', data);
       info('paso centro costo');
@@ -136,7 +136,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       return;
     }
     set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
-    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto, naturaleza: 1 })
     .then((data)=> {
       set(this, 'subpartida1Lista', data);
       if (get(data, 'length') === 0) {
@@ -164,7 +164,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       return;
     }
     set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
-    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto, naturaleza: 1 })
     .then((data)=> {
       set(this, 'subpartida2Lista', data);
       info('si paso observaSelectedSubpartida1');
@@ -189,7 +189,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       return;
     }
     set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
-    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto, naturaleza: 1 })
     .then((data)=> {
       set(this, 'subpartida3Lista', data);
       info('si paso observaSelectedSubpartida2');
@@ -214,7 +214,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       return;
     }
     set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
-    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto, naturaleza:1 })
     .then((data)=> {
       set(this, 'subpartida4Lista', data);
       info('si paso observaSelectedSubpartida3');
@@ -239,7 +239,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       return;
     }
     set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
-    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto })
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto, naturaleza: 1 })
     .then((data)=> {
       set(this, 'subpartida5Lista', data);
       info('si paso observaSelectedSubpartida4');
