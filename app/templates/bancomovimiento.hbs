@@ -219,43 +219,58 @@
 		</div>
 	</div>
 {{/if}}
+
 {{#if formaCoinciliar}}
-				<div id="no-more-tables">
-					<table class="table table-bordered table-striped table-condensed cf">
-					<thead>
-					<tr>
-						<th>Sel</th>
-						<th>id</th>
-						<th>Beneficiario</th>
-						<th>Cantidad</th>
-						<th>Estatus</th>
-					</tr>
-					</thead>
-					<tbody>
-						{{#each listaSolicitudesFondear as |r|}}
-						<tr>
-							<td data-title="Sel">
-							{{#if r.seleccionado}}
-								<div class="btn btn-warning" {{action "quitarSolicitud" r}}>Quitar</div>
-								{{else}}
-								<div class="btn btn-info" {{action "agregarSolicitud" r}}>Seleccionar</div>
-								{{/if}}
-							</td>
-							<td data-title="id">{{r.id}}</td>
-							<td data-title="Beneficiario">{{r.nombredefinitivo}}</td>
-							<td data-title="Cantidad">{{r.cantidad}}</td>
-							<td data-title="Fstatus">{{r.estatus}}</td>
-						</tr>
-						{{/each}}
-					</tbody>
-					</table>
-				</div>
-				<div class="row">
-					{{#if botonCoinciliarFlag}}
-					<div class="btn btn-success" {{action "coinciliarMovimiento"}}>Conciliar</div>
+	{{#if showNavigationSolicitudes}}
+		<div class="row">
+		<h4 class="text text-danger">Bloque {{resultPageSolicitudes}} de {{resultPagesSolicitudes}} ( Total a mostrar {{resulCuantos}} )</h4>
+		{{#if hayPagPreviasSolicitudes}}
+			<button class="btn btn-primary" {{action 'mostrarPagPreviaSolicitudes'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
+		{{/if}}
+		{{#if hayPagSiguientesSolicitudes}}
+			<button class="btn btn-primary" {{action 'mostrarPagSiguienteSolicitudes'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+		{{/if}}
+		</div>
+	{{/if}}
+	<br>
+	<div id="no-more-tables">
+		<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Sel</th>
+			<th>id</th>
+			<th>Beneficiario</th>
+			<th>Cantidad</th>
+			<th>Estatus</th>
+			<th>Fecha Programada</th>
+		</tr>
+		</thead>
+		<tbody>
+			{{#each listaSolicitudesFondear as |r|}}
+			<tr>
+				<td data-title="Sel">
+				{{#if r.seleccionado}}
+					<div class="btn btn-warning" {{action "quitarSolicitud" r}}>Quitar</div>
+					{{else}}
+					<div class="btn btn-info" {{action "agregarSolicitud" r}}>Seleccionar</div>
 					{{/if}}
-					<div class="btn btn-warning" {{action "cancelarCoinciliarMovimiento"}}>Cancelar</div>
-				</div>
+				</td>
+				<td data-title="id">{{r.id}}</td>
+				<td data-title="Beneficiario">{{r.nombredefinitivo}}</td>
+				<td data-title="Cantidad">{{r.cantidadComas}}</td>
+				<td data-title="Estatus">{{r.estatus}}</td>
+				<td data-title="Fecha Programada">{{r.fechaprogramada}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		</table>
+	</div>
+	<div class="row">
+		{{#if botonCoinciliarFlag}}
+		<div class="btn btn-success" {{action "coinciliarMovimiento"}}>Conciliar</div>
+		{{/if}}
+		<div class="btn btn-warning" {{action "cancelarCoinciliarMovimiento"}}>Cancelar</div>
+	</div>
 {{/if}}
 {{#if formaClasificar}}
 	<div class="row">
@@ -456,6 +471,8 @@
 	{{/if}}
 </div>
 {{/if}}
+<br>
+<div class="h4 text text-info">Total Cargos {{totalCargos}}, Total Abonos {{totalAbonos}}</div>
 <div id="no-more-tables">
 <br>
 	<table class="table table-bordered table-striped table-condensed cf">
