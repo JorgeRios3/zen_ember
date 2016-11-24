@@ -52,6 +52,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   selecteEstatusForma: '',
   cantidadForma: '',
   referenciaForma: '',
+  listaSolicitudesSeleccionadas: Ember.A(),
   init() {
     this._super(...arguments);
     set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
@@ -68,7 +69,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       this.store.query('bancoorigen', { empresa })
       .then((data)=> {
         set(this, 'bancoOrigenLista', data);
-        this.store.query('centrocosto', { empresa, naturaleza: 1}).then((data2)=> {
+        this.store.query('centrocosto', { empresa, naturaleza: 1 }).then((data2)=> {
           set(this, 'centroCostoLista', data2);
         }, (error2)=> {
           info('trono error2');
@@ -214,7 +215,7 @@ export default Ember.Controller.extend(FormatterMixin, {
       return;
     }
     set(this, 'valorPartidaEgreso', { partidaID: partida, nombrePartida });
-    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto, naturaleza:1 })
+    this.store.query('partidaegreso', { partida, nivel, empresa, centrocosto, naturaleza: 1 })
     .then((data)=> {
       set(this, 'subpartida4Lista', data);
       info('si paso observaSelectedSubpartida3');
@@ -300,6 +301,30 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     }
   }),
+  hayPagPreviasSolicitudes: computed('resultPageSolicitudes', {
+    get() {
+      if (get(this, 'resultPageSolicitudes') === '') {
+        return false;
+      }
+      if (parseInt(get(this, 'resultPageSolicitudes')) === 1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }),
+  hayPagSiguientesSolicitudes: computed('resultPageSolicitudes', {
+    get() {
+      if (get(this, 'resultPageSolicitudes') === '') {
+        return false;
+      }
+      if (parseInt(get(this, 'resultPageSolicitudes')) < get(this, 'resultPagesSolicitudes')) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }),
   observaCamposForma: computed('fechaForma', 'cantidadForma', 'referenciaForma', {
     get() {
       if (!isEmpty(get(this, 'fechaForma')) && !isEmpty(get(this, 'cantidadForma')) && !isEmpty(get(this, 'referenciaForma'))) {
@@ -320,6 +345,7 @@ export default Ember.Controller.extend(FormatterMixin, {
   }),
   CantidadesIgualesCoinciliar: observer('solicitudesSeleccionaFlag', function() {
     let total = 0;
+    let lista = Ember.A();
     let movimientoCantidad = get(this, 'movimientoRecord.cantidad');
     get(this, 'listaSolicitudesFondear').forEach((item)=> {
       if (get(item, 'seleccionado')) {
@@ -363,17 +389,26 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'formaCoinciliar', false);
     },
     quitarSolicitud(r) {
+      let lista = get(this, 'listaSolicitudesSeleccionadas');
+      let objeto = lista.findBy('id', get(r, 'id'));
+      lista.removeObject(objeto);
       set(r, 'seleccionado', false);
       this.notifyPropertyChange('solicitudesSeleccionaFlag');
     },
     agregarSolicitud(r) {
+      info('valor de r', r);
+      get(this, 'listaSolicitudesSeleccionadas').pushObject(r);
       set(r, 'seleccionado', true);
       this.notifyPropertyChange('solicitudesSeleccionaFlag');
     },
     toggleCoinciliarForm() {
       this.toggleProperty('formaCoinciliar');
       set(this, 'botonCoinciliarFlag', false);
-      info('en boton coinciliar');
+      info('en boton formacoinciliar');
+      this.send('pedirSolicitudes');
+    },
+    pedirSolicitudes() {
+      let lista = Ember.A();
       let objeto = {};
       if (get(this, 'selectedSolicitud') === 'P') {
         objeto.estatus = 13;
@@ -381,14 +416,34 @@ export default Ember.Controller.extend(FormatterMixin, {
       } else {
         objeto.estatus = 6;
       }
+      let requestedPageSolicitudes = get(this, 'requestedPageSolicitudes');
+      if (requestedPageSolicitudes) {
+        objeto.page = requestedPageSolicitudes;
+      }
       objeto.empresa = get(this, 'selectedEmpresa');
       objeto.idbancoorigen = get(this, 'selectedBancoOrigen');
       set(this, 'listaSolicitudesFondear', Ember.A());
       this.store.unloadAll('gxsolicitudcheque');
       this.store.query('gxsolicitudcheque', objeto)
       .then((data)=> {
-        data.setEach('seleccionado', false);
-        set(this, 'listaSolicitudesFondear', data);
+        let meta = get(data, 'meta');
+        info('valor de meta en coinciliar form ', meta);
+        set(this, 'showNavigationSolicitudes', get(meta, 'cuantos') > 20 ? true : false);
+        set(this, 'resulCuantos', get(meta, 'cuantos'));
+        set(this, 'resultPageSolicitudes', get(meta, 'page'));
+        set(this, 'resultPagesSolicitudes', get(meta, 'pages'));
+        data.forEach((item)=> {
+          let seleccionado = false;
+          let objetoitem = get(this, 'listaSolicitudesSeleccionadas').findBy('id', `${get(item, 'id')}`);
+          if (objetoitem) {
+            seleccionado = true;
+          }
+          let { cantidad, fechaprogramada, id, nombredefinitivo, cantidadComas, estatus } = getProperties(item, `cantidad
+            fechaprogramada id nombredefinitivo cantidadComas estatus`.w());
+          lista.pushObject({ cantidad, fechaprogramada, id, nombredefinitivo, seleccionado, cantidadComas, estatus });
+        });
+        // data.setEach('seleccionado', false);
+        set(this, 'listaSolicitudesFondear', lista);
         info('si llego');
       }, (error)=> {
         info('trono');
@@ -411,7 +466,6 @@ export default Ember.Controller.extend(FormatterMixin, {
           });
           record2.save().then(()=> {
             info('se grabo partida', i);
-            // this.send('toggleClasificarForm');
           }, (error)=> {
             info('error grabar partida');
           });
@@ -679,8 +733,19 @@ export default Ember.Controller.extend(FormatterMixin, {
         }
         set(this, 'resultRowCountFormatted', cuantos);
         delete objeto.cuantos;
+        let totalAbonos = 0;
+        let totalCargos = 0;
         this.store.query('gxbancomovimiento', objeto)
         .then((data)=> {
+          data.forEach((item)=> {
+            if (get(item, 'tipo') === 'C') {
+              totalCargos += get(item, 'cantidad');
+            } else {
+              totalAbonos += get(item, 'cantidad');
+            }
+          });
+          set(this, 'totalCargos', this.formatter(totalCargos));
+          set(this, 'totalAbonos', this.formatter(totalAbonos));
           // data.forEach((item)=> {})
           set(this, 'movimientosLista', data);
           set(this, 'resultPage', get(data, 'meta.page'));
@@ -711,6 +776,19 @@ export default Ember.Controller.extend(FormatterMixin, {
       set(this, 'requestedPage', nextPage);
       this.send('pedir');
     },
+    mostrarPagPreviaSolicitudes() {
+      let nextPage = parseInt(get(this, 'resultPage'));
+      nextPage = nextPage - 1;
+      set(this, 'requestedPageSolicitudes', nextPage);
+      this.send('pedirSolicitudes');
+    },
+    mostrarPagSiguienteSolicitudes() {
+      let nextPage = parseInt(get(this, 'resultPageSolicitudes'));
+      nextPage = nextPage + 1;
+      set(this, 'requestedPageSolicitudes', nextPage);
+      this.send('pedirSolicitudes');
+    },
+
     okCerrarModal() {
       info('cerrando el modal');
       set(this, 'modalActionRecord', false);
