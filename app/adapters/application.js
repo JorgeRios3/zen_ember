@@ -52,3 +52,4 @@ inflector.irregular('blogentry', 'blogentries');
 inflector.irregular('terrenovendidoarcadia', 'terrenovendidoarcadias');
 inflector.irregular('solicitudfirmante', 'solicitudfirmantes');
 inflector.irregular('solicitudfondeo', 'solicitudfondeos');
+inflector.irregular('zenrapcuenta', 'zenrapcuentas');

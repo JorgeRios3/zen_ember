@@ -22,6 +22,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     let controller = this.controllerFor(this.routeName);
     controller.setProperties({
       features: get(this, 'features'),
+      rapCliente: '',
       selectedEtapa: '',
       selectedNombre: '',
       telefonoCasa: '',
