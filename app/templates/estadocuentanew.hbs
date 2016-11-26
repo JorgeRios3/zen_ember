@@ -1,0 +1,406 @@
+<h2 class="text-info">Estado de Cuenta</h2>
+{{#if derechosArcadia}}
+	<div class="form-group">
+		<div class="checkbox">
+			<label>{{input type="checkbox" name="isArcadia" checked=isArcadia }}Arcadia</label>
+		</div>		
+	</div>
+{{/if}}
+<div class="form-group">
+	<label for="idcuentaCliente" class="control-label">Cuenta</label>
+	<div class="row">
+		<div class="col-xs-8 col-md-5">
+			{{input type="text" value=cuentaBuscar class="form-control" placeholder="Cuenta" id="idcuentaCliente" type="number"}}
+		</div>		
+	</div>
+</div>
+{{#if proxyCuenta}}
+<a href="#" {{action "copiaCuenta"}}>Copiar Cuenta</a>
+{{/if}}
+{{#if mostrarNombreClienteAlert}}
+	<div class="alert alert-success" role="alert">Cliente: {{showName}}  Cuenta: {{showCuenta}}</div>
+	<div class="btn btn-info" {{ action 'buscarConCuenta'}}>Mostrar</div>
+	<br>
+{{/if}}
+{{#if etapas.length}}
+	<br>
+	<div class="form-group">
+		<label for="etapas" class="control-label">Etapa</label>
+		<div class="row">
+			<div class="col-md-5">
+				
+				{{#x-select value='0' action="selectedEtapa" class="form-control form-control-inline"}}
+		  			{{#x-option value='0'}}Elija etapa{{/x-option}}
+		  			
+		  			  {{#each etapas as |item|}}
+		  				  {{#x-option value=item}}{{item.nombre}}{{/x-option}}
+					  {{/each}}
+					
+				{{/x-select}}
+		
+			</div>
+		</div>
+	</div>
+{{/if}}
+
+{{#if manzanasEtapaLista.length}}
+	<div class="form-group">
+			<label for="manzanasEtapaLista" class="control-label">Manzana</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=selectedManzana action=(action  (mut selectedManzana)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Manzana{{/x-option}}
+					{{#each manzanasEtapaLista as |item|}}
+						{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+{{/if}}
+{{#if isDepartamento}}
+		<div class="form-group">
+			<label for="numerosExteriores" class="control-label">Numero Exterior</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=numeroExteriorSelected action=(action  (mut numeroExteriorSelected)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Exterior{{/x-option}}
+					{{#each numerosExteriores as |item|}}
+						{{#x-option value=item}}{{item}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="numerosInteriores" class="control-label">Numero Interior</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=numeroInteriorSelected action=(action  (mut numeroInteriorSelected)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Elija Exterior{{/x-option}}
+					{{#each numerosInteriores as |item|}}
+						{{#x-option value=item}}{{item.depa}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>
+
+{{else}}
+	<div class="form-group">
+		{{#if isArcadia}}
+			<label for="inmueble" class="control-label">Lote</label>
+		{{else}}
+			<label for="inmueble" class="control-label">Inmueble</label>
+		{{/if}}
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=inmuebleSelected action=(action  (mut inmuebleSelected)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Elija Inmueble{{/x-option}}
+				{{#each inmueblesManzana as |item|}}
+					{{#x-option value=item}}{{item.lote}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+{{/if}}
+
+
+<div class="form-group">
+	<label for="idclientenombre" class="control-label">Nombre</label>
+	<div class="row">
+		<div class="col-xs-8 col-md-5">
+			{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idclientenombre" class="text-uppercase" }}
+		</div>
+		{{#if showButton}}
+			<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+		{{/if}}
+	</div>
+</div>
+	
+{{#if cuantos}}
+	{{#if maximo}}
+		<div class="h3 text text-success">hay {{cuantos}} clientes</div>
+		<div class="form-group">
+		<label>Elija Nombre</label>
+			<div class="row">	
+				<div class="col-md-8">
+					{{ember-selectize
+					content=catalogoNombres
+					optionValuePath="content.cuenta"
+					optionLabelPath="content.nombre"
+					placeholder="Todos"
+					value=selectedNombre
+					}}
+				</div>
+			</div>
+			</div>
+
+	{{else}}
+		<div class="h3 text text-warning">hay {{cuantos}} clientes la lista es muy larga intenta filtrar mas el nombre </div>
+	{{/if}}
+{{/if}}
+
+{{#if showData}}
+    <dl class="dl-horizontal">
+    	<dt>{{if isArcadia 'Terreno' 'Inmueble'}}</dt><dd>{{#if isArcadia }} {{lote}} {{manzana}}{{else}}{{manzana}} {{loteBreve}}{{/if}}</dd>
+    	<dt>Etapa</dt><dd>{{etapaBreve}}</dd>
+    	<dt>Cuenta</dt><dd>{{cuenta}}</dd>
+    	<dt>Imss</dt><dd>{{imss}}</dd>
+    	{{#if ofertaCliente}}<dt>Oferta</dt><dd>{{ofertaCliente}}</dd>{{/if}}
+    	<dt>telefono Casa</dt><dd>{{telefonoCasa}}</dd>
+    	<dt>telefono Trabajo</dt><dd>{{telefonoTrabajo}}</dd>
+    	<dt>Saldo</dt><dd>{{saldoFormateado}}</dd>
+    	<dt>Cargos</dt><dd>{{cargosFormateado}}</dd>
+    	<dt>Abonos</dt><dd>{{abonosFormateado}}</dd>
+    	<dt>Domicilio</dt><dd>{{domicilioCliente}}</dd>
+    	<dt>Colonia</dt><dd>{{coloniaCliente}}</dd>
+    	<dt>Ciudad</dt><dd>{{ciudadCliente}}</dd>
+    	<dt>Estado</dt><dd>{{estadoCliente}}</dd>
+    	<dt>CP</dt><dd>{{cpCliente}}</dd>
+    	<dt>RFC</dt><dd>{{rfcCliente}}</dd>
+    	<dt>RAP</dt><dd>{{rapCliente}}</dd>
+    	{{#if totalVencido}}
+    		<dt>Vencido</dt><dd>{{totalVencidoFormateado}}&nbsp;({{documentosVencidos}} docs.)</dd>
+    	{{/if}}
+
+    </dl>
+	{{#unless features.solo_consulta}}
+	{{#if conPagares}}
+		<div class="form-group">
+			<label class="control-label">Saldo Pagares</label>
+			<div class="row">
+				<div class="col-xs-4 col-md-2">
+					<p class="form-control-static text text-info">{{saldoPagaresFormateado}}</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="text text-info">Pagares</div>
+		<table class="table table-bordered table-striped table-condensed cf">
+			<thead>
+				<tr>
+					<th>Fecha</th>
+	                <th>Fecha De Vencimiento</th>
+					<th>Saldo</th>
+					<th>Cargo</th>
+					<th>Abono</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each documentosPagares as |t|}}
+				<tr>
+
+					<td data-title="Fecha">		
+						{{t.fecha}}
+				    </td>
+	                <td data-title="Fecha De Vencimiento">
+	                	<div class="text {{if t.estavencido 'text-danger'}} ">{{t.fechavencimientocompleto}}</div>
+					</td>
+					<td data-title="Saldo" class="text-right">
+						{{t.saldo}}
+					</td>
+					<td data-title="Cargo" class="text-right">
+						{{t.cargo}}
+					</td>
+					<td data-title="Abono" class="text-right">
+						{{t.abono}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	{{/if}}
+
+	<div class="text text-info"><span>Documentos</span>&nbsp;<span class="badge badge-info">{{numeroDocumentos}}</span></div>
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				<th>Sel</th>
+                <th>Documento</th>
+				<th>Descripcion</th>
+				<th>Cargo</th>
+				<th>Abono</th>
+				<th>Saldo</th>
+				<th>Fecha</th>
+				<th>Fecha Vencimiento</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each docsCliente as |t|}}
+			<tr>
+
+				<td data-title="Sel">
+					{{#if t.elegido}}
+						<span class="glyphicon glyphicon-check"></span>
+						{{else}}
+						<span></span>
+					{{/if}}
+			    </td>
+                <td data-title="Documento">
+					<a href="" {{ action 'procesaDocumento' t.id t.abono }}>{{t.id}}</a>
+				</td>
+				<td data-title="Descripcion">
+					{{t.descripcion}}
+				</td>
+				<td data-title="Cargo" class="text-right">
+					{{t.cargo}}
+				</td>
+				<td data-title="Abono" class="text-right">
+					{{t.abono}}
+				</td>
+				<td data-title="Saldo" class="text-right">
+					{{t.saldo}}
+				</td>
+				<td data-title="Fecha">
+					{{t.fecha}}
+				</td>
+				<td data-title="Fecha Vencimiento">
+					{{#if t.documentoVencido}}
+			         	<div class="text {{if t.documentoVencido 'text-danger'}} ">{{t.fechavencimiento}} ({{t.diasvencimiento}})</div>
+			         {{else}}
+			         	{{t.fechavencimiento}}
+			         {{/if}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	<br>
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				<th>Id</th>
+                <th>Cantidad</th>
+				<th>Fecha</th>
+				<th>Cargo Abono</th>
+				<th>Recibo</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each movimientosdocumento as |m|}}
+			<tr>
+                <td data-title="Documento">
+					{{m.id}}
+				</td>
+				<td data-title="Descripcion">
+					{{m.cantidad}}
+				</td>
+				<td data-title="Cargo" class="text-right">
+					{{m.fecha}}
+				</td>
+				<td data-title="Abono" class="text-right">
+					{{m.cargoabono}}
+				</td>
+				<td data-title="Saldo" class="text-right">
+					{{#if isArcadia}}
+						<a href="" {{ action 'procesaRecibo' m.recibo m.id }}>{{m.recibo}}</a>
+					{{else}}
+						{{m.recibo}}
+					{{/if}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	{{#if isArcadia}}
+	
+		{{#if recibo}}
+			<div class="h4 text text-danger">Movimientos implicados del recibo {{recibo}}</div>
+			<div id="no-more-tables">
+			<table  class="table table-bordered table-striped table-condensed cf">
+			<thead>
+					<tr>
+						<th>Sel</th>
+						<th>Movimiento</th>
+		                <th>Fecha</th>
+						<th>cantidad</th>
+						<th>Documento</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each recibosmovimientosLista as |m|}}
+					<tr>
+						<td data-title="Sel">
+							{{#if m.elegido}}
+								<span class="glyphicon glyphicon-check"></span>
+								{{else}}
+								<span></span>
+							{{/if}}
+					    </td>
+		                <td data-title="Id">
+							{{m.movimiento}}
+						</td>
+						<td data-title="Fecha">
+							{{m.fecha}}
+						</td>
+						<td data-title="Cantidad" class="text-right">
+							{{m.cantidad}}
+						</td>
+						<td data-title="Documento" class="text-right">
+							<a href="" {{ action 'procesaReciboDocumento' m.documento }}>{{m.documento}}</a>
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+			</div>
+		{{/if}}
+		{{#if errorMessage}}
+			{{#modal-bs title="Aviso" close="enteradoError"}}
+			 	<div class="h4 text-warning">Hubo error al intentar saldar el recibo: <br>{{error}}</div>
+			{{/modal-bs}}	
+		{{/if}}	
+		{{#if movimientosMayorAUno}}	
+	  		{{#modal-bs title="Aviso" close="cerrarModal"}}
+	  			<div class="h4 text-warning">Este Recibo {{recibo}} implica mas de un documento </div>
+	  		{{/modal-bs}}
+		{{/if}}
+	{{/if}}
+	{{#if hayReciboElegido}}
+		<div class="btn btn-warning" {{action 'saldarRecibo'}}>Saldar Recibo</div>
+	{{/if}}
+	{{#if features.documentocuenta}}
+		<div class="btn btn-info" {{action 'levantaFormaDocumento'}}>Generar Documento a la Cuenta</div>
+		{{#if formaGeneraDocumento}}
+			<div class="form-group">
+				<label for="idnumerosexteriores" class="control-label">Tipo</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=selectedTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
+						{{#x-option value=''}}Elija Documento{{/x-option}}
+							{{#each tipos as |item|}}
+								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="CantidadDocumento" class="control-label">Cantidad</label>
+				<div class="row">
+					<div class="col-xs-8 col-md-5">
+						{{input type="text" value=CantidadDocumento class="form-control" placeholder="Cantidad" id="CantidadDocumento" type="number"}}
+					</div>		
+				</div>
+			</div>
+			<div class="row">
+				{{#if observaCantidadYTipo}}
+					<div class="btn btn-success" {{action 'guardarDocumento'}}>Guardar</div>
+				{{/if}}
+				<div class="btn btn-warning" {{action 'levantaFormaDocumento'}}>Cancelar</div>
+			</div>
+		{{/if}}
+	{{/if}}
+	{{/unless}}
+{{/if}}
+{{#if huboErrorAlGrabar}}
+  			{{#modal-bs title="Hubo Error al Generarse el documento" ok="enteradoHuboErrorAlGrabar" close="enteradoHuboErrorAlGrabar"}}
+   					No pudo grabarse el Documento. {{errorAlGrabar}} 
+   				<br>
+   				<div class="text-danger">	
+   				</div>
+  			{{/modal-bs}}
+
+		{{/if}}
