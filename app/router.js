@@ -82,6 +82,7 @@ Router.map(function() {
   this.route('solicitudcheque');
   this.route('solicitudesfondeo');
   this.route('bancomovimiento');
+  this.route('estadocuentanew');
 });
 
 export default Router;

@@ -586,16 +586,14 @@ export default Ember.Controller.extend(FormatterMixin, {
       info('valores', empresa, banco, fecha, tipo, cantidad, referencia, estatus);
     },
     limpiarCamposForma() {
-      // set(this, 'formaActionMovimiento', false);
-      // set(this, 'formaMovimiento', true);
-      // set(this, 'selectedEmpresa', get(r, 'empresa'));
-      // set(this, 'selectedBancoOrigen');
-      set(this, 'nullFechaCapturaInicialForma', null);
-      set(this, 'fechaForma', null);
+      set(this, 'nullFechaCapturaInicialForma', '');
+      set(this, 'fechaForma', '');
       set(this, 'selectedTipoForma', 'C');
       set(this, 'cantidadForma', '');
       set(this, 'referenciaForma', '');
+      set(this, 'nullFechaCapturaInicialForma', '');
       set(this, 'selectedEstatusForma', 'F');
+      set(this, 'movimientoRecord', null);
     },
     traerRecord(movimientoid) {
       set(this, 'formaCoinciliar', false);
@@ -629,7 +627,7 @@ export default Ember.Controller.extend(FormatterMixin, {
         info('si se actulizo el registro');
         this.send('pedirSaldo', false);
         this.send('pedir');
-        this.send('limpiarCamposForma');
+        //this.send('limpiarCamposForma');
       }, (error)=> {
         info('error no se actualizo');
       });
