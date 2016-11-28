@@ -404,7 +404,11 @@ export default Ember.Controller.extend(FormatterMixin, {
     set(this, 'claveCuentaSolicitud', '');
     set(this, 'selectedEspecificaciones', '');
     if (!isEmpty(get(this, 'selectedBeneficiario'))) {
-      this.store.findRecord('gxsolicitudbeneficiario', get(this, 'selectedBeneficiario'))
+      let modelo = 'gxsolicitudbeneficiario'; 
+      if (get(this, 'isCliente')) {
+        modelo = 'gxsolicitudcliente'
+      }
+      this.store.findRecord(modelo, get(this, 'selectedBeneficiario'))
       .then((data)=> {
         info('valor de data', data);
         set(this, 'beneficiarioBancoCuenta', data);

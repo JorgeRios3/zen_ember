@@ -534,9 +534,9 @@ export default Ember.Controller.extend(FormatterMixin,
       let nombre = get(this, 'nombre');
       let etapa = get(this, 'selectedEtapa');
       info('valor de selectedEtapa', get(this, 'selectedEtapa'));
-      this.store.unloadAll('clientescuantosconcuentanosaldada');
-      this.store.unloadAll('clientesconcuentanosaldada');
-      this.store.query('clientescuantosconcuentanosaldada' , { etapa, nombre, estadocuenta: 1, company })
+      this.store.unloadAll('zenclientescuantosconcuentanosaldada');
+      this.store.unloadAll('zenclientesconcuentanosaldada');
+      this.store.query('zenclientescuantosconcuentanosaldada' , { etapa, nombre, estadocuenta: 1, company })
       .then((data)=> {
         if (get(data, 'length')) {
           data.forEach((item)=> {
@@ -544,7 +544,7 @@ export default Ember.Controller.extend(FormatterMixin,
           });
         }
         if (parseInt(get(this, 'cuantos')) <= 100) {
-          this.store.query('clientesconcuentanosaldada', { etapa, nombre, estadocuenta: 1, company })
+          this.store.query('zenclientesconcuentanosaldada', { etapa, nombre, estadocuenta: 1, company })
           .then((data)=> {
             data.forEach((item)=> {
               let { cliente, conpagares, cuenta, inmueble, manzana, nombre, oferta, saldo, saldoformateado, saldopagares, saldopagaresformateado } = item.getProperties('cliente',
