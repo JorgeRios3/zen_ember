@@ -235,15 +235,15 @@ export default Ember.Controller.extend(FormatterMixin,
     let { store } = this;
     set(this, 'company', company);
     store.unloadAll('zenetapastramite');
-    store.unloadAll('documentoscliente');
-    store.unloadAll('movimientosdocumento');
+    store.unloadAll('zendocumentoscliente');
+    store.unloadAll('zenmovimientosdocumento');
     set(this, 'etapas', this.store.query('zenetapastramite', { company }));
   }),
   observaSelectedNombre: observer('selectedNombre', function() {
     let { store } = this;
     info('valor de selectedNombre', get(this, 'selectedNombre'));
-    store.unloadAll('documentoscliente');
-    store.unloadAll('documentopagare');
+    store.unloadAll('zendocumentoscliente');
+    store.unloadAll('zendocumentopagare');
     store.unloadAll('zenrapcuenta');
     let that = this;
     let totalVencido = 0;
@@ -265,7 +265,7 @@ export default Ember.Controller.extend(FormatterMixin,
     info('cual', cual);
     info(get(cual, 'oferta'));
     info(`valor de cual ${cual}`);
-    let p = this.store.query('documentoscliente', { cuenta: get(this, 'selectedNombre'), company });
+    let p = this.store.query('zendocumentoscliente', { cuenta: get(this, 'selectedNombre'), company });
     p.then((data)=> {
       data.forEach((item)=> {
         if (get(item, 'documentoVencido')) {
@@ -303,7 +303,7 @@ export default Ember.Controller.extend(FormatterMixin,
       info('el error es ', e);
     }
     if (get(this, 'conPagares') === true) {
-      set(this, 'documentosPagares', this.store.query('documentopagare', { cuenta }));
+      set(this, 'documentosPagares', this.store.query('zendocumentopagare', { cuenta }));
     }
     set(this, 'cliente', get(cual, 'cliente'));
     set(this, 'showData', true);
@@ -429,7 +429,7 @@ export default Ember.Controller.extend(FormatterMixin,
         info('se grabo correctamente');
         this.notifyPropertyChange('selectedNombre');
         set(this, 'recibo', '');
-        set(this, 'movimientosdocumento', null);
+        set(this, 'zenmovimientosdocumento', null);
       }, (error)=> {
         // info('log hubo error al grabar', error.errors);
         set(this, 'errorMessage', true);
@@ -484,9 +484,9 @@ export default Ember.Controller.extend(FormatterMixin,
     },
     procesaDocumento(idDocumento, abono) {
       let company = get(this, 'company');
-      this.store.unloadAll('movimientosdocumento');
+      this.store.unloadAll('zenmovimientosdocumento');
       info(`valor de id documento ${idDocumento} valor de abono ${abono}`);
-      set(this, 'movimientosdocumento', this.store.query('movimientosdocumento', { documento: idDocumento, company }));
+      set(this, 'movimientosdocumento', this.store.query('zenmovimientosdocumento', { documento: idDocumento, company }));
     },
     selectedEtapa(item) {
       let etapa = item.id
