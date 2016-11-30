@@ -253,12 +253,14 @@ export default Ember.Controller.extend(FormatterMixin,
     let abonos = 0;
     let company = get(this, 'company');
     let cuenta = get(this, 'selectedNombre');
-    store.find('zenrapcuenta', cuenta).then((data)=> {
-      info('paso zenrapcuenta');
-      set(this, 'rapCliente', get(data, 'rap'));
-    },(error)=> {
-      info('trono zenrapcuenta');
-    });
+    if (company !== 'arcadia') {
+      store.find('zenrapcuenta', cuenta).then((data)=> {
+        info('paso zenrapcuenta');
+        set(this, 'rapCliente', get(data, 'rap'));
+      },(error)=> {
+        info('trono zenrapcuenta');
+      });
+    }
     // info(`valor de cuenta en observer selectednombre ${cuenta}`);
     info('revisando catalogo antes de pasar ', get(this, 'catalogoNombres'));
     let cual = get(this, 'catalogoNombres').findBy('cuenta', get(this, 'selectedNombre'));
@@ -372,7 +374,7 @@ export default Ember.Controller.extend(FormatterMixin,
       let cantidad = get(this, 'CantidadDocumento');
       let cuenta = get(this, 'cuenta');
       let tipo = get(this, 'selectedTipo');
-      let record = this.store.createRecord('documentocuenta', {
+      let record = this.store.createRecord('zendocumentocuenta', {
         cantidad,
         cuenta,
         tipo
@@ -421,7 +423,7 @@ export default Ember.Controller.extend(FormatterMixin,
       });
       info('cancelando', listaDocumentos.join(','),    recibo);
       let movsLista = listaDocumentos.join(',');
-      let record = store.createRecord('recibocancelacion', {
+      let record = store.createRecord('zenrecibocancelacion', {
         recibo,
         movimientos: movsLista
       });
@@ -464,9 +466,9 @@ export default Ember.Controller.extend(FormatterMixin,
       let company = isArcadia ? 'arcadia' : '';
       info('valor de recibo de recibo', id);
       set(this, 'recibo', recibo);
-      store.unloadAll('recibomovimiento');
+      store.unloadAll('zenrecibomovimiento');
       // set(this, 'recibosmovimientosLista', this.store.query('recibomovimiento', { company, recibo }));
-      store.query('recibomovimiento', { company, recibo }).then((data)=> {
+      store.query('zenrecibomovimiento', { company, recibo }).then((data)=> {
         data.forEach((item)=> {
           if (id === get(item, 'movimiento')) {
             let { movimiento, fecha, cantidad, documento } = item.getProperties('movimiento', 'fecha', 'cantidad', 'documento');
@@ -499,7 +501,7 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'selectedEtapa', etapa);
       set(this, 'catalogoNombres', null);
       set(this, 'cuantos', 0);
-      this.store.unloadAll('clientesconcuentanosaldada');
+      this.store.unloadAll('zenclientesconcuentanosaldada');
       set(this, 'nombre', '');
       if (company !== true) {
         set(this, 'isDepartamento', get(item, 'departamento'));
