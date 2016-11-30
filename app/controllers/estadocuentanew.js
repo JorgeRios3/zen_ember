@@ -436,7 +436,7 @@ export default Ember.Controller.extend(FormatterMixin,
         // info('log hubo error al grabar', error.errors);
         set(this, 'errorMessage', true);
         set(this, 'error', error.errors.resultado[0]);
-        store.unloadAll('recibomovimiento');
+        store.unloadAll('zenrecibomovimiento');
         set(this, 'recibosmovimientosLista', Ember.A());
         set(this, 'recibo', '');
 

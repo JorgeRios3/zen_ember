@@ -253,12 +253,14 @@ export default Ember.Controller.extend(FormatterMixin,
     let abonos = 0;
     let company = get(this, 'company');
     let cuenta = get(this, 'selectedNombre');
-    store.find('zenrapcuenta', cuenta).then((data)=> {
-      info('paso zenrapcuenta');
-      set(this, 'rapCliente', get(data, 'rap'));
-    },(error)=> {
-      info('trono zenrapcuenta');
-    });
+    if (company !== 'arcadia') {
+      store.find('rapcuenta', cuenta).then((data)=> {
+        info('paso rapcuenta');
+        set(this, 'rapCliente', get(data, 'rap'));
+      },(error)=> {
+        info('trono rapcuenta');
+      });
+    }
     // info(`valor de cuenta en observer selectednombre ${cuenta}`);
     info('revisando catalogo antes de pasar ', get(this, 'catalogoNombres'));
     let cual = get(this, 'catalogoNombres').findBy('cuenta', get(this, 'selectedNombre'));
