@@ -254,7 +254,7 @@ export default Ember.Controller.extend(FormatterMixin,
     let company = get(this, 'company');
     let cuenta = get(this, 'selectedNombre');
     if (company !== 'arcadia') {
-      store.find('rapcuenta', cuenta).then((data)=> {
+      store.find('zenrapcuenta', cuenta).then((data)=> {
         info('paso rapcuenta');
         set(this, 'rapCliente', get(data, 'rap'));
       },(error)=> {
