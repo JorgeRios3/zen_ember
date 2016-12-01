@@ -6,6 +6,41 @@
 		</div>		
 	</div>
 {{/if}}
+{{#unless isArcadia}}
+	<div class="btn btn-info" {{action "BuscarPrerecibos"}}>Prerecibos</div>
+	<br>
+	<br>
+	{{#if hayPrerecibos}}
+	<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+			<tr>
+				<th>Id</th>
+	            <th>Cantidad</th>
+				<th>Fecha</th>
+				<th>Cuenta</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each listaPrerecibos as |m|}}
+			<tr>
+	            <td data-title="Documento">
+					{{m.id}}
+				</td>
+				<td data-title="Descripcion">
+					{{m.cantidad}}
+				</td>
+				<td data-title="Cargo" class="text-right">
+					{{m.fecha}}
+				</td>
+				<td data-title="Cuenta" class="text-right">
+					<a href="" {{action "seleccionarPrerecibo" m}}>{{m.cuenta}}</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	{{/if}}
+{{/unless}}
 <div class="form-group">
 	<label for="idcuentaCliente" class="control-label">Cuenta</label>
 	<div class="row">

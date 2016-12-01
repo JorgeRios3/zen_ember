@@ -77,6 +77,7 @@ export default Ember.Controller.extend(FormatterMixin,
   recibosmovimientosLista: null,
   documentosSelec: null,
   movimientosMayorAUno: computed.gt('recibosmovimientosLista.length', 1),
+  hayPrerecibos: computed.gt('listaPrerecibos.length', 0),
   cuentaBuscar: '',
   mostrarNombreClienteAlert: false,
   showName: '',
@@ -84,6 +85,11 @@ export default Ember.Controller.extend(FormatterMixin,
   errorMessage: '',
   hayReciboElegido: false,
   imss: '',
+  init() {
+    this._super(...arguments);
+    set(this, 'listaDocsPagar', Ember.ArrayProxy.create({ content: [] }));
+    info('viendo en le init el que quiero', get(this, 'listaDocsPagar'));
+  },
   observaTipo: observer('selectedTipo', function() {
     info('viendo tipo', get(this, 'selectedTipo'));
   }),
@@ -370,6 +376,24 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
 
   actions: {
+  	seleccionarPrerecibo(r) {
+  	  let that = this;
+  	  set(this, 'showCuenta', get(r, 'cuenta'));
+  	  set(this, 'cuentaBuscar', get(r, 'cuenta'));
+  	  set(this, 'prereciboRecord', r);
+  	  Ember.run.later('', function() {
+  	    that.send('buscarConCuenta');
+  	  }, 2000);
+  	},
+  	BuscarPrerecibos() {
+  	  this.store.unloadAll('zenprerecibo');
+  	  this.store.findAll('zenprerecibo')
+  	  .then((data)=> {
+  	  	set(this, 'listaPrerecibos', data);
+  	  }, (error)=> {
+  	  	info('trono zenprerecibos');
+  	  })
+  	},
     guardarDocumento() {
       let cantidad = get(this, 'CantidadDocumento');
       let cuenta = get(this, 'cuenta');
