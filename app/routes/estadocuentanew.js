@@ -59,7 +59,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       abonos: 0,
       showName: '',
       showCuenta: '',
-      cuentaBuscar: ''
+      cuentaBuscar: '',
+      // aqui enpiezan variables de recibos
+      listaPrerecibos: null,
+      prereciboRecord: null
     });
   },
 
