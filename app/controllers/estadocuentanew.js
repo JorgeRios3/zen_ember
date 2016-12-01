@@ -84,6 +84,16 @@ export default Ember.Controller.extend(FormatterMixin,
   showCuenta: '',
   errorMessage: '',
   hayReciboElegido: false,
+  // aqui variables de recibos
+  nullFechaCapturaInicial: '',
+  nullFechaCapturaFinal: '',
+  fechaCapturaInicial: '',
+  fechaCapturaFinal: '',
+  formaDepositos: false,
+  prerecibosForma: false,
+  selectedBancoOrigen: '',
+  selectedEmpresa: '',
+  depositosLista: Ember.A(),
   imss: '',
   init() {
     this._super(...arguments);
@@ -374,8 +384,103 @@ export default Ember.Controller.extend(FormatterMixin,
       this.send('buscarConCuenta');
     }, 2000);
   }),
-
+  hayFechas: computed('fechaCapturaInicial', 'fechaCapturaFinal', 'selectedBancoOrigen', {
+    get() {
+      let ini = get(this, 'fechaCapturaInicial');
+      let fini = get(this, 'fechaCapturaFinal');
+      let banco = get(this, 'selectedBancoOrigen');
+      if (!isEmpty(ini) && !isEmpty(fini) && !isEmpty(banco)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }),
+  observaSelectedEmpresa: observer('selectedEmpresa', function() {
+    if (get(this, 'listaPartidasEgresoGrabar.length') > 0) {
+      set(this, 'listaPartidasEgresoGrabar', Ember.ArrayProxy.create({ content: [] }));
+    }
+    if (!isEmpty(get(this, 'selectedEmpresa'))) {
+      set(this, 'selectedBancoOrigen', '');
+      let empresa = get(this, 'selectedEmpresa');
+      this.store.query('bancoorigen', { empresa })
+      .then((data)=> {
+        set(this, 'bancoOrigenLista', data);
+        this.store.query('centrocosto', { empresa, naturaleza: 1 }).then((data2)=> {
+          set(this, 'centroCostoLista', data2);
+        }, (error2)=> {
+          info('trono error2');
+        });
+        info('ya paso bacoorigen');
+      }, (error)=> {
+        info('trono bancoorigen');
+      });
+    }
+  }),
   actions: {
+  	seleccionaReferenciaRap(rap) {
+  	  let that = this;
+  	  let r = rap.slice(4,rap.length);
+  	  this.store.find('zencuentarap', r)
+  	  .then((data)=> {
+  	    set(this, 'showCuenta', get(data, 'cuenta'));
+  	    set(this, 'cuentaBuscar', get(data, 'cuenta'));
+  	    //set(this, 'prereciboRecord', r);
+  	    Ember.run.later('', function() {
+  	    that.send('buscarConCuenta');
+  	    }, 3000);
+  	    }, (error)=> {
+  	      let e = error.errors[0];
+  	      info('viendo si jalo', e.detail);
+  	      set(this, 'errorFlagRap', true);
+  	      set(this, 'errorMsgRap', e.detail);
+  	      info('valor de error', error.errors[0]);
+  	      info('error zencuentarap');
+  	      Ember.run.later('', function() {
+  	        set(that, 'errorFlagRap', false);
+  	      },2000);
+  	    });
+  	},
+  	buscarDepositos() {
+  	  let objeto = {};
+  	  info('entrando');
+  	  let fCapturaInicial = get(this, 'fechaCapturaInicial');
+      let fechaCapturainicial = !isEmpty(fCapturaInicial) ? fCapturaInicial.format('YYYY/MM/DD') : '';
+      let fCapturaFinal = get(this, 'fechaCapturaFinal');
+      let fechaCapturafinal = !isEmpty(fCapturaFinal) ? fCapturaFinal.format('YYYY/MM/DD') : '';
+      if (fechaCapturainicial) {
+        objeto.fechacapturainicial = fechaCapturainicial;
+      }
+      if (fechaCapturafinal) {
+        objeto.fechacapturafinal = fechaCapturafinal;
+      }
+      let empresa = get(this, 'selectedEmpresa');
+      let banco = get(this, 'selectedBancoOrigen');
+      if (empresa) {
+        objeto.empresa = empresa;
+      }
+      if (banco) {
+        objeto.banco = banco;
+      }
+      objeto.clasificado = 'N';
+      objeto.eliminado = 'N';
+      objeto.referencia = 1;
+      info('haciendo query');
+      this.store.unloadAll('gxbancomovimiento');
+      this.store.query('gxbancomovimiento', objeto)
+      .then((data)=> {
+        set(this, 'depositosLista', data);
+        info('si fue por promesa');
+      }, (error)=> {
+        info('trono');
+      });
+  	},
+  	toggleFormaDespositos() {
+  	  if (get(this, 'hayPrerecibos') === true) {
+  	    set(this, 'prerecibosForma', false);
+  	  }
+  	  this.toggleProperty('formaDepositos');
+  	},
   	seleccionarPrerecibo(r) {
   	  let that = this;
   	  set(this, 'showCuenta', get(r, 'cuenta'));
@@ -386,6 +491,10 @@ export default Ember.Controller.extend(FormatterMixin,
   	  }, 2000);
   	},
   	BuscarPrerecibos() {
+  	  if (get(this, 'formaDepositos') === true) {
+  	    set(this, 'formaDepositos', false);
+  	  }
+  	  this.toggleProperty('prerecibosForma');
   	  this.store.unloadAll('zenprerecibo');
   	  this.store.findAll('zenprerecibo')
   	  .then((data)=> {

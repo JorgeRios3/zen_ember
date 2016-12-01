@@ -140,6 +140,28 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       set(this, key, true);
     }
   }.on('highlightandtrue'),*/
+  /*hayInmuebleAsignado: observer('inmuebleAsignado', function() {
+    set(this, 'inmueble', get(this, 'inmuebleAsignado'));
+    if (('inmuebleAsignado')!== '') {
+      set(this, 'isValid', true);
+    } else {
+      set(this, 'isValid', false);
+    }
+  }),*/
+  hayInmuebleAsignado: computed('inmuebleAsignado', 'cantidadDescuento', 'comentarioValor', {
+    get() {
+      let i = get(this, 'inmuebleAsignado');
+      let can = get(this, 'cantidadDescuento');
+      let com = get(this, 'comentarioValor');
+      set(this, 'inmueble', i);
+      if (!isEmpty(i) && !isEmpty(can) && !isEmpty(com)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }),
+
   mislotes: computed('selectedManzana', {
     get() {
       let that = this;

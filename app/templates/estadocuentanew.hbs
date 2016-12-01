@@ -7,10 +7,95 @@
 	</div>
 {{/if}}
 {{#unless isArcadia}}
-	<div class="btn btn-info" {{action "BuscarPrerecibos"}}>Prerecibos</div>
+	<div class="row">
+		<div class="btn btn-info" {{action "BuscarPrerecibos"}}>Prerecibos</div>
+		<div class="btn btn-info" {{action "toggleFormaDespositos"}}>Depositos</div>
+	</div>
 	<br>
 	<br>
-	{{#if hayPrerecibos}}
+	{{#if formaDepositos}}
+		<div class="h5">Busqueda por Depositos</div>
+		<div class="form-group">
+		<label for="EmpresasLista" class="control-label">Empresa</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedEmpresa action=(action  (mut selectedEmpresa)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Elija Empresa{{/x-option}}
+				{{#each empresasLista as |item|}}
+					{{#x-option value=item.id}}{{item.razonsocial}}{{/x-option}}
+				{{/each}}
+				{{/x-select}}
+			</div>
+		</div>
+	</div>
+	{{#if bancoOrigenLista}}
+		<div class="form-group">
+		<label for="idbancoOrigen" class="control-label">Banco Origen</label>
+			<div class="row">
+				<div class="col-md-5">
+					{{#x-select value=selectedBancoOrigen action=(action  (mut selectedBancoOrigen)) class="form-control form-control-inline"}}
+					{{#x-option value=''}}Escoja Banco{{/x-option}}
+					{{#each bancoOrigenLista as |item|}}
+						{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+					{{/each}}
+					{{/x-select}}
+				</div>
+			</div>
+		</div>	
+		{{/if}}
+		<div class="form-inline">
+			<div class="form-group">
+			<label for="datewidget" class="control-label">Fecha Inicial</label>
+				<div>
+		        	{{bs-datetimepicker id='fecha1' date=nullFechaCapturaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCapturaInicial))}}
+		    	</div>
+			</div>
+			<div class="form-group">
+				<label for="datewidget2" class="control-label">Fecha Final</label>
+				<div >
+		        	{{bs-datetimepicker id='fecha2' date=nullFechaCapturaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCapturaFinal))}}
+		    	</div>
+		    </div>
+		</div>
+		<br>
+		{{#if hayFechas}}
+			<div class="btn btn-success" {{action	 "buscarDepositos"}}>Buscar</div>
+			<br>
+		{{/if}}
+		{{#if depositosLista.length}}
+			<div class="h5">Lista Prerecibos</div>
+			<table class="table table-bordered table-striped table-condensed cf">
+				<thead>
+					<tr>
+						<th>Id</th>
+			            <th>Referencia-Rap</th>
+						<th>Cantidad</th>
+						<th>Fecha</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each depositosLista as |m|}}
+					<tr>
+			            <td data-title="id">
+							<a href="" {{action "seleccionaReferenciaRap" m.referencia}}>{{m.id}}</a>
+						</td>
+						<td data-title="Referencia-Rap">
+							{{m.referencia}}
+						</td>
+						<td data-title="Cantidad" class="text-right">
+							{{m.cantidad}}
+						</td>
+						<td data-title="Fecha" class="text-right">
+							{{m.fecha}}
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		{{/if}}
+	{{/if}}
+	{{#if prerecibosForma}}
+	<div class="h5">Lista Prerecibos</div>
 	<table class="table table-bordered table-striped table-condensed cf">
 		<thead>
 			<tr>
@@ -40,7 +125,11 @@
 		</tbody>
 	</table>
 	{{/if}}
+	{{#if errorFlagRap}}
+		<div class="alert alert-danger" role="alert">error {{errorMsgRap}}</div>
+	{{/if}}
 {{/unless}}
+<br>
 <div class="form-group">
 	<label for="idcuentaCliente" class="control-label">Cuenta</label>
 	<div class="row">

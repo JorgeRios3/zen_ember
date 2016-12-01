@@ -12,6 +12,8 @@ const{
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
   setupController(ctrlr, model) {
+  	let { empresas } = model;
+    set(ctrlr, 'empresasLista', empresas);
     // let a= this.controllerFor('index');
     // info('revisnado pèrfolñ', a.perfil);
     ctrlr.notifyPropertyChange('isArcadia');
@@ -62,7 +64,16 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       cuentaBuscar: '',
       // aqui enpiezan variables de recibos
       listaPrerecibos: null,
-      prereciboRecord: null
+      prereciboRecord: null,
+      formaDepositos: false,
+      nullFechaCapturaInicial: '',
+      nullFechaCapturaFinal: '',
+      fechaCapturaInicial: '',
+      fechaCapturaFinal: '',
+      prerecibosForma: false,
+      selectedBancoOrigen: '',
+      selectedEmpresa: '',
+      depositosLista: Ember.A()
     });
   },
 
@@ -73,6 +84,11 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     store.unloadAll('movimientosdocumento');
     store.unloadAll('clientescuantosconcuentanosaldada');
     store.unloadAll('clientesconcuentanosaldada');
+  },
+  model() {
+    return hash({
+      empresas: this.store.findAll('empresasolicitud')
+    });
   },
   actions: {
     error(error) {
