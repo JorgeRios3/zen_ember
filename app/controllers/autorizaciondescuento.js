@@ -78,6 +78,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   huboErrorAlGrabar: false,
   muestroErrores: false,
   errorAlGrabar: '',
+  carateristicasLista: Ember.A(),
   comodin: Ember.inject.service('comodin'),
 
   init() {
@@ -94,6 +95,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     }
   }),
   observaSelectedInmueble: observer('selectedInmueble', function() {
+     
     let that = this;
     let antes = get(this, 'selectedInmueblePrevio');
     let despues = get(this, 'selectedInmueble');
@@ -148,13 +150,43 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       set(this, 'isValid', false);
     }
   }),*/
+  inuebleAsignadoObserver: observer('inmuebleAsignado', function() {
+    set(this, 'cantidadDescuento', '');
+    set(this, 'candadoPrecio', '');
+    set(this, 'selectedInmueble', '');
+    if(!isEmpty(get(this, 'selectedInmueble'))) {
+      return;
+    }
+    this.setProperties({
+      selectedEtapa: '0',
+      cuantosInmueblesDisponibles: 0,
+      carateristicasLista: Ember.A(),
+      selectedManzana: null,
+      selectedEtapa: '0',
+      comentarioValor: '',
+      selectedInmueble: ''
+    });
+  }),
   hayInmuebleAsignado: computed('inmuebleAsignado', {
     get() {
       let i = get(this, 'inmuebleAsignado');
-      let can = get(this, 'cantidadDescuento');
-      let com = get(this, 'comentarioValor');
       set(this, 'inmueble', i);
       if (!isEmpty(i)) {
+        return true;
+      } else {
+        set(this, 'comentarioValor', '');
+        set(this, 'cantidadDescuento', '');
+        set(this, 'selectedInmueble', '');
+        return false;
+      }
+    }
+  }),
+  camposFormafillAndInmueble: computed('cantidadDescuento', 'comentarioValor', {
+    get() {
+      let can = get(this, 'cantidadDescuento');
+      let com = get(this, 'comentarioValor');
+      let i = get(this, 'inmuebleAsignado');
+      if (!isEmpty(i) && !isEmpty(can) && !isEmpty(com)) {
         return true;
       } else {
         return false;
@@ -224,6 +256,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     }
   }),
   observaEtapa: observer('selectedEtapa', function() {
+    if (get(this, 'selectedEtapa') === '0') {
+      return;
+    }
     let _this = this;
     set(_this, 'cuantosInmueblesDisponibles', 0);
     // get(this, 'manzanasdisponibles').
@@ -266,17 +301,17 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   // clientessinofertas : Ember.computed.alias('controllers.clientessinofertas'),
   validations: {
     selectedEtapa: {
-      exclusion: { in: [null] , message: 'Debe seleccionar etapa' }
+      exclusion: { in: [null, '0', '', 0] , message: 'Debe seleccionar etapa' }
     },
     selectedManzana: {
-      exclusion: { in: [null], message: 'Debe seleccionar manzana' }
+      exclusion: { in: [null, '0', '', 0], message: 'Debe seleccionar manzana' }
     },
     selectedInmueble: {
-      exclusion: { in: [null] , message: 'Debe seleccionar inmueble' }
+      exclusion: { in: [null, '', 0, '0'] , message: 'Debe seleccionar inmueble' }
     },
     cantidadDescuento: {
       numericality: { allowBlank: false},
-      exclusion: { in: [null], message: 'Debe tener descuento con numero' }
+      exclusion: { in: [null, ''], message: 'Debe tener descuento con numero' }
     },
     comentarioValor: {
       exclusion: { in: [''], message: 'Debe de tener comentario' }
@@ -289,7 +324,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     grabarAsignado() {
       let comentario = get(this, 'comentarioValor');
       let descuento = get(this, 'cantidadDescuento');
-      let inmueble = get(this, 'inmueble');
+      let inmueble = get(this, 'inmuebleAsignado');
       let record = this.store.createRecord('autorizaciondescuento', {
         comentario,
         descuento,

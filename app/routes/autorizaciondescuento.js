@@ -9,10 +9,9 @@ const {
 export default Ember.Route.extend(AuthenticatedRouteMixin,
 RouteAuthMixin,
 {
-  beforeModel2(transition) {
+  beforeModel2() {
     // this._super(...arguments);
     info('paso por autorizaciondescuento before');
-    let controller = this.controllerFor(this.routeName);
     let url = get(this, 'router.url');
     let origenCliente = url.indexOf('cliente?origenOferta') !== -1;
     if (origenCliente) {
@@ -22,74 +21,18 @@ RouteAuthMixin,
       info('before model agarraro parametros');
       return;
     }
-    controller.setProperties({
-      codigoDescuento: '',
-      seGrabo: false,
-      cantidadDescuento: null,
-      comentarioValor: '',
-      processingGrabar: false,
-      selectedEtapa: null,
-      selectedPrecio: null,
-      selectedManzana: null,
-      selectedLote: null,
-      selectedInmueble: null,
-      hayClientesSinOfertas: false,
-      oferta: '',
-      cuenta: '',
-      inmuebleSaldo: '',
-      nombreCliente: '',
-      afiliacion: '',
-      cliente: '',
-      numerointerior: '',
-      numeroexterior: '',
-      departamento: false,
-      montocredito: '',
-      precio: '',
-      inmueble: '',
-      afiliacionOk: false,
-      afiliacionNoChecar: false,
-      prospectoNoChecar: false,
-      manzana: '',
-      lote: '',
-      apartado: '',
-      prospecto: '',
-      cuantosprecios: 0,
-      gastosadministrativos: '',
-      precioseguro: '',
-      prerecibo: '',
-      prereciboadicional: '',
-      anticipocomision: '',
-      precalificacion: '',
-      avaluo: '',
-      subsidio: '',
-      pagare: '',
+    let c = this.controllerFor(this.routeName);
+    c.setProperties({
+      selectedEtapa: '0',
       cuantosInmueblesDisponibles: 0,
-      sumaCheca: false,
-      precioRaw: null,
-      inmuebleAsignado: '',
-      hayCaracteristicas: null,
-      inmuebleSaldo: '',
-      errorMessage: '',
-      candadoPrecio: '',
-      precioCatalogo: '',
-      processingGrabar: false,
-      selectedEtapa: null,
-      selectedPrecio: null,
-      selectedManzana: null,
-      selectedLote: null,
-      selectedInmueble: null,
-      hayClientesSinOfertas: false,
-      numerointerior: '',
-      numeroexterior: '',
-      numerosExteriores: null,
-      numerosInteriores: null,
-      proxyNumerosExteriores: null,
-      precio: '',
-      precioRaw: null,
       inmueble: '',
-      manzana: '',
-      lote: '',
+      inmuebleAsignado: '',
+      carateristicasLista: Ember.A(),
+      selectedManzana: null,
+      candadoPrecio: ''
     });
+    info('si entro en beforemodel de la ruta es el 2');
+    
   },
   setupController(ctrlr, model) {
     // set(ctrlr,'model', model.gtevdor);
