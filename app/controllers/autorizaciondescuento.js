@@ -148,9 +148,22 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       set(this, 'isValid', false);
     }
   }),*/
-  hayInmuebleAsignado: computed('inmuebleAsignado', 'cantidadDescuento', 'comentarioValor', {
+  hayInmuebleAsignado: computed('inmuebleAsignado', {
     get() {
       let i = get(this, 'inmuebleAsignado');
+      let can = get(this, 'cantidadDescuento');
+      let com = get(this, 'comentarioValor');
+      set(this, 'inmueble', i);
+      if (!isEmpty(i)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }),
+  valoresInmuebleAsignadoGrabar: computed('cantidadDescuento', 'comentarioValor', {
+    get() {
+      let i = get(this, 'inmueble');
       let can = get(this, 'cantidadDescuento');
       let com = get(this, 'comentarioValor');
       set(this, 'inmueble', i);
@@ -273,6 +286,44 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     } */
   },
   actions: {
+    grabarAsignado() {
+      let comentario = get(this, 'comentarioValor');
+      let descuento = get(this, 'cantidadDescuento');
+      let inmueble = get(this, 'inmueble');
+      let record = this.store.createRecord('autorizaciondescuento', {
+        comentario,
+        descuento,
+        inmueble,
+        asignado: true
+      });
+      record.save().then((data)=> {
+        set(this, 'seGrabo', true);
+        set(this, 'codigoDescuento', get(data, 'autorizacion'))
+      },(error)=> {
+        info('no se grabo');
+      });
+    },
+    revisarErrores() {
+      let _this = this;
+      get(this, 'erroresHabidos.content').clear();
+      Object.keys(this.get('errors')).forEach((que)=> {
+        if (typeof que === 'string' || que instanceof String) {
+          let error = get(_this, `errors.${que}`);
+          if (typeof error[0] === 'string' || error[0] instanceof String) {
+            let [errmsg] = error;
+            if (errmsg === 'is not a number') {
+              errmsg = 'no es numérico';
+            }
+            get(_this, 'erroresHabidos.content').pushObject(ErrorValidacion.create({
+              variable: que,
+              mensaje: errmsg,
+              campo: _this.getWithDefault(`label${que.capitalize()}`, '')
+            }));
+          }
+        }
+      });
+      this.toggleProperty('muestroErrores');
+    },
     grabar() {
       let comentario = get(this, 'comentarioValor');
       let descuento = get(this, 'cantidadDescuento');

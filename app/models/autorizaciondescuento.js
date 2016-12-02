@@ -7,5 +7,6 @@ export default DS.Model.extend({
   comentario: DS.attr('string'),
   cuenta: DS.attr('number', { default: 0 }),
   vigente: DS.attr('boolean', { default: true }),
-  usuarionombre: DS.attr('string', {default: '' })	
+  usuarionombre: DS.attr('string', {default: '' }),
+  asignado: DS.attr('boolean', { default: false })
 });
