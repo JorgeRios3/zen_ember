@@ -37,6 +37,7 @@
 <form role="form" {{ action "grabar" on="submit"}}>
 
 	<div><a href="" {{action 'traerEmail'}}><span class="glyphicon glyphicon-envelope"></span></a>{{emailaddress}}</div>
+	{{#unless hayInmuebleAsignado}}
 	<div class="form-group">
 				<label class="control-label">Etapa</label>
 				<div class="row">
@@ -170,21 +171,15 @@
 				</div>
 			</div>
 		{{/if}}
-
-	{{else}}
-			{{#if selectedEtapa}}
-				<div class="form-group">
-					<label class="control-label">Obteniendo Inmuebles Disponibles ...</label>
-				</div>
-			{{/if}}
 	{{/liquid-if}}
+	{{/unless}}
 	{{#if inmueble}}
 	<br><br>
 		<div class="form-group">		
 			<label for="idCantidadDescuento" class="control-label">Cantidad Descuento</label>		
 			<div class="row">
 				<div class="col-xs-10 col-md-3">
-					{{input type="text" value=cantidadDescuento class="form-control" placeholder="Cantidad Descuento" maxlength="11" id="idCantidadDescuento"}}
+					{{input type="number" value=cantidadDescuento class="form-control" placeholder="Cantidad Descuento" maxlength="11" id="idCantidadDescuento"}}
 				</div>				
 			</div>
   			<label for="comment">Comentario</label>
@@ -234,8 +229,8 @@
   				{{/modal-bs}}
 			{{/if}} 
 		{{/if}}
-		{{#if hayInmuebleAsignado}}
-			<div class="btn btn-info" {{action "grabarAsignado"}}>Grabar</div>
+		{{#if camposFormafillAndInmueble}}
+			<div class="btn btn-info" {{action "grabarAsignado"}}>Grabar (Inmueble Asignado)</div>
 		{{/if}}
 
 	</div>
