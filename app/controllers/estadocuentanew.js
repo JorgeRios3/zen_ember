@@ -486,6 +486,7 @@ export default Ember.Controller.extend(FormatterMixin,
   	  set(this, 'showCuenta', get(r, 'cuenta'));
   	  set(this, 'cuentaBuscar', get(r, 'cuenta'));
   	  set(this, 'prereciboRecord', r);
+  	  set(this, 'prerecibosForma', false);
   	  Ember.run.later('', function() {
   	    that.send('buscarConCuenta');
   	  }, 2000);
