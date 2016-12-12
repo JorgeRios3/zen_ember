@@ -86,18 +86,21 @@ export default Ember.Controller.extend({
   },
   ponerInmueble(loteoficial) {
     let cual = get(this, 'lotesArray').findBy('lote', loteoficial);
+    info('valor de cual', cual);
     let inmueble = get(cual, 'inmueble');
     set(this, 'selectedInmueble', inmueble);
   },
   observaSelectedInmueble: observer('selectedInmueble', function() {
     let inmueble = get(this, 'selectedInmueble');
+    info('valor de inmueble en selectedInmueble', inmueble);
+    set(this, 'inmuebleLabel', inmueble)
     let that = this;
     // info('selectedInmueble paso');
     this.store.find('inmuebleindividual', inmueble)
     .then((dato) => {
       that.setProperties({
         domicilio: get(dato, 'domicilio'),
-        inmueble,
+        inmueble: get(dato, 'id'),
         precioCatalogo: get(dato, 'precioCatalogo'),
         selectedPrecio: 0
       });
@@ -208,6 +211,8 @@ export default Ember.Controller.extend({
       let loteoficial = `${ne}${depa}`;
       let l = get(this, 'inmueblesdisponibles');
       let cual = l.findBy('lote', loteoficial);
+      info('valor de cual aqui', cual);
+      set(this, 'inmueble', cual.id);
       this.store.find('inmuebleindividual', cual.id)
       .then((dato)=> {
         that.setProperties(
@@ -226,7 +231,7 @@ export default Ember.Controller.extend({
         }
 		    );
       });
-      set(this, 'inmueble', loteoficial);
+      //set(this, 'inmueble', loteoficial);
       set(this, 'hayCaracteristicas', true);
     },
     buscar() {
