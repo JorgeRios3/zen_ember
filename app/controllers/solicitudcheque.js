@@ -1414,7 +1414,9 @@ export default Ember.Controller.extend(FormatterMixin, {
       this.store.query('gxsolicitudcheque', objeto)
       .then((data)=> {
         let cuantos = get(data, 'meta.cuantos');
+        info('valor de cuantos ', cuantos);
         cuantos > 20 ? set(this, 'showNavigation', true) : set(this, 'showNavigation', false);
+        set(this, 'showNavigation', true);
         if (cuantos <= 0) {
           info('no hubo resultados');
           set(this, 'errorModal', true);

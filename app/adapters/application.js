@@ -53,3 +53,4 @@ inflector.irregular('terrenovendidoarcadia', 'terrenovendidoarcadias');
 inflector.irregular('solicitudfirmante', 'solicitudfirmantes');
 inflector.irregular('solicitudfondeo', 'solicitudfondeos');
 inflector.irregular('zenrapcuenta', 'zenrapcuentas');
+inflector.irregular('inmueblesvendidosdescuento', 'inmueblesvendidosdescuentos');

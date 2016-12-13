@@ -94,6 +94,9 @@
 			</table>
 		{{/if}}
 	{{/if}}
+	{{#if prereciboRecord}}
+		<div class="h4 text text-success">Prerecibo seleccionado {{prereciboRecord.id}} ${{prereciboRecord}}</div>
+	{{/if}}
 	{{#if prerecibosForma}}
 	<div class="h5">Lista Prerecibos</div>
 	<table class="table table-bordered table-striped table-condensed cf">
