@@ -5,8 +5,8 @@ export default DS.Model.extend({
   descripcion: DS.attr('string'),
   manzana: DS.attr('string'),
   lote: DS.attr('number'),
-  preciobase: DS.attr('money'),
-  descuento: DS.attr('money'),
-  neto: DS.attr('money'),
+  preciobase: DS.attr('number'),
+  descuento: DS.attr('number'),
+  neto: DS.attr('number'),
   fecha: DS.attr('string')
 });

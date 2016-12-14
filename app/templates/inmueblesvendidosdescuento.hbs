@@ -33,6 +33,8 @@
 <div id="no-more-tables">
 	<br>
 	<div class="badge">{{cuantos}}</div>
+	<br>
+	<div class="row text text-info h5">Total Base ${{totalbase}}  Total Descuento ${{totaldescuento}}  Total Neto ${{totalneto}}</div>
 		<table class="table table-bordered table-striped table-condensed cf">
 		<thead>
 		<tr>
@@ -56,9 +58,9 @@
 				<td data-title="Lote">{{r.lote}}</td>
 				<td data-title="Inmueble">{{r.id}}</td>
 				<td data-title="Fecha">{{r.fecha}}</td>
-				<td data-title="Precio Base">{{r.preciobase}}</td>
-				<td data-title="Descuento">{{r.descuento}}</td>
-				<td data-title="Precio Neto">{{r.neto}}</td>
+				<td data-title="Precio Base" class="text-right">{{r.preciobase}}</td>
+				<td data-title="Descuento" class="text-right">{{r.descuento}}</td>
+				<td data-title="Precio Neto" class="text-right">{{r.neto}}</td>
 
 			</tr>
 			{{/each}}

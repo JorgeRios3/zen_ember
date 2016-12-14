@@ -1,15 +1,17 @@
 import Ember from 'ember';
 import moment from 'moment';
+import FormatterMixin from '../mixins/formatter';
 
 const {
   get,
   set,
   Logger: { info },
-  setProperies,
-  isEmpty
+  setProperties,
+  isEmpty,
+  getProperties
 } = Ember;
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(FormatterMixin,{
   fechaInicial: '',
   fechaFinal: '',
   nullFechaInicial: null,
@@ -25,11 +27,29 @@ export default Ember.Controller.extend({
   	  let fechafinal = !isEmpty(fFinal) ? fFinal.format('YYYY/MM/DD') : '';
   	  objeto.fechainicial = fechainicial;
   	  objeto.fechafinal = fechafinal;
+  	  let totalneto = 0;
+  	  let totalbase = 0;
+  	  let totaldescuento = 0;
+  	  let lista = Ember.A();
   	  this.store.query('inmueblesvendidosdescuento', objeto)
   	  .then((data)=> {
+  	  	data.forEach((item)=> {
+  	  	  let { descripcion, descuento, etapa, fecha, id ,lote, manzana, neto, preciobase } = getProperties(item, `descripcion descuento 
+  	  	  	etapa fecha id lote manzana neto preciobase`.w());
+  	  	    totalneto += neto;
+  	  	    totalbase += preciobase;
+  	  	    totaldescuento += descuento;
+  	  	    lista.pushObject({ descripcion, descuento: this.formatter(descuento), 
+  	  	    	etapa, fecha, id ,lote, manzana, 
+  	  	    	neto: this.formatter(neto), 
+  	  	    	preciobase: this.formatter(preciobase) });
+  	  	});
   	  	info('valor de data', data.length);
   	  	set(this, 'cuantos', get(data, 'length'));
-  	    set(this, 'inmueblesLista', data);
+  	    set(this, 'inmueblesLista', lista);
+  	    set(this, 'totalneto', this.formatter(totalneto));
+  	    set(this, 'totaldescuento', this.formatter(totaldescuento));
+  	    set(this, 'totalbase', this.formatter(totalbase));
   	  info('si llego');
   	  }, (error)=> {
   	  	info('trono');
