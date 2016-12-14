@@ -21,7 +21,10 @@ RouteAuthMixin, {
   	  nullFechaInicial: null,
   	  nullFechaFinal: null,
   	  selectedEtapa: '',
-  	  cuantos: ''
+  	  cuantos: '',
+  	  totalneto: '',
+  	  totalbase: '',
+  	  totaldescuento: ''
   	});
   },
   setupController(ctrl, model) {
