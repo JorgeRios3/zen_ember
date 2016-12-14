@@ -1,0 +1,69 @@
+<div class="h3 text text-info">Inmuebles Descuento Detalle</div>
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Etapa</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Elija etapa{{/x-option}}
+			{{#each etapas as |item|}}
+				{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label for="datewidget" class="control-label">Fecha Inicial</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+			{{bs-datetimepicker date=nullFechaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaInicial))}}
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label for="datewidget" class="control-label">Fecha Final</label>
+	<div class="row">
+		<div class="col-xs-10 col-md-3">
+			{{bs-datetimepicker date=nullFechaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaFinal))}}
+		</div>
+	</div>
+</div>
+<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+<div id="no-more-tables">
+	<br>
+	<div class="badge">{{cuantos}}</div>
+		<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Etapa</th>
+			<th>Desarrollo</th>
+			<th>Manzana</th>
+			<th>Lote</th>
+			<th>Inmueble</th>
+			<th>Fecha</th>
+			<th>Precio Base</th>
+			<th>Descuento</th>
+			<th>Precio Neto</th>
+		</tr>
+		</thead>
+		<tbody>
+			{{#each inmueblesLista as |r|}}
+			<tr>
+				<td data-title="Etapa">{{r.etapa}}</td>
+				<td data-title="Desarrollo">{{r.descripcion}}</td>
+				<td data-title="Manzana">{{r.manzana}}</td>
+				<td data-title="Lote">{{r.lote}}</td>
+				<td data-title="Inmueble">{{r.id}}</td>
+				<td data-title="Fecha">{{r.fecha}}</td>
+				<td data-title="Precio Base">{{r.preciobase}}</td>
+				<td data-title="Descuento">{{r.descuento}}</td>
+				<td data-title="Precio Neto">{{r.neto}}</td>
+
+			</tr>
+			{{/each}}
+		</tbody>
+		</table>
+	</div>
+
+
