@@ -84,6 +84,7 @@ Router.map(function() {
   this.route('bancomovimiento');
   this.route('estadocuentanew');
   this.route('inmueblesvendidosdescuento');
+  this.route('reporteasignaciones');
 });
 
 export default Router;

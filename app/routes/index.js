@@ -111,6 +111,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     );
   },
   model() {
+    try {
     let { store } = this;
     store.unloadAll('zenusuario');
     store.unloadAll('twofactor');
@@ -132,9 +133,13 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     return Ember.RSVP.hash(
       promises
     );
+  }catch(e) {
+    info ('sera aqui');
+  }
   },
 
   afterModel(model, transition) {
+    try {
     let currentLocation;
     let hasTwoFactorAuthentication = get(model.twofactor, 'hasTwoFactorAuthentication');
     let isTwoFactorAuthenticated = get(model.twofactor, 'isTwoFactorAuthenticated');
@@ -163,6 +168,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
         this.transitionTo('twofactorlogin');
       }
     }
+  }catch(e) {
+    info('se fue por el aftermodel catch');
+  }
 
   },
   actions: {
