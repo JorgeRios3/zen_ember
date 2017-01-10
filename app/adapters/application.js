@@ -54,3 +54,5 @@ inflector.irregular('solicitudfirmante', 'solicitudfirmantes');
 inflector.irregular('solicitudfondeo', 'solicitudfondeos');
 inflector.irregular('zenrapcuenta', 'zenrapcuentas');
 inflector.irregular('inmueblesvendidosdescuento', 'inmueblesvendidosdescuentos');
+inflector.irregular('zenmenuitemsuspendido', 'zenmenuitemsuspendidos');
+inflector.irregular('asignacionesreporte', 'asignacionesreportes');
