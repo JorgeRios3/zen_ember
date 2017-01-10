@@ -1,0 +1,6 @@
+<div class="h3 tex text-info">Habilitar el menu de precios</div>
+{{#if model.suspendido}}
+	<div class="btn btn-success" {{action "cambiarEstado"}}>Activar</div>
+{{else}}
+	<div class="btn btn-danger" {{action "cambiarEstado"}}>Desactivar</div>
+{{/if}}

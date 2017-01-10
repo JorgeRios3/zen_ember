@@ -1,0 +1,92 @@
+<div class="h3 text text-info">Reporte Asignaciones</div>
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Etapa</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Elija etapa{{/x-option}}
+			{{#each etapas as |item|}}
+				{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Filtro</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedFiltro action=(action  (mut selectedFiltro)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Elija Filtro{{/x-option}}
+			{{#each listaFiltro as |item|}}
+				{{#x-option value=item.id}}{{item.label}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+<div class="form-inline">
+		<div class="h5 text text-info">Fecha Oferta</div>
+		<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha Inicial</label>
+		<div>
+        	{{bs-datetimepicker id='fecha1' date=nullFechaCapturaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCapturaInicial))}}
+    	</div>
+	</div>
+	<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha Final</label>
+		<div >
+        	{{bs-datetimepicker id='fecha2' date=nullFechaCapturaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCapturaFinal))}}
+    		</div>
+    	</div>
+	</div>
+<div class="form-inline">
+	<div class="h5 text text-info">Fecha Asignacion</div>
+	<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha Inicial</label>
+		<div>
+        	{{bs-datetimepicker id='fecha3' date=nullFechaProgramadaInicial showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaProgramadaInicial))}}
+    	</div>
+	</div>
+	<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha Final</label>
+		<div>
+        	{{bs-datetimepicker id='fecha4' date=nullFechaProgramadaFinal showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaProgramadaFinal))}}
+    	</div>
+	</div>
+</div>
+	<br>
+<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+<div id="no-more-tables">
+<table class="table table-bordered table-striped table-condensed cf">
+	<thead>
+	<tr>
+		<th>Oferta</th>
+		<th>Fecha Oferta</th>
+		<th>Cuenta</th>
+		<th>Manzana</th>
+		<th>Lote</th>
+		<th>Cliente</th>
+		<th>Nombre</th>
+		<th>Vendedor</th>
+		<th>Rap</th>
+	</tr>
+	</thead>
+	<tbody>
+	{{#each listaAsignaciones as |r i|}}
+		<tr>
+			<td data-title="Oferta">{{r.id}}</td>
+			<td data-title="Fecha Oferta">{{r.fechaoferta}}</td>
+			<td data-title="Cuenta">{{r.cuenta}}</td>
+			<td data-title="Manzana">{{r.manzana}}</td>
+			<td data-title="Lote">{{r.lote}}</td>
+			<td data-title="Cliente">{{r.clientecodigo}}</td>
+			<td data-title="Nombre">{{r.nombrecliente}}</td>
+			<td data-title="Vendedor">{{r.nombrevendedor}}</td>
+			<td data-title="Rap">{{r.referencia_rap}}</td>
+		</tr>
+	{{/each}}
+	</tbody>
+</table>
+</div>
+
