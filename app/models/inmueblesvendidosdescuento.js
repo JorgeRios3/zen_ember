@@ -8,5 +8,6 @@ export default DS.Model.extend({
   preciobase: DS.attr('number'),
   descuento: DS.attr('number'),
   neto: DS.attr('number'),
-  fecha: DS.attr('string')
+  fecha: DS.attr('string'),
+  subsidio: DS.attr('number')
 });

@@ -24,7 +24,10 @@ RouteAuthMixin, {
   	  cuantos: '',
   	  totalneto: '',
   	  totalbase: '',
-  	  totaldescuento: ''
+  	  totaldescuento: '',
+      totalSubsidio: '',
+      totalvendidosporetapa: '',
+      requestedPage: ''
   	});
   },
   setupController(ctrl, model) {
