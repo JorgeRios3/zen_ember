@@ -14,6 +14,20 @@
 </div>
 
 <div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Estatus</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=SelectedTipo action=(action  (mut selectedTipo)) class="form-control form-control-inline"}}
+			{{#x-option value='1'}}Vendidas Cobradas{{/x-option}}
+			{{#each filtroCobradas as |item|}}
+				{{#x-option value=item.value}}{{item.label}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
 	<label for="datewidget" class="control-label">Fecha Inicial</label>
 	<div class="row">
 		<div class="col-xs-10 col-md-3">
@@ -29,8 +43,18 @@
 		</div>
 	</div>
 </div>
-<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
-{{#if showNavigation}}
+<div class="btn btn-info" {{action "buscar2"}}>Buscar</div>
+<div id="no-more-tables">
+	<br><div>Total vendidos etapa <span class="badge">{{totalvendidosporetapa}}</span></div>
+	<br>
+	<div class="badge">{{cuantos}}</div>
+	<br>
+	<dl class="dl-horizontal">
+    	<dt>Total Precios</dt><dd>{{totprecios}}</dd>
+    	<dt>Total Descuentos</dt><dd>{{totdescuentos}}</dd>
+    	<dt>Total Subsidios</dt><dd>{{totsubsidios}}</dd>
+    </dl>
+	{{#if showNavigation}}
 		<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
 		{{#if hayPagPrevias}}
 			<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
@@ -39,11 +63,6 @@
 			<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
 		{{/if}}
 	{{/if}}
-<div id="no-more-tables">
-	<br>
-	<div class="badge">{{cuantos}}</div>
-	<br>
-	<div class="row text text-info h5">Total Base ${{totalbase}}  Total Descuento ${{totaldescuento}}  Total Neto ${{totalneto}}</div>
 		<table class="table table-bordered table-striped table-condensed cf">
 		<thead>
 		<tr>
@@ -56,6 +75,7 @@
 			<th>Precio Base</th>
 			<th>Descuento</th>
 			<th>Precio Neto</th>
+			<th>Subsidio</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -70,6 +90,7 @@
 				<td data-title="Precio Base" class="text-right">{{r.preciobase}}</td>
 				<td data-title="Descuento" class="text-right">{{r.descuento}}</td>
 				<td data-title="Precio Neto" class="text-right">{{r.neto}}</td>
+				<td data-title="Subsidio" class="text-right">{{r.subsidio}}</td>
 
 			</tr>
 			{{/each}}
