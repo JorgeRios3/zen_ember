@@ -86,6 +86,7 @@ Router.map(function() {
   this.route('inmueblesvendidosdescuento');
   this.route('reporteasignaciones');
   this.route('habilitamenuprecios');
+  this.route('catalogoprecios');
 });
 
 export default Router;

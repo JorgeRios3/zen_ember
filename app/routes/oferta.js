@@ -83,7 +83,8 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       DescuentoCatalogo: 0,
       totalDescuentoCatalogo: 0,
       muestraCamposCapturaAdicionales: false,
-      messageTotaldescuento: ''
+      messageTotaldescuento: '',
+      showSubsidio: true
     }); // conforme se definen properties en el controller modificar este hash agregando las properties con el mismo valor asociado
   },
   setupController(ctrlr, model) {

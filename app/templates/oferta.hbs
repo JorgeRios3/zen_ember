@@ -424,6 +424,7 @@
 			</div>
 	</div>
 	{{#unless tipoCuentaEsContado}}
+		{{#if showSubsidio}}
 		<div class="form-group">
 				<label for="idofertasubsidio" class="control-label">Subsidio</label>
 				<div class="row">
@@ -432,6 +433,7 @@
 					</div>
 				</div>
 		</div>
+		{{/if}}
 	{{/unless}}	
 	<div class="form-group">
 			<label for="idofertapagare" class="control-label">Pagaré</label>

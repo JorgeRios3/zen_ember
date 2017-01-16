@@ -155,6 +155,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   enviarEmail: false,
   DescuentoCatalogo: 0,
   messageTotaldescuento: '',
+  showSubsidio: true,
   tiposcuentas: [{ id: 'infonavit' , tipo: 'Infonavit' },
     { id: 'contado', tipo: 'Contado' },
     { id: 'hipotecaria', tipo: 'Hipotecaria' },
@@ -182,6 +183,11 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       set(this, 'banderaTotalDescuento', false);
       set(this, 'messageTotaldescuento', 'La cantidad no puede ser mayor al descuento marcado');
       info('es mayor del descuento');
+    }
+    if (get(this, 'totalDescuentoCatalogo') > 0) {
+      set(this, 'showSubsidio', false);
+    } else {
+      set(this, 'showSubsidio', true);
     }
   }),
   observaDescuento: observer('codigoDescuento', function() {
@@ -713,10 +719,10 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       return true;
     }
   }),
-  checaSuma: Ember.observer('nuevoPrecioRaw', 'precalificacion', 'avaluo', 'subsidio' , 'pagare' , 'prerecibo' , 'prereciboadicional', function() {
+  checaSuma: Ember.observer('nuevoPrecioRaw', 'precalificacion', 'avaluo', 'subsidio' , 'pagare' , 'prerecibo' , 'prereciboadicional', 'totalDescuentoCatalogo', function() {
     let _this = this;
     let total = 0;
-    'precalificacion avaluo subsidio pagare prerecibo prereciboadicional'.w().forEach((key)=> {
+    'precalificacion avaluo subsidio pagare prerecibo prereciboadicional totalDescuentoCatalogo'.w().forEach((key)=> {
       try {
         let n = Number(_this.getWithDefault(key, 0));
         total = total + n;
