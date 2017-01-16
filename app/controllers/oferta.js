@@ -10,7 +10,8 @@ const {
   isEmpty,
   getOwner,
   Logger: { info },
-  inject: { service }
+  inject: { service },
+  getProperties
 } = Ember;
 
 let InmuebleReservado = Ember.Object.extend({
@@ -152,6 +153,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   clientessinofertas: null,
   clientesofertas: null,
   enviarEmail: false,
+  DescuentoCatalogo: 0,
+  messageTotaldescuento: '',
   tiposcuentas: [{ id: 'infonavit' , tipo: 'Infonavit' },
     { id: 'contado', tipo: 'Contado' },
     { id: 'hipotecaria', tipo: 'Hipotecaria' },
@@ -168,6 +171,17 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   socket: computed('socketService', 'socketU', {
     get() {
       return get(this, 'socketService').socketFor(config.WSOCKETS_URL);
+    }
+  }),
+  observaTotalDescuentoCatalogo: observer('totalDescuentoCatalogo', function() {
+    if(get(this, 'totalDescuentoCatalogo') <= get(this, 'descuentoCatalogoRaw') || get(this, 'totalDescuentoCatalogo' ) === 0) {
+      set(this, 'banderaTotalDescuento', true);
+      set(this, 'messageTotaldescuento', '');
+      info('es menor igual');
+    } else {
+      set(this, 'banderaTotalDescuento', false);
+      set(this, 'messageTotaldescuento', 'La cantidad no puede ser mayor al descuento marcado');
+      info('es mayor del descuento');
     }
   }),
   observaDescuento: observer('codigoDescuento', function() {
@@ -362,6 +376,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         this.send('freeInmueble', antes);
       } else {
         this.send('submitInmueble');
+        //this.send('BuscarDescuentoInmueble', despues);
         this.store.unloadAll('caracteristicasinmueble');
         this.store.unloadAll('inmuebleindividual');
         this.store.unloadAll('catalogoprecio');
@@ -379,7 +394,13 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         }).then((dato)=> {
           let idPrecioCatalogo = get(dato, 'idPrecioCatalogo');
           if (idPrecioCatalogo !== 0) {
-            info('paso la prueba', get(dato, 'idPrecioCatalogo'));
+            info('paso la prueba', get(that, 'misprecios.content'));
+            info('valor de idPrecioCatalogo', idPrecioCatalogo);
+            let objetoDescuento = get(that, 'misprecios.content').findBy('id', idPrecioCatalogo);
+            set(that, 'descuentoCatalogoRaw', get(objetoDescuento, 'descuentoraw'))
+            set(that, 'descuentoCatalogo', get(objetoDescuento, 'descuento'));
+            set(that, 'descuentoCatalogoField', get(that, 'descuentoCatalogoRaw') > 0 ? true : false);
+            info('viendo si hay objeto', objetoDescuento);
           } else {
             info('se fue por el else no hay idPrecioCatalogo');
           }
@@ -552,16 +573,21 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         data.forEach((item)=> {
           let e = get(item, 'etapa');
           if (e === etapa) {
-            let { descripcion, id, precio, precioraw, sustentable } = item.getProperties();
+            info('valor de item en append', item);
+            let { id, descripcion, descuento, descuentoraw, 
+              etapa, precio, precioraw, sustentable } = getProperties(item, `id descripcion descuento 
+              descuentoraw etapa precio precioraw sustentable`.w());
             // get(this,'precios.content').pushObject(
             v.pushObject(
               miPrecio.create({
                 descripcion,
                 etapa,
-                id,
+                id: parseInt(id),
                 precio,
                 precioraw,
                 sustentable,
+                descuento,
+                descuentoraw,
                 precioDescripcion: `${get(item, 'precio')} ${get(item, 'descripcion')}`
               })
             );
@@ -601,11 +627,17 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     set(this, 'clientesofertas', this.store.query('clientesoferta', { cliente }));
     let _this = this;
     if (cliente) {
+      try {
       let url = `/api/referenciasrapconclientesincuentas/${cliente}`;
       this.get('ajax').request(url).then((data)=> {
         let ref = data.referenciasrapconclientesincuenta.referencia;
         set(_this, 'referencia', ref);
+      },(error)=> {
+        info('no la encontro');
       });
+    } catch(e) {
+      info('no lo encontro');
+    }
     }
   }),
   observaAfiliacion: observer('afiliacion', function() {
@@ -701,6 +733,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     set(this, 'sumaCheca', total === pr && pr > 0);
   }),
   validations: {
+    banderaTotalDescuento: {
+      inclusion: {in: [true, null], message: 'el descuento no puede ser mayor al descuento marcado'}
+    },
     comision: {
       inclusion: { in: [true], message: 'no tiene comision' }
     },
@@ -767,6 +802,14 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     }
   },
   actions: {
+    BuscarDescuentoInmueble(inmueble) {
+      /*this.store.find('preciodescuento', inmueble)
+      .then((data)=> {
+        info('llego el dato');
+      },(error)=> {
+        info('ocurio un error en inmueblepreciosdescuento');
+      });*/
+    },
     checarComision() {
       let that = this;
       let inmueble = get(this, 'selectedInmueble');
@@ -832,7 +875,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           tipocuenta: get(this, 'tipoCuenta'),
           prerecibo: cambiar(get(this, 'prerecibo')),
           prereciboadicional: cambiar(get(this, 'prereciboadicional')),
-          autorizacion: get(this, 'observaCodigoDescuento') === true ? get(this, 'codigoDescuento') : ''
+          autorizacion: get(this, 'observaCodigoDescuento') === true ? get(this, 'codigoDescuento') : '',
+          descuento: get(this, 'totalDescuentoCatalogo') > 0 ? get(this, 'totalDescuentoCatalogo') : 0
         }
       );
 

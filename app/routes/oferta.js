@@ -79,7 +79,11 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       sumaCheca: false,
       precioRaw: null,
       candadoPrecio: false,
-      precioCatalogo: 0
+      precioCatalogo: 0,
+      DescuentoCatalogo: 0,
+      totalDescuentoCatalogo: 0,
+      muestraCamposCapturaAdicionales: false,
+      messageTotaldescuento: ''
     }); // conforme se definen properties en el controller modificar este hash agregando las properties con el mismo valor asociado
   },
   setupController(ctrlr, model) {

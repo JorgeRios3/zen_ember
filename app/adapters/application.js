@@ -56,3 +56,4 @@ inflector.irregular('zenrapcuenta', 'zenrapcuentas');
 inflector.irregular('inmueblesvendidosdescuento', 'inmueblesvendidosdescuentos');
 inflector.irregular('zenmenuitemsuspendido', 'zenmenuitemsuspendidos');
 inflector.irregular('asignacionesreporte', 'asignacionesreportes');
+inflector.irregular('preciosdescuento', 'preciosdescuentos');
