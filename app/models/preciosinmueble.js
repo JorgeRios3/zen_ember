@@ -5,5 +5,7 @@ export default DS.Model.extend({
   sustentable : DS.attr("boolean"),
   etapa : DS.attr("number"),
   precioraw : DS.attr('number'),
-  descripcion: DS.attr("string")
+  descripcion: DS.attr("string"),
+  descuentoraw: DS.attr('number'),
+  descuento: DS.attr('string')
 });

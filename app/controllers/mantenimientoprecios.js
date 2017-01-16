@@ -249,6 +249,7 @@ export default Ember.Controller.extend(EmberValidations, {
       c.then((data)=> {
         data.forEach((item)=> {
           let e = get(item, 'etapa');
+          // info('valor de etapa comparando en vueltas', parseInt(etapa) === e);
           if (e === parseInt(etapa)) {
             get(that, 'precios.content').pushObject(item);
           }
