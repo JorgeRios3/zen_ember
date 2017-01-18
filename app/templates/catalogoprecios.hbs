@@ -1,1 +1,61 @@
-{{outlet}}
+<br><br>
+<div class="h3 text text-info">Catalogo Precios</div>
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Etapa</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Elija etapa{{/x-option}}
+			{{#each etapas as |item|}}
+				{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Estatus</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEstatus action=(action  (mut selectedEstatus)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Todos{{/x-option}}
+			{{#each listaEstatus as |item|}}
+				{{#x-option value=item.valor}}{{item.label}}{{/x-option}}
+		{{/each}}
+	{{/x-select}}
+		</div>
+	</div>
+</div>
+<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+
+<div id="no-more-tables">
+		<br>
+			<table class="table table-bordered table-striped table-condensed cf">
+			<thead>
+			<tr>
+				<th>Id</th>
+				<th>Descripcion</th>
+				<th>Precio</th>
+				<th>Sustentable</th>
+				<th>etapa</th>
+				<th>Descuento</th>
+				<th>Activo</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each listaPrecios as |r i|}}
+				<tr>
+					<td data-title="Id">{{r.id}}</td>
+					<td data-title="Descripcion">{{r.descripcion}}</td>
+					<td data-title="Precio">{{r.precio}}</td>
+					<td data-title="Sustentable">{{r.sustentable}}</td>
+					<td data-title="etapa">{{r.etapa}}</td>
+					<td data-title="Descuento">{{r.descuento}}</td>
+					<td data-title="Activo"><span class="glyphicon glyphicon-{{if r.activo "ok" "remove"}}"></span></td>
+					
+				</tr>
+			{{/each}}
+			</tbody>
+			</table>
+		</div>

@@ -7,5 +7,6 @@ export default DS.Model.extend({
   precioraw : DS.attr('number'),
   descripcion: DS.attr("string"),
   descuentoraw: DS.attr('number'),
-  descuento: DS.attr('string')
+  descuento: DS.attr('string'),
+  activo: DS.attr('boolean')
 });
