@@ -8,5 +8,8 @@ export default DS.Model.extend({
   descripcion: DS.attr("string"),
   descuentoraw: DS.attr('number'),
   descuento: DS.attr('string'),
-  activo: DS.attr('boolean')
+  activo: DS.attr('boolean'),
+  caracteristicas: DS.attr('string', {default: ''}),
+  visible: DS.attr('boolean'),
+  tipo: DS.attr('string')
 });

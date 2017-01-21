@@ -10,6 +10,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
   setupController(ctrl, model) {
     set(ctrl, 'etapas', model.etapas);
     set(ctrl, 'listaPrecios', model.precios);
+    set(ctrl, 'caracteristicasCatalogo', model.caracteristicas);
   },
   beforeModel2() {
 
@@ -21,7 +22,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
     }
     return hash({
       etapas: store.findAll('etapastramite'),
-      precios: store.findAll('preciosinmueble')
+      precios: store.findAll('preciosinmueble'),
+      caracteristicas: store.findAll('caracteristicasinmueble')
     });
   }
 });

@@ -1,11 +1,11 @@
 <br><br>
-<div class="h3 text text-info">Catalogo Precios</div>
+<div class="h3 text text-info">Catálogo Precios</div>
 <div class="form-group">
 	<label for="idnumerosexteriores" class="control-label">Etapa</label>
 	<div class="row">
 		<div class="col-md-5">
 			{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
-			{{#x-option value=''}}Elija etapa{{/x-option}}
+			{{#x-option value=''}}Todas{{/x-option}}
 			{{#each etapas as |item|}}
 				{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
 		{{/each}}
@@ -27,35 +27,208 @@
 		</div>
 	</div>
 </div>
-<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
-
+<div class="form-group">
+<div class="row">
+	<div class="col-md-5">
+	<div class="btn btn-info" {{action "buscar"}}>Buscar</div>
+	<div class="btn btn-success" {{action "precioNuevo"}}>Precio Nuevo</div>
+</div>
+</div>
+</div>
+<br><br>
+{{#if showPrecios}}
 <div id="no-more-tables">
-		<br>
-			<table class="table table-bordered table-striped table-condensed cf">
-			<thead>
-			<tr>
-				<th>Id</th>
-				<th>Descripcion</th>
-				<th>Precio</th>
-				<th>Sustentable</th>
-				<th>etapa</th>
-				<th>Descuento</th>
-				<th>Activo</th>
-			</tr>
-			</thead>
-			<tbody>
-			{{#each listaPrecios as |r i|}}
-				<tr>
-					<td data-title="Id">{{r.id}}</td>
-					<td data-title="Descripcion">{{r.descripcion}}</td>
-					<td data-title="Precio">{{r.precio}}</td>
-					<td data-title="Sustentable">{{r.sustentable}}</td>
-					<td data-title="etapa">{{r.etapa}}</td>
-					<td data-title="Descuento">{{r.descuento}}</td>
-					<td data-title="Activo"><span class="glyphicon glyphicon-{{if r.activo "ok" "remove"}}"></span></td>
-					
-				</tr>
+<br>
+	<table class="table table-bordered table-striped table-condensed cf">
+	<thead>
+	<tr>
+		<th>Id</th>
+		<th>Descripcion</th>
+		<th>Precio</th>
+		<th>Sustentable</th>
+		<th>etapa</th>
+		<th>Descuento</th>
+		<th>Activo</th>
+		<th>Prototipo</th>
+		<th>Visible</th>
+	</tr>
+	</thead>
+	<tbody>
+	{{#each listaPrecios as |r i|}}
+		<tr>
+			<td data-title="Id"><a href="" {{action "BuscarCatalogo" r}}>{{r.id}}</a></td>
+			<td data-title="Descripcion">{{r.descripcion}}</td>
+			<td data-title="Precio">{{r.precio}}</td>
+			<td data-title="Sustentable"><span class="glyphicon glyphicon-{{if r.sustentable "ok" "remove"}}"></span></td>
+			<td data-title="etapa">{{r.etapa}}</td>
+			<td data-title="Descuento">{{r.descuento}}</td>
+			<td data-title="Activo"><span class="glyphicon glyphicon-{{if r.activo "ok" "remove"}}"></span></td>
+			<td data-title="Prototipo">{{r.tipo}}</td>
+			<td data-title="Visible"><span class="glyphicon glyphicon-{{if r.visible "ok" "remove"}}"></span></td>
+			
+		</tr>
+	{{/each}}
+	</tbody>
+	</table>
+</div>
+{{/if}}
+{{#if showDetalle}}
+<div class="jumbotron">
+	{{#if newFlag}}
+	<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Etapa</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedEtapaPrecio action=(action  (mut selectedEtapaPrecio)) class="form-control form-control-inline"}}
+			{{#x-option value=''}}Todas{{/x-option}}
+			{{#each etapas as |item|}}
+				{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
 			{{/each}}
-			</tbody>
-			</table>
+		{{/x-select}}
 		</div>
+	</div>
+	</div>
+{{/if}}
+	<div class="form-group">
+		<label for="cantidad" class="control-label">Descripcion</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">	
+	    		{{input type="text" value=descripcion class="form-control" placeholder="Nombre" id="Nombre"}}
+	    	</div>
+    	</div>
+    </div>
+    <div class="form-group">
+		<label for="cantidad" class="control-label">Precio</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+    			{{input type="number" value=precio class="form-control" placeholder="Precio" id="Precio"}}
+    		</div>
+    	</div>
+    </div>
+    <div class="form-group">
+		<label for="cantidad" class="control-label">Descuento</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="number" value=descuento class="form-control" placeholder="Descuento" id="Descuento"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+	<label for="idnumerosexteriores" class="control-label">Caracteristica</label>
+	<div class="row">
+		<div class="col-md-5">
+			{{#x-select value=selectedCaracteristica action=(action  (mut selectedCaracteristica)) class="form-control form-control-inline"}}
+				{{#x-option value=''}}Elegir{{/x-option}}
+				{{#each caracteristicasCatalogo as |item|}}
+					{{#x-option value=item}}{{item.descripcion}}{{/x-option}}
+				{{/each}}
+			{{/x-select}}
+		</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="cantidad" class="control-label">Cantidad</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="number" value=cantidad class="form-control" placeholder="Cuenta" id="cantidad"}}
+			</div>		
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idnumerosexteriores" class="control-label">Activo</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedActivoItem action=(action  (mut selectedActivoItem)) class="form-control form-control-inline"}}
+				{{#each listaEstatusPrecio as |item|}}
+					{{#x-option value=item.valor}}{{item.label}}{{/x-option}}
+			{{/each}}
+		{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idnumerosexteriores" class="control-label">Sustentable</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedSustentableItem action=(action  (mut selectedSustentableItem)) class="form-control form-control-inline"}}
+				{{#each listaSustentablePrecio as |item|}}
+					{{#x-option value=item.valor}}{{item.label}}{{/x-option}}
+			{{/each}}
+		{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idnumerosexteriores" class="control-label">Prototipo</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedPrototipoItem action=(action  (mut selectedPrototipoItem)) class="form-control form-control-inline"}}
+				{{#each listatipo as |item|}}
+					{{#x-option value=item.valor}}{{item.label}}{{/x-option}}
+			{{/each}}
+		{{/x-select}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idnumerosexteriores" class="control-label">Visible</label>
+		<div class="row">
+			<div class="col-md-5">
+				{{#x-select value=selectedVisibleItem action=(action  (mut selectedVisibleItem)) class="form-control form-control-inline"}}
+				{{#each listaVisible as |item|}}
+					{{#x-option value=item.valor}}{{item.label}}{{/x-option}}
+			{{/each}}
+		{{/x-select}}
+			</div>
+		</div>
+	</div>
+
+	{{#if observaCaracteristicaAndCantidad}}
+		<div class="btn btn-info" {{action "agregarCaracteristica"}}>Agregar</div>
+	{{/if}}
+	{{#if errorMsg}}
+		<br>
+		<br>
+		<div class="alert alert-danger">
+  			<strong>{{errorMsg}}</strong>
+		</div>
+	{{/if}}
+	<div id="no-more-tables">
+	<br>
+		<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Id</th>
+			<th>Descripcion</th>
+			<th>Cantidad</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each caracteristicasPrecio as |c i|}}
+			<tr>
+				<td data-title="Id"><a href=""><span class="glyphicon glyphicon-remove" {{action "quitarCaracteristica" c}}></span></a></td>
+				<td data-title="Descripcion">{{c.descripcion}}</td>
+				<td data-title="Cantidad">{{c.cantidad}}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+		</table>
+	</div>
+	<div class="row">
+		{{#if precioMayorADescuento}}
+		{{#if observaDescripcion}}
+		{{#if flagBotonGuardarEditar}}
+			{{#if newFlag}}
+				{{#if etapaPrecio}}
+					<div class="btn btn-success" {{action "guardarNuevo"}}>Guardar</div>
+				{{/if}}
+			{{else}}
+				<div class="btn btn-success" {{action "guardarEditar"}}>Guardar Editar</div>
+			{{/if}}
+		{{/if}}
+		{{/if}}
+		{{/if}}
+		<div class="btn btn-warning" {{action "buscar"}}>Cancelar</div>
+	</div>
+</div>
+{{/if}}
