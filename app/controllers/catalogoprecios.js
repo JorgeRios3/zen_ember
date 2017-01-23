@@ -111,8 +111,8 @@ export default Ember.Controller.extend(FormatterMixin,{
       });
       r.save().then((data)=> {
         info('si se grabo el nuevo precio');
+        this.send('buscar');
       });
-
   	},
   	guardarEditar() {
   	  let r = get(this, 'catalogo');
@@ -151,7 +151,9 @@ export default Ember.Controller.extend(FormatterMixin,{
       	tipo,
       	visible
       });
-      r.save();
+      r.save().then(()=> {
+        this.send('buscar');
+      })
   	},
   	quitarCaracteristica(c) {
   	  let item = get(this, 'caracteristicasPrecio').findBy('descripcion', get(c, 'descripcion'));
@@ -175,6 +177,7 @@ export default Ember.Controller.extend(FormatterMixin,{
   	  }
   	},
     buscar() {
+      this.store.unloadAll('preciosinmueble');
       let etapa = get(this, 'selectedEtapa');
       let activo = get(this, 'selectedEstatus');
       this.store.query('preciosinmueble', { etapa, activo })
