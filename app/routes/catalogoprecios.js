@@ -3,7 +3,9 @@ import RouteAuthMixin from '../mixins/routeauth';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 const {
   set,
-  RSVP: { hash }
+  RSVP: { hash },
+  setProperties,
+  get
 } = Ember;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
@@ -13,7 +15,15 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
     set(ctrl, 'caracteristicasCatalogo', model.caracteristicas);
   },
   beforeModel2() {
-
+    let c = this.controllerFor(this.routeName);
+    c.setProperties({
+      showPrecios: true,
+      showDetalle: false,
+      selectedCaracteristica: '',
+      selectedEtapaPrecio: '',
+      selectedEtapa: '',
+      selectedEstatus: ''
+    });
   },
   model() {
     let { store } = this;
