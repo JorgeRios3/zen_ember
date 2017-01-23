@@ -134,6 +134,9 @@
 			</div>		
 		</div>
 	</div>
+	{{#if observaCaracteristicaAndCantidad}}
+		<div class="btn btn-info" {{action "agregarCaracteristica"}}>Agregar</div>
+	{{/if}}
 	<div class="form-group">
 		<label for="idnumerosexteriores" class="control-label">Activo</label>
 		<div class="row">
@@ -183,9 +186,6 @@
 		</div>
 	</div>
 
-	{{#if observaCaracteristicaAndCantidad}}
-		<div class="btn btn-info" {{action "agregarCaracteristica"}}>Agregar</div>
-	{{/if}}
 	{{#if errorMsg}}
 		<br>
 		<br>
