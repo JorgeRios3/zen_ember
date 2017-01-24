@@ -719,10 +719,10 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       return true;
     }
   }),
-  checaSuma: Ember.observer('nuevoPrecioRaw', 'precalificacion', 'avaluo', 'subsidio' , 'pagare' , 'prerecibo' , 'prereciboadicional', 'totalDescuentoCatalogo', function() {
+  checaSuma: Ember.observer('nuevoPrecioRaw', 'precalificacion', 'avaluo', 'subsidio' , 'pagare' , 'prerecibo' , 'prereciboadicional', function() {
     let _this = this;
     let total = 0;
-    'precalificacion avaluo subsidio pagare prerecibo prereciboadicional totalDescuentoCatalogo'.w().forEach((key)=> {
+    'precalificacion avaluo subsidio pagare prerecibo prereciboadicional'.w().forEach((key)=> {
       try {
         let n = Number(_this.getWithDefault(key, 0));
         total = total + n;
