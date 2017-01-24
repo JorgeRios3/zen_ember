@@ -87,6 +87,7 @@ Router.map(function() {
   this.route('reporteasignaciones');
   this.route('habilitamenuprecios');
   this.route('catalogoprecios');
+  this.route('mantenimientocaracteristicas');
 });
 
 export default Router;
