@@ -130,7 +130,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       categoriasMenu: store.findAll('categoriasmenu')
     };
     if (requestLocation) {
-      // promises.geolocation = get(this, 'geolocation').getLocation();
+      promises.geolocation = get(this, 'geolocation').getLocation();
     }
     return Ember.RSVP.hash(
       promises
@@ -147,7 +147,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     let isTwoFactorAuthenticated = get(model.twofactor, 'isTwoFactorAuthenticated');
     Ember.run(()=> {
       currentLocation = get(get(this, 'geolocation'), 'currentLocation');
-      info('valor de geolocation', get(this, 'geolocation'));
+      info('valor de geolocation', this.get('geolocation').get('currentLocation'));
     });
     info(`valor de currentLocation ${currentLocation}`);
     let radioIclar = 1; // 200 metros
