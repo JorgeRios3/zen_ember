@@ -84,7 +84,9 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       totalDescuentoCatalogo: 0,
       muestraCamposCapturaAdicionales: false,
       messageTotaldescuento: '',
-      showSubsidio: true
+      showSubsidio: true,
+      selectedHipotecaria: 1,
+      asignarCheckBox: true
     }); // conforme se definen properties en el controller modificar este hash agregando las properties con el mismo valor asociado
   },
   setupController(ctrlr, model) {
@@ -96,6 +98,7 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       return;
     }
     set(ctrlr, 'etapasofertas', model.etapasoferta);
+    set(ctrlr, 'catalogoHipotecarias', model.catalogoHipotecarias);
     let reservados = get(ctrlr, 'reservados');
     info('reservados', reservados);
     if (reservados > 0) {
@@ -111,7 +114,8 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     info('en model2');
     let { store } = this;
     return hash({
-      etapasoferta: store.findAll('etapasoferta', { reload: true })
+      etapasoferta: store.findAll('etapasoferta', { reload: true }),
+      catalogoHipotecarias: store.findAll('zenhipotecaria', {reload: true })
     });
   },
   actions: {

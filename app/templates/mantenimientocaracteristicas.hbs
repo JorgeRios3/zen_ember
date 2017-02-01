@@ -1,0 +1,21 @@
+<br><br>
+<div class="h3 text text-info">Mantenimiento Caracteristicas</div>
+<div id="no-more-tables">
+	<br>
+		<table class="table table-bordered table-striped table-condensed cf">
+		<thead>
+		<tr>
+			<th>Id</th>
+			<th>Descripcion</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each model as |c i|}}
+			<tr>
+				<td data-title="Id"><a href="" {{action "seleccionarItem" c}}>{{c.id}}</a></td>
+				<td data-title="Descripcion">{{c.descripcion}}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+		</table>
+	</div>

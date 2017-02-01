@@ -20,5 +20,7 @@ export default DS.Model.extend({
   prerecibo: DS.attr("number", {default: 0}),
   prereciboadicional: DS.attr("number", {default: 0}),
   autorizacion: DS.attr('string', {default: ''}),
-  descuento: DS.attr('number', {default: 0})
+  descuento: DS.attr('number', {default: 0}),
+  hipotecaria: DS.attr('number', {default: 0}),
+  asignar: DS.attr('boolean', {default: true})
 });

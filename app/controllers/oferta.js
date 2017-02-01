@@ -156,6 +156,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   DescuentoCatalogo: 0,
   messageTotaldescuento: '',
   showSubsidio: true,
+  selectedHipotecaria: 1,
   tiposcuentas: [{ id: 'infonavit' , tipo: 'Infonavit' },
     { id: 'contado', tipo: 'Contado' },
     { id: 'hipotecaria', tipo: 'Hipotecaria' },
@@ -173,6 +174,12 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     get() {
       return get(this, 'socketService').socketFor(config.WSOCKETS_URL);
     }
+  }),
+  obsrvaesto: observer('asignarCheckBox', function() {
+    info('viendo bvandera', get(this, 'asignarCheckBox'));
+  }),
+  observaHipotecaria: observer('selectedHipotecaria', function() {
+    info('valor de hipotecaria', get(this, 'selectedHipotecaria'));
   }),
   observaTotalDescuentoCatalogo: observer('totalDescuentoCatalogo', function() {
     if(get(this, 'totalDescuentoCatalogo') <= get(this, 'descuentoCatalogoRaw') || get(this, 'totalDescuentoCatalogo' ) === 0) {
@@ -882,7 +889,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           prerecibo: cambiar(get(this, 'prerecibo')),
           prereciboadicional: cambiar(get(this, 'prereciboadicional')),
           autorizacion: get(this, 'observaCodigoDescuento') === true ? get(this, 'codigoDescuento') : '',
-          descuento: get(this, 'totalDescuentoCatalogo') > 0 ? get(this, 'totalDescuentoCatalogo') : 0
+          descuento: get(this, 'totalDescuentoCatalogo') > 0 ? get(this, 'totalDescuentoCatalogo') : 0,
+          hipotecaria: get(this, 'selectedHipotecaria'),
+          asignar: get(this, 'asignarCheckBox')
         }
       );
 
@@ -912,17 +921,31 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
             set(that, 'emailaddress', emaildata.email);
           }
         });
-        that.setProperties({
-          muestraOpcionesImpresion: true,
-          muestraCamposCapturaAdicionales: false,
-          copiasCaracteristicas: 2,
-          copiasAnexo: 2,
-          copiasOferta: 3,
-          enviarEmail: false,
-          soloEmail: false,
-          processingGrabar: false,
-          ofertaGenerada: get(data, 'id')
-        });
+        if (get(this, 'asignar')) {
+          that.setProperties({
+            muestraOpcionesImpresion: true,
+            muestraCamposCapturaAdicionales: false,
+            copiasCaracteristicas: 2,
+            copiasAnexo: 2,
+            copiasOferta: 3,
+            enviarEmail: false,
+            soloEmail: false,
+            processingGrabar: false,
+            ofertaGenerada: get(data, 'id')
+          });
+        } else {
+          that.setProperties({
+            muestraOpcionesImpresion: true,
+            muestraCamposCapturaAdicionales: false,
+            copiasCaracteristicas: 0,
+            copiasAnexo: 2,
+            copiasOferta: 3,
+            enviarEmail: false,
+            soloEmail: false,
+            processingGrabar: false,
+            ofertaGenerada: get(data, 'id')
+          });
+        }
         get(that, 'socket').send({ topic: 'free_feature', data: { feature: 'oferta.save' } }, true);
         info('termino el socket de oferta.save');
       }, (error)=> {
@@ -997,6 +1020,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       this.toggleProperty('muestroErrores');
     },
     imprimir() {
+      let asignar = get(this, 'asignarCheckBox');
       set(this, 'processingGrabar', true);
       let email = 'webmaster@grupoiclar.com';
       let oferta = parseInt(get(this, 'ofertaGenerada'));
@@ -1021,14 +1045,16 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           ofertaPdf = data.name;
           set(that, 'ofertaPdf', ofertaPdf);
         });
-        get(this, 'ajax').request(`/api/otro?printer=null&tipo=caracteristicas&etapa=${etapa}&oferta=${oferta}`)
-        .then((data)=> {
-          if (data.error) {
-            return;
-          }
-          caracteristicasPdf = data.name;
-          set(that, 'caracteristicasPdf', caracteristicasPdf);
-        });
+        if (asignar) {
+          get(this, 'ajax').request(`/api/otro?printer=null&tipo=caracteristicas&etapa=${etapa}&oferta=${oferta}`)
+          .then((data)=> {
+            if (data.error) {
+              return;
+            }
+            caracteristicasPdf = data.name;
+            set(that, 'caracteristicasPdf', caracteristicasPdf);
+          });
+        }
         url = `/api/otro?printer=null&tipo=anexo&etapa=${etapa}&oferta=${oferta}&precalificacion=${precalificacion}&avaluo=${avaluo}&subsidio=${subsidio}&pagare=${pagare}`;
         get(this, 'ajax').request(url)
         .then((data)=> {
@@ -1064,7 +1090,12 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           let tieneValor = function(que) {
             return !isEmpty(que);
           };
-          let archivos = [ ofertaPdf, caracteristicasPdf, anexoPdf, rapPdf ];
+          let archivos = [];
+          if (asignar) {
+            archivos = [ ofertaPdf, caracteristicasPdf, anexoPdf, rapPdf ];
+          } else {
+            archivos = [ofertaPdf, anexoPdf, rapPdf ];
+          }
           let archivosValidos = true;
           archivos.forEach((archivo)=> {
             if (isEmpty(archivo)) {
@@ -1082,7 +1113,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           if (!get(that, 'soloEmail') &&  archivosValidos && impresoras.length > 0) {
             impresoras.forEach((impresora)=> {
               if (get(impresora, 'chosen')) {
-                requestForPrinting(get(impresora, 'impresora'), ofertaPdf, get(that, 'copiasOferta'));
+                if (asignar) {
+                  requestForPrinting(get(impresora, 'impresora'), ofertaPdf, get(that, 'copiasOferta'));
+                }
                 requestForPrinting(get(impresora, 'impresora'), caracteristicasPdf, get(that, 'copiasCaracteristicas'));
                 requestForPrinting(get(impresora, 'impresora'), anexoPdf, get(that, 'copiasAnexo'));
                 requestForPrinting(get(impresora, 'impresora'), rapPdf, get(that, 'copiasRap'));
