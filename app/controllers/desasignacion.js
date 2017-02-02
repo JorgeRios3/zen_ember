@@ -84,6 +84,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       let etapa = get(this, 'selectedEtapa');
       info(`valor de selectedEtapa ${etapa}`);
       set(this, 'catalogoNombres', null);
+      this.store.unloadAll('clientescuantosconcuentanosaldada');
+      this.store.unloadAll('clientesconcuentanosaldada');
       this.store.query('clientescuantosconcuentanosaldada' , { etapa, nombre })
       .then((data) => {
         if (get(data, 'length')) {

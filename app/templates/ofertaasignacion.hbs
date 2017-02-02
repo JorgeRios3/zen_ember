@@ -35,7 +35,7 @@
 				<div class="row">
 					<div class="col-md-5">
 						{{#x-select value=selectedEtapa action=(action  (mut selectedEtapa)) class="form-control form-control-inline"}}
-  							{{#x-option value='0'}}Elija Etapa{{/x-option}}
+  							{{#x-option value=null}}Elija Etapa{{/x-option}}
   							{{#each etapasofertas as |item|}}
   								{{#x-option value=item.id}}{{item.nombre}}{{/x-option}}
 							{{/each}}
@@ -44,7 +44,7 @@
 				</div>
 			</div>
 	
-	{{#liquid-if cuantosInmueblesDisponibles use="toRight"}}
+	{{#if cuantosInmueblesDisponibles }}
 		<div class="form-group">
 			<label class="control-label">Inmuebles Disponibles</label>
 			<div class="row">
@@ -103,7 +103,7 @@
 				<div class="row">
 					<div class="col-md-5">
 						{{#x-select value=selectedInmueble action=(action  (mut selectedInmueble)) class="form-control form-control-inline"}}
-  							{{#x-option value='0'}}Elija Lote{{/x-option}}
+  							{{#x-option value=null}}Elija Lote{{/x-option}}
   							{{#each mislotes as |item|}}
   								{{#x-option value=item.id}}{{item.lote}}{{/x-option}}
 							{{/each}}
@@ -124,7 +124,7 @@
 		
 		</div>
 		{{/if}}
-		{{#if hayCaracteristicas}}
+		{{#if carateristicasLista.length}}
 			<div id="no-more-tables">
 				<table class="table table-bordered table-striped table-condensed cf">
 					<thead>
@@ -175,7 +175,7 @@
 					<label class="control-label">Obteniendo Inmuebles Disponibles ...</label>
 				</div>
 			{{/if}}
-	{{/liquid-if}}
+	{{/if}}
 	{{#if errorMessage}}
 		<br>
 		  <div class="alert alert-danger">
@@ -199,7 +199,7 @@
 	{{#if isOferta}}
 		<div class="text text-info">el saldo de la cuenta {{cuenta}} es ${{inmuebleSaldo}}</div>
 		<div class="text text-info">Cliente {{nombreCliente}}</div>
-		<div class="form-group">
+		<!--<div class="form-group">
 	    	<label for="idpreCalif" class="control-label">Precalificación</label>
 			<div class="row">
 				<div class="col-xs-10 col-md-3">
@@ -252,7 +252,7 @@
 					{{input type="text" value=prereciboadicional class="form-control" placeholder="Prerecibo Ad" maxlength="11" id="idprereciboadicional"}}
 				</div>
 			</div>
-		</div>
+		</div>-->
 	{{/if}}
 
 	<div>

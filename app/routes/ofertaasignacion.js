@@ -61,7 +61,8 @@ RouteAuthMixin,
       pagare: '',
       cuantosInmueblesDisponibles: 0,
       sumaCheca: false,
-      precioRaw: null
+      precioRaw: null,
+      carateristicasLista: Ember.A()
     });
   },
   setupController(ctrlr, model) {

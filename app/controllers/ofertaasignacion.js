@@ -68,7 +68,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   labelSelectedPrecio: 'Precio del Inmueble',
   labelSumaCheca: 'Sumas',
   domicilio: '',
-  hayCaracteristicas: computed.gt('carateristicasLista.length', 0),
+  //hayCaracteristicas: computed.gt('carateristicasLista.length', 0),
   etapasofertas: null,
   preciosinmuebles: null,
   inmueblesdisponibles: '',
@@ -136,6 +136,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
   copiasCaracteristicas: 1,
   copiasRap: 1,
   enviarEmail: false,
+  checaPrecioCatalogoZen: false,
+  carateristicasLista: Ember.A(),
   tiposcuentas: [ { id: 'infonavit', tipo: 'Infonavit' },
     { id: 'contado', tipo: 'Contado' },
     { id: 'hipotecaria', tipo: 'Hipotecaria' } ],
@@ -289,6 +291,30 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       return indice !== -1;
     }
   }),
+  observaPrecioInmuebleAndPrecioOferta: observer('PrecioInmuebleOferta', 'OfertaPrecio', function() {
+    if(!isEmpty(get(this, 'PrecioInmuebleOferta')) && !isEmpty(get(this, 'OfertaPrecio'))) {
+      info(' entro a validar rest nuevo');
+      info('valor del inmueble', get(this, 'PrecioInmuebleOferta'));
+      let cuenta = get(get(this, 'OfertaPrecio'), 'cuenta');
+      info('valor de cuenta', cuenta);
+      this.store.find('zenpreciooriginal', cuenta)
+      .then((data)=> {
+        info('valor de data', data);
+        let ipc = parseFloat(get(get(this, 'PrecioInmuebleOferta'), 'precioCatalogo'));
+        let iidpc = parseInt(get(get(this, 'PrecioInmuebleOferta'), 'idPrecioCatalogo'));
+        info(ipc, iidpc);
+        let zpd = parseFloat(get(data, 'preciodocumentos'));
+        let zpid = parseInt(get(data, 'idprecio'));
+        info(zpd, zpid);
+        if (ipc === zpd || ipc < zpd) {
+          set(this, 'checaPrecioCatalogoZen', true);
+        } else {
+          set(this, 'checaPrecioCatalogoZen', false);
+        }
+      });
+
+    }
+  }),
   // observer('flagLista', function() {
   observaFlagLista: observer('flagLista', function() {
     if (get(this, 'flagLista')) {
@@ -325,6 +351,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           set(that, 'selectedPrecio', 0);
           let p1 = that.store.find('catalogoprecio', despues);
           p1.then((dato)=> {
+            set(this, 'PrecioInmuebleOferta', dato);
             let idPrecioCatalogo = get(dato, 'idPrecioCatalogo');
             if (idPrecioCatalogo !== 0) {
               info('paso la prueba', get(dato, 'idPrecioCatalogo'));
@@ -477,7 +504,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     });
     //  get(this, 'controllers.inmueblesdisponibles').
     set(this, 'inmueblesdisponibles', idisp);
-    //  set(this, 'selectedManzana', null);
+    set(this, 'selectedManzana', null);
   }),
   observarCliente: observer('cliente', function() {
     let cliente = get(this, 'clienteId');
@@ -547,6 +574,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     set(this, 'sumaCheca', total === get(this, 'precioCatalogo'));
   }),
   validations: {
+    checaPrecioCatalogoZen: {
+      exclusion: { in: [false], message: 'La cantidad de la oferta no coincide con el precio del inmueble' }
+    },
     precalificacion: {
       numericality: { allowBlank: true }
     },
@@ -580,9 +610,9 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
     tipoCuenta: {
       exclusion: { in: [null], message: 'Debe seleccionar tipo cuenta' }
     },
-    sumaCheca: {
+    /*sumaCheca: {
       exclusion: { in: [false], message: 'No checa total con precio' }
-    },
+    },*/
     oferta: {
       numericality: { onlyInteger: true, messages: { onlyInteger: 'la oferta solo debe contenter numeros' } }
     }
@@ -606,6 +636,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           info('entro en length');
           data.forEach((item)=> {
             if (Object.is(get(item, 'inmueble'), 0)) {
+              set(that, 'OfertaPrecio', item);
               set(that, 'isOferta', true);
               set(that, 'inmuebleSaldo', item.get('saldo'));
               set(that, 'nombreCliente', item.get('nombreCliente'));
@@ -698,8 +729,8 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           muestraOpcionesImpresion: true,
           muestraCamposCapturaAdicionales: false,
           copiasCaracteristicas: 2,
-          copiasAnexo: 2,
-          copiasOferta: 3,
+          copiasAnexo: 0,
+          copiasOferta: 0,
           enviarEmail: false,
           soloEmail: false,
           processingGrabar: false,
@@ -808,14 +839,14 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           caracteristicasPdf = data.name;
           that.set('caracteristicasPdf', caracteristicasPdf);
         });
-        let url = `/api/otro?printer=null&tipo=anexo&etapa=${etapa}&oferta=${oferta}&precalificacion=${precalificacion}&avaluo=${avaluo}&subsidio=${subsidio}&pagare=${pagare}`;
+        /*let url = `/api/otro?printer=null&tipo=anexo&etapa=${etapa}&oferta=${oferta}&precalificacion=${precalificacion}&avaluo=${avaluo}&subsidio=${subsidio}&pagare=${pagare}`;
         get(this, 'ajax').request(url).then((data)=> {
           if (data.error) {
             return;
           }
           anexoPdf = data.name;
           set(that, 'anexoPdf', anexoPdf);
-        });
+        });*/
         /*ajax( { type: 'GET' ,
             			async : false,
             			url: '/api/otro?printer=null&tipo=rap&cliente='+cliente }
@@ -846,7 +877,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
           let tieneValor = function(que) {
             return !Ember.isEmpty(que);
           };
-          let archivos = [caracteristicasPdf, anexoPdf];
+          let archivos = [caracteristicasPdf];
           let archivosValidos = true;
           archivos.forEach((archivo)=> {
             if (Ember.isEmpty(archivo)) {
@@ -865,7 +896,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
               if (impresora.get('chosen')) {
                 // requestForPrinting( impresora.get('impresora'), ofertaPdf, get(that, 'copiasOferta') );
                 requestForPrinting(impresora.get('impresora'), caracteristicasPdf, get(that, 'copiasCaracteristicas'));
-                requestForPrinting(impresora.get('impresora'), anexoPdf, get(that, 'copiasAnexo'));
+                //requestForPrinting(impresora.get('impresora'), anexoPdf, get(that, 'copiasAnexo'));
                 // requestForPrinting( impresora.get('impresora'), rapPdf, get(that, 'copiasRap') );
               }
             });
