@@ -58,6 +58,17 @@
 	<br>
 <div class="btn btn-info" {{action "buscar"}}>Buscar</div>
 <br>
+<br>
+<span class="badge badge-info">{{cuantosLen}}</span>
+{{#if showNavigation}}
+	<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
+	{{#if hayPagPrevias}}
+		<button class="btn btn-primary" {{action 'mostrarPagPrevia'}}><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Bloque Previo</button>
+	{{/if}}
+	{{#if hayPagSiguientes}}
+		<button class="btn btn-primary" {{action 'mostrarPagSiguiente'}}>Bloque Siguiente&nbsp;<span class="glyphicon glyphicon-arrow-right"></span></button>
+	{{/if}}
+{{/if}}
 <div id="no-more-tables">
 <table class="table table-bordered table-striped table-condensed cf">
 	<thead>

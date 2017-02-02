@@ -2,11 +2,12 @@ import Ember from 'ember';
 const {
   set,
   get,
-  compued,
+  computed,
   Logger: { info },
   getProperties,
   setProperties,
-  isEmpty
+  isEmpty,
+  observer
 } = Ember;
 export default Ember.Controller.extend({
   selectedFiltro: '',
@@ -20,9 +21,38 @@ export default Ember.Controller.extend({
   nullFechaProgramadaFinal: '',
   nullFechaProgramadaSolicitud: '',
   listaFiltro: [{ id: 1, label: 'Todo' }, { id: 2, label: 'Asignadas' }, { id: 3, label: 'Sin Asignar' }, { id: 4, label: 'Reactivaciones' }],
+  hayPagPrevias: computed('resultPage', {
+    get() {
+      if (get(this, 'resultPage') === '') {
+        return false;
+      }
+      if (parseInt(get(this, 'resultPage')) === 1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }),
+  hayPagSiguientes: computed('resultPage', {
+    get() {
+      if (get(this, 'resultPage') === '') {
+        return false;
+      }
+      if (parseInt(get(this, 'resultPage')) < get(this, 'resultPages')) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }),
   actions: {
   	buscar() {
   	  let objeto = {};
+      let lista = Ember.A();
+      let requestedPage = get(this, 'requestedPage');
+      if (requestedPage) {
+        objeto.page = get(this, 'requestedPage');
+      }
   	  if (!isEmpty(get(this, 'selectedEtapa'))) {
   	  	objeto.etapa = get(this, 'selectedEtapa');
   	  }
@@ -49,15 +79,38 @@ export default Ember.Controller.extend({
       if (fechaProgramadafinal) {
         objeto.fechaasignafin = fechaProgramadafinal;
       }
+      //objeto.cuantos = 1;
       this.store.query('asignacionesreporte', objeto)
       .then((data)=> {
-        let lista = Ember.A();
-        lista = data;
-        set(this, 'listaAsignaciones', lista);
-      	info('promesa');
+        let cuantos = get(data, 'meta.cuantos');
+        info('valor de cuantos', cuantos);
+        set(this, 'cuantosLen', cuantos);
+        cuantos > 20 ? set(this, 'showNavigation', true) : set(this, 'showNavigation', false);
+        info('valor de show', get(this, 'showNavigation'));
+        delete objeto.cuantos;
+        this.store.query('asignacionesreporte', objeto)
+        .then((data)=> {
+          lista = data;
+          set(this, 'listaAsignaciones', lista);
+          info('promesa');
+        });
+        set(this, 'resultPage', get(data, 'meta.page'));
+        set(this, 'resultPages', get(data, 'meta.pages'));
+        info(get(this, 'resultPage'), get(this, 'resultPages'));
+        //set(this, 'hayPagSiguientes', true);
       });
-      info('viendo elvalor deol obeo', objeto);
-
-  	}
+  	},
+    mostrarPagPrevia() {
+      let nextPage = parseInt(get(this, 'resultPage'));
+      nextPage = nextPage - 1;
+      set(this, 'requestedPage', nextPage);
+      this.send('buscar');
+    },
+    mostrarPagSiguiente() {
+      let nextPage = parseInt(get(this, 'resultPage'));
+      nextPage = nextPage + 1;
+      set(this, 'requestedPage', nextPage);
+      this.send('buscar');
+    },
   }
 });
