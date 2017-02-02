@@ -86,7 +86,7 @@ export default Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       messageTotaldescuento: '',
       showSubsidio: true,
       selectedHipotecaria: 1,
-      asignarCheckBox: true
+      asignarCheckBox: false
     }); // conforme se definen properties en el controller modificar este hash agregando las properties con el mismo valor asociado
   },
   setupController(ctrlr, model) {
