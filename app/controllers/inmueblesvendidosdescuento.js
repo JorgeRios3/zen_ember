@@ -132,8 +132,8 @@ export default Ember.Controller.extend(FormatterMixin,{
   	  	let resultRowCountFormatted = parseInt(get(data, 'meta.rowcountformatted'));
   	  	setProperties(this, { resultPage, resultPages, resultRowCountFormatted });
   	  	data.forEach((item)=> {
-  	  	  let { descripcion, descuento, etapa, fecha, id ,lote, manzana, neto, preciobase, subsidio } = getProperties(item, `descripcion descuento 
-  	  	  	etapa fecha id lote manzana neto preciobase subsidio`.w());
+  	  	  let { descripcion, descuento, etapa, fecha, id ,lote, manzana, neto, preciobase, subsidio, institucion } = getProperties(item, `descripcion descuento 
+  	  	  	etapa fecha id lote manzana neto preciobase subsidio institucion`.w());
   	  	    totalneto += neto;
   	  	    totalbase += preciobase;
   	  	    totaldescuento += descuento;
@@ -142,7 +142,9 @@ export default Ember.Controller.extend(FormatterMixin,{
   	  	    	etapa, fecha, id ,lote, manzana, 
   	  	    	neto: this.formatter(neto), 
   	  	    	preciobase: this.formatter(preciobase),
-              subsidio: this.formatter(subsidio)});
+              subsidio: this.formatter(subsidio),
+              institucion
+            });
   	  	});
   	  	info('valor de data', data.length);
   	  	//set(this, 'cuantos', get(data, 'length'));

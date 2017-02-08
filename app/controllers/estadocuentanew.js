@@ -100,6 +100,14 @@ export default Ember.Controller.extend(FormatterMixin,
     set(this, 'listaDocsPagar', Ember.ArrayProxy.create({ content: [] }));
     info('viendo en le init el que quiero', get(this, 'listaDocsPagar'));
   },
+
+  observanewna: observer('prueban', function() {
+    info('funciono', get(this, 'prueban'));
+    this.store.query('zenprospecto', {tipo:"nombre", nombre:get(this, 'prueban')})
+    .then((data)=> {
+      info('si llego', data);
+    });
+  }),
   observaTipo: observer('selectedTipo', function() {
     info('viendo tipo', get(this, 'selectedTipo'));
   }),

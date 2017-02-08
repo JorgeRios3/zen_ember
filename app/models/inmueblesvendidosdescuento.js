@@ -9,5 +9,6 @@ export default DS.Model.extend({
   descuento: DS.attr('number'),
   neto: DS.attr('number'),
   fecha: DS.attr('string'),
-  subsidio: DS.attr('number')
+  subsidio: DS.attr('number'),
+  institucion: DS.attr('string')
 });

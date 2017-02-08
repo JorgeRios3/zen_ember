@@ -15,5 +15,6 @@ export default DS.Model.extend({
   vendedor: DS.attr('number'),
   vendenom: DS.attr('string'),
   cuenta: DS.attr('number'),
-  descripcion: DS.attr('string')
+  descripcion: DS.attr('string'),
+  institucion: DS.attr('string')
 });
