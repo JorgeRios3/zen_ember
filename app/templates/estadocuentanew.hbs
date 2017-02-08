@@ -6,6 +6,9 @@
 		</div>		
 	</div>
 {{/if}}
+<div>
+	{{input type="text" value=prueban action=(action (mut prueban))}}
+</div>
 {{#unless isArcadia}}
 	<div class="row">
 		<div class="btn btn-info" {{action "BuscarPrerecibos"}}>Prerecibos</div>

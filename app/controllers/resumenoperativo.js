@@ -26,6 +26,17 @@ export default Ember.Controller.extend(FormatterMixin, {
       }
     }
   }),
+  esCesar: computed('', {
+    get() {
+      let app = getOwner(this).lookup('controller:application');
+      let usuario = get(app, 'usuario');
+      if (usuario === 'cesar') {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }),
   actions: {
     togglePrinterComponent() {
       this.toggleProperty('showComponent');

@@ -154,6 +154,7 @@ export default Ember.Controller.extend(FormatterMixin,
         objeto.cuenta = get(this, 'cuentaBuscar');
         info('valor de company', company);
         store.unloadAll('cuentabreve');
+        let p = this.store.find('zenhipotecaria', get(this, 'cuentaBuscar'));
         store.query('cuentabreve', objeto)
         .then((data)=> {
           data.forEach((item)=> {

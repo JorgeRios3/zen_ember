@@ -14,7 +14,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
   setupController(ctrlr, model) {
     // let a= this.controllerFor('index');
     // info('revisnado pèrfolñ', a.perfil);
+    let { catalogoHipotecaria } = get(this, 'model');
     ctrlr.notifyPropertyChange('isArcadia');
+    set(ctrlr, 'catalogoHipotecaria', catalogoHipotecaria);
   },
   beforeModel2() {
     info('valor de featues ',get(this, 'features'));
@@ -62,6 +64,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       cuentaBuscar: ''
     });
   },
+  model() {
+    return this.store.findAll('zenhipotecaria');
+  },
 
   willTransition() {
     let { store } = this;
@@ -70,6 +75,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     store.unloadAll('movimientosdocumento');
     store.unloadAll('clientescuantosconcuentanosaldada');
     store.unloadAll('clientesconcuentanosaldada');
+    store.unloadAll('zenhipotecaria');
   },
   actions: {
     error(error) {

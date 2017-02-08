@@ -1,5 +1,7 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-  descripcion: DS.attr('string')
+  hipotecaria: DS.attr('number', {default: 0}),
+  descripcion: DS.attr('string', {default: ''}),
+  fecha: DS.attr('string', {default: ''})
 });
