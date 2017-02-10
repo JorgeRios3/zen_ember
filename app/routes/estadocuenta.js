@@ -14,9 +14,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
   setupController(ctrlr, model) {
     // let a= this.controllerFor('index');
     // info('revisnado pèrfolñ', a.perfil);
-    let { catalogoHipotecaria } = get(this, 'model');
     ctrlr.notifyPropertyChange('isArcadia');
-    set(ctrlr, 'catalogoHipotecaria', catalogoHipotecaria);
+    info('valor de hipotecarias', model);
+    set(ctrlr, 'catalogoHipotecaria', model);
   },
   beforeModel2() {
     info('valor de featues ',get(this, 'features'));

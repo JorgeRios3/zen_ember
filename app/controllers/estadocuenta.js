@@ -131,6 +131,17 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'showButton', false);
     }
   }),
+  cambioHipotecaria: computed('selectedHipotecaria', {
+    get() {
+    let hipotecariaId = get(this, 'hipotecariaId');
+    let hipotecaria = get(this, 'selectedHipotecaria');
+     if (parseInt(hipotecariaId) !== parseInt(hipotecaria)) {
+      return true;
+     } else {
+      return false;
+     }
+    }
+  }),
   observaCuentaBuscar: observer('cuentaBuscar', function() {
     try {
 
@@ -155,6 +166,15 @@ export default Ember.Controller.extend(FormatterMixin,
         info('valor de company', company);
         store.unloadAll('cuentabreve');
         let p = this.store.find('zenhipotecaria', get(this, 'cuentaBuscar'));
+        p.then((data2)=> {
+          let id = get(data2, 'hipotecaria') > 0 ? get(data2, 'hipotecaria') : 0;
+          set(this, 'hipotecariaId', id);
+          set(this, 'selectedHipotecaria', id);
+          Ember.run.later('', function() {
+            let val = `#x-institucion option[value=${id}]`
+            $(val).prop('selected', true);
+          },6000)
+        });
         store.query('cuentabreve', objeto)
         .then((data)=> {
           data.forEach((item)=> {
@@ -263,7 +283,7 @@ export default Ember.Controller.extend(FormatterMixin,
       });
     }
     // info(`valor de cuenta en observer selectednombre ${cuenta}`);
-    info('revisando catalogo antes de pasar ', get(this, 'catalogoNombres'));
+    // info('revisando catalogo antes de pasar ', get(this, 'catalogoNombres'));
     let cual = get(this, 'catalogoNombres').findBy('cuenta', get(this, 'selectedNombre'));
     info('cual', cual);
     info(get(cual, 'oferta'));
@@ -371,6 +391,17 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
 
   actions: {
+    guardarInstitucion() {
+      let cuenta = get(this, 'cuenta');
+      let hipotecaria = get(this, 'selectedHipotecaria');
+      let r = this.store.createRecord('zenhipotecaria', {
+        cuenta,
+        hipotecaria
+      });
+      r.save().then(()=>{
+        info('se grabo');
+      });
+    },
     guardarDocumento() {
       let cantidad = get(this, 'CantidadDocumento');
       let cuenta = get(this, 'cuenta');
@@ -558,7 +589,7 @@ export default Ember.Controller.extend(FormatterMixin,
               a.pushObject({ cliente, conpagares, cuenta, inmueble, manzana, nombre, oferta, saldo, saldoformateado, saldopagares, saldopagaresformateado });
             });
             set(this, 'catalogoNombres', a);
-            info('valor de catalogoNombres, en buscar', get(this, 'catalogoNombres'));
+            //info('valor de catalogoNombres, en buscar', get(this, 'catalogoNombres'));
           });
         }
       });
