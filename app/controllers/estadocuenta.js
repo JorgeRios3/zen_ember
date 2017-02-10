@@ -193,6 +193,7 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'estadoCliente', get(item, 'estado'));
               set(this, 'cpCliente', get(item, 'cp'));
               set(this, 'rfcCliente', get(item, 'rfc'));
+              set(this, 'vendedor', get(item, 'nombrevendedor'));
               if (isArcadia) {
                 info('en arcadia lote', get(item, 'lote'));
                 info('en arcadia lote', get(item, 'manzana'));

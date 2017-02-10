@@ -83,7 +83,7 @@
 			<div class="row">{{input type='text' value=totDocumentos disabled=true}}</div>
 		</div>
 	{{/if}}
-	<div><span class="badge badge-info">{{inmuebles.length}}</span></div>
+	<div><span class="badge badge-info">{{cuantos}}</span></div>
 	{{#if desktopOrJumbo}}
 		{{#if showNavigation}}
 			<h4 class="text text-danger">Bloque {{resultPage}} de {{resultPages}} ( Total a mostrar {{resultRowCountFormatted}} )</h4>
@@ -142,7 +142,8 @@
 					<th>Suman Documentos</th>
 					<th>Saldo</th>
 					<th>Imss</th>
-					<th>Numero Credito</th>						
+					<th>Numero Credito</th>	
+					<th>Institucion</th>						
 				</tr>
 			</thead>
 			<tbody>
@@ -187,6 +188,9 @@
 					</td>
 					<td data-title="Numero Credito">
 						{{i.numerocredito}}
+					</td>
+					<td data-title="Institucion">
+						{{i.institucion}}
 					</td>
 				</tr>
 				{{/each}}
