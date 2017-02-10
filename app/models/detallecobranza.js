@@ -25,6 +25,7 @@ export default DS.Model.extend({
   saldo: attr('money'),
   imss: attr('string'),
   inmueble: attr('number'),
+  institucion: attr('string'),
   numerocredito: attr('string')
   /*
   formatter(key) {

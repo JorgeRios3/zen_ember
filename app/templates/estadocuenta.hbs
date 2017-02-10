@@ -161,6 +161,7 @@
     	<dt>CP</dt><dd>{{cpCliente}}</dd>
     	<dt>RFC</dt><dd>{{rfcCliente}}</dd>
     	<dt>RAP</dt><dd>{{rapCliente}}</dd>
+    	<dt>Vendedor</dt><dd>{{vendedor}}</dd>
     	<dt>Institucion</dt>
     	<dd>
     		{{#x-select value=selectedHipotecaria action=(action  (mut selectedHipotecaria)) class="form-control form-control-inline" id="x-institucion"}}
@@ -303,7 +304,7 @@
 					{{m.fecha}}
 				</td>
 				<td data-title="Abono" class="text-right">
-					{{m.cargoabono}}
+					{{m.cargoabono}} &nbsp; {{m.relaciondepago}}
 				</td>
 				<td data-title="Saldo" class="text-right">
 					{{#if isArcadia}}

@@ -14,5 +14,6 @@ export default DS.Model.extend({
   ciudad: DS.attr('string'),
   estado: DS.attr('string'),
   cp: DS.attr('string'),
-  rfc: DS.attr('string')
+  rfc: DS.attr('string'),
+  nombrevendedor: DS.attr('string')
 });
