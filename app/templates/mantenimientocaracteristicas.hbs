@@ -1,21 +1,52 @@
 <br><br>
 <div class="h3 text text-info">Mantenimiento Caracteristicas</div>
-<div id="no-more-tables">
-	<br>
-		<table class="table table-bordered table-striped table-condensed cf">
-		<thead>
-		<tr>
-			<th>Id</th>
-			<th>Descripcion</th>
-		</tr>
-		</thead>
-		<tbody>
-		{{#each model as |c i|}}
-			<tr>
-				<td data-title="Id"><a href="" {{action "seleccionarItem" c}}>{{c.id}}</a></td>
-				<td data-title="Descripcion">{{c.descripcion}}</td>
-			</tr>
-		{{/each}}
-		</tbody>
-		</table>
+{{#if showForma}}
+	<div class="jumbotron">
+		<div class="h5 text text-info">{{record.id}} &nbsp; {{record.descripcion}}</div>
+		<div class="form-group">
+			<label for="idInmuebleComision" class="control-label">Caracteristica</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+			{{input type="text" value=caracteristicaDescrip class="form-control" placeholder="Caracteristica" id="idInmuebleComision"}}
+			</div>
+		</div>
+		</div>
+		{{#if btnGrabar}}
+			{{#if activarBtnGrabarActualizar}}
+			<div class="btn btn-info" {{action "grabar"}}>Grabar</div>
+			{{/if}}
+		{{else}}
+			{{#if activarBtnGrabarActualizar}}
+			<div class="btn btn-info" {{action "actualizar"}}>Actualizar</div>
+			{{/if}}
+			<div class="btn btn-danger" {{action "eliminar"}}>Eliminar</div>
+		{{/if}}
+		<div class="btn btn-warning" {{action "cerrarForma"}}>Cancelar</div>
 	</div>
+	{{#if errorMsg}}
+		<div class="alert alert-danger">
+ 			<strong>Error</strong> {{errorMsg}}
+		</div>
+	{{/if}}
+{{else}}
+<div class="btn btn-info" {{action "formaInsert"}}>Agregar Caracteristica</div>
+<div id="no-more-tables">
+<br>
+	<table class="table table-bordered table-striped table-condensed cf">
+	<thead>
+	<tr>
+		<th>Id</th>
+		<th>Descripcion</th>
+	</tr>
+	</thead>
+	<tbody>
+	{{#each model as |c i|}}
+		<tr>
+			<td data-title="Id"><a href="" {{action "seleccionarItem" c}}>{{c.id}}</a></td>
+			<td data-title="Descripcion">{{c.descripcion}}</td>
+		</tr>
+	{{/each}}
+	</tbody>
+	</table>
+</div>
+{{/if}}
