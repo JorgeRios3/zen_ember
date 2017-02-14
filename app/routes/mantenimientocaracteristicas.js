@@ -12,6 +12,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, {
 
   beforeModel2() {
     let c = this.controllerFor(this.routeName);
+    c.setProperties({
+      showForma: false,
+    })
   },
   model() {
     this.store.unloadAll('caracteristica');
