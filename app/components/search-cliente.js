@@ -5,7 +5,8 @@ const {
   set,
   observer,
   computed,
-  isEmpty
+  isEmpty,
+  Logger: { info }
 } = Ember;
 
 let clientefiltro = Ember.Object.extend({
@@ -56,7 +57,7 @@ export default Ember.Component.extend({
     selectedEtapa(etapa) {
       set(this, 'selectedEtapa', etapa.id);
       set(this, 'listaNombresClientes', '');
-      this.sendAction('hacer', '0');
+      //this.sendAction('hacer', '0');
     },
     selectedTipo(tipo) {
       set(this, 'selectedTipo', tipo.tipo);

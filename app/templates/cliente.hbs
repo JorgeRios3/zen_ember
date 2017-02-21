@@ -16,7 +16,10 @@
 	</span>
 {{else}}
 	{{search-cliente etapas=etapas store=store hacer=(action "seleccionar")}}
-  {{impresion-reporte store=store reporte="rap" parametro1="cliente" valorParametro1=clienteValorSelect labelParametro1="Cliente" placeholderParametro1="Digite Cliente" submit=(action 'imprimeFicha') }}
+	{{impresion-reporte store=store reporte="rap" parametro1="cliente" valorParametro1=clienteValorSelect labelParametro1="Cliente" placeholderParametro1="Digite Cliente" submit=(action 'imprimeFicha') }}
+{{/if}}
+{{#if formaEditarCliente}}
+	{{partial "clientemantenimiento"}}
 {{/if}}
 <hr>
 <form role="form" {{ action "grabar" on="submit"}}>
