@@ -23,6 +23,14 @@ export default Ember.Controller.extend(FormatterMixin,
     }
   }),
   tipos: [{id:8, nombre: 'Documento de Ajuste de Precio'}, {id:13, nombre:'Documento Excedente de Credito'}],
+  catalogo:[{"id":1,"descripcion":"POR DEFINIR"},
+  {"id":2,"descripcion":"CONTADO"},
+  {"id":3,"descripcion":"INFONAVIT"},
+  {"id":4,"descripcion":"FOVISSSTE"},
+  {"id":5,"descripcion":"PENSIONES"},
+  {"id":6,"descripcion":"CAJA POPULAR"},
+  {"id":7,"descripcion":"BANCOMER"},
+  {"id":8,"descripcion":"SCOTIABANK"}],
   formaGeneraDocumento: false,
   telefonoCasa: '',
   telefonoTrabajo: '',
@@ -131,16 +139,15 @@ export default Ember.Controller.extend(FormatterMixin,
       set(this, 'showButton', false);
     }
   }),
-  cambioHipotecaria: computed('selectedHipotecaria', {
-    get() {
+  viendosicambia: observer('selectedHipotecaria', function() {
+    info('cambiando', get(this, 'selectedHipotecaria'));
     let hipotecariaId = get(this, 'hipotecariaId');
     let hipotecaria = get(this, 'selectedHipotecaria');
      if (parseInt(hipotecariaId) !== parseInt(hipotecaria)) {
-      return true;
+      set(this, 'cambioHipotecaria', true);
      } else {
-      return false;
+      set(this, 'cambioHipotecaria', false)
      }
-    }
   }),
   observaCuentaBuscar: observer('cuentaBuscar', function() {
     try {
@@ -399,7 +406,11 @@ export default Ember.Controller.extend(FormatterMixin,
         cuenta,
         hipotecaria
       });
-      r.save().then(()=>{
+      r.save().then(()=> {
+        set(this, 'hipotecariaId', hipotecaria);
+        set(this, 'selectedHipotecaria', hipotecaria);
+        info('valor de hipotecaria', hipotecaria);
+        set(this, 'cambioHipotecaria', false);
         info('se grabo');
       });
     },
@@ -571,6 +582,7 @@ export default Ember.Controller.extend(FormatterMixin,
       info('valor de selectedEtapa', get(this, 'selectedEtapa'));
       this.store.unloadAll('clientescuantosconcuentanosaldada');
       this.store.unloadAll('clientesconcuentanosaldada');
+      this.store.unloadAll('zenhipotecaria');
       this.store.query('clientescuantosconcuentanosaldada' , { etapa, nombre, estadocuenta: 1, company })
       .then((data)=> {
         if (get(data, 'length')) {

@@ -97,7 +97,7 @@ export default Ember.Component.extend({
   },
   actions: {
     cancelar() {
-      this.attrs.cancel();
+      //this.attrs.cancel();
     },
     elegirImpresora(cual) {
       get(this, 'impresoras.content').objectAt(cual).toggleProperty('chosen');

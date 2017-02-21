@@ -166,7 +166,7 @@
     	<dd>
     		{{#x-select value=selectedHipotecaria action=(action  (mut selectedHipotecaria)) class="form-control form-control-inline" id="x-institucion"}}
     			{{#x-option value=''}}Elija Institucion{{/x-option}}
-					{{#each catalogoHipotecaria as |item|}}
+					{{#each catalogo as |item|}}
 						{{#x-option value=item.id}}{{item.descripcion}}{{/x-option}}
 					{{/each}}
 			{{/x-select}}

@@ -11,6 +11,7 @@ const {
   Logger: { info },
   observer,
   computed,
+  setProperties,
   isEmpty
 } = Ember;
 
@@ -364,9 +365,35 @@ export default Ember.Controller.extend(EmberValidations, {
   },
 
   actions: {
+    guardarEditar() {
+        let r = get(this, 'clienteRecord')
+        //set(this, 'formaEditarCliente', true);
+        let nombre = get(this, 'clienteNombre');
+        let rfc = get(this, 'clienteRfc');
+        let telefonocasa = get(this, 'clienteTelCasa');
+        let telefonotrabajo = get(this, 'clienTelTrabajo');
+        r.setProperties({
+          nombre, rfc, telefonocasa, telefonotrabajo
+        });
+        r.save().then(()=>{
+          set(this, 'formaEditarCliente', false);
+        });
+    },
     seleccionar(cliente) {
       let cliente1 = parseInt(get(cliente, 'id'));
       set(this, 'clienteValorSelect', cliente1);
+      this.store.find('cliente', cliente1).
+      then((data)=>{
+        info('viendo cliente', data);
+        set(this, 'clienteRecord', data);
+        set(this, 'formaEditarCliente', true);
+        set(this, 'clienteNombre', get(data, 'nombre'));
+        set(this, 'clienteRfc', get(data, 'rfc'));
+        set(this, 'clienteTelCasa', get(data, 'telefonocasa'));
+        set(this, 'clienTelTrabajo', get(data, 'telefonotrabajo'));
+      },(error)=>{
+        info('trono');
+      });
     },
     llenarCliente() {
       this.set('nombre', 'otro');

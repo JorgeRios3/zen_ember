@@ -30,7 +30,8 @@ export default Ember.Controller.extend(FormatterMixin, {
     get() {
       let app = getOwner(this).lookup('controller:application');
       let usuario = get(app, 'usuario');
-      if (usuario === 'cesar') {
+      usuario = usuario.toUpperCase()
+      if (usuario === 'CESAR') {
         return true;
       } else {
         return false;

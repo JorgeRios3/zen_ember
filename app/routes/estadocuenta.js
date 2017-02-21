@@ -12,11 +12,10 @@ const{
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
   setupController(ctrlr, model) {
-    // let a= this.controllerFor('index');
-    // info('revisnado pèrfolñ', a.perfil);
     ctrlr.notifyPropertyChange('isArcadia');
     info('valor de hipotecarias', model);
-    set(ctrlr, 'catalogoHipotecaria', model);
+    let {hipotecarias} = model;
+    //set(ctrlr, 'catalogoHipotecaria', hipotecarias);
   },
   beforeModel2() {
     info('valor de featues ',get(this, 'features'));
@@ -66,7 +65,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     });
   },
   model() {
-    return this.store.findAll('zenhipotecaria');
+    return Ember.RSVP.hash({
+      hipotecarias: this.store.findAll('zenhipotecaria')
+    })
   },
 
   willTransition() {
