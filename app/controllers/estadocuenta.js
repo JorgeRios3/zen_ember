@@ -172,16 +172,24 @@ export default Ember.Controller.extend(FormatterMixin,
         objeto.cuenta = get(this, 'cuentaBuscar');
         info('valor de company', company);
         store.unloadAll('cuentabreve');
-        let p = this.store.find('zenhipotecaria', get(this, 'cuentaBuscar'));
-        p.then((data2)=> {
-          let id = get(data2, 'hipotecaria') > 0 ? get(data2, 'hipotecaria') : 0;
-          set(this, 'hipotecariaId', id);
-          set(this, 'selectedHipotecaria', id);
-          Ember.run.later('', function() {
-            let val = `#x-institucion option[value=${id}]`
-            $(val).prop('selected', true);
-          },6000)
-        });
+        if (!isArcadia) {
+          let p = this.store.find('zenhipotecaria', get(this, 'cuentaBuscar'));
+          p.then((data2)=> {
+            let id = get(data2, 'hipotecaria') > 0 ? get(data2, 'hipotecaria') : 0;
+            set(this, 'hipotecariaId', id);
+            set(this, 'selectedHipotecaria', id);
+            Ember.run.later('', function() {
+              let val = `#x-institucion option[value=${id}]`
+              $(val).prop('selected', true);
+            },6000)
+          }); 
+        } else {
+          let promise2 = this.store.find('cuentaarcadia', cuenta);
+          promise2.then((data3)=>{
+            set(this, 'arcadiaBorrar', data3);
+            info('viendo arcadianuevo', data3);
+          });
+        }
         store.query('cuentabreve', objeto)
         .then((data)=> {
           data.forEach((item)=> {
@@ -399,6 +407,14 @@ export default Ember.Controller.extend(FormatterMixin,
   }),
 
   actions: {
+    cancelaCuentaArcadia() {
+      let cuenta= get(this, 'arcadiaBorrar');
+      cuenta.deleteRecord();
+      cuenta.save().then(()=>{
+        info('se borro');
+        this.transitionToRoute('index');
+      });
+    },
     guardarInstitucion() {
       let cuenta = get(this, 'cuenta');
       let hipotecaria = get(this, 'selectedHipotecaria');

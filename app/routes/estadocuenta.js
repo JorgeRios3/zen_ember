@@ -5,6 +5,7 @@ const{
   set,
   get,
   setProperties,
+  getProperties,
   RSVP: { hash },
   Logger: { info }
 } = Ember;
@@ -15,6 +16,12 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     ctrlr.notifyPropertyChange('isArcadia');
     info('valor de hipotecarias', model);
     let {hipotecarias} = model;
+    let lista=[]
+    hipotecarias.forEach((item)=>{
+      let{id, descripcion}  = getProperties(item, 'id descripcion'.w());
+      lista.pushObject({id, descripcion});
+    });
+    set(ctrlr, 'catalogoHipotecaria', lista);
     //set(ctrlr, 'catalogoHipotecaria', hipotecarias);
   },
   beforeModel2() {
@@ -61,7 +68,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       abonos: 0,
       showName: '',
       showCuenta: '',
-      cuentaBuscar: ''
+      cuentaBuscar: '',
+      arcadiaBorrar: null
     });
   },
   model() {
