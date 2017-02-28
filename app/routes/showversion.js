@@ -18,7 +18,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     return new Ember.RSVP.hash({
       //usuarios: store.find('usuarios'),
       zenversion : store.find('zenversion',1),
-      timestamp: ajax.post('/api/gql', {data: JSON.stringify({query: "query {zenusers {timestamp}}"})})
+      //timestamp: ajax.post('/api/gql', {data: JSON.stringify({query: "query {zenusers {timestamp}}"})})
     });
     
   },
