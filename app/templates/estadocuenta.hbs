@@ -162,11 +162,19 @@
     	<dt>RFC</dt><dd>{{rfcCliente}}</dd>
     	<dt>RAP</dt><dd>{{rapCliente}}</dd>
     	<dt>Vendedor</dt><dd>{{vendedor}}</dd>
+    	{{#if totalVencido}}
+    		<dt>Vencido</dt><dd>{{totalVencidoFormateado}}&nbsp;({{documentosVencidos}} docs.)</dd>
+    	{{/if}}
+    	{{#if isArcadia}}
+    		{{#if features.cancelarcuentaarcadia}}
+    			<dt></dt><dd><div class="btn btn-danger" {{action "cancelaCuentaArcadia"}}>Cancelar Cuenta</div></dd>
+    		{{/if}}
+    	{{else}}
     	<dt>Institucion</dt>
     	<dd>
     		{{#x-select value=selectedHipotecaria action=(action  (mut selectedHipotecaria)) class="form-control form-control-inline" id="x-institucion"}}
     			{{#x-option value=''}}Elija Institucion{{/x-option}}
-					{{#each catalogo as |item|}}
+					{{#each catalogoHipotecaria as |item|}}
 						{{#x-option value=item.id}}{{item.descripcion}}{{/x-option}}
 					{{/each}}
 			{{/x-select}}
@@ -174,9 +182,7 @@
 				<div class="btn btn-info" {{action "guardarInstitucion"}}>Guardar</div>
 			{{/if}}
 		</dd>
-    	{{#if totalVencido}}
-    		<dt>Vencido</dt><dd>{{totalVencidoFormateado}}&nbsp;({{documentosVencidos}} docs.)</dd>
-    	{{/if}}
+		{{/if}}
 
     </dl>
 	{{#unless features.solo_consulta}}

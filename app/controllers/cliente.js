@@ -376,7 +376,17 @@ export default Ember.Controller.extend(EmberValidations, {
           nombre, rfc, telefonocasa, telefonotrabajo
         });
         r.save().then(()=>{
-          set(this, 'formaEditarCliente', false);
+          this.setProperties({
+            clienteRecord: null,
+            formaEditarCliente: false,
+            clienteNombre: '',
+            clienteRfc:'',
+            clienteTelCasa: '',
+            clienTelTrabajo: ''
+          });
+          this.store.unloadAll('clientecuantofiltro');
+          this.store.unloadAll('clientefiltro');
+          this.store.unloadAll('cliente');
         });
     },
     seleccionar(cliente) {

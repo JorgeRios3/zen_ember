@@ -60,3 +60,4 @@ inflector.irregular('preciosdescuento', 'preciosdescuentos');
 inflector.irregular('caracteristica', 'caracteristicas');
 inflector.irregular('zenpreciooriginal', 'zenpreciooriginals');
 inflector.irregular('zenhipotecaria', 'zenhipotecarias');
+inflector.irregular('cuentaarcadia', 'cuentaarcadias');
