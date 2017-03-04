@@ -6,6 +6,7 @@
 		</div>		
 	</div>
 {{/if}}
+<div class="btn btn-info" {{action "probandosi"}}>Probando</div>
 <div class="form-group">
 	<label for="idcuentaCliente" class="control-label">Cuenta</label>
 	<div class="row">
@@ -251,14 +252,9 @@
 			<tr>
 
 				<td data-title="Sel">
-					{{#if t.elegido}}
-						<span class="glyphicon glyphicon-check"></span>
-						{{else}}
-						<span></span>
-					{{/if}}
 			    </td>
                 <td data-title="Documento">
-					<a href="" {{ action 'procesaDocumento' t.id t.abono }}>{{t.id}}</a>
+					<a href="" {{ action 'procesaDocumento' t.id t.abono t}}>{{t.id}}</a>
 				</td>
 				<td data-title="Descripcion">
 					{{t.descripcion}}
@@ -286,6 +282,39 @@
 			{{/each}}
 		</tbody>
 	</table>
+	<br>
+	{{#if showForma}}
+		<div class="jumbotron">
+			<div class="h4 text-center">Pagar Documento {{documentoSeleccionado.id}}</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="h5">Saldo del Documento {{documentoSeleccionado.saldo}}</div>
+						Cantidad a pagar
+						{{input type="number" value=importePago placeholder="Cantidad" id="importePago"}}
+						{{#if pagoCantidadDocumento}}
+							<div class="btn btn-success">Pagar</div>
+						{{/if}}
+					</div>
+					<div class="col-md-6">
+						{{#if opcionDescuento}}
+						<div class="text-center text-info">Generar Descuento</div>
+						<br>
+						Autorizacion {{input type="text" value=codigoAutorizacion placeholder="Autorizacion" id="Autorizacion"}}
+						<div class="btn btn-info" {{action "buscarAutorizacion"}}>Buscar</div>
+						{{#if detalleAutorizacion}}
+							<br><div class="h4 text text-info">Valor Descuento ${{detalleAutorizacion.descuento}}</div>
+						{{/if}}
+						{{/if}}
+					</div>
+				</div>
+		</div>
+
+		<div class="btn btn-warning" {{action "turnShowForma"}}>Cancelar</div>
+	{{else}}
+		{{#if documentoSelFlag}}
+			<div class="btn btn-info" {{action "turnShowForma"}}>Abonar o Pagar Documento</div>
+			<br>
+		{{/if}}
 	<br>
 	<table class="table table-bordered table-striped table-condensed cf">
 		<thead>
@@ -323,6 +352,7 @@
 			{{/each}}
 		</tbody>
 	</table>
+	{{/if}} <!-- cierre show forma -->
 	{{#if isArcadia}}
 	
 		{{#if recibo}}

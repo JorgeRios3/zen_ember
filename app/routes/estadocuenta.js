@@ -69,7 +69,16 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       showName: '',
       showCuenta: '',
       cuentaBuscar: '',
-      arcadiaBorrar: null
+      arcadiaBorrar: null,
+      documentoSelFlag: false,
+      documentoSeleccionado: null,
+      showForma: false,
+      importePago: null,
+      opcionDescuento: false,
+      codigoAutorizacion: '',
+      detalleAutorizacion: null,
+      inmuebleCuenta: null
+
     });
   },
   model() {

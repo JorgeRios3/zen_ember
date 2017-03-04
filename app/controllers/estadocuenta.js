@@ -15,6 +15,7 @@ const {
 
 export default Ember.Controller.extend(FormatterMixin,
 {
+  ajax: service(),
   session: service(),
   comodin: service(),
   proxyCuenta: computed('comodin', {
@@ -182,7 +183,11 @@ export default Ember.Controller.extend(FormatterMixin,
               let val = `#x-institucion option[value=${id}]`
               $(val).prop('selected', true);
             },6000)
-          }); 
+          });
+          /*this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {autorizacion (inmueble: "${autorizacion}") {descuento fecha cuenta inmueble}}`})})
+          .then((data2)=> {
+            let dato2 = data.data.autorizacion;
+          })*/
         } else {
           let promise2 = this.store.find('cuentaarcadia', cuenta);
           promise2.then((data3)=>{
@@ -194,6 +199,7 @@ export default Ember.Controller.extend(FormatterMixin,
         .then((data)=> {
           data.forEach((item)=> {
             if (get(item, 'id') && get(item, 'nombre')) {
+              set(this, 'inmuebleCuenta', get(item, 'inmueble'));
               set(this, 'telefonoCasa', get(item, 'telefonocasa'));
               set(this, 'telefonoTrabajo', get(item, 'telefonotrabajo'));
               set(this, 'mostrarNombreClienteAlert', true);
@@ -272,15 +278,15 @@ export default Ember.Controller.extend(FormatterMixin,
     let { store } = this;
     set(this, 'company', company);
     store.unloadAll('etapastramite');
-    store.unloadAll('documentoscliente');
-    store.unloadAll('movimientosdocumento');
+    store.unloadAll('zendocumentoscliente');
+    store.unloadAll('zenmovimientosdocumento');
     set(this, 'etapas', this.store.query('etapastramite', { company }));
   }),
   observaSelectedNombre: observer('selectedNombre', function() {
     let { store } = this;
     info('valor de selectedNombre', get(this, 'selectedNombre'));
-    store.unloadAll('documentoscliente');
-    store.unloadAll('documentopagare');
+    store.unloadAll('zendocumentoscliente');
+    store.unloadAll('zendocumentopagare');
     store.unloadAll('zenrapcuenta');
     let that = this;
     let totalVencido = 0;
@@ -304,7 +310,7 @@ export default Ember.Controller.extend(FormatterMixin,
     info('cual', cual);
     info(get(cual, 'oferta'));
     info(`valor de cual ${cual}`);
-    let p = this.store.query('documentoscliente', { cuenta: get(this, 'selectedNombre'), company });
+    let p = this.store.query('zendocumentoscliente', { cuenta: get(this, 'selectedNombre'), company });
     p.then((data)=> {
       data.forEach((item)=> {
         if (get(item, 'documentoVencido')) {
@@ -405,8 +411,53 @@ export default Ember.Controller.extend(FormatterMixin,
       this.send('buscarConCuenta');
     }, 2000);
   }),
-
+  pagoCantidadDocumento: computed('importePago', {
+    get() {
+      let val = '';
+      let importe = get(this, 'importePago');
+      let documentoSaldo = get(get(this, 'documentoSeleccionado'), 'saldoNumber');
+      if (importe <= 0 ){
+        val =  false
+      } else {
+        val = importe <= documentoSaldo ? true : false;
+      }
+      return val;
+    }
+  }),
   actions: {
+    buscarAutorizacion() {
+      set(this, 'detalleAutorizacion', null);
+      let autorizacion = get(this, 'codigoAutorizacion');
+      autorizacion =21639
+      // autorizacion = "c03ef7e4";
+      //this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {inmueble (id: "${autorizacion}") {descuento fecha cuenta inmueble}}`})})
+      this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {inmueble (id: "${autorizacion}") {autorizacion}}`})})
+      .then((data)=> {
+        let dato = data.data.autorizacion;
+        if (dato.cuenta === 0 && parseInt(get(this, 'inmuebleCuenta')) === dato.inmueble ) {
+          set(this, 'detalleAutorizacion', dato);
+          info('si concuerda con el inmueble del descuento');
+        } else {
+          info('no concuerda algun dato de la autorizacion');
+        }
+        info('valor de data', data.data.autorizacion);
+      },(error)=> {
+        info('trono', error);
+      });
+    },
+    turnShowForma() {
+      this.toggleProperty('showForma')
+    },
+    probandosi() {
+      //this.get('ajax').post('/api/gql', {data: JSON.stringify({query: "query {zenusers {timestamp}}"})})
+      //%{"query" => "query {autorizacion (id: \"c03ef7e4\") {importe}}"}}
+      this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {autorizacion (id: "c03ef7e4") {descuento fecha cuenta inmueble}}`})})
+      .then((data)=> {
+        info('valor de data', data.data.autorizacion);
+      },(error)=> {
+        info('trono', error);
+      });
+    },
     cancelaCuentaArcadia() {
       let cuenta= get(this, 'arcadiaBorrar');
       cuenta.deleteRecord();
@@ -544,11 +595,32 @@ export default Ember.Controller.extend(FormatterMixin,
       });
       set(this, 'recibosmovimientosLista', lista);
     },
-    procesaDocumento(idDocumento, abono) {
+    procesaDocumento(idDocumento, abono, documento) {
+      info('valor de inmueblecuenta', get(this, 'inmuebleCuenta'));
+      set(this, 'opcionDescuento', false);
       let company = get(this, 'company');
-      this.store.unloadAll('movimientosdocumento');
+      this.store.unloadAll('zenmovimientosdocumento');
       info(`valor de id documento ${idDocumento} valor de abono ${abono}`);
-      set(this, 'movimientosdocumento', this.store.query('movimientosdocumento', { documento: idDocumento, company }));
+      set(this, 'documentoSelFlag', true);
+      set(this, 'documentoSeleccionado', documento);
+      set(this, 'importePago', get(documento,'saldoNumber'));
+      //aqui va el ajax
+      let p = this.store.query('zenmovimientosdocumento', { documento: idDocumento, company });
+      p.then((data)=> {
+        set(this, 'movimientosdocumento', data);
+        if(isEmpty(company) && get(documento, 'tipo') === 2) {
+          let valida = data.filter((item) => {
+            if (get(item, 'relaciondepago') === 'DESCUENTO PRECIO') {
+              return true;
+            } else {
+              return false;
+            }
+          });
+          set(this, 'opcionDescuento', valida.length === 0);
+        }
+      });
+      //set(this, 'movimientosdocumento', this.store.query('zenmovimientosdocumento', { documento: idDocumento, company }));
+
     },
     selectedEtapa(item) {
       let etapa = item.id
