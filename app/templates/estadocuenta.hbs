@@ -297,13 +297,23 @@
 					</div>
 					<div class="col-md-6">
 						{{#if opcionDescuento}}
-						<div class="text-center text-info">Generar Descuento</div>
-						<br>
-						Autorizacion {{input type="text" value=codigoAutorizacion placeholder="Autorizacion" id="Autorizacion"}}
-						<div class="btn btn-info" {{action "buscarAutorizacion"}}>Buscar</div>
-						{{#if detalleAutorizacion}}
-							<br><div class="h4 text text-info">Valor Descuento ${{detalleAutorizacion.descuento}}</div>
-						{{/if}}
+							{{#if isAutorizacionInmueble}}
+								<div class="text-center text-info">Generar Descuento</div>
+								<br>
+								Autorizacion {{input type="text" value=codigoAutorizacion placeholder="Autorizacion" id="Autorizacion"}}
+								<div class="btn btn-info" {{action "buscarAutorizacion"}}>Buscar</div>
+								<br>
+								{{#if detalleAutorizacion}}
+									<br><div class="h4 text text-info">Valor Descuento ${{detalleAutorizacion.descuento}}</div>
+									<div class="btn btn-success align-right" {{action "aplicarDescuento"}}>Aplicar Descuento</div>
+								{{/if}}
+							{{/if}}
+							{{#if errorAutorizacion}}
+								<br>
+								<div class="alert alert-danger">
+									<strong>error</strong> {{errorAutorizacion}}
+								</div>
+							{{/if}}
 						{{/if}}
 					</div>
 				</div>

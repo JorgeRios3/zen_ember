@@ -184,10 +184,6 @@ export default Ember.Controller.extend(FormatterMixin,
               $(val).prop('selected', true);
             },6000)
           });
-          /*this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {autorizacion (inmueble: "${autorizacion}") {descuento fecha cuenta inmueble}}`})})
-          .then((data2)=> {
-            let dato2 = data.data.autorizacion;
-          })*/
         } else {
           let promise2 = this.store.find('cuentaarcadia', cuenta);
           promise2.then((data3)=>{
@@ -215,6 +211,17 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'cpCliente', get(item, 'cp'));
               set(this, 'rfcCliente', get(item, 'rfc'));
               set(this, 'vendedor', get(item, 'nombrevendedor'));
+              if (!isArcadia) {
+                let inmueble = get(this, 'inmuebleCuenta');
+                this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {inmueble (id: "${inmueble}") {autorizacion}}`})})
+                .then((data3)=> {
+                  set(this, 'isAutorizacionInmueble',data3.data.inmueble.autorizacion);
+                  info(data3.data.inmueble.autorizacion);
+                },(error)=>{
+                  info('mallll');
+                  set(this, 'isAutorizacionInmueble', '');
+                });
+              }
               if (isArcadia) {
                 info('en arcadia lote', get(item, 'lote'));
                 info('en arcadia lote', get(item, 'manzana'));
@@ -425,23 +432,33 @@ export default Ember.Controller.extend(FormatterMixin,
     }
   }),
   actions: {
+    aplicarDescuento() {
+
+    },
     buscarAutorizacion() {
+      let that = this;
       set(this, 'detalleAutorizacion', null);
       let autorizacion = get(this, 'codigoAutorizacion');
-      autorizacion =21639
-      // autorizacion = "c03ef7e4";
-      //this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {inmueble (id: "${autorizacion}") {descuento fecha cuenta inmueble}}`})})
-      this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {inmueble (id: "${autorizacion}") {autorizacion}}`})})
+      this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {autorizacion (id: "${autorizacion}") {descuento fecha cuenta inmueble}}`})})
       .then((data)=> {
         let dato = data.data.autorizacion;
         if (dato.cuenta === 0 && parseInt(get(this, 'inmuebleCuenta')) === dato.inmueble ) {
           set(this, 'detalleAutorizacion', dato);
           info('si concuerda con el inmueble del descuento');
         } else {
+          set(this, 'errorAutorizacion', 'la autorizacion solicitada ya esta asignada a otra cuenta o no corresponde al inmueble de la cuenta');
+          Ember.run.later('', function() {
+            set(that, 'errorAutorizacion', null);
+          }, 4000);
           info('no concuerda algun dato de la autorizacion');
         }
         info('valor de data', data.data.autorizacion);
       },(error)=> {
+        set(this, 'errorAutorizacion', 'No Existe');
+        Ember.run.later('', function() {
+          set(that, 'errorAutorizacion', null);
+        }, 2000);
+
         info('trono', error);
       });
     },
@@ -671,6 +688,7 @@ export default Ember.Controller.extend(FormatterMixin,
       this.store.unloadAll('clientescuantosconcuentanosaldada');
       this.store.unloadAll('clientesconcuentanosaldada');
       this.store.unloadAll('zenhipotecaria');
+      set(this, 'showForma', false);
       this.store.query('clientescuantosconcuentanosaldada' , { etapa, nombre, estadocuenta: 1, company })
       .then((data)=> {
         if (get(data, 'length')) {
