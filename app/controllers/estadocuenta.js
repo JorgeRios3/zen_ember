@@ -432,8 +432,34 @@ export default Ember.Controller.extend(FormatterMixin,
     }
   }),
   actions: {
-    aplicarDescuento() {
+    pagarDocumento() {
+      let r = this.store.createRecord('zenrecibo', {
+        documento: get(this, 'documentoSeleccionado.id',),
+        cantidad: get(this, 'importePago'),
+        autorizacion: '',
+        referencia: 'probando referencia'
+      });
+      //info('valor de record', r);
+      r.save().then(()=>{
+        info('si');
+      },(error)=>{
+        info('trono');
+      });
 
+    },
+    aplicarDescuento() {
+      let r = this.store.createRecord('zenrecibo', {
+        documento: get(this, 'documentoSeleccionado.id',),
+        cantidad: get(this, 'detalleAutorizacion.descuento'),
+        autorizacion: get(this, 'codigoAutorizacion'),
+        referencia: ''
+      });
+      //info('valor de record', r);
+      r.save().then(()=>{
+        info('si');
+      },(error)=>{
+        info('trono');
+      });
     },
     buscarAutorizacion() {
       let that = this;

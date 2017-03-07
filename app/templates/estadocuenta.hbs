@@ -292,7 +292,7 @@
 						Cantidad a pagar
 						{{input type="number" value=importePago placeholder="Cantidad" id="importePago"}}
 						{{#if pagoCantidadDocumento}}
-							<div class="btn btn-success">Pagar</div>
+							<div class="btn btn-success" {{action "pagarDocumento"}}>Pagar</div>
 						{{/if}}
 					</div>
 					<div class="col-md-6">
