@@ -251,14 +251,9 @@
 			<tr>
 
 				<td data-title="Sel">
-					{{#if t.elegido}}
-						<span class="glyphicon glyphicon-check"></span>
-						{{else}}
-						<span></span>
-					{{/if}}
 			    </td>
                 <td data-title="Documento">
-					<a href="" {{ action 'procesaDocumento' t.id t.abono }}>{{t.id}}</a>
+					<a href="" {{ action 'procesaDocumento' t.id t.abono t}}>{{t.id}}</a>
 				</td>
 				<td data-title="Descripcion">
 					{{t.descripcion}}
@@ -286,6 +281,73 @@
 			{{/each}}
 		</tbody>
 	</table>
+	<br>
+	{{#if showForma}}
+		<div class="jumbotron">
+			<div class="h4 text-center">Pagar Documento {{documentoSeleccionado.id}}</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-inline">
+							<div class="form-group">
+							<label for="datewidget" class="control-label">Fecha de Aplicacion</label>
+							<div>
+					        	{{bs-datetimepicker id='fecha1' date=nullFechaCaptura showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCaptura))}}
+					    	</div>
+						</div>
+					</div>
+						<div class="h5">Saldo del Documento {{documentoSeleccionado.saldo}}</div>
+						<div class="form-group">
+							<label for="importePagar" class="control-label">Cantidad a Pagar</label>
+							<div class="row">
+								<div class="col-xs-11 col-md-7">
+									{{input type="number" value=importePago class="form-control" placeholder="importe" id="importePagar"}}
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="idReferencia" class="control-label">Referencia</label>
+							<div class="row">
+								<div class="col-xs-11 col-md-7">
+									{{input type="text" value=referenciaPago class="form-control" placeholder="Referencia" id="idReferencia"}}
+								</div>
+							</div>
+						</div>
+						{{#if pagoCantidadDocumento}}
+							<div class="btn btn-success" {{action "pagarDocumento"}}>Pagar</div>
+						{{/if}}
+						<div class="btn btn-warning" {{action "turnShowForma"}}>Cancelar</div>
+					</div>
+					<div class="col-md-6">
+						{{#if opcionDescuento}}
+							{{#if isAutorizacionInmueble}}
+								<div class="text-center text-info">Generar Descuento</div>
+								<br>
+								Autorizacion {{input type="text" value=codigoAutorizacion placeholder="Autorizacion" id="Autorizacion"}}
+								<div class="btn btn-info" {{action "buscarAutorizacion"}}>Buscar</div>
+								<br>
+								{{#if detalleAutorizacion}}
+									<br><div class="h4 text text-info">Valor Descuento ${{detalleAutorizacion.descuento}}</div>
+									<div class="btn btn-success align-right" {{action "aplicarDescuento"}}>Aplicar Descuento</div>
+								{{/if}}
+							{{/if}}
+							{{#if errorAutorizacion}}
+								<br>
+								<div class="alert alert-danger">
+									<strong>error</strong> {{errorAutorizacion}}
+								</div>
+							{{/if}}
+						{{/if}}
+					</div>
+				</div>
+		</div>
+
+	{{else}}
+		{{#if features.pagoestadocuentaiclar}}
+			{{#if documentoSelFlag}}
+				<div class="btn btn-info" {{action "turnShowForma"}}>Abonar o Pagar Documento</div>
+				<br>
+			{{/if}}
+		{{/if}}
 	<br>
 	<table class="table table-bordered table-striped table-condensed cf">
 		<thead>
@@ -323,6 +385,7 @@
 			{{/each}}
 		</tbody>
 	</table>
+	{{/if}} <!-- cierre show forma -->
 	{{#if isArcadia}}
 	
 		{{#if recibo}}
@@ -423,3 +486,6 @@
   			{{/modal-bs}}
 
 		{{/if}}
+{{#if showImpresion}}
+	{{impresion-reporte store=store reporte="recibo" parametro1="recibo" muestraInput=false valorParametro1=reciboPrint labelParametro1="Cliente" placeholderParametro1="Digite Cliente" submit=(action 'imprimeFicha') }}
+{{/if}}

@@ -15,6 +15,14 @@ export default DS.Model.extend({
   elegido: DS.attr("boolean", {default : false}),
   fechavencimiento: DS.attr('string'),
   diasvencimiento: DS.attr('number'),
+  tipo: DS.attr('number'),
+  saldoNumber: computed('saldo', {
+    get() {
+    let saldo = get(this, 'saldo');
+    saldo = saldo.replace(",", "");
+    return Number(saldo)
+    }
+  }),
   documentoVencido:computed('diasvencimiento', {
   	get() {
   	  if(get (this, 'diasvencimiento') > 0) {

@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import FormatterMixin from '../mixins/formatter';
+import moment from 'moment';
 
 const {
   get,
@@ -15,6 +16,7 @@ const {
 
 export default Ember.Controller.extend(FormatterMixin,
 {
+  ajax: service(),
   session: service(),
   comodin: service(),
   proxyCuenta: computed('comodin', {
@@ -171,7 +173,7 @@ export default Ember.Controller.extend(FormatterMixin,
         let company = get(this, 'company');
         objeto.cuenta = get(this, 'cuentaBuscar');
         info('valor de company', company);
-        store.unloadAll('cuentabreve');
+        store.unloadAll('zencuentabreve');
         if (!isArcadia) {
           let p = this.store.find('zenhipotecaria', get(this, 'cuentaBuscar'));
           p.then((data2)=> {
@@ -182,7 +184,7 @@ export default Ember.Controller.extend(FormatterMixin,
               let val = `#x-institucion option[value=${id}]`
               $(val).prop('selected', true);
             },6000)
-          }); 
+          });
         } else {
           let promise2 = this.store.find('cuentaarcadia', cuenta);
           promise2.then((data3)=>{
@@ -190,10 +192,11 @@ export default Ember.Controller.extend(FormatterMixin,
             info('viendo arcadianuevo', data3);
           });
         }
-        store.query('cuentabreve', objeto)
+        store.query('zencuentabreve', objeto)
         .then((data)=> {
           data.forEach((item)=> {
             if (get(item, 'id') && get(item, 'nombre')) {
+              set(this, 'inmuebleCuenta', get(item, 'inmueble'));
               set(this, 'telefonoCasa', get(item, 'telefonocasa'));
               set(this, 'telefonoTrabajo', get(item, 'telefonotrabajo'));
               set(this, 'mostrarNombreClienteAlert', true);
@@ -209,6 +212,17 @@ export default Ember.Controller.extend(FormatterMixin,
               set(this, 'cpCliente', get(item, 'cp'));
               set(this, 'rfcCliente', get(item, 'rfc'));
               set(this, 'vendedor', get(item, 'nombrevendedor'));
+              if (!isArcadia) {
+                let inmueble = get(this, 'inmuebleCuenta');
+                this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {inmueble (id: "${inmueble}") {autorizacion}}`})})
+                .then((data3)=> {
+                  set(this, 'isAutorizacionInmueble',data3.data.inmueble.autorizacion);
+                  info(data3.data.inmueble.autorizacion);
+                },(error)=>{
+                  info('mallll');
+                  set(this, 'isAutorizacionInmueble', '');
+                });
+              }
               if (isArcadia) {
                 info('en arcadia lote', get(item, 'lote'));
                 info('en arcadia lote', get(item, 'manzana'));
@@ -271,16 +285,16 @@ export default Ember.Controller.extend(FormatterMixin,
     let etapas = Ember.A();
     let { store } = this;
     set(this, 'company', company);
-    store.unloadAll('etapastramite');
-    store.unloadAll('documentoscliente');
-    store.unloadAll('movimientosdocumento');
-    set(this, 'etapas', this.store.query('etapastramite', { company }));
+    store.unloadAll('zenetapastramite');
+    store.unloadAll('zendocumentoscliente');
+    store.unloadAll('zenmovimientosdocumento');
+    set(this, 'etapas', this.store.query('zenetapastramite', { company }));
   }),
   observaSelectedNombre: observer('selectedNombre', function() {
     let { store } = this;
     info('valor de selectedNombre', get(this, 'selectedNombre'));
-    store.unloadAll('documentoscliente');
-    store.unloadAll('documentopagare');
+    store.unloadAll('zendocumentoscliente');
+    store.unloadAll('zendocumentopagare');
     store.unloadAll('zenrapcuenta');
     let that = this;
     let totalVencido = 0;
@@ -304,7 +318,7 @@ export default Ember.Controller.extend(FormatterMixin,
     info('cual', cual);
     info(get(cual, 'oferta'));
     info(`valor de cual ${cual}`);
-    let p = this.store.query('documentoscliente', { cuenta: get(this, 'selectedNombre'), company });
+    let p = this.store.query('zendocumentoscliente', { cuenta: get(this, 'selectedNombre'), company });
     p.then((data)=> {
       data.forEach((item)=> {
         if (get(item, 'documentoVencido')) {
@@ -342,7 +356,7 @@ export default Ember.Controller.extend(FormatterMixin,
       info('el error es ', e);
     }
     if (get(this, 'conPagares') === true) {
-      set(this, 'documentosPagares', this.store.query('documentopagare', { cuenta }));
+      set(this, 'documentosPagares', this.store.query('zendocumentopagare', { cuenta }));
     }
     set(this, 'cliente', get(cual, 'cliente'));
     set(this, 'showData', true);
@@ -405,8 +419,104 @@ export default Ember.Controller.extend(FormatterMixin,
       this.send('buscarConCuenta');
     }, 2000);
   }),
-
+  pagoCantidadDocumento: computed('importePago', {
+    get() {
+      let val = '';
+      let importe = get(this, 'importePago');
+      let documentoSaldo = get(get(this, 'documentoSeleccionado'), 'saldoNumber');
+      if (importe <= 0 ){
+        val =  false
+      } else {
+        val = importe <= documentoSaldo ? true : false;
+      }
+      return val;
+    }
+  }),
   actions: {
+    imprimeFicha() {
+      
+    },
+    pagarDocumento() {
+      let fCapturaInicial = get(this, 'fechaCaptura');
+      let fechaCapturainicial = !isEmpty(fCapturaInicial) ? fCapturaInicial.format('MM/DD/YYYY') : '';
+      let r = this.store.createRecord('zenrecibo', {
+        documento: get(this, 'documentoSeleccionado.id',),
+        cantidad: get(this, 'importePago'),
+        autorizacion: '',
+        referencia: get(this, 'referenciaPago'),
+        fechaaplicacion:  fechaCapturainicial
+      });
+      //info('valor de record', r);
+      r.save().then((data)=>{
+        info('si');
+        set(this, 'showForma', false);
+        set(this, 'referenciaPago', null);
+        let recibo = get(data, 'id');
+        set(this, 'reciboPrint', recibo);
+        this.notifyPropertyChange('selectedNombre');
+        set(this, 'showImpresion', true);
+      },(error)=>{
+        info('trono');
+      });
+
+    },
+    aplicarDescuento() {
+      let r = this.store.createRecord('zenrecibo', {
+        documento: get(this, 'documentoSeleccionado.id',),
+        cantidad: get(this, 'detalleAutorizacion.descuento'),
+        autorizacion: get(this, 'codigoAutorizacion'),
+        referencia: ''
+      });
+      //info('valor de record', r);
+      r.save().then(()=>{
+        info('si');
+        set(this, 'showForma', false);
+        this.notifyPropertyChange('selectedNombre');
+      },(error)=>{
+        info('trono');
+      });
+    },
+    buscarAutorizacion() {
+      let that = this;
+      set(this, 'detalleAutorizacion', null);
+      let autorizacion = get(this, 'codigoAutorizacion');
+      this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {autorizacion (id: "${autorizacion}") {descuento fecha cuenta inmueble}}`})})
+      .then((data)=> {
+        let dato = data.data.autorizacion;
+        if (dato.cuenta === 0 && parseInt(get(this, 'inmuebleCuenta')) === dato.inmueble ) {
+          set(this, 'detalleAutorizacion', dato);
+          info('si concuerda con el inmueble del descuento');
+        } else {
+          set(this, 'errorAutorizacion', 'la autorizacion solicitada ya esta asignada a otra cuenta o no corresponde al inmueble de la cuenta');
+          Ember.run.later('', function() {
+            set(that, 'errorAutorizacion', null);
+          }, 4000);
+          info('no concuerda algun dato de la autorizacion');
+        }
+        info('valor de data', data.data.autorizacion);
+      },(error)=> {
+        set(this, 'errorAutorizacion', 'No Existe');
+        Ember.run.later('', function() {
+          set(that, 'errorAutorizacion', null);
+        }, 2000);
+
+        info('trono', error);
+      });
+    },
+    turnShowForma() {
+      this.toggleProperty('showForma');
+      set(this, 'showImpresion', false);
+    },
+    probandosi() {
+      //this.get('ajax').post('/api/gql', {data: JSON.stringify({query: "query {zenusers {timestamp}}"})})
+      //%{"query" => "query {autorizacion (id: \"c03ef7e4\") {importe}}"}}
+      this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {autorizacion (id: "c03ef7e4") {descuento fecha cuenta inmueble}}`})})
+      .then((data)=> {
+        info('valor de data', data.data.autorizacion);
+      },(error)=> {
+        info('trono', error);
+      });
+    },
     cancelaCuentaArcadia() {
       let cuenta= get(this, 'arcadiaBorrar');
       cuenta.deleteRecord();
@@ -544,11 +654,32 @@ export default Ember.Controller.extend(FormatterMixin,
       });
       set(this, 'recibosmovimientosLista', lista);
     },
-    procesaDocumento(idDocumento, abono) {
+    procesaDocumento(idDocumento, abono, documento) {
+      info('valor de inmueblecuenta', get(this, 'inmuebleCuenta'));
+      set(this, 'opcionDescuento', false);
       let company = get(this, 'company');
-      this.store.unloadAll('movimientosdocumento');
+      this.store.unloadAll('zenmovimientosdocumento');
       info(`valor de id documento ${idDocumento} valor de abono ${abono}`);
-      set(this, 'movimientosdocumento', this.store.query('movimientosdocumento', { documento: idDocumento, company }));
+      set(this, 'documentoSelFlag', true);
+      set(this, 'documentoSeleccionado', documento);
+      set(this, 'importePago', get(documento,'saldoNumber'));
+      //aqui va el ajax
+      let p = this.store.query('zenmovimientosdocumento', { documento: idDocumento, company });
+      p.then((data)=> {
+        set(this, 'movimientosdocumento', data);
+        if(isEmpty(company) && get(documento, 'tipo') === 2) {
+          let valida = data.filter((item) => {
+            if (get(item, 'relaciondepago') === 'DESCUENTO PRECIO') {
+              return true;
+            } else {
+              return false;
+            }
+          });
+          set(this, 'opcionDescuento', valida.length === 0);
+        }
+      });
+      //set(this, 'movimientosdocumento', this.store.query('zenmovimientosdocumento', { documento: idDocumento, company }));
+
     },
     selectedEtapa(item) {
       let etapa = item.id
@@ -596,10 +727,11 @@ export default Ember.Controller.extend(FormatterMixin,
       let nombre = get(this, 'nombre');
       let etapa = get(this, 'selectedEtapa');
       info('valor de selectedEtapa', get(this, 'selectedEtapa'));
-      this.store.unloadAll('clientescuantosconcuentanosaldada');
-      this.store.unloadAll('clientesconcuentanosaldada');
+      this.store.unloadAll('zenclientescuantosconcuentanosaldada');
+      this.store.unloadAll('zenclientesconcuentanosaldada');
       this.store.unloadAll('zenhipotecaria');
-      this.store.query('clientescuantosconcuentanosaldada' , { etapa, nombre, estadocuenta: 1, company })
+      set(this, 'showForma', false);
+      this.store.query('zenclientescuantosconcuentanosaldada' , { etapa, nombre, estadocuenta: 1, company })
       .then((data)=> {
         if (get(data, 'length')) {
           data.forEach((item)=> {
@@ -607,7 +739,7 @@ export default Ember.Controller.extend(FormatterMixin,
           });
         }
         if (parseInt(get(this, 'cuantos')) <= 100) {
-          this.store.query('clientesconcuentanosaldada', { etapa, nombre, estadocuenta: 1, company })
+          this.store.query('zenclientesconcuentanosaldada', { etapa, nombre, estadocuenta: 1, company })
           .then((data)=> {
             data.forEach((item)=> {
               let { cliente, conpagares, cuenta, inmueble, manzana, nombre, oferta, saldo, saldoformateado, saldopagares, saldopagaresformateado } = item.getProperties('cliente',
