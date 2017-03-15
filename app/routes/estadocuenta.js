@@ -79,7 +79,12 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       detalleAutorizacion: null,
       inmuebleCuenta: null,
       isAutorizacionInmueble: null,
-      errorAutorizacion: null
+      errorAutorizacion: null,
+      referenciaPago: null,
+      reciboPrint: '',
+      nullFechaCaptura: null,
+      fechaCaptura: null,
+      showImpresion: false
 
     });
   },

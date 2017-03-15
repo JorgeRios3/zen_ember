@@ -6,7 +6,6 @@
 		</div>		
 	</div>
 {{/if}}
-<div class="btn btn-info" {{action "probandosi"}}>Probando</div>
 <div class="form-group">
 	<label for="idcuentaCliente" class="control-label">Cuenta</label>
 	<div class="row">
@@ -288,12 +287,35 @@
 			<div class="h4 text-center">Pagar Documento {{documentoSeleccionado.id}}</div>
 				<div class="row">
 					<div class="col-md-6">
+						<div class="form-inline">
+							<div class="form-group">
+							<label for="datewidget" class="control-label">Fecha de Aplicacion</label>
+							<div>
+					        	{{bs-datetimepicker id='fecha1' date=nullFechaCaptura showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechaCaptura))}}
+					    	</div>
+						</div>
+					</div>
 						<div class="h5">Saldo del Documento {{documentoSeleccionado.saldo}}</div>
-						Cantidad a pagar
-						{{input type="number" value=importePago placeholder="Cantidad" id="importePago"}}
+						<div class="form-group">
+							<label for="importePagar" class="control-label">Cantidad a Pagar</label>
+							<div class="row">
+								<div class="col-xs-11 col-md-7">
+									{{input type="number" value=importePago class="form-control" placeholder="importe" id="importePagar"}}
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="idReferencia" class="control-label">Referencia</label>
+							<div class="row">
+								<div class="col-xs-11 col-md-7">
+									{{input type="text" value=referenciaPago class="form-control" placeholder="Referencia" id="idReferencia"}}
+								</div>
+							</div>
+						</div>
 						{{#if pagoCantidadDocumento}}
 							<div class="btn btn-success" {{action "pagarDocumento"}}>Pagar</div>
 						{{/if}}
+						<div class="btn btn-warning" {{action "turnShowForma"}}>Cancelar</div>
 					</div>
 					<div class="col-md-6">
 						{{#if opcionDescuento}}
@@ -319,11 +341,12 @@
 				</div>
 		</div>
 
-		<div class="btn btn-warning" {{action "turnShowForma"}}>Cancelar</div>
 	{{else}}
-		{{#if documentoSelFlag}}
-			<div class="btn btn-info" {{action "turnShowForma"}}>Abonar o Pagar Documento</div>
-			<br>
+		{{#if features.pagoestadocuentaiclar}}
+			{{#if documentoSelFlag}}
+				<div class="btn btn-info" {{action "turnShowForma"}}>Abonar o Pagar Documento</div>
+				<br>
+			{{/if}}
 		{{/if}}
 	<br>
 	<table class="table table-bordered table-striped table-condensed cf">
@@ -463,3 +486,6 @@
   			{{/modal-bs}}
 
 		{{/if}}
+{{#if showImpresion}}
+	{{impresion-reporte store=store reporte="recibo" parametro1="recibo" muestraInput=false valorParametro1=reciboPrint labelParametro1="Cliente" placeholderParametro1="Digite Cliente" submit=(action 'imprimeFicha') }}
+{{/if}}
