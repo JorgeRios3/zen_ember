@@ -1,4 +1,5 @@
 <h2 class="text-info">Estado de Cuenta</h2>
+<div class="btn btn-danger" {{action "calcularPagare"}}>probar pabagre</div>
 {{#if derechosArcadia}}
 	<div class="form-group">
 		<div class="checkbox">
@@ -313,28 +314,50 @@
 							</div>
 						</div>
 						{{#if pagoCantidadDocumento}}
-							<div class="btn btn-success" {{action "pagarDocumento"}}>Pagar</div>
+							{{#if esPagare}}
+								<div class="btn btn-success" {{action "calcularPagare"}}>Calcular Pago</div>
+							{{else}}
+								<div class="btn btn-success" {{action "pagarDocumento"}}>Pagar</div>
+							{{/if}}
 						{{/if}}
 						<div class="btn btn-warning" {{action "turnShowForma"}}>Cancelar</div>
 					</div>
 					<div class="col-md-6">
-						{{#if opcionDescuento}}
-							{{#if isAutorizacionInmueble}}
-								<div class="text-center text-info">Generar Descuento</div>
-								<br>
-								Autorizacion {{input type="text" value=codigoAutorizacion placeholder="Autorizacion" id="Autorizacion"}}
-								<div class="btn btn-info" {{action "buscarAutorizacion"}}>Buscar</div>
-								<br>
-								{{#if detalleAutorizacion}}
-									<br><div class="h4 text text-info">Valor Descuento ${{detalleAutorizacion.descuento}}</div>
-									<div class="btn btn-success align-right" {{action "aplicarDescuento"}}>Aplicar Descuento</div>
-								{{/if}}
-							{{/if}}
-							{{#if errorAutorizacion}}
-								<br>
-								<div class="alert alert-danger">
-									<strong>error</strong> {{errorAutorizacion}}
+						{{#if esPagare}}
+							<div class="form-group">
+							<div class="checkbox">
+									<div class="h5 text text-info">{{input type="checkbox" name="hayIntereses" checked=hayIntereses }}Con Intereses</div>
+								</div>		
+							</div>
+							{{#if hayIntereses}}
+								<div class="form-group">
+								<label for="intereses" class="control-label">Intereses</label>
+									<div class="row">
+									<div class="col-xs-11 col-md-7">
+										{{input type="text" value=intereses class="form-control" placeholder="Intereses" id="intereses"}}
+									</div>
+									</div>
 								</div>
+							{{/if}}
+						{{else}}
+							{{#if opcionDescuento}}
+								{{#if isAutorizacionInmueble}}
+									<div class="text-center text-info">Generar Descuento</div>
+									<br>
+									Autorizacion {{input type="text" value=codigoAutorizacion placeholder="Autorizacion" id="Autorizacion"}}
+									<div class="btn btn-info" {{action "buscarAutorizacion"}}>Buscar</div>
+									<br>
+									{{#if detalleAutorizacion}}
+										<br><div class="h4 text text-info">Valor Descuento ${{detalleAutorizacion.descuento}}</div>
+										<div class="btn btn-success align-right" {{action "aplicarDescuento"}}>Aplicar Descuento</div>
+									{{/if}}
+								{{/if}}
+								{{#if errorAutorizacion}}
+									<br>
+									<div class="alert alert-danger">
+									<strong>error</strong> {{errorAutorizacion}}
+									</div>
+								{{/if}}
 							{{/if}}
 						{{/if}}
 					</div>
@@ -344,7 +367,9 @@
 	{{else}}
 		{{#if features.pagoestadocuentaiclar}}
 			{{#if documentoSelFlag}}
+				{{#unless isArcadia}}
 				<div class="btn btn-info" {{action "turnShowForma"}}>Abonar o Pagar Documento</div>
+				{{/unless}}
 				<br>
 			{{/if}}
 		{{/if}}
@@ -489,3 +514,40 @@
 {{#if showImpresion}}
 	{{impresion-reporte store=store reporte="recibo" parametro1="recibo" muestraInput=false valorParametro1=reciboPrint labelParametro1="Cliente" placeholderParametro1="Digite Cliente" submit=(action 'imprimeFicha') }}
 {{/if}}
+
+{{#if mostrarModal}}
+	{{#modal-bs title="Calculo del pago"  ok="ok" close="cerrarCalculoPagare" closeTitle="Cancelar" okTitle="Pagar"}}
+		<div id="no-more-tables">
+			<table  class="table table-bordered table-striped table-condensed cf">
+			<thead>
+				<tr>
+					<th>Pagare</th>
+					<th>A Pagar</th>
+		        	<th>Interes</th>
+		        	<th>Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each calculoParages as |m|}}
+				<tr>
+		        	<td data-title="Pagare">
+						{{m.id}}
+					</td>
+					<td data-title="A Pagar">
+						{{m.apagar}}
+					</td>
+					<td data-title="Interes">
+						{{m.interes}}
+					</td>
+					<td data-title="Total">
+						{{m.total}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+			</table>
+		</div>
+		<div>Sobra $ {{if reciduoPagares reciduoPagares '0'}}</div>
+	{{/modal-bs}}
+{{/if}}
+
