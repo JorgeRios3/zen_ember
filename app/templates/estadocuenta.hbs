@@ -512,7 +512,7 @@
 
 		{{/if}}
 {{#if showImpresion}}
-	{{impresion-reporte store=store reporte="recibo" parametro1="recibo" muestraInput=false valorParametro1=reciboPrint labelParametro1="Cliente" placeholderParametro1="Digite Cliente" submit=(action 'imprimeFicha') }}
+	{{impresion-reporte store=store reporte="recibo" parametro1="recibo" muestraInput=false valorParametro1=reciboPrint labelParametro1="Cliente" placeholderParametro1="Digite Cliente" submit=(action 'imprimeFicha') cancel=(action 'togglePrinterComponent') }}
 {{/if}}
 
 {{#if mostrarModal}}

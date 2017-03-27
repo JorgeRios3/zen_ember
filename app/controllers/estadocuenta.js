@@ -445,6 +445,9 @@ export default Ember.Controller.extend(FormatterMixin,
     }
   }),
   actions: {
+    togglePrinterComponent() {
+      set(this, 'showImpresion', false);
+    },
     cerrarCalculoPagare() {
       set(this, 'mostrarModal', false);
     },
@@ -504,7 +507,6 @@ export default Ember.Controller.extend(FormatterMixin,
       });
     },
     imprimeFicha() {
-      
     },
     pagarDocumento() {
       let fCapturaInicial = get(this, 'fechaCaptura');

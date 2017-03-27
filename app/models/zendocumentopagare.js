@@ -13,7 +13,19 @@ export default DS.Model.extend({
 	cargo:DS.attr("string"),
 	abono:DS.attr("string"),
 	diasvencidos:DS.attr("number"),
-	estavencido:computed.gt("diasvencidos",0),
+	//estavencido:computed.gt("diasvencidos",0),
+	estavencido: computed('diasvencidos', {
+	  get() {
+	    let saldo = parseFloat(get(this, 'saldo'));
+	    let dias = get(this, 'diasvencidos');
+	    if (saldo > 0 && dias > 0) {
+	    	return true;
+	    }
+	    else {
+	      return false;
+	    }
+	  }
+	}),
 	fechavencimientocompleto:computed("fechavencimiento", "diasvencidos", {
 		get(){
 			let fechavencimiento=get(this, "fechavencimiento");
