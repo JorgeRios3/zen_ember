@@ -7,11 +7,13 @@ const{
   setProperties,
   getProperties,
   RSVP: { hash },
-  Logger: { info }
+  Logger: { info },
+  inject: { service },
 } = Ember;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
 {
+  session: service(),
   setupController(ctrlr, model) {
     ctrlr.notifyPropertyChange('isArcadia');
     info('valor de hipotecarias', model);
@@ -25,11 +27,14 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
     //set(ctrlr, 'catalogoHipotecaria', hipotecarias);
   },
   beforeModel2() {
+    let sess = get(this, 'session.session.content');
+    let token = get(sess, 'authenticated.access_token');
     info('valor de featues ',get(this, 'features'));
     // this._super(...arguments);
     let controller = this.controllerFor(this.routeName);
     controller.setProperties({
       features: get(this, 'features'),
+      token,
       rapCliente: '',
       selectedEtapa: '',
       selectedNombre: '',
@@ -84,7 +89,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       reciboPrint: '',
       nullFechaCaptura: null,
       fechaCaptura: null,
-      showImpresion: false
+      showImpresion: false,
+      hayIntereses: false,
+      intereses: 0
 
     });
   },

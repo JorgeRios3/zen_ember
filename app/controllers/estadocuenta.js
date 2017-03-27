@@ -419,6 +419,18 @@ export default Ember.Controller.extend(FormatterMixin,
       this.send('buscarConCuenta');
     }, 2000);
   }),
+  observaHayIntereses: observer('hayIntereses', function() {
+    if (get(this, 'hayIntereses')) {
+      let token = get(this, 'token');
+      info('entro en observer de hayinterses');
+      this.get('ajax').post('/api/gql', {data: JSON.stringify({query: `query {cpp (id: "1", token: "${token}") {cantidad}}`})})
+      .then((data)=> {
+        let cpp = data.data.cpp.cantidad;
+        info('valor de cpp', cpp);
+        set(this, 'intereses', cpp);
+      });
+    }
+  }),
   pagoCantidadDocumento: computed('importePago', {
     get() {
       let val = '';
@@ -433,18 +445,79 @@ export default Ember.Controller.extend(FormatterMixin,
     }
   }),
   actions: {
-    imprimeFicha() {
+    togglePrinterComponent() {
+      set(this, 'showImpresion', false);
+    },
+    cerrarCalculoPagare() {
+      set(this, 'mostrarModal', false);
+    },
+    ok() {
+      let pagares = "";
+      let listaPagares = get(this, 'calculoParages');
+      listaPagares.forEach((item)=> {
+        let {id, apagar, fechavencimiento} = getProperties(item, 'id apagar fechavencimiento'.w());
+        pagares = pagares + `id:${id}:cantidad:${apagar}:fechavencimiento:${fechavencimiento},`
+      });
+      pagares = pagares.slice(0,pagares.length-1);
+      info('viendo la cadena de pagares', pagares);
       
+
+      info('accion ok no hago nada');
+      set(this, 'mostrarModal', false);
+      let fCapturaInicial = get(this, 'fechaCaptura');
+      let fechaCapturainicial = !isEmpty(fCapturaInicial) ? fCapturaInicial.format('MM/DD/YYYY') : '';
+      let r = this.store.createRecord('zenrecibo', {
+        documento: get(this, 'documentoSeleccionado.id'),
+        cantidad: get(this, 'importePago'),
+        autorizacion: '',
+        referencia: get(this, 'referenciaPago'),
+        fechaaplicacion:  fechaCapturainicial,
+        espagare: true,
+        pagares
+      });
+      //info('valor de record', r);
+      r.save().then((data)=>{
+        info('si');
+        set(this, 'showForma', false);
+        set(this, 'referenciaPago', null);
+        let recibo = get(data, 'id');
+        set(this, 'reciboPrint', recibo);
+        this.notifyPropertyChange('selectedNombre');
+        set(this, 'showImpresion', true);
+      },(error)=>{
+        info('trono');
+      });
+    },
+    calcularPagare() {
+      let lista = Ember.A();
+      let cantidad = get(this, 'importePago');
+      let hayinteres = get(this, 'hayIntereses');
+      let intereses = get(this, 'intereses');
+      let cuenta = get(this, 'cuenta');
+      this.store.query('calculapagarepago', {cuenta, cantidad, hayinteres, intereses})
+      .then((data)=> {
+        data.forEach((item)=> {
+          lista.addObject(item)
+        });
+        set(this, 'calculoParages', lista);
+        set(this, 'reciduoPagares', get(data, 'meta.reciduo'));
+        set(this, 'mostrarModal', true);
+      }, (error)=> {
+        info('trono');
+      });
+    },
+    imprimeFicha() {
     },
     pagarDocumento() {
       let fCapturaInicial = get(this, 'fechaCaptura');
       let fechaCapturainicial = !isEmpty(fCapturaInicial) ? fCapturaInicial.format('MM/DD/YYYY') : '';
       let r = this.store.createRecord('zenrecibo', {
-        documento: get(this, 'documentoSeleccionado.id',),
+        documento: get(this, 'documentoSeleccionado.id'),
         cantidad: get(this, 'importePago'),
         autorizacion: '',
         referencia: get(this, 'referenciaPago'),
-        fechaaplicacion:  fechaCapturainicial
+        fechaaplicacion:  fechaCapturainicial,
+        espagare: false
       });
       //info('valor de record', r);
       r.save().then((data)=>{
@@ -656,6 +729,7 @@ export default Ember.Controller.extend(FormatterMixin,
     },
     procesaDocumento(idDocumento, abono, documento) {
       info('valor de inmueblecuenta', get(this, 'inmuebleCuenta'));
+      set(this, 'esPagare', get(documento, 'tipo') === 17 ? true : false );
       set(this, 'opcionDescuento', false);
       let company = get(this, 'company');
       this.store.unloadAll('zenmovimientosdocumento');
