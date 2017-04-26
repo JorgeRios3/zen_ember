@@ -387,8 +387,12 @@
 			{{#each movimientosdocumento as |m|}}
 			<tr>
                 <td data-title="id">
-					{{#if m.esdescuento}} 
-						<a href="" {{action "editarDescuento" m.id}}> {{m.id}}</a> 
+					{{#if m.esdescuento}}
+						{{#if features.cancelardescuento}} 
+							<a href="" {{action "editarDescuento" m.id}}> {{m.id}}</a>
+						{{else}}
+							{{m.id}}
+						{{/if}}
 					{{else}} 
 						{{m.id}} 
 					{{/if}}
