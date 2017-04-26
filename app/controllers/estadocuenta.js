@@ -444,12 +444,40 @@ export default Ember.Controller.extend(FormatterMixin,
       return val;
     }
   }),
+  cantidadDescuentoValida: computed('editarCantidadDescuento', {
+    get() {
+      let cantidadDocumento = get(this, 'movimientoEditar.cantidad');
+      cantidadDocumento = cantidadDocumento.replace(',', '');
+      cantidadDocumento = parseFloat(cantidadDocumento);
+      return cantidadDocumento >= get(this, 'editarCantidadDescuento');
+    }
+  }),
   actions: {
+    editarDescuento(movimiento) {
+      info('viendo movimiento a editar', movimiento);
+      this.store.find('zenmovimientosdocumento', movimiento).then((data)=> {
+        info('viendo el data', get(data, 'cantidad'));
+        set(this, 'movimientoEditar', data);
+      });
+    },
     togglePrinterComponent() {
       set(this, 'showImpresion', false);
     },
     cerrarCalculoPagare() {
       set(this, 'mostrarModal', false);
+    },
+    cerrarEliminarDescuento() {
+      info('cancele editar descuentoo');
+      set(this, 'movimientoEditar', null);
+    },
+    eliminarDescuento() {
+      let r = get(this, 'movimientoEditar');
+      r.deleteRecord();
+      r.save().then((data)=> {
+        info('si se borro');
+        set(this, 'movimientoEditar', null);
+        this.notifyPropertyChange('selectedNombre');
+      });
     },
     ok() {
       let pagares = "";

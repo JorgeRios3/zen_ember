@@ -91,7 +91,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,
       fechaCaptura: null,
       showImpresion: false,
       hayIntereses: false,
-      intereses: 0
+      intereses: 0,
+      movimientoEditar: null,
+      editarCantidadDescuento: 0
 
     });
   },

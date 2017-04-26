@@ -386,19 +386,23 @@
 		<tbody>
 			{{#each movimientosdocumento as |m|}}
 			<tr>
-                <td data-title="Documento">
-					{{m.id}}
+                <td data-title="id">
+					{{#if m.esdescuento}} 
+						<a href="" {{action "editarDescuento" m.id}}> {{m.id}}</a> 
+					{{else}} 
+						{{m.id}} 
+					{{/if}}
 				</td>
-				<td data-title="Descripcion">
+				<td data-title="Cantidad" class="text-right">
 					{{m.cantidad}}
 				</td>
-				<td data-title="Cargo" class="text-right">
+				<td data-title="Fecha" class="text-right">
 					{{m.fecha}}
 				</td>
-				<td data-title="Abono" class="text-right">
+				<td data-title="Cargo Abono" class="text-right">
 					{{m.cargoabono}} &nbsp; {{m.relaciondepago}}
 				</td>
-				<td data-title="Saldo" class="text-right">
+				<td data-title="Recibo" class="text-right">
 					{{#if isArcadia}}
 						<a href="" {{ action 'procesaRecibo' m.recibo m.id }}>{{m.recibo}}</a>
 					{{else}}
@@ -409,6 +413,15 @@
 			{{/each}}
 		</tbody>
 	</table>
+	{{#if movimientoEditar}}
+		<div class="jumbotron">
+			<div class="h5 text text-info">Descuento: {{movimientoEditar.id}} Cantidad: ${{movimientoEditar.cantidad}}</div>
+		 <div class="row">
+		 	<div class="btn btn-danger" {{action "eliminarDescuento"}}>Eliminar Descuento</div>
+		 	<div class="btn btn-warning" {{action "cerrarEliminarDescuento"}}>Cancelar</div>
+		</div>
+	</div>
+	{{/if}}
 	{{/if}} <!-- cierre show forma -->
 	{{#if isArcadia}}
 	
@@ -549,4 +562,5 @@
 		<div>Sobra $ {{if reciduoPagares reciduoPagares '0'}}</div>
 	{{/modal-bs}}
 {{/if}}
+
 
