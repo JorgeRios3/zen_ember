@@ -1154,7 +1154,7 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       return c.filter(function(item) {
         let lote = get(item, 'lote');
         if (edificio === lote.substring(0, 2)) {
-          get(that, 'numerosInteriores').add(lote.substring(2, 5));
+          get(that, 'numerosInteriores').add(lote.substring(2, lote.length));
           return true;
         } else {
           return false;

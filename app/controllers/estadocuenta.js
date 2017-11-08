@@ -375,10 +375,15 @@ export default Ember.Controller.extend(FormatterMixin,
         let lote = get(item, 'lote');
         info('en el filter de selectedManzana', get(item, 'manzana') === get(this, 'selectedManzana'));
         if (get(this, 'selectedManzana') === get(item, 'manzana')) {
-          if (isDepartamento) {
-            get(this, 'numerosExteriores').add(lote.substring(0, 2));
-          }
-          return true;
+	  if(get(this, 'selectedEtapa') >= 58 && get(this, 'isArcadia') === false){
+              get(this, 'numerosExteriores').add(lote.substring(0, 4));
+              return true;
+	  } else{
+            if (isDepartamento) {
+              get(this, 'numerosExteriores').add(lote.substring(0, 2));
+            }
+            return true;
+	  }
         } else {
           return false;
         }
@@ -389,13 +394,24 @@ export default Ember.Controller.extend(FormatterMixin,
     let exterior = get(this, 'numeroExteriorSelected');
     let inmuebles =  get(this, 'inmueblesManzana');
     let lista = Ember.A();
+    let exteriorInmueble;
+    let depa;
     inmuebles.forEach((item)=> {
-      let exteriorInmueble = get(item, 'lote').substring(0, 2);
+      if(get(this, 'selectedEtapa')>= 58 && get(this ,'isArcadia') === false){
+        exteriorInmueble = get(item, 'lote').substring(0, 4);
+      }else {
+        exteriorInmueble = get(item, 'lote').substring(0, 2);
+      }
       info('valor de exterior', exterior, exteriorInmueble, exteriorInmueble === exterior);
       if (exterior === exteriorInmueble) {
         info('coincidio exterior');
         let { cuenta, etapa, id, inmueble, lote, manzana } = getProperties(item, 'cuenta etapa id inmueble lote manzana'.w());
-        let depa = lote.substring(2, 5);
+	if(get(this, 'selectedEtapa') >= 58 && get(this, 'isArcadia') === false){
+          depa = lote.substring(4, lote.length);
+	}
+	else{
+          depa = lote.substring(2, lote.length);
+	}
         lista.pushObject({
           cuenta, etapa, id, inmueble, lote, manzana, depa
         });
