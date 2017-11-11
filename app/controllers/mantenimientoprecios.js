@@ -280,8 +280,13 @@ export default Ember.Controller.extend(EmberValidations, {
       c.forEach((item)=> {
         if (manzana === item.get('manzana')) {
           lote = get(item, 'lote');
-          l.pushObject(Ember.Object.create({ manzana: get(item, 'manzana'), lote, loteSort: parseInt(lote), inmueble: get(item, 'id') }));
-          get(that, 'numerosExteriores').add(lote.substring(0, 2));
+          if(get(that, 'selectedEtapa') >= 58){
+            l.pushObject(Ember.Object.create({ manzana: get(item, 'manzana'), lote, loteSort: parseInt(lote), inmueble: get(item, 'id') }));
+            get(that, 'numerosExteriores').add(lote.substring(0, 4));
+          } else {
+            l.pushObject(Ember.Object.create({ manzana: get(item, 'manzana'), lote, loteSort: parseInt(lote), inmueble: get(item, 'id') }));
+            get(that, 'numerosExteriores').add(lote.substring(0, 2));
+          }
         }
       });
       set(this, 'sortedTodosDesc', Ember.computed.sort('lotesArray', 'todosSortingDesc'));
@@ -309,11 +314,20 @@ export default Ember.Controller.extend(EmberValidations, {
       set(this, 'numerosInteriores', mySet2);
       return c.filter((item)=> {
         let lote = get(item, 'lote');
-        if (edificio === lote.substring(0, 2)) {
-          get(that, 'numerosInteriores').add(lote.substring(2, 5));
-          return true;
+        if(get(that, 'selectedEtapa') >=58){
+          if (edificio === lote.substring(0, 4)) {
+            get(that, 'numerosInteriores').add(lote.substring(4, lote.length));
+            return true;
+          } else {
+            return false;
+          }
         } else {
-          return false;
+          if (edificio === lote.substring(0, 2)) {
+            get(that, 'numerosInteriores').add(lote.substring(2, 5));
+            return true;
+          } else {
+            return false;
+          }
         }
       });
     },

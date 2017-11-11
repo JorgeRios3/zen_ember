@@ -76,6 +76,7 @@ RouteAuthMixin, FormatterMixin,
   },
   model() {
     // info('voy en beforemodel de resumenoperativo2', get(this, 'features'));
+    info('entro en el model ===========')
     let app = getOwner(this).lookup('controller:application');
     let usuario = get(app, 'usuario');
     let additional = '';

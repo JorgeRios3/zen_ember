@@ -153,11 +153,18 @@ export default Ember.Controller.extend({
     set(this, 'numerosInteriores', mySet2);
     return c.filter((item)=> {
       let lote = get(item, 'lote');
-      if (edificio === lote.substring(0, 2)) {
-        get(that, 'numerosInteriores').add(lote.substring(2, 5));
-        return true;
+      if(get(this, 'selectedEtapa') >= 58){
+        if(edificio === lote.substring(0,4)){
+          get(that, 'numerosInteriores').add(lote.substring(4, lote.length));
+	} else {
+	  return false;
+	}
       } else {
-        return false;
+        if (edificio === lote.substring(0, 2)) {
+            get(that, 'numerosInteriores').add(lote.substring(2, lote.length));
+	} else {
+            return false;
+        }
       }
     });
   }),
@@ -191,7 +198,11 @@ export default Ember.Controller.extend({
           loteSort: parseInt(lote),
           inmueble: get(item, 'id')
         }));
-        get(that, 'numerosExteriores').add(lote.substring(0, 2));
+	if(get(that, 'selectedEtapa') >= 58){
+          get(that, 'numerosExteriores').add(lote.substring(0, 4));
+	} else {
+          get(that, 'numerosExteriores').add(lote.substring(0, 2));
+	}
       }
     });
     set(this, 'sortedTodosDesc', computed.sort('lotesArray', 'todosSortingDesc'));
@@ -259,10 +270,11 @@ export default Ember.Controller.extend({
   }),
 
   observaEtapaSeleccionada: observer('selectedEtapa', function() {
+    info('======viendo el selected etpapa=======', get(this, 'selectedEtapa'));
     if (get(this, 'selectedEtapa') === '') {
       return;
     } else {
-      info('paso por aqui', get(this, 'selectedEtapa'));
+      //info('paso por aqui', get(this, 'selectedEtapa'));
       let etapa = get(this, 'selectedEtapa');
       let inmueblesdisponibles = get(this, 'inmueblesdisponibles');
       inmueblesdisponibles.clear();
@@ -280,13 +292,13 @@ export default Ember.Controller.extend({
       .then((data)=> {
         try {
           let cuantos = get(data, 'length');
-          info('cuantos es ', cuantos);
+          //info('cuantos es ', cuantos);
           set(_this, 'cuantosInmueblesDisponibles', cuantos);
           data.forEach((item)=> {
             inmueblesdisponibles.pushObject(item);
           });
         } catch (e) {
-          info('callo en error buscado', e);
+          //info('callo en error buscado', e);
         }
       });
       this.store.find('parametrosetapa', get(this, 'selectedEtapa'))
@@ -340,7 +352,7 @@ export default Ember.Controller.extend({
   observaTramite: observer('selectedTramite', function() {
     set(this, 'tramitesLista', '');
     let a = !isEmpty(get(this, 'selectedTramite'));
-    info('valor de a', a);
+    //info('valor de a', a);
     set(this, 'isManzanaFiltrado', a);
     Ember.$('#x-manzana-filtrado option[value=0]').prop('selected', true);
     Ember.$('#x-lote-filtrado option[value=0]').prop('selected', true);

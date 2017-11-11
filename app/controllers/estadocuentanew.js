@@ -368,7 +368,7 @@ export default Ember.Controller.extend(FormatterMixin,
       if (exterior === exteriorInmueble) {
         info('coincidio exterior');
         let { cuenta, etapa, id, inmueble, lote, manzana } = getProperties(item, 'cuenta etapa id inmueble lote manzana'.w());
-        let depa = lote.substring(2, 5);
+        let depa = lote.substring(2, lote.length);
         lista.pushObject({
           cuenta, etapa, id, inmueble, lote, manzana, depa
         });

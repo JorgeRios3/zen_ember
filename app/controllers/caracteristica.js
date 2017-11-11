@@ -171,7 +171,11 @@ export default Ember.Controller.extend({
               inmueble: get(item, 'id')
             })
           );
-          get(that, 'numerosExteriores').add(lote.substring(0, 2));
+          if(get(that, 'selectedEtapa') >= 58){
+              get(that, 'numerosExteriores').add(lote.substring(0, 4));
+          }else {
+            get(that, 'numerosExteriores').add(lote.substring(0, 2));
+          }
         }
       });
       set(this, 'sortedTodosDesc', Ember.computed.sort('lotesArray', 'todosSortingDesc'));
@@ -194,11 +198,20 @@ export default Ember.Controller.extend({
       set(this, 'numerosInteriores', mySet2);
       return get(this, 'inmueblesdisponibles').filter((item)=> {
         let lote = get(item, 'lote');
-        if (edificio === lote.substring(0, 2)) {
-          get(that, 'numerosInteriores').add(lote.substring(2, 5));
-          return true;
+        if(get(this, 'selectedEtapa') >= 58){
+          if (edificio === lote.substring(0, 4)) {
+            get(that, 'numerosInteriores').add(lote.substring(4, lote.length));
+            return true;
+          } else {
+            return false;
+          }
         } else {
-          return false;
+          if (edificio === lote.substring(0, 2)) {
+            get(that, 'numerosInteriores').add(lote.substring(2, 5));
+            return true;
+          } else {
+            return false;
+          }
         }
       });
     },
