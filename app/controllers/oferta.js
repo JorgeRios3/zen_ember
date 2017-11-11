@@ -563,8 +563,12 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
         let m = get(item, 'manzana');
         let lote = get(item, 'lote');
         if (m === manzana) {
-          if (isDepto) {
-            get(that, 'numerosExteriores').add(lote.substring(0, 2));
+          if(get(this, 'selectedEtapa') >= 58){
+            get(that, 'numerosExteriores').add(lote.substring(0,4));
+          } else {
+            if (isDepto) {
+              get(that, 'numerosExteriores').add(lote.substring(0, 2));
+            }
           }
           return true;
         } else {
@@ -1153,11 +1157,20 @@ export default Ember.Controller.extend(Ember.Evented, EmberValidations, {
       set(this, 'numerosInteriores', mySet2);
       return c.filter(function(item) {
         let lote = get(item, 'lote');
-        if (edificio === lote.substring(0, 2)) {
-          get(that, 'numerosInteriores').add(lote.substring(2, lote.length));
-          return true;
+        if(get(that, 'selectedEtapa') >= 58){
+          if (edificio === lote.substring(0, 4)) {
+            get(that, 'numerosInteriores').add(lote.substring(4, lote.length));
+            return true;
+          } else {
+            return false;
+          }
         } else {
-          return false;
+          if (edificio === lote.substring(0, 2)) {
+            get(that, 'numerosInteriores').add(lote.substring(2, lote.length));
+            return true;
+          } else {
+            return false;
+          }
         }
       });
     },
