@@ -19,7 +19,9 @@ export default DS.Model.extend({
   saldoNumber: computed('saldo', {
     get() {
     let saldo = get(this, 'saldo');
-    saldo = saldo.replace(",", "");
+    //saldo = saldo.replace(",", "");
+    saldo=saldo.replace(/[,]/g, "")
+
     return Number(saldo)
     }
   }),
