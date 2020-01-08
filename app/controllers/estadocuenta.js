@@ -103,7 +103,8 @@ export default Ember.Controller.extend(FormatterMixin,
       switch (get(this, 'ci.perfil')) {
         case 'admin':
         case 'finanzas':
-        case 'cobranza':
+        case 'finanzas':
+        case 'auxiliarsubdireccion':
           permiso = true;
           break;
         default:

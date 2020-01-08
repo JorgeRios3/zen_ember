@@ -17,7 +17,6 @@
 	<thead>
 	<tr>
 		<th>Mes</th>
-		<th>2001</th>
 		<th>2002</th>
 		<th>2003</th>
 		<th>2004</th>
@@ -35,14 +34,13 @@
 		<th>2016</th>
 		<th>2017</th>
 		<th>2018</th>
+		<th>2019</th>
 	</tr>
 	</thead>
 	<tbody>
 		{{#each ventascuadro as | r i|}}
 		<tr> {{#unless r.total}}
 			<td data-title="Mes">{{r.mes}}</td>
-			<td data-title="2001" class="text-right"><a href="" {{action "detalleMesLotes" 2001 r.mes}}>{{r.a2001}}</a></td>
-			<td data-title="2002" class="text-right"><a href="" {{action "detalleMesLotes" 2002 r.mes}}>{{r.a2002}}</a></td>
 			<td data-title="2003" class="text-right"><a href="" {{action "detalleMesLotes" 2003 r.mes}}>{{r.a2003}}</a></td>
 			<td data-title="2004" class="text-right"><a href="" {{action "detalleMesLotes" 2004 r.mes}}>{{r.a2004}}</a></td>
 			<td data-title="2005" class="text-right"><a href="" {{action "detalleMesLotes" 2005 r.mes}}>{{r.a2005}}</a></td>
@@ -59,10 +57,10 @@
 			<td data-title="2016" class="text-right"><a href="" {{action "detalleMesLotes" 2016 r.mes}}>{{r.a2016}}</a></td>
 			<td data-title="2017" class="text-right"><a href="" {{action "detalleMesLotes" 2017 r.mes}}>{{r.a2017}}</a></td>
 			<td data-title="2018" class="text-right"><a href="" {{action "detalleMesLotes" 2018 r.mes}}>{{r.a2018}}</a></td>
+			<td data-title="2019" class="text-right"><a href="" {{action "detalleMesLotes" 2019 r.mes}}>{{r.a2019}}</a></td>
+			<td data-title="2020" class="text-right"><a href="" {{action "detalleMesLotes" 2020 r.mes}}>{{r.a2020}}</a></td>
 			{{else}}
 			<td data-title="Mes">{{r.mes}}</td>
-			<td data-title="2001" class="text-right">{{r.a2001}}</td>
-			<td data-title="2002" class="text-right">{{r.a2002}}</td>
 			<td data-title="2003" class="text-right">{{r.a2003}}</td>
 			<td data-title="2004" class="text-right">{{r.a2004}}</td>
 			<td data-title="2005" class="text-right">{{r.a2005}}</td>
@@ -79,6 +77,8 @@
 			<td data-title="2016" class="text-right">{{r.a2016}}</td>
 			<td data-title="2017" class="text-right">{{r.a2017}}</td>
 			<td data-title="2018" class="text-right">{{r.a2018}}</td>
+			<td data-title="2019" class="text-right">{{r.a2019}}</td>
+			<td data-title="2020" class="text-right">{{r.a2020}}</td>
 			{{/unless}}
 		</tr>
 		{{/each}}

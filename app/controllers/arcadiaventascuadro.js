@@ -53,7 +53,7 @@ export default Ember.Controller.extend({
         let titleCols = ['Mes'];
         let alignments = ['left'];
         let year = get(data, 'meta.maxyear');
-        for (let i = 2001; i <= year; i++) {
+        for (let i = 2003; i <= year; i++) {
           llaves.push(`a${i}`);
           titleCols.push(i);
           alignments.push('right');

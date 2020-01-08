@@ -10,6 +10,7 @@ export default Ember.Controller.extend({
   actions: {
     usuario(usuario) {
       info('usuario', get(usuario, 'vendedor'));
+      info("lo nuevo controller")
       set(this, 'vendedor', get(usuario, 'vendedor'));
       set(this, 'usuario', get(usuario, 'usuario'));
     },
