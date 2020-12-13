@@ -14,7 +14,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin, Forma
     set(controller, 'fecha', fecha);
     let yearsList = Ember.A();
     let today = moment().year();
-    for (let i = 1; i < 11; i++) {
+    for (let i = 0; i < 10; i++) {
       let years = parseInt(today) - i;
       let year = i + 1;
       yearsList.pushObject({ 'nombre': years, year });
