@@ -58,11 +58,11 @@ export default Ember.Controller.extend({
           titleCols.push(i);
           alignments.push('right');
         }
-        data.forEach((item)=> {
+        data.forEach((item, i)=> {
           if(get(item, 'mes') === 'Total') {
             info('valor de total');
             let objeto = getProperties(item, llaves);
-            objeto.total = true
+            objeto.total = true;
             ventascuadro.pushObject(objeto);
           } else {
             ventascuadro.pushObject(getProperties(item, llaves));

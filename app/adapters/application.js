@@ -22,6 +22,8 @@ inflector.irregular('referenciasrapconclientesincuenta', 'referenciasrapconclien
 inflector.irregular('ventaspordia', 'ventaspordias');
 inflector.irregular('panorama', 'panoramas');
 inflector.irregular('lotesdisponiblesarcadia', 'lotesdisponiblesarcadias');
+inflector.irregular('vendedoresarcadia', 'vendedoresarcadias');
+inflector.irregular('clientesarcadia', 'clientesarcadias');
 inflector.irregular('vendidosarcadia', 'vendidosarcadias');
 inflector.irregular('lotesindividualesarcadia', 'lotesindividualesarcadias');
 inflector.irregular('ventascuadroarcadia', 'ventascuadroarcadias');

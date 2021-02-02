@@ -89,6 +89,8 @@ Router.map(function() {
   this.route('catalogoprecios');
   this.route('mantenimientocaracteristicas');
   this.route('clientesmantenimiento');
+  this.route('arcadiavendedores');
+  this.route('arcadiaclientes');
 });
 
 export default Router;

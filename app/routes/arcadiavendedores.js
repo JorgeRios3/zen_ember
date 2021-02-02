@@ -12,14 +12,12 @@ const {
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,{
   setupController(ctrl, model) {
-    info("viendo model--------- jajaja")
-
-  	set(ctrl, 'titleCols', ['id Gerente', 'Nombre Gerente', 'id Vendedor', 'Nombre Vendedor']);
-  	let lista = Ember.A();
+  	/*set(ctrl, 'titleCols', ['id Gerente', 'Nombre Gerente', 'id Vendedor', 'Nombre Vendedor']);
+  	let lista = Ember.A();*/
   	let listaGerentes = Ember.A();
-    let gerentes = get(model, 'gerentesventa');
-    gerentes.forEach((gerente)=> {
-      info("viendo el nombre  ", get(gerente, 'nombre'));
+    let vendedores = get(model, 'vendedores');
+    set(ctrl, 'vendedores', vendedores);
+    /*gerentes.forEach((gerente)=> {
       let nombre = get(gerente, 'nombre');
       let id = parseInt(get(gerente, 'id'));
       listaGerentes.pushObject({id, nombre});
@@ -37,14 +35,13 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, RouteAuthMixin,{
         let nombreGerente = get(gerente, 'nombre');
         lista.pushObject({ idGerente, nombreGerente, idVendedor, nombreVendedor })
       }
-    });
-    set(ctrl, 'datos', lista);
+    });*/
+    //set(ctrl, 'datos', lista);
   },
   model() {
   	let { store } = this;
   	return hash({
-  	   gerentesventa: store.findAll('gerentesventa', { reload: true }),
-      vendedor: store.findAll('vendedor', { reload: true }),
+  	   vendedores: store.findAll('vendedoresarcadia', { reload: true }),
   	});
   }
 

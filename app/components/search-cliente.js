@@ -30,6 +30,7 @@ export default Ember.Component.extend({
   errores: '',
   maximo: 100,
   clientesArray: '',
+  company: '',
   // listaNombresClientes:'',
   tipoTD: computed.equal('selectedTipo', 'TD'),
   tipoSC: computed.equal('selectedTipo', 'SC'),
@@ -64,6 +65,7 @@ export default Ember.Component.extend({
       this.sendAction('hacer', '0');
     },
     buscarCliente() {
+      info(this)
       let that = this;
       let tamano = get(this, 'nombreCliente');
       get(this, 'store').unloadAll('clientecuantofiltro');
@@ -76,7 +78,7 @@ export default Ember.Component.extend({
         }
         // var l= get(this, 'listaNombresClientes');
         let nombre = get(this, 'nombreCliente');
-        let p1 = get(this, 'store').query('clientecuantofiltro', { etapa: get(this, 'selectedEtapa'), nombre, tipo: get(this, 'selectedTipo') });
+        let p1 = get(this, 'store').query('clientecuantofiltro', { etapa: get(this, 'selectedEtapa'), nombre, tipo: get(this, 'selectedTipo'), company: get(that, 'company') });
         p1.then((data)=> {
           if (get(data, 'length')) {
             data.forEach((item)=> {
@@ -84,7 +86,7 @@ export default Ember.Component.extend({
             });
             if (parseInt(get(this, 'cuantos')) < get(that, 'maximo')) {
               set(this, 'cuantosLength', true);
-              let p2 = get(that, 'store').query('clientefiltro', { etapa: get(that, 'selectedEtapa'), nombre, tipo: get(that, 'selectedTipo') });
+              let p2 = get(that, 'store').query('clientefiltro', { etapa: get(that, 'selectedEtapa'), nombre, tipo: get(that, 'selectedTipo'), company: get(that, 'company') });
               p2.then((data)=> {
                 data.forEach((item)=> {
                   let c = { id: get(item, 'id'), nombre: get(item, 'nombre'), cuenta: get(item, 'cuenta'), saldo: get(item, 'saldo') };

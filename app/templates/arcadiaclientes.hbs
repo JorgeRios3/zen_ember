@@ -1,0 +1,325 @@
+<h3>
+	<div class="row">
+		<span class="col-xs-6 col-md-3">Cliente</span>
+	</div>
+</h3>
+<hr>
+<h4 class="text text-danger">Nuevo Cliente {{partiendoDeOferta}}</h4>
+{{search-cliente etapas=etapas store=store company="arcadia" hacer=(action "seleccionar")}}
+<!-- {{#if origenOferta }}
+	<span class="text text-info">	
+		{{#link-to 'oferta' ( query-params origenCliente=true)}}
+			Regresar a Oferta sin Afectar
+		{{/link-to}}
+	</span>
+{{else}}
+	{{search-cliente etapas=etapas store=store hacer=(action "seleccionar")}}
+	{{impresion-reporte store=store reporte="rap" parametro1="cliente" valorParametro1=clienteValorSelect labelParametro1="Cliente" placeholderParametro1="Digite Cliente" submit=(action 'imprimeFicha') }}
+{{/if}} -->
+{{#if formaEditarCliente}}
+	{{partial "clientemantenimientoarcadia"}}
+{{/if}}
+<hr>
+
+{{#if showForm}}
+<form role="form" {{ action "grabar" on="submit"}}>
+	{{#if errorMessage}}
+		<br><div class="alert alert-danger">
+  				<a class="close" data-dismiss="alert" href="#">x</a>
+  					<p>
+            			<strong>Operación Inválida : </strong> <code>{{errorMessage}}</code>
+  					</p>
+        </div>
+	{{/if}}
+	{{#if isDev}}
+	<div class="btn btn-info" {{action "llenarCliente"}}>llenar</div>
+	{{/if}}
+
+	{{#if afiliacionOk}}
+	<div class="form-group">
+		<label for="idclientenombre" class="control-label">Nombre Completo</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idclientenombre"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclienterfc" class="control-label">RFC</label>
+		<div class="row">
+			<div class="col-xs-6 col-md-3">
+				{{input type="text" value=rfc class="form-control" placeholder="Reg Fed Contrib" maxlength="13" id="idclienterfc"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclientecurp" class="control-label">CURP</label>
+		<div class="row">
+			<div class="col-xs-6 col-md-3">
+				{{input type="text" value=curp class="form-control" placeholder="Curp, registro nacional de poblaci&oacute;n" maxlength="18" id="idclientecurp"}}
+			</div>
+		</div>
+	</div>
+	
+	{{!date-widget label="Fecha de Nacimiento" xtag="fechanacimiento" action="getDateValue"}}
+	<div class="form-group">
+		<label for="datewidget" class="control-label">Fecha de Nacimiento</label>
+		<div class="row">
+			<div class="col-xs-10 col-md-3">
+            	{{bs-datetimepicker date=nullfechanacimiento showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut fechanacimiento))}}
+        	</div>
+    	</div>
+	</div>
+
+	<div class="form-group">
+		<label for="idclientelugarnacimiento" class="control-label">Lugar de Nacimiento</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=lugarnacimiento class="form-control" placeholder="Lugar de Nacimiento" id="idclientelugarnacimiento" maxlength="50"}}
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="idclientenacionalidad" class="control-label">Nacionalidad</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=nacionalidad class="form-control" placeholder="Nacionalidad" id="idclientenacionalidad" maxlength="15"}}
+			</div>
+		</div>
+	</div>
+	
+
+	<div class="form-group">
+		<label for="idclientetelefonocasa" class="control-label">Tel&eacute;fono Casa</label>
+		<div class="row">
+			<div class="col-xs-5 col-md-2">
+				{{input type="text" value=telefonocasa class="form-control" placeholder="Tel. Casa" id="idclientetelefonocasa" maxlength="15"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclientetelefontrabajo" class="control-label">Tel&eacute;fono trabajo</label>
+		<div class="row">
+			<div class="col-xs-5 col-md-2">
+				{{input type="text" value=telefonotrabajo class="form-control" placeholder="Tel. Trabajo" id="idclientetelefonotrabajo" maxlength="15"}}
+			</div>
+			
+		</div>
+	</div>
+	<div class="form-group">
+				<label class="control-label">Estado Civil</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=estadocivil action=(action  (mut estadocivil)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Estado Civicl{{/x-option}}
+  							{{#each estadosciviles as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	<div class="form-group">
+				<label class="control-label">Situación</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=situacion action=(action  (mut situacion)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Situacion{{/x-option}}
+  							{{#each situaciones as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	{{#if isCasado}}
+		<div class="form-group">
+				<label class="control-label">Régimen</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=regimen action=(action  (mut regimen)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Régimen{{/x-option}}
+  							{{#each regimenes as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+	{{/if}}
+	<div class="form-group">
+				<label class="control-label">Ocupación</label>
+				<div class="row">
+					<div class="col-md-5">
+						{{#x-select value=ocupacion action=(action  (mut ocupacion)) class="form-control form-control-inline"}}
+  							{{#x-option value='0'}}Elija Ocupación{{/x-option}}
+  							{{#each ocupaciones as |item|}}
+  								{{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+							{{/each}}
+						{{/x-select}}
+					</div>
+				</div>
+			</div>
+
+	<div class="form-group">
+		<label for="idclientedomicilio" class="control-label">Domicilio</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=domicilio class="form-control" placeholder="Domicilio" id="idclientedomicilio" maxlength="50"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclientecolonia" class="control-label">Colonia</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=colonia class="form-control" placeholder="Colonia" id="idclientecolonia" maxlength="50"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclienteciudad" class="control-label">Ciudad</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=ciudad class="form-control" placeholder="Ciudad" id="idclienteciudad" maxlength="30"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclienteestado" class="control-label">Estado</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=estado class="form-control" placeholder="Estado" id="idclienteestado" maxlength="25"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclientecodigopostal" class="control-label">Código Postal</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=codigopostal class="form-control" placeholder="Código Postal" id="idclientecodigopostal" maxlength="5"}}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="idclienteemail" class="control-label">Correo Electrónico</label>
+		<div class="row">
+			<div class="col-xs-8 col-md-5">
+				{{input type="text" value=email class="form-control" placeholder="Email" id="idclienteemail"}}
+			</div>
+		</div>
+	</div>
+	{{#if isCasado }}
+        {{#if isSociedadCivil}}
+	        <hr>
+            <div class="text text-danger">Datos Cónyuge</div>
+            <br>
+            <div class="form-group">
+                <label for="idclienteconyugenombre" class="control-label">Nombre Completo</label>
+                <div class="row">
+                    <div class="col-xs-8 col-md-5">
+                        {{input type="text" value=conyugenombre class="form-control" placeholder="Nombre" id="idclienteconyugenombre"}}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="idclienteconyugerfc" class="control-label">RFC</label>
+                <div class="row">
+                    <div class="col-xs-6 col-md-3">
+                        {{input type="text" value=conyugerfc class="form-control" placeholder="Reg Fed Contrib" maxlength="13" id="idclienteconyugerfc"}}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="idclienteconyugecurp" class="control-label">CURP</label>
+                <div class="row">
+                    <div class="col-xs-6 col-md-3">
+                        {{input type="text" value=conyugecurp class="form-control" placeholder="Curp, registro nacional de poblaci&oacute;n" maxlength="18" id="idclienteconyugecurp"}}
+                    </div>
+                </div>
+            </div>	
+            <div class="form-group">
+                <label for="datewidget" class="control-label">Fecha de Nacimiento</label>
+                <div class="row">
+                    <div class="col-xs-10 col-md-3">
+                        {{bs-datetimepicker date=nullconyugefechanacimiento showClear=true showTodayButton=true format="YYYY/MM/DD" locale="es" updateDate=(action (mut conyugefechanacimiento))}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="idclienteconyugelugarnacimiento" class="control-label">Lugar de Nacimiento</label>
+                <div class="row">
+                    <div class="col-xs-8 col-md-5">
+                        {{input type="text" value=conyugelugarnacimiento class="form-control" placeholder="Lugar de Nacimiento" id="idclienteconyugelugarnacimiento" maxlength="50"}}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="idclienteconyugenacionalidad" class="control-label">Nacionalidad</label>
+                <div class="row">
+                    <div class="col-xs-8 col-md-5">
+                        {{input type="text" value=conyugenacionalidad class="form-control" placeholder="Nacionalidad" id="idclienteconyugenacionalidad" maxlength="15"}}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                        <label class="control-label">Ocupación</label>
+                        <div class="row">
+                            <div class="col-md-5">
+                                {{#x-select value=conyugeocupacion action=(action  (mut conyugeocupacion)) class="form-control form-control-inline"}}
+                                    {{#x-option value='0'}}Elija Ocupación{{/x-option}}
+                                    {{#each ocupaciones as |item|}}
+                                        {{#x-option value=item.id}}{{item.tipo}}{{/x-option}}
+                                    {{/each}}
+                                {{/x-select}}
+                            </div>
+                        </div>
+                    </div>
+            <hr>
+	    {{/if}}
+    {{/if}}
+    <hr>
+
+	<div>
+		{{#if isValid}}
+			{{#unless processingGrabar}}
+                {{#if clienteValorSelect}}
+                    <button class="btn btn-info" type="submit" {{action 'editar'}}>Grabar</button>
+                {{else}}
+				    <button class="btn btn-info" type="submit" {{action 'grabar'}}>Grabar</button>
+                {{/if}}
+                <button class="btn btn-warning" {{action "closeForm"}}>Cancelar</button>
+			{{/unless}}
+			{{#if huboErrorAlGrabar}}
+  					{{#modal-bs title="Hubo Error al Grabar el Cliente" ok="enteradoHuboErrorAlGrabar" close="enteradoHuboErrorAlGrabar"}}
+   						No pudo grabarse el cliente.  
+   						<br>
+   						<div class="text-danger">
+   							{{errorAlGrabar}}	
+   						</div>
+  					{{/modal-bs}}
+
+			{{/if}}
+		{{else}}
+            <button class="btn btn-warning" {{action "closeForm"}}>Cancelar</button>
+			<button class="btn btn-danger" {{action 'revisarErrores'}}>Revisar</button>
+			{{#if muestroErrores}}
+			
+				{{#modal-bs title="Errores antes de poder grabar" ok="enteradoInspeccionarErrores" }}
+   						<ul>
+   							{{#each erroresHabidos.content as |err|}}
+   							<li>{{if err.campo err.campo err.variable}}&nbsp;-&nbsp;{{err.mensaje}}</li>
+   							{{/each}}
+   						</ul>
+  				{{/modal-bs}}
+			{{/if}} 
+		{{/if}}
+	</div>
+	{{/if}}
+</form>
+{{else}}
+<button class="btn btn-primary" {{action "showForm"}}>Agregar Cliente</button>
+{{/if}}

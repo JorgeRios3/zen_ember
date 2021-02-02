@@ -1,0 +1,43 @@
+<h4 class="text text-info">Editar Cliente arcadia</h4>
+<div class="form-group">
+	<label for="namecliente" class="control-label">Nombre</label>
+<div class="row">
+	<div class="col-xs-8 col-md-5">
+	{{input type="text" value=clienteNombre class="form-control" placeholder="Nombre" id="namecliente"}}
+	</div>
+</div>
+</div>
+<div class="form-group">
+	<label for="rfccliente" class="control-label">RFC</label>
+    <div class="row">
+        <div class="col-xs-8 col-md-5">
+        {{input type="text" value=clienteRfc class="form-control" placeholder="Rfc" id="rfccliente"}}
+        </div>
+    </div>
+</div>
+<div class="form-group">
+	<label for="rfccliente" class="control-label">lugar nacimiento</label>
+    <div class="row">
+        <div class="col-xs-8 col-md-5">
+        {{input type="text" value=clienteRfc class="form-control" placeholder="Rfc" id="rfccliente"}}
+        </div>
+    </div>
+</div>
+<div class="form-group">
+	<label for="telefonoCasabn" class="control-label">Telefono Casa</label>
+<div class="row">
+	<div class="col-xs-8 col-md-5">
+	{{input type="text" value=clienteTelCasa class="form-control" placeholder="Telefono Casa" id="telefonoCasabn"}}
+	</div>
+</div>
+</div>
+<div class="form-group">
+	<label for="telefonotrabajobn" class="control-label">Telefono Trabajo</label>
+<div class="row">
+	<div class="col-xs-8 col-md-5">
+	{{input type="text" value=clienTelTrabajo class="form-control" placeholder="Telefono Trabajo" id="telefonotrabajobn"}}
+	</div>
+</div>
+</div>
+
+<div class="btn btn-success" {{action "guardarEditar"}}>Guardar</div>

@@ -1,0 +1,115 @@
+<h2 class="text-info">Vendedores Arcadia</h2>
+			
+			
+			{{#liquid-if vendedores use="toRight"}}
+
+					<div id="no-more-tables">
+						<table class="table table-bordered table-striped table-condensed cf">
+							<thead>
+							<tr>
+								<th>Nombre</th>
+                                <th>telefono</th>
+                                <th>email</th>
+								<th>id</th>
+							</tr>
+							</thead>
+							<tbody>
+							{{#each vendedores as |vendedor|}}
+								<tr>
+									<td data-title="Nombre">{{vendedor.nombre}}</td>
+                                    <td data-title="telefono">{{vendedor.telefono}}</td>
+                                    <td data-title="email">{{vendedor.email}}</td>
+                                    <td data-title="id">
+									<a href="#"  {{action "buscarVendedor"  vendedor.codigo}}>{{vendedor.codigo}} </a>
+                                    </td>
+								</tr>
+							{{/each}}
+							</tbody>
+						</table>
+					</div>
+		{{/liquid-if }}
+
+        <br><br>
+{{#if showForm}}
+<form role="form" {{ action "guardarEditar" on="submit"}}>
+		<div class="form-group">
+			<label for="idnombre" class="control-label">Nombre Completo</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=nombre class="form-control" placeholder="Nombre" id="idnombre" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="iddomicilio" class="control-label">Domicilio</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=domicilio class="form-control" placeholder="domicilio" id="iddomicilio" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="idcolonia" class="control-label">colonia</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=colonia class="form-control" placeholder="Colonia" id="idcolonia" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="idciudad" class="control-label">Ciudad</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=ciudad class="form-control" placeholder="Ciudad" id="idciudad" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="idcp" class="control-label">CP</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=cp class="form-control" placeholder="CP" id="idcp" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="idestado" class="control-label">Estado</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=estado class="form-control" placeholder="Estado" id="idestado" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="idrfc" class="control-label">RFC</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=rfc class="form-control" placeholder="RFC" id="idrfc" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="idtelefono" class="control-label">Telefono</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=telefono class="form-control" placeholder="Telefono" id="idtelefono" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="idemail" class="control-label">Email</label>
+			<div class="row">
+				<div class="col-xs-8 col-md-5">
+					{{input type="text" value=email class="form-control" placeholder="Email" id="idemail" maxlenght="60"}}
+				</div>
+			</div>
+		</div>
+        {{#if isValid}}
+        <button class="btn btn-success" type="submit">Grabar</button>
+        {{/if}}
+        <button class="btn btn-danger" {{action "showForm"}}>Cancelar</button>
+</form>
+{{else}}
+<button class="btn btn-primary" {{action "showForm"}}>Agregar Vendedor</button>
+{{/if}}
+		
