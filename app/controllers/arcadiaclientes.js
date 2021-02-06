@@ -526,8 +526,15 @@ export default Ember.Controller.extend(EmberValidations, {
   },
 
   actions: {
-    showForm(){
-        set(this, 'showForm', true);
+    AgregarCliente(){
+      set(this, 'record', null)
+      set(this, 'showForm', true);
+      set(this, 'clienteValorSelect', '')
+      set(this, 'nullfechanacimiento', '');
+      set(this, 'fechanacimiento', '');
+      set(this, 'nullconyugefechanacimiento', '');
+      set(this, 'conyugefechanacimiento', '');
+
     },
     guardarEditar() {
         let r = get(this, 'clienteRecord')

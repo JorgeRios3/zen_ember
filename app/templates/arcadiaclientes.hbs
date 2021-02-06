@@ -23,14 +23,7 @@
 
 {{#if showForm}}
 <form role="form" {{ action "grabar" on="submit"}}>
-	{{#if errorMessage}}
-		<br><div class="alert alert-danger">
-  				<a class="close" data-dismiss="alert" href="#">x</a>
-  					<p>
-            			<strong>Operación Inválida : </strong> <code>{{errorMessage}}</code>
-  					</p>
-        </div>
-	{{/if}}
+	
 	{{#if isDev}}
 	<div class="btn btn-info" {{action "llenarCliente"}}>llenar</div>
 	{{/if}}
@@ -321,5 +314,5 @@
 	{{/if}}
 </form>
 {{else}}
-<button class="btn btn-primary" {{action "showForm"}}>Agregar Cliente</button>
+<button class="btn btn-primary" {{action "AgregarCliente"}}>Agregar Cliente</button>
 {{/if}}

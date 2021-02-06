@@ -58,10 +58,9 @@ export default Ember.Controller.extend(EmberValidations, {
           set(this, 'rfcValido', moment(fecha2, 'YY-MM-DD').isValid());
         }
       }),*/
-      actions: {
-        showForm(){
-            let val = get(this, 'showForm');
-            set(this, 'showForm', !val);
+    actions: {
+        closeForm(){
+            set(this, 'showForm', false);
             set(this, 'dato', null);
             set(this, 'nombre', null);
             set(this, 'domicilio', null); 
@@ -73,6 +72,21 @@ export default Ember.Controller.extend(EmberValidations, {
             set(this, 'rfc', null);
             set(this, 'email', null);
         },
+        showForm(){
+            if (get(this, 'record') == null) {
+                set(this, 'dato', null);
+                set(this, 'nombre', null);
+                set(this, 'domicilio', null); 
+                set(this, 'colonia', null);
+                set(this, 'cp', null);
+                set(this, 'ciudad', null);
+                set(this, 'estado', null);
+                set(this, 'telefono', null);
+                set(this, 'rfc', null);
+                set(this, 'email', null);
+            }
+            set(this, 'showForm', true);
+        },
         buscarVendedor(codigo) {
             let that = this;
             info("aqui buscando esto")
@@ -82,11 +96,15 @@ export default Ember.Controller.extend(EmberValidations, {
                 let { nombre, domicilio, colonia, cp, ciudad, estado, telefono, rfc, email } = dato.getProperties(['nombre', 'domicilio', 'colonia', 'cp', 'ciudad', 'estado', 'telefono', 'rfc', 'email']);
                 set(that, 'nombre', nombre);
                 set(that, 'domicilio', domicilio);
-
-
-                set(this, 'showForm', true);
+                set(that, 'colonia', colonia);
+                set(that, 'cp', cp);
+                set(that, 'ciudad', ciudad);
+                set(that, 'estado', estado);
+                set(that, 'telefono', telefono);
+                set(that, 'rfc', rfc);
+                set(that, 'email', email);
+                set(that, 'showForm', true);
             });
-            //set(this, 'listaLotes', lista);
         },
         guardarEditar() {
             let that = this;
@@ -105,36 +123,33 @@ export default Ember.Controller.extend(EmberValidations, {
                     nombre,
                     domicilio,
                     colonia,
-                    cp,
                     ciudad,
+                    cp,
                     estado,
-                    telefono,
                     rfc,
+                    telefono,
                     email
                 });
                 r.save().then(()=>{
-                    info("termino de actulizar");
                     set(this, 'showForm', false);
                     this.store.findAll('vendedoresarcadia', { reload: true })
                     .then((data)=>{
-                        set(that, 'vendedores', null)
                         set(that, 'vendedores', data);
+                        set(that, 'record', null);
                     })
                 })
             }else {
                 let that = this;
                 let r = this.store.createRecord('vendedoresarcadia', {
                     nombre: get(this, 'nombre'),
-                  });
-                  r.save().then((data)=> {
+                });
+                r.save().then((data)=> {
                     info('si se grabo  el vendedor');
                     set(this, 'showForm', false);
                     this.store.findAll('vendedoresarcadia', { reload: true })
                     .then((data)=>{
-                        set(that, 'vendedores', null);
                         set(this, 'vendedores', data);
-                    })
-                    //this.send('buscar');
+                    });
                   });
             }
         }}

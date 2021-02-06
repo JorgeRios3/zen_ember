@@ -13,6 +13,7 @@ RouteAuthMixin,
     let controller = this.controllerFor(this.routeName);
     let url = this.get('router.url');
     controller.setProperties({
+      afiliacionOk:true,
       showForm: false,
       clienteGrabado: 0,
       clienteValorSelect: '',

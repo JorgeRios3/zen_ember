@@ -65,7 +65,6 @@ export default Ember.Component.extend({
       this.sendAction('hacer', '0');
     },
     buscarCliente() {
-      info(this)
       let that = this;
       let tamano = get(this, 'nombreCliente');
       get(this, 'store').unloadAll('clientecuantofiltro');

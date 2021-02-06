@@ -48,6 +48,9 @@ export default Ember.Controller.extend({
       }
       this.store.query('ventascuadroarcadia', { enganche })
       .then((data)=> {
+        data.forEach((item)=>{
+          info(item);
+        })
         let ventascuadro = Ember.A();
         let llaves = ['mes'];
         let titleCols = ['Mes'];
@@ -58,9 +61,11 @@ export default Ember.Controller.extend({
           titleCols.push(i);
           alignments.push('right');
         }
+        //info('viendo llaves', llaves)
         data.forEach((item, i)=> {
+          //info(item)
           if(get(item, 'mes') === 'Total') {
-            info('valor de total');
+            //info('valor de total');
             let objeto = getProperties(item, llaves);
             objeto.total = true;
             ventascuadro.pushObject(objeto);

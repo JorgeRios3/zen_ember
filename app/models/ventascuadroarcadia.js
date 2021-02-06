@@ -28,4 +28,5 @@ export default Model.extend({
 	a2018: attr('formattedint', { defaultValue: 0 }),
 	a2019: attr('formattedint', { defaultValue: 0 }),
 	a2020: attr('formattedint', { defaultValue: 0 }),
+	a2021: attr('formattedint', { defaultValue: 0 }),
 });
